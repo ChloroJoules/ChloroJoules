@@ -35,6 +35,10 @@ class CJBlockMachineBase extends BlockContainer {
 	public boolean blockActivated(
 			World world, int x, int y, int z, EntityPlayer player) {
 
+		// TODO: If held item is a bucket which contains a fluid accepted by
+		//		 A `CJTank` of this machine -- fill that tank and empty the
+		//		 Bucket. If the bucket is empty -- fill from an available
+		//		 Output tank.
 		CJTileEntityMachineBase machine = machineEntity(world, x, y, z);
 		CJGuiMachineBase gui = new CJGuiMachineBase(player.inventory, machine);
 		Minecraft.theMinecraft.displayGuiScreen(gui);

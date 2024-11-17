@@ -1,49 +1,19 @@
 package io.github.chlorojoules.client;
 
 import net.minecraft.src.client.gui.Container;
-import net.minecraft.src.client.gui.Slot;
-import net.minecraft.src.client.inventory.IInventory;
 import net.minecraft.src.game.entity.player.EntityPlayer;
 import net.minecraft.src.game.entity.player.InventoryPlayer;
 import net.minecraft.src.game.item.ItemStack;
 
-class CJSlotMachineBase extends Slot {
-	private final EntityPlayer entityPlayer;
+import java.util.ArrayList;
 
-	private boolean output = false;
-
-	public CJSlotMachineBase(
-			EntityPlayer entityPlayer, IInventory inventory,
-			int index, int x, int y) {
-
-		super(inventory, index, x, y);
-
-		this.entityPlayer = entityPlayer;
-	}
-
-	@Override
-	public boolean isItemValid(ItemStack item) {
-		return !output;
-	}
-
-	@Override
-	public void onPickupFromSlot(ItemStack item) {
-		item.onCrafting(entityPlayer.worldObj, entityPlayer);
-		super.onPickupFromSlot(item);
-	}
-
-	CJSlotMachineBase setOutput(boolean value) {
-		output = value;
-		return this;
-	}
-
-	boolean isOutput() {
-		return output;
-	}
-}
+// TODO: Mixin on `ItemBucket.onItemRightClick' to auto-register non-Vanilla
+//		 Fluids to bucket items.
 
 public class CJContainerMachineBase extends Container {
 	private final CJTileEntityMachineBase machine;
+
+	public ArrayList<CJTank> tanks = new ArrayList<CJTank>();
 
 	void addPlayerInventory(InventoryPlayer inventory) {
 		EntityPlayer player = inventory.player;
@@ -75,6 +45,9 @@ public class CJContainerMachineBase extends Container {
 				.setOutput(true));
 
 		addSlot(new CJSlotMachineBase(player, machine, 1, 50, 50));
+
+		// TODO: Add helper for adding fuel tanks.
+		tanks.add(new CJTank(25, 35));
 
 		addPlayerInventory(inventoryPlayer);
 	}

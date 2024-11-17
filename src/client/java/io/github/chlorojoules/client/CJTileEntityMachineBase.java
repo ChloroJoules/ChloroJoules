@@ -15,6 +15,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	//		 Be read here.
 	// NOTE: For now, let convention be that slot 0 is always output.
 	public ItemStack[] stacks = new ItemStack[2];
+	public CJTankVolume[] tanks = new CJTankVolume[1];
 
 	public static CJTileEntityMachineBase machineEntity(
 			World world, int x, int y, int z) {
@@ -22,6 +23,11 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
 		return (CJTileEntityMachineBase) tileEntity;
+	}
+
+	public CJTileEntityMachineBase() {
+		tanks[0] = new CJTankVolume();
+		tanks[0].current = 3 * CJTank.BUCKET;
 	}
 
 	public void onBreak(World world, int x, int y, int z) {
@@ -41,16 +47,20 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 
 	@Override
 	public void updateEntity() {
-		// TODO: Update machine.
-		ItemStack stack = stacks[0];
+		// TODO: Machine behaviour interface.
 
+		ItemStack stack = stacks[0];
 		if(stack == null) {
-			stacks[0] = new ItemStack(Item.snowball);
-			this.onInventoryChanged();
+			if(tanks[0].removeFluid(null, 10, false) == 10) {
+				stacks[0] = new ItemStack(Item.snowball);
+				this.onInventoryChanged();
+			}
 		}
 		else if(stack.stackSize < stack.getMaxStackSize()) {
-			stacks[0].stackSize++;
-			this.onInventoryChanged();
+			if(tanks[0].removeFluid(null, 10, false) == 10) {
+				stacks[0].stackSize++;
+				this.onInventoryChanged();
+			}
 		}
 	}
 
