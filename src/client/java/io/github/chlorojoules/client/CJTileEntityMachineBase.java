@@ -8,9 +8,11 @@ import net.minecraft.src.game.item.ItemStack;
 import net.minecraft.src.game.level.World;
 import net.minecraft.src.game.nbt.NBTTagCompound;
 
-class CJTileEntityMachineBase extends TileEntity implements IInventory {
+public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	// TODO: Make a tagging/name/enum system so we can keep track of slots
 	//		 In a machine without magic numbers.
+	//		 `CJContainerMachineBase` can contain this mapping which can then
+	//		 Be read here.
 	// NOTE: For now, let convention be that slot 0 is always output.
 	public ItemStack[] stacks = new ItemStack[2];
 
