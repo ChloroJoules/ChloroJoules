@@ -1,12 +1,12 @@
 buildscript {
 	repositories {
-        mavenCentral()
-        maven { url 'https://cdn.fox2code.com/maven' }
-        maven { url 'https://jitpack.io/' }
-    }
-    dependencies {
-        classpath('com.fox2code.FoxLoader:dev:1.3.0')
-    }
+		mavenCentral()
+		maven { url 'https://cdn.fox2code.com/maven' }
+		maven { url 'https://jitpack.io/' }
+	}
+	dependencies {
+		classpath('com.fox2code.FoxLoader:dev:1.3.0')
+	}
 }
 
 apply plugin: 'foxloader.dev'
@@ -14,10 +14,13 @@ apply plugin: 'foxloader.dev'
 version '0.0.1'
 
 foxloader {
-    modId = 'chlorojoules'
-    modName = 'ChloroJoules'
-    modVersion = project.version
-    modDesc = 'Flower power to the extreme!'
-    clientMod = 'io.github.chlorojoules.chlorojoules.CJClient'
-    serverMod = 'io.github.chlorojoules.chlorojoules.CJServer'
+	modId = 'chlorojoules'
+
+	modName = 'ChloroJoules'
+	modVersion = project.version
+	modDesc = 'Flower power to the extreme!'
+	modWebsite = 'https://chlorojoules.github.io/'
+
+	clientMod = 'io.github.chlorojoules.client.CJClient'
+	serverMod = 'io.github.chlorojoules.server.CJServer'
 }
