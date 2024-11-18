@@ -56,7 +56,10 @@ public class CJBlockMachineBase extends BlockContainer {
 		if(heldItem == null) return false;
 		if(heldItem.itemID != Item.bucketWater.itemID) return false;
 
-		CJTankVolume tankVolume = machineEntity.getPrimaryInputTank();
+		// TODO: Make this return different tanks depending on attempted fluid
+		//       Insertion.
+		int tankIndex = machineBuilder.getPrimaryInputTankIndex();
+		CJTankVolume tankVolume = machineEntity.tanks.get(tankIndex);
 
 		int waterID = Block.waterMoving.getBlockID();
 		if(tankVolume.fluidID == waterID || tankVolume.fluidID == 0) {

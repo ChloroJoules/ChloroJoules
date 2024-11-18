@@ -1,24 +1,25 @@
 # We need to provide some Vanilla names.
-tile.flowing_lava.name = Lava
-tile.flowing_water.name = Water
+tile.flowing_lava.name=Lava
+tile.flowing_water.name=Water
 
 # Machine messages.
-message.cj_no_power = Not enough CJ
-message.cj_no_jewel = No jewel inserted
-message.cj_bad_jewel = Bad jewel inserted
-message.cj_bad_recipe = No matching recipe
+message.cj_no_power=Not enough CJ
+message.cj_no_jewel=No jewel inserted
+message.cj_bad_jewel=Bad jewel inserted
+message.cj_bad_recipe=No matching recipe
+message.cj_resource=Insufficient resources
 
 # Blocks.
-tile.cj_bugblock.name = BugBlock
-tile.cj_liquefier.name = Liquefier
+tile.cj_bugblock.name=BugBlock
+tile.cj_liquefier.name=Liquefier
 
 # Inventories.
-inventory.cj_liquefier = Liquefier
+inventory.cj_liquefier=Liquefier
 
 # Items.
-item.cj_paste.name = Plant Paste
+item.cj_paste.name=Plant Paste
 
-item.cj_jewel_primal.name = Primal ChloroJewel
-item.cj_jewel_manufactured.name = Manufactured ChloroJewel
-item.cj_jewel_refined.name = Refined ChloroJewel
-item.cj_jewel_awakened.name = Awakened ChloroJewel
+item.cj_jewel_primal.name=Primal ChloroJewel
+item.cj_jewel_manufactured.name=Manufactured ChloroJewel
+item.cj_jewel_refined.name=Refined ChloroJewel
+item.cj_jewel_awakened.name=Awakened ChloroJewel

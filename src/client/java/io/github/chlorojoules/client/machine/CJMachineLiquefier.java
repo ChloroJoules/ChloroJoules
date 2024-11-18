@@ -14,13 +14,10 @@ public class CJMachineLiquefier implements CJIMachine {
 	public static final int INPUT_TANK = 0;
 	public static final int OUTPUT_TANK = 1;
 
-	private static final int BASE_OPERATION_COST = 10;
-	private static final int BASE_OPERATION_TIME = 50;
-
 	// TODO: Common counters like this should have a helper partial machine
 	//       Implementation.
 	private int ticksSinceOperation = 0;
-	private int operationTime = BASE_OPERATION_TIME;
+	private int operationTime = 1;
 
 	@Override
 	public void updateMachine(CJTileEntityMachineBase machineEntity) {
@@ -52,25 +49,21 @@ public class CJMachineLiquefier implements CJIMachine {
 		}
 
 		if(stack == null) return;
-		else {
-			// TODO: Machine recipe registry in client.
-			int itemID = Block.leaves.asRegisteredItem().getRegisteredItemId();
 
-			if(stack.itemID != itemID) {
-				machineEntity.errorMessage =
-						translate.translateKey("message.cj_bad_recipe");
+		CJMachineBuilder builder = machineEntity.machineBuilder;
+		CJMachineRecipe recipe =
+				builder.getMatchingRecipe(jewelRarity, machineEntity);
 
-				return;
-			}
-		}
+		if(recipe == null) return;
 
 		if(outputTank.current == outputTank.max) return;
 
-		operationTime = BASE_OPERATION_TIME / CJRarityInfo.getRarityTimeScale(
-				jewelRarity);
+		int timeScale = CJRarityInfo.getRarityTimeScale(jewelRarity);
+		operationTime = recipe.processTime / timeScale;
 
-		int cost = BASE_OPERATION_COST / CJRarityInfo.getRarityPowerScale(
-				jewelRarity);
+		int powerScale = CJRarityInfo.getRarityPowerScale(jewelRarity);
+		CJMachineRecipeComponent fuelComponent = recipe.getFuelComponent();
+		int cost = fuelComponent.count / powerScale;
 
 		boolean passive = false;
 		if(inputTank.current < cost) {

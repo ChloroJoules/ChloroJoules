@@ -3,9 +3,7 @@ package io.github.chlorojoules.client;
 import io.github.chlorojoules.CJInstance;
 
 import io.github.chlorojoules.client.gui.CJGuiGravity;
-import io.github.chlorojoules.client.machine.CJMachineBugBlock;
-import io.github.chlorojoules.client.machine.CJMachineBuilder;
-import io.github.chlorojoules.client.machine.CJMachineLiquefier;
+import io.github.chlorojoules.client.machine.*;
 import net.minecraft.src.game.block.Block;
 
 import com.fox2code.foxloader.loader.ClientMod;
@@ -52,9 +50,7 @@ public class CJClient extends CJInstance implements ClientMod {
 
 		liquefier = registerNewMachine("cj_liquefier", new CJMachineBuilder()
 				.setMachineName("cj_liquefier")
-				.addTankGravityVCenter(
-						CJGuiGravity.TOP_LEFT, 10, false, 4 * CJTank.BUCKET,
-						fuelFluid)
+				.addFuelTank()
 				.addTankGravityVCenter(
 						CJGuiGravity.TOP_RIGHT, 10, true, 8 * CJTank.BUCKET, 0)
 				.addSlotGravity(CJGuiGravity.CENTER, 0, 0, false)
@@ -69,6 +65,11 @@ public class CJClient extends CJInstance implements ClientMod {
 						 *       Between two elements.
 						 */
 						CJGuiGravity.CENTER, (SLOT_IN_WIDTH * 4) / 3)
+				.addRecipe(
+						10,
+						new CJMachineRecipeComponent(1, Block.leaves, 1),
+						new CJMachineRecipeComponent(0, Block.lavaMoving, 50),
+						50)
 				.setImpl(new CJMachineLiquefier()));
 
 		paste = registerNewItem("cj_paste", new ItemBuilder()

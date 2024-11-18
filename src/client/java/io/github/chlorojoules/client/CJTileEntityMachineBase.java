@@ -21,7 +21,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 
 	public String errorMessage = null;
 
-	private final CJMachineBuilder machineBuilder;
+	public final CJMachineBuilder machineBuilder;
 
 	public static CJTileEntityMachineBase machineEntity(
 			World world, int x, int y, int z) {
@@ -57,16 +57,6 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		 */
 	}
 
-	// TODO: Make this return different tanks depending on attempted fluid
-	//       Insertion.
-	public CJTankVolume getPrimaryInputTank() {
-		for(int i = 0; i < tanks.size(); i++) {
-			if(!machineBuilder.tanks.get(i).output) return tanks.get(i);
-		}
-
-		return null;
-	}
-
 	@Override
 	public void updateEntity() {
 		machineBuilder.machineImpl.updateMachine(this);
@@ -79,6 +69,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		tagCompound.setInteger("y", this.yCoord);
 		tagCompound.setInteger("z", this.zCoord);
 
+		/*
 		// Serialize slots.
 		NBTTagList itemsList = new NBTTagList();
 		for(int i = 0; i < stacks.size(); i++) {
@@ -118,7 +109,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 			machineBuilder.machineImpl.progressToNBT(this, i, progressBarTag);
 			progressBarList.setTag(progressBarTag);
 		}
-		tagCompound.setTag("Progresses", itemsList);
+		tagCompound.setTag("Progresses", itemsList);*/
 	}
 
 	@Override
@@ -127,6 +118,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		yCoord = tagCompound.getInteger("y");
 		zCoord = tagCompound.getInteger("z");
 
+		/*
 		// Deserialize slots.
 		NBTTagList itemsList = tagCompound.getTagList("Items");
 		// TODO: Are tag lists always unordered? Is there a way we can
@@ -161,7 +153,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 
 			machineBuilder.machineImpl.progressFromNBT(
 					this, progressBarIndex, progressBarTag);
-		}
+		}*/
 	}
 
 	@Override

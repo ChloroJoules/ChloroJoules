@@ -59,4 +59,8 @@ public class CJRarityInfo {
 
 		return -1;
 	}
+
+	public static boolean raritySufficient(CJRarity test, CJRarity required) {
+		return test.compareTo(required) >= 0;
+	}
 }
