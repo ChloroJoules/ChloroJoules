@@ -11,6 +11,8 @@ import net.minecraft.src.game.entity.player.InventoryPlayer;
 import net.minecraft.src.game.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
+import static io.github.chlorojoules.client.CJGuiMachineBaseLayout.*;
+
 // TODO: Ghosts in the class here? Extracting this to its own `.java` file
 //		 Causes symbol resolution to fail at compile time.
 class CJSlotMachineBase extends Slot {
@@ -53,57 +55,6 @@ public class CJGuiMachineBase extends GuiContainer {
 	public static final int MACHINE_TEXT = 4210752;
 	public static final int MACHINE_ERROR = Block.COLOR_RED;
 	public static final int TOOLTIP_BACKGROUND = -1073741824;
-
-	// Game slot hitbox size.
-	private static final int SLOT_WIDTH = 16;
-	private static final int SLOT_HEIGHT = 16;
-
-	// NOTE: Positional information from `resources/cj_machinebase.xcf` image
-	// Source split by layer.
-	private static final int PROGRESS_FULL_X = 176;
-	private static final int PROGRESS_FULL_Y = 0;
-
-	private static final int PROGRESS_EMPTY_X = 176;
-	private static final int PROGRESS_EMPTY_Y = 17;
-
-	private static final int PROGRESS_WIDTH = 24;
-	private static final int PROGRESS_HEIGHT = 17;
-
-	private static final int SLOT_IN_X = 176;
-	private static final int SLOT_IN_Y = 34;
-
-	private static final int SLOT_IN_WIDTH = 18;
-	private static final int SLOT_IN_HEIGHT = 18;
-
-	private static final int SLOT_IN_OFFSET_X =
-			(SLOT_IN_WIDTH - SLOT_WIDTH) / 2;
-
-	private static final int SLOT_IN_OFFSET_Y =
-			(SLOT_IN_HEIGHT - SLOT_HEIGHT) / 2;
-
-	private static final int SLOT_OUT_X = 176;
-	private static final int SLOT_OUT_Y = 52;
-
-	private static final int SLOT_OUT_WIDTH = 26;
-	private static final int SLOT_OUT_HEIGHT = 26;
-
-	private static final int SLOT_OUT_OFFSET_X =
-			(SLOT_OUT_WIDTH - SLOT_WIDTH) / 2;
-
-	private static final int SLOT_OUT_OFFSET_Y =
-			(SLOT_OUT_HEIGHT - SLOT_HEIGHT) / 2;
-
-	private static final int FLUID_FULL_X = 176;
-	private static final int FLUID_FULL_Y = 78;
-
-	private static final int FLUID_EMPTY_X = 188;
-	private static final int FLUID_EMPTY_Y = 78;
-
-	private static final int FLUID_WIDTH = 12;
-	private static final int FLUID_HEIGHT = 53;
-
-	private static final int FLUID_OFFSET_X = 1;
-	private static final int FLUID_OFFSET_Y = 1;
 
 	private final CJTileEntityMachineBase machineEntity;
 	private final CJMachineBuilder machineBuilder;
@@ -186,9 +137,6 @@ public class CJGuiMachineBase extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer() {
-		CJContainerMachineBase machine =
-				(CJContainerMachineBase) inventorySlots;
-
 		StringTranslate translate = StringTranslate.getInstance();
 
 		// TODO: Source name from container/block.
@@ -208,7 +156,7 @@ public class CJGuiMachineBase extends GuiContainer {
 			fontRenderer.drawString(
 					errorMessage,
 					xSize / 2 - fontRenderer.getStringWidth(errorMessage) / 2,
-					10,
+					14,
 					MACHINE_ERROR);
 		}
 

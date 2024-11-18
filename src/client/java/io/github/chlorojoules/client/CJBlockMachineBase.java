@@ -6,8 +6,13 @@ import net.minecraft.src.game.block.BlockContainer;
 import net.minecraft.src.game.block.Material;
 import net.minecraft.src.game.block.tileentity.TileEntity;
 import net.minecraft.src.game.entity.player.EntityPlayer;
+import net.minecraft.src.game.entity.player.InventoryPlayer;
 import net.minecraft.src.game.item.EnumTools;
+import net.minecraft.src.game.item.Item;
+import net.minecraft.src.game.item.ItemStack;
 import net.minecraft.src.game.level.World;
+
+import java.util.logging.Logger;
 
 import static io.github.chlorojoules.client.CJTileEntityMachineBase.machineEntity;
 
@@ -35,17 +40,53 @@ public class CJBlockMachineBase extends BlockContainer {
 	allocateTextures
 	 */
 
-	@Override
-	public boolean blockActivated(
+	private boolean tryFillBucket(
 			World world, int x, int y, int z, EntityPlayer player) {
+
+		CJTileEntityMachineBase machineEntity = machineEntity(world, x, y, z);
 
 		// TODO: If held item is a bucket which contains a fluid accepted by
 		//		 A `CJTank` of this machine -- fill that tank and empty the
 		//		 Bucket. If the bucket is empty -- fill from an available
 		//		 Output tank.
-		CJTileEntityMachineBase machine = machineEntity(world, x, y, z);
+		// TODO: When we autogenerate fluid buckets we will probably need to
+		//       Append Vanilla ones.
+		ItemStack heldItem = player.inventory.getCurrentItem();
+
+		if(heldItem == null) return false;
+		if(heldItem.itemID != Item.bucketWater.itemID) return false;
+
+		CJTankVolume tankVolume = machineEntity.getPrimaryInputTank();
+
+		int waterID = Block.waterMoving.getBlockID();
+		if(tankVolume.fluidID == waterID || tankVolume.fluidID == 0) {
+			int filled = tankVolume.addFluid(waterID, CJTank.BUCKET, true);
+			if(filled == CJTank.BUCKET) {
+				InventoryPlayer inventory = player.inventory;
+				ItemStack stack =
+						inventory.mainInventory[inventory.currentItem];
+
+				stack.itemID = Item.bucketEmpty.itemID;
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean blockActivated(
+			World world, int x, int y, int z, EntityPlayer player) {
+
+		CJTileEntityMachineBase machineEntity = machineEntity(world, x, y, z);
+
+		if(tryFillBucket(world, x, y, z, player)) {
+			// TODO: Sound effect.
+			return true;
+		}
+
 		CJGuiMachineBase gui = new CJGuiMachineBase(
-				player.inventory, machine, machineBuilder);
+				player.inventory, machineEntity, machineBuilder);
 
 		Minecraft.theMinecraft.displayGuiScreen(gui);
 

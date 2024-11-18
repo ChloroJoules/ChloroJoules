@@ -10,6 +10,8 @@ import com.fox2code.foxloader.loader.ClientMod;
 import com.fox2code.foxloader.registry.*;
 import net.minecraft.src.game.item.Item;
 
+import static io.github.chlorojoules.client.CJGuiMachineBaseLayout.FLUID_HEIGHT;
+import static io.github.chlorojoules.client.CJGuiMachineBaseLayout.WORKING_HEIGHT;
 import static io.github.chlorojoules.client.CJRarityInfo.*;
 
 public class CJClient extends CJInstance implements ClientMod {
@@ -42,17 +44,22 @@ public class CJClient extends CJInstance implements ClientMod {
 		bugBlock = registerNewMachine("cj_bugblock", new CJMachineBuilder()
 				.setMachineName("cj_bugblock")
 				.setRarity(CJRarity.AWAKENED)
-				.addTank(15, 10, false, 4 * CJTank.BUCKET, 0)
+				.addTank(15, 15, false, 4 * CJTank.BUCKET, 0)
 				.addSlot(50, 35, false)
 				.addSlot(75, 35, true)
 				.setImpl(new CJMachineBugBlock()));
 
 		liquefier = registerNewMachine("cj_liquefier", new CJMachineBuilder()
 				.setMachineName("cj_liquefier")
-				.addTank(15, 10, false, 4 * CJTank.BUCKET, fuelFluid)
-				.addTank(100, 10, true, 8 * CJTank.BUCKET, 0)
-				.addSlot(65, 35, false)
-				.addSlot(35, 40, false)
+				.addTankGravityVCentre(
+						CJGuiGravity.TOP_LEFT, 10, false, 4 * CJTank.BUCKET, fuelFluid)
+				.addTankGravityVCentre(
+						CJGuiGravity.TOP_RIGHT, 10, true, 8 * CJTank.BUCKET, 0)
+				.addSlotCentre(false)
+				.addSlotGravity(
+						CJGuiGravity.BOTTOM_LEFT, 35,
+						/* Align bottom of Jewel slot with input tank. */
+						(WORKING_HEIGHT - FLUID_HEIGHT) / 2, false)
 				.setImpl(new CJMachineLiquefier()));
 
 		paste = registerNewItem("cj_paste", new ItemBuilder()

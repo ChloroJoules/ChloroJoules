@@ -25,6 +25,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	public static CJTileEntityMachineBase machineEntity(
 			World world, int x, int y, int z) {
 
+		// TODO: Should we cache this?
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
 		return (CJTileEntityMachineBase) tileEntity;
@@ -53,6 +54,16 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 			entity.item.setTagCompound(stack.getTagCompound());
 		}
 		 */
+	}
+
+	// TODO: Make this return different tanks depending on attempted fluid
+	//       Insertion.
+	public CJTankVolume getPrimaryInputTank() {
+		for(int i = 0; i < tanks.size(); i++) {
+			if(!machineBuilder.tanks.get(i).output) return tanks.get(i);
+		}
+
+		return null;
 	}
 
 	@Override

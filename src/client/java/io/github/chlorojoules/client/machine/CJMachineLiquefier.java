@@ -40,6 +40,16 @@ public class CJMachineLiquefier implements CJIMachine {
 			return;
 		}
 
+		CJRarity jewelRarity = CJRarityInfo.getJewelRarity(jewel.itemID);
+
+		// TODO: Make Jewel slot visually distinct and reject non-Jewel items.
+		if(jewelRarity == CJRarity.INVALID) {
+			machineEntity.errorMessage =
+					translate.translateKey("message.cj_bad_jewel");
+
+			return;
+		}
+
 		if(stack == null) return;
 		else {
 			// TODO: Machine recipe registry in client.
@@ -51,16 +61,6 @@ public class CJMachineLiquefier implements CJIMachine {
 
 				return;
 			}
-		}
-
-		CJRarity jewelRarity = CJRarityInfo.getJewelRarity(jewel.itemID);
-
-		// TODO: Make Jewel slot visually distinct and reject non-Jewel items.
-		if(jewelRarity == CJRarity.INVALID) {
-			machineEntity.errorMessage =
-					translate.translateKey("message.cj_bad_jewel");
-
-			return;
 		}
 
 		if(outputTank.current == outputTank.max) return;
@@ -79,7 +79,7 @@ public class CJMachineLiquefier implements CJIMachine {
 			}
 			else {
 				machineEntity.errorMessage =
-						translate.translateKey("message.cj_power");
+						translate.translateKey("message.cj_no_power");
 
 				return;
 			}
@@ -90,7 +90,7 @@ public class CJMachineLiquefier implements CJIMachine {
 		if(!passive) {
 			if(inputTank.removeFluid(0, cost, true) != cost) {
 				machineEntity.errorMessage =
-						translate.translateKey("message.cj_power");
+						translate.translateKey("message.cj_no_power");
 
 				return;
 			}
