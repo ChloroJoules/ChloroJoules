@@ -12,8 +12,8 @@ public class CJTank {
 	public static final int BUCKET = 1000;
 
 	// Display position.
-	int xDisplayPosition;
-	int yDisplayPosition;
+	public int xDisplayPosition;
+	public int yDisplayPosition;
 
 	// Whether tank is an output.
 	public boolean output = false;

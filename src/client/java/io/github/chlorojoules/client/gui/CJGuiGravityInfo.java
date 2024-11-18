@@ -1,6 +1,6 @@
-package io.github.chlorojoules.client;
+package io.github.chlorojoules.client.gui;
 
-import static io.github.chlorojoules.client.CJGuiMachineBaseLayout.*;
+import static io.github.chlorojoules.client.gui.CJGuiMachineBaseLayout.*;
 
 public class CJGuiGravityInfo {
 	private static int getAnchoredX(CJGuiGravity anchor, int x, int width) {

@@ -1,5 +1,6 @@
-package io.github.chlorojoules.client;
+package io.github.chlorojoules.client.machine;
 
+import io.github.chlorojoules.client.CJTileEntityMachineBase;
 import net.minecraft.src.game.nbt.NBTTagCompound;
 
 public interface CJIMachine {

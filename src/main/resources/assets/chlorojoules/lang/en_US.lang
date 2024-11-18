@@ -6,6 +6,7 @@ tile.flowing_water.name = Water
 message.cj_no_power = Not enough CJ
 message.cj_no_jewel = No jewel inserted
 message.cj_bad_jewel = Bad jewel inserted
+message.cj_bad_recipe = No matching recipe
 
 # Blocks.
 tile.cj_bugblock.name = BugBlock

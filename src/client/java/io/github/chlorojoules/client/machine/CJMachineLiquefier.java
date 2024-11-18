@@ -1,10 +1,9 @@
 package io.github.chlorojoules.client.machine;
 
-import io.github.chlorojoules.CJInstance;
 import io.github.chlorojoules.client.*;
+import io.github.chlorojoules.client.gui.CJGuiMachineBaseLayout;
 import net.minecraft.src.client.gui.StringTranslate;
 import net.minecraft.src.game.block.Block;
-import net.minecraft.src.game.item.Item;
 import net.minecraft.src.game.item.ItemStack;
 import net.minecraft.src.game.nbt.NBTTagCompound;
 

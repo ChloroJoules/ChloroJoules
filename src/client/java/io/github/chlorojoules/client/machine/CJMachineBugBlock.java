@@ -1,14 +1,11 @@
 package io.github.chlorojoules.client.machine;
 
-import io.github.chlorojoules.client.CJIMachine;
 import io.github.chlorojoules.client.CJTankVolume;
 import io.github.chlorojoules.client.CJTileEntityMachineBase;
 import net.minecraft.src.game.block.Block;
 import net.minecraft.src.game.item.Item;
 import net.minecraft.src.game.item.ItemStack;
 import net.minecraft.src.game.nbt.NBTTagCompound;
-
-import java.util.logging.Logger;
 
 public class CJMachineBugBlock implements CJIMachine {
 	public static final int INPUT_SLOT = 0;

@@ -1,9 +1,9 @@
 package io.github.chlorojoules.client;
 
+import io.github.chlorojoules.client.machine.CJMachineBuilder;
 import net.minecraft.src.client.inventory.IInventory;
 import net.minecraft.src.game.block.tileentity.TileEntity;
 import net.minecraft.src.game.entity.player.EntityPlayer;
-import net.minecraft.src.game.item.Item;
 import net.minecraft.src.game.item.ItemStack;
 import net.minecraft.src.game.level.World;
 import net.minecraft.src.game.nbt.NBTTagCompound;

@@ -1,22 +1,15 @@
-package io.github.chlorojoules.client;
+package io.github.chlorojoules.client.machine;
+
+import io.github.chlorojoules.client.CJRarity;
+import io.github.chlorojoules.client.CJTank;
+import io.github.chlorojoules.client.CJTankVolume;
+import io.github.chlorojoules.client.gui.CJGuiElement;
+import io.github.chlorojoules.client.gui.CJGuiGravity;
+import io.github.chlorojoules.client.gui.CJGuiGravityInfo;
 
 import java.util.ArrayList;
 
-import static io.github.chlorojoules.client.CJGuiMachineBaseLayout.*;
-import static io.github.chlorojoules.client.CJGuiGravity.*;
-import static io.github.chlorojoules.client.CJGuiGravityInfo.*;
-
-class CJMachineSlotInfo {
-	public int x;
-	public int y;
-	public boolean output;
-
-	public CJMachineSlotInfo(int x, int y, boolean output) {
-		this.x = x;
-		this.y = y;
-		this.output = output;
-	}
-}
+import static io.github.chlorojoules.client.gui.CJGuiGravity.*;
 
 public class CJMachineBuilder {
 	public String name = null;

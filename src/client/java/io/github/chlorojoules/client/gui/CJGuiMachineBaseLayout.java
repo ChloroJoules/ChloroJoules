@@ -1,4 +1,4 @@
-package io.github.chlorojoules.client;
+package io.github.chlorojoules.client.gui;
 
 public class CJGuiMachineBaseLayout {
 	// Game slot hitbox size.

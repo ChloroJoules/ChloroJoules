@@ -1,55 +1,15 @@
-package io.github.chlorojoules.client;
+package io.github.chlorojoules.client.gui;
 
+import io.github.chlorojoules.client.*;
+import io.github.chlorojoules.client.machine.CJMachineBuilder;
 import net.minecraft.src.client.gui.GuiContainer;
-import net.minecraft.src.client.gui.Slot;
 import net.minecraft.src.client.gui.StringTranslate;
-import net.minecraft.src.client.inventory.IInventory;
 import net.minecraft.src.game.block.Block;
-import net.minecraft.src.game.entity.player.EntityPlayer;
 import net.minecraft.src.game.entity.player.InventoryPlayer;
 
-import net.minecraft.src.game.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
-import static io.github.chlorojoules.client.CJGuiMachineBaseLayout.*;
-
-// TODO: Ghosts in the class here? Extracting this to its own `.java` file
-//		 Causes symbol resolution to fail at compile time.
-class CJSlotMachineBase extends Slot {
-	private final EntityPlayer entityPlayer;
-
-	private boolean output = false;
-
-	public CJSlotMachineBase(
-			EntityPlayer entityPlayer, IInventory inventory,
-			int index, int x, int y) {
-
-		super(inventory, index, x, y);
-
-		this.entityPlayer = entityPlayer;
-	}
-
-	@Override
-	public boolean isItemValid(ItemStack item) {
-		return !output;
-	}
-
-	@Override
-	public void onPickupFromSlot(ItemStack item) {
-		// TODO: This currently fires for inventory pickup aswell.
-		//item.onCrafting(entityPlayer.worldObj, entityPlayer);
-		super.onPickupFromSlot(item);
-	}
-
-	CJSlotMachineBase setOutput(boolean value) {
-		output = value;
-		return this;
-	}
-
-	boolean isOutput() {
-		return output;
-	}
-}
+import static io.github.chlorojoules.client.gui.CJGuiMachineBaseLayout.*;
 
 public class CJGuiMachineBase extends GuiContainer {
 	public static final int MACHINE_TEXT = 4210752;
@@ -181,11 +141,11 @@ public class CJGuiMachineBase extends GuiContainer {
 		drawTexturedModalRect(baseX, baseY, 0, 0, xSize, ySize);
 
 		// Draw slots.
-		CJSlotMachineBase slot;
+		CJGuiMachineBaseSlot slot;
 		int slotX;
 		int slotY;
 		for(int i = 0; i < machine.slots.size(); i++) {
-			slot = (CJSlotMachineBase) machine.slots.get(i);
+			slot = (CJGuiMachineBaseSlot) machine.slots.get(i);
 			slotX = baseX + slot.xDisplayPosition;
 			slotY = baseY + slot.yDisplayPosition;
 

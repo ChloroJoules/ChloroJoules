@@ -1,5 +1,7 @@
 package io.github.chlorojoules.client;
 
+import io.github.chlorojoules.client.gui.CJGuiMachineBase;
+import io.github.chlorojoules.client.machine.CJMachineBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.game.block.Block;
 import net.minecraft.src.game.block.BlockContainer;
@@ -11,8 +13,6 @@ import net.minecraft.src.game.item.EnumTools;
 import net.minecraft.src.game.item.Item;
 import net.minecraft.src.game.item.ItemStack;
 import net.minecraft.src.game.level.World;
-
-import java.util.logging.Logger;
 
 import static io.github.chlorojoules.client.CJTileEntityMachineBase.machineEntity;
 

@@ -2,16 +2,17 @@ package io.github.chlorojoules.client;
 
 import io.github.chlorojoules.CJInstance;
 
+import io.github.chlorojoules.client.gui.CJGuiGravity;
 import io.github.chlorojoules.client.machine.CJMachineBugBlock;
+import io.github.chlorojoules.client.machine.CJMachineBuilder;
 import io.github.chlorojoules.client.machine.CJMachineLiquefier;
-import io.github.chlorojoules.client.mixins.CJMixinTileEntity;
 import net.minecraft.src.game.block.Block;
 
 import com.fox2code.foxloader.loader.ClientMod;
 import com.fox2code.foxloader.registry.*;
 import net.minecraft.src.game.item.Item;
 
-import static io.github.chlorojoules.client.CJGuiMachineBaseLayout.*;
+import static io.github.chlorojoules.client.gui.CJGuiMachineBaseLayout.*;
 import static io.github.chlorojoules.client.CJRarityInfo.*;
 
 public class CJClient extends CJInstance implements ClientMod {

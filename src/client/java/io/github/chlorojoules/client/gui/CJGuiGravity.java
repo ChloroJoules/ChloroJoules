@@ -1,4 +1,4 @@
-package io.github.chlorojoules.client;
+package io.github.chlorojoules.client.gui;
 
 public enum CJGuiGravity {
 	TOP_LEFT,

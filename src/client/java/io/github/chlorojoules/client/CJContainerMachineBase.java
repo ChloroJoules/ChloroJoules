@@ -1,5 +1,8 @@
 package io.github.chlorojoules.client;
 
+import io.github.chlorojoules.client.gui.CJGuiMachineBaseSlot;
+import io.github.chlorojoules.client.machine.CJMachineBuilder;
+import io.github.chlorojoules.client.machine.CJMachineSlotInfo;
 import net.minecraft.src.client.gui.Container;
 import net.minecraft.src.game.entity.player.EntityPlayer;
 import net.minecraft.src.game.entity.player.InventoryPlayer;
@@ -22,14 +25,14 @@ public class CJContainerMachineBase extends Container {
 		// TODO: Can we de-magic this a little bit?
 		for(int row = 0; row < 3; row++) {
 			for(int column = 0; column < 9; column++) {
-				addSlot(new CJSlotMachineBase(
+				addSlot(new CJGuiMachineBaseSlot(
 						player, inventory, column + (row * 9) + 9,
 						8 + (column * 18), 84 + (row * 18)));
 			}
 		}
 
 		for(int i = 0; i < 9; i++) {
-			addSlot(new CJSlotMachineBase(
+			addSlot(new CJGuiMachineBaseSlot(
 					player, inventory, i, 8 + i * 18, 142));
 		}
 	}
@@ -46,7 +49,7 @@ public class CJContainerMachineBase extends Container {
 		for(int i = 0; i < machineBuilder.slots.size(); i++) {
 			CJMachineSlotInfo info = machineBuilder.slots.get(i);
 
-			CJSlotMachineBase slot = new CJSlotMachineBase(
+			CJGuiMachineBaseSlot slot = new CJGuiMachineBaseSlot(
 					player, machineEntity, i, info.x, info.y);
 
 			slot.setOutput(info.output);
