@@ -20,6 +20,7 @@ public class CJMachineLiquefier implements CJIMachine {
 	// TODO: Common counters like this should have a helper partial machine
 	//       Implementation.
 	private int ticksSinceOperation = 0;
+	private int operationTime = BASE_OPERATION_TIME;
 
 	@Override
 	public void updateMachine(CJTileEntityMachineBase machineEntity) {
@@ -65,7 +66,7 @@ public class CJMachineLiquefier implements CJIMachine {
 
 		if(outputTank.current == outputTank.max) return;
 
-		int opTime = BASE_OPERATION_TIME / CJRarityInfo.getRarityTimeScale(
+		operationTime = BASE_OPERATION_TIME / CJRarityInfo.getRarityTimeScale(
 				jewelRarity);
 
 		int cost = BASE_OPERATION_COST / CJRarityInfo.getRarityPowerScale(
@@ -74,7 +75,7 @@ public class CJMachineLiquefier implements CJIMachine {
 		boolean passive = false;
 		if(inputTank.current < cost) {
 			if(jewelRarity == CJRarity.PRIMAL) {
-				opTime *= 2;
+				operationTime *= 2;
 				passive = true;
 			}
 			else {
@@ -85,7 +86,7 @@ public class CJMachineLiquefier implements CJIMachine {
 			}
 		}
 
-		if(ticksSinceOperation++ < opTime) return;
+		if(ticksSinceOperation++ < operationTime) return;
 
 		if(!passive) {
 			if(inputTank.removeFluid(0, cost, true) != cost) {
@@ -102,5 +103,12 @@ public class CJMachineLiquefier implements CJIMachine {
 		outputTank.addFluid(Block.lavaMoving.getBlockID(), 50, false);
 
 		ticksSinceOperation = 0;
+	}
+
+	@Override
+	public int getProgress(CJTileEntityMachineBase machineEntity, int index) {
+		int maxWidth = CJGuiMachineBaseLayout.PROGRESS_WIDTH;
+
+		return (ticksSinceOperation * maxWidth) / operationTime;
 	}
 }

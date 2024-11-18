@@ -3,6 +3,8 @@ package io.github.chlorojoules.client;
 import java.util.ArrayList;
 
 import static io.github.chlorojoules.client.CJGuiMachineBaseLayout.*;
+import static io.github.chlorojoules.client.CJGuiGravity.*;
+import static io.github.chlorojoules.client.CJGuiGravityInfo.*;
 
 class CJMachineSlotInfo {
 	public int x;
@@ -24,6 +26,7 @@ public class CJMachineBuilder {
 	public ArrayList<CJMachineSlotInfo> slots = new ArrayList<>();
 	public ArrayList<CJTank> tanks = new ArrayList<>();
 	public ArrayList<CJTankVolume> tankVolumes = new ArrayList<>();
+	public ArrayList<CJGuiElement> progressBars = new ArrayList<>();
 
 	public CJMachineBuilder setMachineName(String value) {
 		name = value;
@@ -45,43 +48,26 @@ public class CJMachineBuilder {
 	// TODO: Helper for ChloroJewel slots.
 	public CJMachineBuilder addSlot(int x, int y, boolean output) {
 		slots.add(new CJMachineSlotInfo(x, y, output));
+
 		return this;
 	}
 
 	public CJMachineBuilder addSlotGravity(
 			CJGuiGravity anchor, int x, int y, boolean output) {
 
-		slots.add(new CJMachineSlotInfo(
+		return addSlot(
 				CJGuiGravityInfo.getSlotAnchoredX(anchor, x, output),
 				CJGuiGravityInfo.getSlotAnchoredY(anchor, y, output),
-				output));
-
-		return this;
+				output);
 	}
 
-	public CJMachineBuilder addSlotGravityVCentre(
+	public CJMachineBuilder addSlotGravityVCenter(
 			CJGuiGravity anchor, int x, boolean output) {
 
-		int slotHeight = output ? SLOT_OUT_HEIGHT : SLOT_IN_HEIGHT;
-
-		slots.add(new CJMachineSlotInfo(
+		return addSlot(
 				CJGuiGravityInfo.getSlotAnchoredX(anchor, x, output),
-				(WORKING_HEIGHT - slotHeight) / 2,
-				output));
-
-		return this;
-	}
-
-	public CJMachineBuilder addSlotCentre(boolean output) {
-		int slotWidth = output ? SLOT_OUT_WIDTH : SLOT_IN_WIDTH;
-		int slotHeight = output ? SLOT_OUT_HEIGHT : SLOT_IN_HEIGHT;
-
-		slots.add(new CJMachineSlotInfo(
-				(WORKING_WIDTH - slotWidth) / 2,
-				(WORKING_HEIGHT - slotHeight) / 2,
-				output));
-
-		return this;
+				CJGuiGravityInfo.getSlotAnchoredY(CENTER, 0, output),
+				output);
 	}
 
 	// TODO: Add helper for adding specifically fuel tanks.
@@ -107,23 +93,41 @@ public class CJMachineBuilder {
 			CJGuiGravity anchor, int x, int y, boolean output, int max,
 			int lockFluid) {
 
-		addTank(
+		return addTank(
 				CJGuiGravityInfo.getTankAnchoredX(anchor, x),
 				CJGuiGravityInfo.getTankAnchoredY(anchor, y),
 				output, max, lockFluid);
+	}
+
+	public CJMachineBuilder addTankGravityVCenter(
+			CJGuiGravity anchor, int x, boolean output, int max,
+			int lockFluid) {
+
+		return addTank(
+				CJGuiGravityInfo.getTankAnchoredX(anchor, x),
+				CJGuiGravityInfo.getTankAnchoredY(CENTER, 0),
+				output, max, lockFluid);
+	}
+
+	public CJMachineBuilder addProgressBar(int x, int y) {
+		progressBars.add(new CJGuiElement(x, y));
 
 		return this;
 	}
 
-	public CJMachineBuilder addTankGravityVCentre(
-			CJGuiGravity anchor, int x, boolean output, int max,
-			int lockFluid) {
+	public CJMachineBuilder addProgressBarGravity(
+			CJGuiGravity anchor, int x, int y) {
 
-		addTank(
-				CJGuiGravityInfo.getTankAnchoredX(anchor, x),
-				(WORKING_HEIGHT - FLUID_HEIGHT) / 2,
-				output, max, lockFluid);
+		return addProgressBar(
+				CJGuiGravityInfo.getProgressBarAnchoredX(anchor, x),
+				CJGuiGravityInfo.getProgressBarAnchoredY(anchor, y));
+	}
 
-		return this;
+	public CJMachineBuilder addProgressBarGravityVCenter(
+			CJGuiGravity anchor, int x) {
+
+		return addProgressBar(
+				CJGuiGravityInfo.getProgressBarAnchoredX(anchor, x),
+				CJGuiGravityInfo.getProgressBarAnchoredY(CENTER, 0));
 	}
 }

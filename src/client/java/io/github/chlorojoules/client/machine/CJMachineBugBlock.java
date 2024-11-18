@@ -49,4 +49,9 @@ public class CJMachineBugBlock implements CJIMachine {
 			}
 		}
 	}
+
+	@Override
+	public int getProgress(CJTileEntityMachineBase machineEntity, int index) {
+		return 0;
+	}
 }

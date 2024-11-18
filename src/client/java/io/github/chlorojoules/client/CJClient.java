@@ -10,8 +10,7 @@ import com.fox2code.foxloader.loader.ClientMod;
 import com.fox2code.foxloader.registry.*;
 import net.minecraft.src.game.item.Item;
 
-import static io.github.chlorojoules.client.CJGuiMachineBaseLayout.FLUID_HEIGHT;
-import static io.github.chlorojoules.client.CJGuiMachineBaseLayout.WORKING_HEIGHT;
+import static io.github.chlorojoules.client.CJGuiMachineBaseLayout.*;
 import static io.github.chlorojoules.client.CJRarityInfo.*;
 
 public class CJClient extends CJInstance implements ClientMod {
@@ -51,15 +50,22 @@ public class CJClient extends CJInstance implements ClientMod {
 
 		liquefier = registerNewMachine("cj_liquefier", new CJMachineBuilder()
 				.setMachineName("cj_liquefier")
-				.addTankGravityVCentre(
-						CJGuiGravity.TOP_LEFT, 10, false, 4 * CJTank.BUCKET, fuelFluid)
-				.addTankGravityVCentre(
+				.addTankGravityVCenter(
+						CJGuiGravity.TOP_LEFT, 10, false, 4 * CJTank.BUCKET,
+						fuelFluid)
+				.addTankGravityVCenter(
 						CJGuiGravity.TOP_RIGHT, 10, true, 8 * CJTank.BUCKET, 0)
-				.addSlotCentre(false)
+				.addSlotGravity(CJGuiGravity.CENTER, 0, 0, false)
 				.addSlotGravity(
 						CJGuiGravity.BOTTOM_LEFT, 35,
 						/* Align bottom of Jewel slot with input tank. */
 						(WORKING_HEIGHT - FLUID_HEIGHT) / 2, false)
+				.addProgressBarGravityVCenter(
+						/*
+						 * TODO: Find a better way to center progress bars
+						 *       Between two elements.
+						 */
+						CJGuiGravity.CENTER, (SLOT_IN_WIDTH * 4) / 3)
 				.setImpl(new CJMachineLiquefier()));
 
 		paste = registerNewItem("cj_paste", new ItemBuilder()

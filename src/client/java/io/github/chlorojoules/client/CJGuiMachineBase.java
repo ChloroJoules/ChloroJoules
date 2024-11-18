@@ -254,7 +254,27 @@ public class CJGuiMachineBase extends GuiContainer {
 					FLUID_WIDTH, tankEmptyDrawHeight);
 		}
 
-		// TODO: Draw tanks as filling with fluid texture rather than just a
-		//  	 Green bar.
+		// Draw progress bars.
+		CJGuiElement element;
+		int elementX;
+		int elementY;
+		for(int i = 0; i < machineBuilder.progressBars.size(); i++) {
+			element = machineBuilder.progressBars.get(i);
+			elementX = baseX + element.xDisplayPosition;
+			elementY = baseY + element.yDisplayPosition;
+
+			drawTexturedModalRect(
+					elementX, elementY,
+					PROGRESS_EMPTY_X, PROGRESS_EMPTY_Y,
+					PROGRESS_WIDTH, PROGRESS_HEIGHT);
+
+			int width = machineBuilder.machineImpl.getProgress(
+					machineEntity, i);
+
+			drawTexturedModalRect(
+					elementX, elementY,
+					PROGRESS_FULL_X, PROGRESS_FULL_Y,
+					width, PROGRESS_HEIGHT);
+		}
 	}
 }
