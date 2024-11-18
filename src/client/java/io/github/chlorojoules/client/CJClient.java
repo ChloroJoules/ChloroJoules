@@ -4,6 +4,7 @@ import io.github.chlorojoules.CJInstance;
 
 import io.github.chlorojoules.client.machine.CJMachineBugBlock;
 import io.github.chlorojoules.client.machine.CJMachineLiquefier;
+import io.github.chlorojoules.client.mixins.CJMixinTileEntity;
 import net.minecraft.src.game.block.Block;
 
 import com.fox2code.foxloader.loader.ClientMod;
@@ -56,6 +57,7 @@ public class CJClient extends CJInstance implements ClientMod {
 				.addTankGravityVCenter(
 						CJGuiGravity.TOP_RIGHT, 10, true, 8 * CJTank.BUCKET, 0)
 				.addSlotGravity(CJGuiGravity.CENTER, 0, 0, false)
+				/* TODO: Make Jewel slot maximum stack size 1. */
 				.addSlotGravity(
 						CJGuiGravity.BOTTOM_LEFT, 35,
 						/* Align bottom of Jewel slot with input tank. */

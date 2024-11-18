@@ -6,6 +6,7 @@ import net.minecraft.src.client.gui.StringTranslate;
 import net.minecraft.src.game.block.Block;
 import net.minecraft.src.game.item.Item;
 import net.minecraft.src.game.item.ItemStack;
+import net.minecraft.src.game.nbt.NBTTagCompound;
 
 public class CJMachineLiquefier implements CJIMachine {
 	public static final int INPUT_SLOT = 0;
@@ -110,5 +111,21 @@ public class CJMachineLiquefier implements CJIMachine {
 		int maxWidth = CJGuiMachineBaseLayout.PROGRESS_WIDTH;
 
 		return (ticksSinceOperation * maxWidth) / operationTime;
+	}
+
+	@Override
+	public void progressToNBT(
+			CJTileEntityMachineBase machineEntity, int index,
+			NBTTagCompound progressBarsTag) {
+
+		progressBarsTag.setShort("Ticks", (short) ticksSinceOperation);
+	}
+
+	@Override
+	public void progressFromNBT(
+			CJTileEntityMachineBase machineEntity, int index,
+			NBTTagCompound progressBarsTag) {
+
+		ticksSinceOperation = progressBarsTag.getShort("Ticks");
 	}
 }
