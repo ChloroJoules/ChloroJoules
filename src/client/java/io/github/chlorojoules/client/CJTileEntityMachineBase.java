@@ -21,6 +21,11 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 
 	public String errorMessage = null;
 
+	public boolean isPassive = false;
+	public int operationTicks = 0;
+	public int operationLength = 1;
+	public CJRarity jewelRarity = CJRarity.MANUFACTURED;
+
 	public final CJMachineBuilder machineBuilder;
 
 	public static CJTileEntityMachineBase machineEntity(
@@ -106,7 +111,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		for(int i = 0; i < machineBuilder.progressBars.size(); i++) {
 			NBTTagCompound progressBarTag = new NBTTagCompound();
 			progressBarTag.setByte("Progress", (byte) i);
-			machineBuilder.machineImpl.progressToNBT(this, i, progressBarTag);
+			progressBarsTag.setShort("Ticks", (short) operationTicks);
 			progressBarList.setTag(progressBarTag);
 		}
 		tagCompound.setTag("Progresses", itemsList);*/
@@ -150,6 +155,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 					(NBTTagCompound) progressBarList.tagAt(i);
 
 			byte progressBarIndex = progressBarTag.getByte("Progress");
+			operationTicks = progressBarsTag.getShort("Ticks");
 
 			machineBuilder.machineImpl.progressFromNBT(
 					this, progressBarIndex, progressBarTag);

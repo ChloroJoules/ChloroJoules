@@ -12,6 +12,8 @@ import java.util.logging.Logger;
 
 import static io.github.chlorojoules.client.CJRarityInfo.raritySufficient;
 import static io.github.chlorojoules.client.gui.CJGuiGravity.*;
+import static io.github.chlorojoules.client.gui.CJGuiMachineBaseLayout.FLUID_HEIGHT;
+import static io.github.chlorojoules.client.gui.CJGuiMachineBaseLayout.WORKING_HEIGHT;
 
 public class CJMachineBuilder {
 	private static final int FUEL_TANK_INSET = 10;
@@ -22,6 +24,7 @@ public class CJMachineBuilder {
 	public CJIMachine machineImpl = null;
 
 	public int fuelTankIndex = -1;
+	public int jewelSlotIndex = -1;
 
 	public ArrayList<CJMachineSlotInfo> slots = new ArrayList<>();
 	public ArrayList<CJTank> tanks = new ArrayList<>();
@@ -99,6 +102,15 @@ public class CJMachineBuilder {
 				CJClient.fuelFluid);
 	}
 
+	public CJMachineBuilder addJewelSlot() {
+		jewelSlotIndex = slots.size();
+
+		return addSlotGravity(
+				CJGuiGravity.BOTTOM_LEFT, 35,
+				/* Align bottom of Jewel slot with fuel tank. */
+				(WORKING_HEIGHT - FLUID_HEIGHT) / 2, false);
+	}
+
 	public CJMachineBuilder addTankGravity(
 			CJGuiGravity anchor, int x, int y, boolean output, int max,
 			int lockFluid) {
@@ -166,11 +178,32 @@ public class CJMachineBuilder {
 		return -1;
 	}
 
-	public CJMachineRecipe getMatchingRecipe(
-			CJRarity jewelRarity, CJTileEntityMachineBase entity) {
+	public CJMachineRecipe getMatchingRecipe(CJTileEntityMachineBase entity) {
+		entity.errorMessage = null;
 
 		StringTranslate translate = StringTranslate.getInstance();
 		CJMachineRecipe recipe = null;
+
+		entity.jewelRarity = CJRarity.MANUFACTURED;
+		if(jewelSlotIndex != -1) {
+			ItemStack jewel = entity.stacks.get(jewelSlotIndex);
+
+			if(jewel == null) {
+				entity.errorMessage =
+						translate.translateKey("message.cj_no_jewel");
+
+				return null;
+			}
+
+			entity.jewelRarity = CJRarityInfo.getJewelRarity(jewel.itemID);
+
+			if(entity.jewelRarity == CJRarity.INVALID) {
+				entity.errorMessage =
+						translate.translateKey("message.cj_bad_jewel");
+
+				return null;
+			}
+		}
 
 		boolean matchedRecipe = false;
 		for(int i = 0; i < entity.machineBuilder.recipies.size(); i++) {
@@ -178,7 +211,7 @@ public class CJMachineBuilder {
 			recipe = entity.machineBuilder.recipies.get(i);
 
 			for(int j = 0; j < recipe.inputs.size(); j++) {
-				CJMachineRecipeComponent component = recipe.inputs.get(i);
+				CJMachineRecipeComponent component = recipe.inputs.get(j);
 
 				if(component.target == CJMachineRecipeTarget.TANK) {
 					CJTankVolume volume = entity.tanks.get(component.index);
@@ -191,7 +224,7 @@ public class CJMachineBuilder {
 				else {
 					ItemStack stack = entity.stacks.get(component.index);
 
-					if(stack.itemID != component.id) {
+					if(stack == null || stack.itemID != component.id) {
 						matchedRecipe = false;
 						break;
 					}
@@ -201,10 +234,18 @@ public class CJMachineBuilder {
 			if(!matchedRecipe) continue;
 
 			for(int j = 0; j < recipe.inputs.size(); j++) {
-				CJMachineRecipeComponent component = recipe.inputs.get(i);
+				CJMachineRecipeComponent component = recipe.inputs.get(j);
 
 				if(component.target == CJMachineRecipeTarget.TANK) {
 					CJTankVolume volume = entity.tanks.get(component.index);
+
+					boolean isPrimal = (entity.jewelRarity == CJRarity.PRIMAL);
+					if(component.index == recipe.fuelIndex) {
+						if(recipe.allowPassive && isPrimal) {
+							entity.isPassive = true;
+							continue;
+						}
+					}
 
 					if(volume.current < component.count) {
 						entity.errorMessage =
@@ -229,7 +270,7 @@ public class CJMachineBuilder {
 		}
 
 		if(recipe != null) {
-			if(!raritySufficient(jewelRarity, recipe.requiredRarity)) {
+			if(!raritySufficient(entity.jewelRarity, recipe.requiredRarity)) {
 				entity.errorMessage =
 						translate.translateKey("message.cj_poor_jewel");
 
@@ -245,5 +286,86 @@ public class CJMachineBuilder {
 		}
 
 		return recipe;
+	}
+
+	public boolean runRecipe(
+			CJMachineRecipe recipe, CJTileEntityMachineBase entity) {
+
+		for(int i = 0; i < recipe.outputs.size(); i++) {
+			CJMachineRecipeComponent component = recipe.outputs.get(i);
+
+			if(component.target == CJMachineRecipeTarget.TANK) {
+				CJTankVolume volume = entity.tanks.get(component.index);
+				if(volume.current >= volume.max) return false;
+			}
+			else {
+				ItemStack inputStack =
+						entity.stacks.get(component.index);
+
+				if(inputStack.stackSize >= inputStack.getMaxStackSize()) {
+					return false;
+				}
+			}
+		}
+
+		// Timescale and ticking.
+		int timeScale = CJRarityInfo.getRarityTimeScale(entity.jewelRarity);
+		entity.operationLength = recipe.processTime / timeScale;
+		if(entity.operationTicks++ < entity.operationLength) return false;
+
+		// Handle fuel separately from other fluid inputs.
+		int powerScale = CJRarityInfo.getRarityPowerScale(entity.jewelRarity);
+		CJMachineRecipeComponent fuelComponent = recipe.getFuelComponent();
+		int cost = fuelComponent.count / powerScale;
+
+		if(recipe.fuelIndex != -1) {
+			if(!entity.isPassive) {
+				CJTankVolume volume = entity.tanks.get(fuelComponent.index);
+
+				volume.removeFluid(0, cost, true);
+			}
+		}
+
+		// Generic inputs.
+		for(int i = 0; i < recipe.inputs.size(); i++) {
+			CJMachineRecipeComponent component = recipe.inputs.get(i);
+
+			if(component.target == CJMachineRecipeTarget.TANK) {
+				CJTankVolume volume = entity.tanks.get(component.index);
+				volume.removeFluid(0, component.count, true);
+			}
+			else {
+				ItemStack inputStack = entity.stacks.get(component.index);
+
+				if(inputStack.stackSize == component.count) {
+					entity.stacks.set(component.index, null);
+				}
+				else inputStack.stackSize -= component.count;
+			}
+		}
+
+		// Generic outputs.
+		for(int i = 0; i < recipe.outputs.size(); i++) {
+			CJMachineRecipeComponent component = recipe.outputs.get(i);
+
+			if(component.target == CJMachineRecipeTarget.TANK) {
+				CJTankVolume volume = entity.tanks.get(component.index);
+				volume.addFluid(component.id, component.count, true);
+			}
+			else {
+				ItemStack inputStack = entity.stacks.get(component.index);
+
+				if(inputStack == null) {
+					entity.stacks.set(
+							component.index,
+							new ItemStack(component.id, component.count));
+				}
+				else inputStack.stackSize += component.count;
+			}
+		}
+
+		entity.operationTicks = 0;
+
+		return true;
 	}
 }

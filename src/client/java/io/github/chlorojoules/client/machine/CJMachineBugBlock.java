@@ -47,19 +47,4 @@ public class CJMachineBugBlock implements CJIMachine {
 			}
 		}
 	}
-
-	@Override
-	public int getProgress(CJTileEntityMachineBase machineEntity, int index) {
-		return 0;
-	}
-
-	@Override
-	public void progressToNBT(
-			CJTileEntityMachineBase machineEntity, int index,
-			NBTTagCompound progressBarsTag) {}
-
-	@Override
-	public void progressFromNBT(
-			CJTileEntityMachineBase machineEntity, int index,
-			NBTTagCompound progressBarsTag) {}
 }

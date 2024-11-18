@@ -55,10 +55,11 @@ public class CJClient extends CJInstance implements ClientMod {
 						CJGuiGravity.TOP_RIGHT, 10, true, 8 * CJTank.BUCKET, 0)
 				.addSlotGravity(CJGuiGravity.CENTER, 0, 0, false)
 				/* TODO: Make Jewel slot maximum stack size 1. */
-				.addSlotGravity(
-						CJGuiGravity.BOTTOM_LEFT, 35,
-						/* Align bottom of Jewel slot with input tank. */
-						(WORKING_HEIGHT - FLUID_HEIGHT) / 2, false)
+				/*
+				 * TODO: Make Jewel slot visually distinct and reject non-Jewel
+				 *       Items.
+				 */
+				.addJewelSlot()
 				.addProgressBarGravityVCenter(
 						/*
 						 * TODO: Find a better way to center progress bars
@@ -67,8 +68,9 @@ public class CJClient extends CJInstance implements ClientMod {
 						CJGuiGravity.CENTER, (SLOT_IN_WIDTH * 4) / 3)
 				.addRecipe(
 						10,
-						new CJMachineRecipeComponent(1, Block.leaves, 1),
-						new CJMachineRecipeComponent(0, Block.lavaMoving, 50),
+						new CJMachineRecipeComponent(0, Block.leaves, 1),
+						new CJMachineRecipeComponent(1, Block.lavaMoving, 50)
+								.setTarget(CJMachineRecipeTarget.TANK),
 						50)
 				.setImpl(new CJMachineLiquefier()));
 

@@ -228,13 +228,11 @@ public class CJGuiMachineBase extends GuiContainer {
 					PROGRESS_EMPTY_X, PROGRESS_EMPTY_Y,
 					PROGRESS_WIDTH, PROGRESS_HEIGHT);
 
-			int width = machineBuilder.machineImpl.getProgress(
-					machineEntity, i);
-
+			int width = machineEntity.operationTicks * PROGRESS_WIDTH;
 			drawTexturedModalRect(
 					elementX, elementY,
 					PROGRESS_FULL_X, PROGRESS_FULL_Y,
-					width, PROGRESS_HEIGHT);
+					width / machineEntity.operationLength, PROGRESS_HEIGHT);
 		}
 	}
 }

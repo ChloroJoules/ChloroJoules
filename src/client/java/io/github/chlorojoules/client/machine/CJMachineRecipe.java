@@ -16,6 +16,8 @@ public class CJMachineRecipe {
 
 	public int fuelIndex = -1;
 
+	boolean allowPassive = true;
+
 	// Fuel + In -> Out.
 	public CJMachineRecipe(
 			CJMachineBuilder builder, int fuelVolume,
@@ -39,7 +41,6 @@ public class CJMachineRecipe {
 		outputs.add(out);
 	}
 
-	// TODO: This will need a post-process if fuel is set non-standardly.
 	public CJMachineRecipeComponent getFuelComponent() {
 		if(fuelIndex == -1) return null;
 
