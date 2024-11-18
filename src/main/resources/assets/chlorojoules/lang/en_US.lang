@@ -1,1 +1,4 @@
-tile.cj_bugblock.name=BugBlock
+# We need to provide some Vanilla names
+tile.flowing_lava.name = Lava
+
+tile.cj_bugblock.name = BugBlock

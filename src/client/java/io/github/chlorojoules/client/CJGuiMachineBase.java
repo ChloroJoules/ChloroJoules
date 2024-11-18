@@ -5,10 +5,10 @@ import net.minecraft.src.client.gui.Slot;
 import net.minecraft.src.client.gui.StringTranslate;
 import net.minecraft.src.client.inventory.IInventory;
 import net.minecraft.src.game.block.Block;
-import net.minecraft.src.game.block.BlockFluid;
 import net.minecraft.src.game.entity.player.EntityPlayer;
 import net.minecraft.src.game.entity.player.InventoryPlayer;
 
+import net.minecraft.src.game.item.ItemBlockCrate;
 import net.minecraft.src.game.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
@@ -50,10 +50,11 @@ class CJSlotMachineBase extends Slot {
 }
 
 public class CJGuiMachineBase extends GuiContainer {
-	public static final int MACHINE_TEXT_COLOR = 4210752;
+	public static final int MACHINE_TEXT = 4210752;
+	public static final int TOOLTIP_BACKGROUND = -1073741824;
 
 	// TODO: Switch this to ChloroJoules.
-	public static final BlockFluid fuelFluid = (BlockFluid) Block.waterMoving;
+	public static final int fuelFluid = Block.waterMoving.blockID;
 
 	// Game slot hitbox size.
 	private static final int SLOT_WIDTH = 16;
@@ -103,6 +104,9 @@ public class CJGuiMachineBase extends GuiContainer {
 	private static final int FLUID_WIDTH = 12;
 	private static final int FLUID_HEIGHT = 53;
 
+	private static final int FLUID_OFFSET_X = 1;
+	private static final int FLUID_OFFSET_Y = 1;
+
 	private final CJTileEntityMachineBase machineEntity;
 
 	public CJGuiMachineBase(
@@ -111,6 +115,72 @@ public class CJGuiMachineBase extends GuiContainer {
 		super(new CJContainerMachineBase(inventoryPlayer, machine));
 
 		this.machineEntity = machine;
+	}
+
+	private boolean getIsMouseOverTank(CJTank tank, int x, int y) {
+		int widthScaled = (width - xSize) / 2;
+		int heightScaled = (height - ySize) / 2;
+
+		x -= widthScaled;
+		y -= heightScaled;
+
+		return x >= tank.xDisplayPosition - FLUID_OFFSET_X
+				&& x < tank.xDisplayPosition + FLUID_WIDTH + FLUID_OFFSET_X
+				&& y >= tank.yDisplayPosition - FLUID_OFFSET_Y
+				&& y < tank.yDisplayPosition + FLUID_HEIGHT + FLUID_OFFSET_Y;
+	}
+
+	// TODO: This floats tooltips what appears to be in absolute rather than
+	//		 Relative space.
+	private void drawTooltip(String name, String description, int x, int y) {
+		int widthScaled = (width - xSize) / 2;
+		int heightScaled = (height - ySize) / 2;
+
+		int nameWidth = fontRenderer.getStringWidth(name);
+		int descriptionWidth = fontRenderer.getStringWidth(description);
+		int textWidth = Math.max(nameWidth, descriptionWidth);
+
+		// TODO: Loads of magic numbers down here.
+		int xSlot = x - widthScaled + 12;
+		int ySlot = y - heightScaled - 12;
+
+		this.drawGradientRect(
+				xSlot - 3, ySlot - 3,
+				xSlot + textWidth + 3, ySlot + 26,
+				TOOLTIP_BACKGROUND, TOOLTIP_BACKGROUND
+		);
+
+		fontRenderer.drawStringWithShadow(description, xSlot, ySlot + 15, -1);
+		fontRenderer.drawStringWithShadow(name, xSlot, ySlot, -1);
+	}
+
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float deltaTicks) {
+		super.drawScreen(mouseX, mouseY, deltaTicks);
+
+		CJContainerMachineBase machine =
+				(CJContainerMachineBase) inventorySlots;
+
+		for(int i = 0; i < machine.tanks.size(); i++) {
+			CJTank tank = machine.tanks.get(i);
+			CJTankVolume tankVolume = machineEntity.tanks[i];
+
+			if(getIsMouseOverTank(tank, mouseX, mouseY)) {
+				String name = "Nothing";
+
+				if(tankVolume.fluidID != 0) {
+					Block fluid = Block.blocksList[tankVolume.fluidID];
+					name = fluid.translateBlockName();
+				}
+
+				drawTooltip(
+						name,
+						tankVolume.current + "/" + tankVolume.max + "mB",
+						mouseX, mouseY);
+
+				return;
+			}
+		}
 	}
 
 	@Override
@@ -128,11 +198,11 @@ public class CJGuiMachineBase extends GuiContainer {
 		fontRenderer.drawString(
 				name,
 				xSize / 2 - fontRenderer.getStringWidth(name) / 2, 6,
-				MACHINE_TEXT_COLOR);
+				MACHINE_TEXT);
 
 		// "Inventory" label.
 		fontRenderer.drawString(
-				inventory, 8, ySize - 96 + 2, MACHINE_TEXT_COLOR);
+				inventory, 8, ySize - 96 + 2, MACHINE_TEXT);
 
 		// TODO: Debug only.
 		for(int i = 0; i < machineEntity.tanks.length; i++) {
@@ -142,7 +212,7 @@ public class CJGuiMachineBase extends GuiContainer {
 				fontRenderer.drawString(
 						Block.blocksList[tankVolume.fluidID].getBlockName(),
 						2, 2 + (i * 8),
-						MACHINE_TEXT_COLOR);
+						MACHINE_TEXT);
 			}
 		}
 	}
@@ -201,10 +271,33 @@ public class CJGuiMachineBase extends GuiContainer {
 					FLUID_FULL_X, FLUID_FULL_Y,
 					FLUID_WIDTH, FLUID_HEIGHT);
 
+			// TODO: Fix this.
+			/*
+			if(tankVolume.fluidID != fuelFluid) {
+				Block fluid = Block.blocksList[tankVolume.fluidID];
+				TextureStitched fluidIcon =
+						(TextureStitched) fluid.getBlockTextureFromSide(0);
+
+				int fluidTexture =
+						mc.renderEngine.getTexture("/terrain.png");
+
+				mc.renderEngine.bindTexture(fluidTexture);
+
+				drawTexturedModalRect(
+						tankX + FLUID_OFFSET_X, tankY + FLUID_OFFSET_Y,
+						fluidIcon.getOriginX(), fluidIcon.getOriginY(),
+						FLUID_WIDTH - (FLUID_OFFSET_X * 2),
+						FLUID_HEIGHT - (FLUID_OFFSET_Y * 2));
+
+				mc.renderEngine.bindTexture(texture);
+			}*/
+
 			// Overlay the full tank graphic with an amount of the empty one.
 			// TODO: This doesn't account for the margins of the tank which it
 			//		 Probably should do.
-			int tankFill = (tankVolume.current * FLUID_HEIGHT) / CJTank.MAX;
+			int tankFill =
+					(tankVolume.current * FLUID_HEIGHT) / tankVolume.max;
+
 			int tankEmptyDrawHeight = FLUID_HEIGHT - tankFill;
 
 			drawTexturedModalRect(

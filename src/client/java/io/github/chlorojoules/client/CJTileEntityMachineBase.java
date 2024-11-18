@@ -28,6 +28,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	public CJTileEntityMachineBase() {
 		tanks[0] = new CJTankVolume();
 		tanks[0].current = 3 * CJTank.BUCKET;
+		tanks[0].fluidID = CJBlockMachineBase.lavaMoving.blockID;
 	}
 
 	public void onBreak(World world, int x, int y, int z) {

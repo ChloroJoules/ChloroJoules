@@ -10,10 +10,6 @@ package io.github.chlorojoules.client;
 public class CJTank {
 	// Millibuckets per bucket.
 	public static final int BUCKET = 1000;
-	// Maximum fluid volume.
-	// TODO: Find a way to communicate this from `CJTank` to `CJTankVolume` to
-	//  	 Make it not static.
-	public static final int MAX = 8 * CJTank.BUCKET;
 
 	// Display position.
 	int xDisplayPosition;

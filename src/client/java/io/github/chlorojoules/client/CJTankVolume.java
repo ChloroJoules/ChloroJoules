@@ -4,6 +4,9 @@ import net.minecraft.src.game.block.BlockFluid;
 
 // This is to a fluid as an `ItemStack` is to an item.
 public class CJTankVolume {
+	// Maximum fluid volume.
+	public int max = 8 * CJTank.BUCKET;
+
 	// Current fluid volume.
 	public int current = 0;
 
@@ -16,12 +19,12 @@ public class CJTankVolume {
 	public int addFluid(BlockFluid blockFluid, int amount, boolean all) {
 		if(fluidID != 0 && fluidID != blockFluid.getBlockID()) return 0;
 
-		if((current + amount) > CJTank.MAX) {
+		if((current + amount) > max) {
 			if(all) return 0;
 
 			if(fluidID == 0) fluidID = blockFluid.getBlockID();
 
-			int diff = CJTank.MAX - current;
+			int diff = max - current;
 			current += diff;
 			return diff;
 		}
