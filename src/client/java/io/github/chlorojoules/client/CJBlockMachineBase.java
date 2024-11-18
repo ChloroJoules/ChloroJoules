@@ -11,9 +11,13 @@ import net.minecraft.src.game.level.World;
 
 import static io.github.chlorojoules.client.CJTileEntityMachineBase.machineEntity;
 
-class CJBlockMachineBase extends BlockContainer {
-	public CJBlockMachineBase(int id) {
+public class CJBlockMachineBase extends BlockContainer {
+	private final CJMachineBuilder machineBuilder;
+
+	public CJBlockMachineBase(int id, CJMachineBuilder builder) {
 		super(id, Material.rock);
+
+		machineBuilder = builder;
 
 		// Machines have the same basic block properties by default.
 		super.setHardness(1.5F);
@@ -40,7 +44,9 @@ class CJBlockMachineBase extends BlockContainer {
 		//		 Bucket. If the bucket is empty -- fill from an available
 		//		 Output tank.
 		CJTileEntityMachineBase machine = machineEntity(world, x, y, z);
-		CJGuiMachineBase gui = new CJGuiMachineBase(player.inventory, machine);
+		CJGuiMachineBase gui = new CJGuiMachineBase(
+				player.inventory, machine, machineBuilder);
+
 		Minecraft.theMinecraft.displayGuiScreen(gui);
 
 		return true;
@@ -57,7 +63,7 @@ class CJBlockMachineBase extends BlockContainer {
 
 	@Override
 	protected TileEntity getBlockEntity() {
-		return new CJTileEntityMachineBase();
+		return new CJTileEntityMachineBase(machineBuilder);
 	}
 }
 

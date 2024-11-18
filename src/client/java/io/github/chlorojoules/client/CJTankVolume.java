@@ -16,29 +16,28 @@ public class CJTankVolume {
 	// On empty.
 	public boolean lockFluid = false;
 
-	public int addFluid(BlockFluid blockFluid, int amount, boolean all) {
-		if(fluidID != 0 && fluidID != blockFluid.getBlockID()) return 0;
+	public int addFluid(int blockFluid, int amount, boolean all) {
+		if(fluidID != 0 && fluidID != blockFluid) return 0;
 
 		if((current + amount) > max) {
 			if(all) return 0;
 
-			if(fluidID == 0) fluidID = blockFluid.getBlockID();
+			if(fluidID == 0) fluidID = blockFluid;
 
 			int diff = max - current;
 			current += diff;
 			return diff;
 		}
 
-		if(fluidID == 0) fluidID = blockFluid.getBlockID();
+		if(fluidID == 0) fluidID = blockFluid;
 		current += amount;
 
 		return amount;
 	}
 
-	public int removeFluid(BlockFluid blockFluid, int amount, boolean all) {
-		if(blockFluid != null) {
-			if(fluidID != 0) return 0;
-			if(fluidID != blockFluid.getBlockID()) return 0;
+	public int removeFluid(int blockFluid, int amount, boolean all) {
+		if(blockFluid != 0) {
+			if(fluidID != blockFluid) return 0;
 		}
 
 		if(amount > current) {

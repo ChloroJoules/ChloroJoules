@@ -11,9 +11,10 @@ import java.util.ArrayList;
 //		 Fluids to bucket items.
 
 public class CJContainerMachineBase extends Container {
-	private final CJTileEntityMachineBase machine;
+	private final CJTileEntityMachineBase machineEntity;
+	private final CJMachineBuilder machineBuilder;
 
-	public ArrayList<CJTank> tanks = new ArrayList<CJTank>();
+	public ArrayList<CJTank> tanks = new ArrayList<>();
 
 	void addPlayerInventory(InventoryPlayer inventory) {
 		EntityPlayer player = inventory.player;
@@ -34,20 +35,26 @@ public class CJContainerMachineBase extends Container {
 	}
 
 	public CJContainerMachineBase(
-			InventoryPlayer inventoryPlayer, CJTileEntityMachineBase machine) {
+			InventoryPlayer inventoryPlayer, CJTileEntityMachineBase entity,
+			CJMachineBuilder builder) {
 
-		this.machine = machine;
+		machineEntity = entity;
+		machineBuilder = builder;
 
 		EntityPlayer player = inventoryPlayer.player;
 
-		// TODO: GuiBuilder API to passthrough from machine creation.
-		addSlot(new CJSlotMachineBase(player, machine, 0, 100, 50)
-				.setOutput(true));
+		for(int i = 0; i < machineBuilder.slots.size(); i++) {
+			CJMachineSlotInfo info = machineBuilder.slots.get(i);
 
-		addSlot(new CJSlotMachineBase(player, machine, 1, 50, 50));
+			CJSlotMachineBase slot = new CJSlotMachineBase(
+					player, machineEntity, i, info.x, info.y);
 
-		// TODO: Add helper for adding fuel tanks.
-		tanks.add(new CJTank(25, 35));
+			slot.setOutput(info.output);
+
+			addSlot(slot);
+		}
+
+		tanks.addAll(machineBuilder.tanks);
 
 		addPlayerInventory(inventoryPlayer);
 	}
@@ -66,7 +73,7 @@ public class CJContainerMachineBase extends Container {
 
 	@Override
 	public boolean isUsableByPlayer(EntityPlayer entityPlayer) {
-		return machine.canInteractWith(entityPlayer);
+		return machineEntity.canInteractWith(entityPlayer);
 	}
 
 	// TODO: Investigate how quick moves work.

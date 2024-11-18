@@ -8,14 +8,17 @@ import net.minecraft.src.game.item.ItemStack;
 import net.minecraft.src.game.level.World;
 import net.minecraft.src.game.nbt.NBTTagCompound;
 
+import java.util.ArrayList;
+
 public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	// TODO: Make a tagging/name/enum system so we can keep track of slots
 	//		 In a machine without magic numbers.
 	//		 `CJContainerMachineBase` can contain this mapping which can then
 	//		 Be read here.
-	// NOTE: For now, let convention be that slot 0 is always output.
-	public ItemStack[] stacks = new ItemStack[2];
-	public CJTankVolume[] tanks = new CJTankVolume[1];
+	public ArrayList<ItemStack> stacks;
+	public ArrayList<CJTankVolume> tanks;
+
+	private final CJMachineBuilder machineBuilder;
 
 	public static CJTileEntityMachineBase machineEntity(
 			World world, int x, int y, int z) {
@@ -25,10 +28,14 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		return (CJTileEntityMachineBase) tileEntity;
 	}
 
-	public CJTileEntityMachineBase() {
-		tanks[0] = new CJTankVolume();
-		tanks[0].current = 3 * CJTank.BUCKET;
-		tanks[0].fluidID = CJBlockMachineBase.lavaMoving.blockID;
+	public CJTileEntityMachineBase(CJMachineBuilder builder) {
+		machineBuilder = builder;
+
+		stacks = new ArrayList<>();
+		// TODO: There's probably a better way to do this.
+		for(int i = 0; i < builder.slots.size(); i++) stacks.add(null);
+
+		tanks = new ArrayList<>(builder.tankVolumes);
 	}
 
 	public void onBreak(World world, int x, int y, int z) {
@@ -48,21 +55,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 
 	@Override
 	public void updateEntity() {
-		// TODO: Machine behaviour interface.
-
-		ItemStack stack = stacks[0];
-		if(stack == null) {
-			if(tanks[0].removeFluid(null, 10, false) == 10) {
-				stacks[0] = new ItemStack(Item.snowball);
-				this.onInventoryChanged();
-			}
-		}
-		else if(stack.stackSize < stack.getMaxStackSize()) {
-			if(tanks[0].removeFluid(null, 10, false) == 10) {
-				stacks[0].stackSize++;
-				this.onInventoryChanged();
-			}
-		}
+		machineBuilder.machineImpl.updateMachine(this);
 	}
 
 	@Override
@@ -81,16 +74,16 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 
 	@Override
 	public ItemStack decrStackSize(int slot, int size) {
-		if(stacks[slot] == null) return null;
+		ItemStack stack = stacks.get(slot);
 
-		ItemStack stack = stacks[slot];
+		if(stack == null) return null;
 
-		if(stacks[slot].stackSize <= size) {
-			stacks[slot] = null;
+		if(stack.stackSize <= size) {
+			stacks.set(slot, null);
 		}
 		else {
-			if(stacks[slot].stackSize == 0) {
-				stacks[slot] = null;
+			if(stack.stackSize == 0) {
+				stacks.set(slot, null);
 			}
 
 			return stack.splitStack(size);
@@ -101,7 +94,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
-		stacks[slot] = stack;
+		stacks.set(slot, stack);
 
 		int limit = getInventoryStackLimit();
 		if(stack != null && stack.stackSize > limit) {
@@ -116,17 +109,17 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 
 	@Override
 	public int getSizeInventory() {
-		return stacks.length;
+		return stacks.size();
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		return stacks[slot];
+		return stacks.get(slot);
 	}
 
 	@Override
 	public String getInvName() {
-		return "inventory.cj_machinebase";
+		return "inventory." + machineBuilder.name;
 	}
 
 	@Override

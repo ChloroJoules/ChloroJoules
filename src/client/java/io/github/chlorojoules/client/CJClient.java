@@ -2,20 +2,16 @@ package io.github.chlorojoules.client;
 
 import io.github.chlorojoules.CJInstance;
 
+import io.github.chlorojoules.client.machine.CJMachineBugBlock;
 import net.minecraft.src.game.block.Block;
 
 import com.fox2code.foxloader.loader.ClientMod;
 import com.fox2code.foxloader.registry.*;
 import net.minecraft.src.game.item.Item;
 
-import java.awt.*;
+import static io.github.chlorojoules.client.CJRarityInfo.*;
 
 public class CJClient extends CJInstance implements ClientMod {
-	public static final int PRIMAL_COLOR = Color.GRAY.getRGB();
-	public static final int MANUFACTURED_COLOR = 0;
-	public static final int REFINED_COLOR = -100999924;
-	public static final int AWAKENED_COLOR = Block.COLOR_CYAN;
-
 	public static RegisteredBlock bugBlock;
 
 	public static RegisteredItem paste;
@@ -25,12 +21,26 @@ public class CJClient extends CJInstance implements ClientMod {
 	public static RegisteredItem refinedJewel;
 	public static RegisteredItem awakenedJewel;
 
+	public RegisteredBlock registerNewMachine(
+			String name, CJMachineBuilder builder) {
+
+		return registerNewBlock(name, new BlockBuilder()
+				.setBlockName(name)
+				.setGameBlockProvider(
+						((id, build, ext) ->
+								new CJBlockMachineBase(id, builder) {}))
+				.setTooltipColor(CJRarityInfo.getRarityColor(builder.rarity)));
+	}
+
 	@Override
 	public void onInit() {
-		bugBlock = registerNewBlock("cj_bugblock", new BlockBuilder()
-				.setBlockName("cj_bugblock")
-				.setGameBlockProvider(
-						((id, build, ext) -> new CJBlockMachineBase(id) {})));
+		bugBlock = registerNewMachine("cj_bugblock", new CJMachineBuilder()
+				.setMachineName("cj_bugblock")
+				.setRarity(CJRarity.AWAKENED)
+				.addTank(15, 10, false, 4 * CJTank.BUCKET, 0)
+				.addSlot(50, 35, false)
+				.addSlot(75, 35, true)
+				.setImpl(new CJMachineBugBlock()));
 
 		paste = registerNewItem("cj_paste", new ItemBuilder()
 				.setItemName("cj_paste")

@@ -8,7 +8,6 @@ import net.minecraft.src.game.block.Block;
 import net.minecraft.src.game.entity.player.EntityPlayer;
 import net.minecraft.src.game.entity.player.InventoryPlayer;
 
-import net.minecraft.src.game.item.ItemBlockCrate;
 import net.minecraft.src.game.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
@@ -35,7 +34,8 @@ class CJSlotMachineBase extends Slot {
 
 	@Override
 	public void onPickupFromSlot(ItemStack item) {
-		item.onCrafting(entityPlayer.worldObj, entityPlayer);
+		// TODO: This currently fires for inventory pickup aswell.
+		//item.onCrafting(entityPlayer.worldObj, entityPlayer);
 		super.onPickupFromSlot(item);
 	}
 
@@ -108,13 +108,16 @@ public class CJGuiMachineBase extends GuiContainer {
 	private static final int FLUID_OFFSET_Y = 1;
 
 	private final CJTileEntityMachineBase machineEntity;
+	private final CJMachineBuilder machineBuilder;
 
 	public CJGuiMachineBase(
-			InventoryPlayer inventoryPlayer, CJTileEntityMachineBase machine) {
+			InventoryPlayer inventoryPlayer, CJTileEntityMachineBase entity,
+			CJMachineBuilder builder) {
 
-		super(new CJContainerMachineBase(inventoryPlayer, machine));
+		super(new CJContainerMachineBase(inventoryPlayer, entity, builder));
 
-		this.machineEntity = machine;
+		machineBuilder = builder;
+		machineEntity = entity;
 	}
 
 	private boolean getIsMouseOverTank(CJTank tank, int x, int y) {
@@ -163,7 +166,7 @@ public class CJGuiMachineBase extends GuiContainer {
 
 		for(int i = 0; i < machine.tanks.size(); i++) {
 			CJTank tank = machine.tanks.get(i);
-			CJTankVolume tankVolume = machineEntity.tanks[i];
+			CJTankVolume tankVolume = machineEntity.tanks.get(i);
 
 			if(getIsMouseOverTank(tank, mouseX, mouseY)) {
 				String name = "Nothing";
@@ -190,6 +193,7 @@ public class CJGuiMachineBase extends GuiContainer {
 
 		StringTranslate translate = StringTranslate.getInstance();
 
+		// TODO: Source name from container/block.
 		String name = translate.translateKey(machineEntity.getInvName());
 		String inventory = translate.translateKey("inventory.generic");
 
@@ -205,8 +209,8 @@ public class CJGuiMachineBase extends GuiContainer {
 				inventory, 8, ySize - 96 + 2, MACHINE_TEXT);
 
 		// TODO: Debug only.
-		for(int i = 0; i < machineEntity.tanks.length; i++) {
-			CJTankVolume tankVolume = machineEntity.tanks[i];
+		for(int i = 0; i < machineEntity.tanks.size(); i++) {
+			CJTankVolume tankVolume = machineEntity.tanks.get(i);
 
 			if(tankVolume.fluidID != 0) {
 				fontRenderer.drawString(
@@ -262,7 +266,7 @@ public class CJGuiMachineBase extends GuiContainer {
 		int tankY;
 		for(int i = 0; i < machine.tanks.size(); i++) {
 			tank = machine.tanks.get(i);
-			tankVolume = machineEntity.tanks[i];
+			tankVolume = machineEntity.tanks.get(i);
 			tankX = baseX + tank.xDisplayPosition;
 			tankY = baseY + tank.yDisplayPosition;
 
