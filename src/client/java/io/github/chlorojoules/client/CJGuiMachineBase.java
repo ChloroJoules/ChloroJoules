@@ -51,10 +51,8 @@ class CJSlotMachineBase extends Slot {
 
 public class CJGuiMachineBase extends GuiContainer {
 	public static final int MACHINE_TEXT = 4210752;
+	public static final int MACHINE_ERROR = Block.COLOR_RED;
 	public static final int TOOLTIP_BACKGROUND = -1073741824;
-
-	// TODO: Switch this to ChloroJoules.
-	public static final int fuelFluid = Block.waterMoving.blockID;
 
 	// Game slot hitbox size.
 	private static final int SLOT_WIDTH = 16;
@@ -204,21 +202,19 @@ public class CJGuiMachineBase extends GuiContainer {
 				xSize / 2 - fontRenderer.getStringWidth(name) / 2, 6,
 				MACHINE_TEXT);
 
+		// Error message.
+		String errorMessage = machineEntity.errorMessage;
+		if(errorMessage != null) {
+			fontRenderer.drawString(
+					errorMessage,
+					xSize / 2 - fontRenderer.getStringWidth(errorMessage) / 2,
+					10,
+					MACHINE_ERROR);
+		}
+
 		// "Inventory" label.
 		fontRenderer.drawString(
 				inventory, 8, ySize - 96 + 2, MACHINE_TEXT);
-
-		// TODO: Debug only.
-		for(int i = 0; i < machineEntity.tanks.size(); i++) {
-			CJTankVolume tankVolume = machineEntity.tanks.get(i);
-
-			if(tankVolume.fluidID != 0) {
-				fontRenderer.drawString(
-						Block.blocksList[tankVolume.fluidID].getBlockName(),
-						2, 2 + (i * 8),
-						MACHINE_TEXT);
-			}
-		}
 	}
 
 	@Override

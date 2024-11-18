@@ -18,6 +18,8 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	public ArrayList<ItemStack> stacks;
 	public ArrayList<CJTankVolume> tanks;
 
+	public String errorMessage = null;
+
 	private final CJMachineBuilder machineBuilder;
 
 	public static CJTileEntityMachineBase machineEntity(

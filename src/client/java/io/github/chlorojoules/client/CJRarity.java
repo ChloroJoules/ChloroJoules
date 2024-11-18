@@ -4,5 +4,7 @@ public enum CJRarity {
 	PRIMAL,
 	MANUFACTURED,
 	REFINED,
-	AWAKENED
+	AWAKENED,
+
+	INVALID
 }

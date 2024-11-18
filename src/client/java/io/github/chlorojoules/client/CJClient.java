@@ -3,6 +3,7 @@ package io.github.chlorojoules.client;
 import io.github.chlorojoules.CJInstance;
 
 import io.github.chlorojoules.client.machine.CJMachineBugBlock;
+import io.github.chlorojoules.client.machine.CJMachineLiquefier;
 import net.minecraft.src.game.block.Block;
 
 import com.fox2code.foxloader.loader.ClientMod;
@@ -12,7 +13,11 @@ import net.minecraft.src.game.item.Item;
 import static io.github.chlorojoules.client.CJRarityInfo.*;
 
 public class CJClient extends CJInstance implements ClientMod {
+	// TODO: Switch this to ChloroJoules.
+	public static final int fuelFluid = Block.waterMoving.blockID;
+
 	public static RegisteredBlock bugBlock;
+	public static RegisteredBlock liquefier;
 
 	public static RegisteredItem paste;
 
@@ -41,6 +46,14 @@ public class CJClient extends CJInstance implements ClientMod {
 				.addSlot(50, 35, false)
 				.addSlot(75, 35, true)
 				.setImpl(new CJMachineBugBlock()));
+
+		liquefier = registerNewMachine("cj_liquefier", new CJMachineBuilder()
+				.setMachineName("cj_liquefier")
+				.addTank(15, 10, false, 4 * CJTank.BUCKET, fuelFluid)
+				.addTank(100, 10, true, 8 * CJTank.BUCKET, 0)
+				.addSlot(65, 35, false)
+				.addSlot(35, 40, false)
+				.setImpl(new CJMachineLiquefier()));
 
 		paste = registerNewItem("cj_paste", new ItemBuilder()
 				.setItemName("cj_paste")

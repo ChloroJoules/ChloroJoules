@@ -42,6 +42,7 @@ public class CJMachineBuilder {
 
 	// TODO: Mechanism for anchoring/centering slots/tanks in builder
 	//       Interface.
+	// TODO: Helper for ChloroJewel slots.
 	public CJMachineBuilder addSlot(int x, int y, boolean output) {
 		slots.add(new CJMachineSlotInfo(x, y, output));
 		return this;

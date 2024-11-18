@@ -20,4 +20,43 @@ public class CJRarityInfo {
 
 		return -1;
 	}
+
+	public static CJRarity getJewelRarity(int itemID) {
+		if(itemID == CJClient.primalJewel.getRegisteredItemId()) {
+			return CJRarity.PRIMAL;
+		}
+		else if(itemID == CJClient.manufacturedJewel.getRegisteredItemId()) {
+			return CJRarity.MANUFACTURED;
+		}
+		else if(itemID == CJClient.refinedJewel.getRegisteredItemId()) {
+			return CJRarity.REFINED;
+		}
+		else if(itemID == CJClient.awakenedJewel.getRegisteredItemId()) {
+			return CJRarity.AWAKENED;
+		}
+
+		return CJRarity.INVALID;
+	}
+
+	public static int getRarityPowerScale(CJRarity rarity) {
+		switch(rarity) {
+			case PRIMAL: return 1;
+			case MANUFACTURED: return 2;
+			case REFINED: return 3;
+			case AWAKENED: return 4;
+		}
+
+		return -1;
+	}
+
+	public static int getRarityTimeScale(CJRarity rarity) {
+		switch(rarity) {
+			case PRIMAL: return 1;
+			case MANUFACTURED: return 2;
+			case REFINED: return 4;
+			case AWAKENED: return 8;
+		}
+
+		return -1;
+	}
 }
