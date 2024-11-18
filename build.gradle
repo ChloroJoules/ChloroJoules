@@ -22,5 +22,5 @@ foxloader {
 	modWebsite = 'https://chlorojoules.github.io/'
 
 	clientMod = 'io.github.chlorojoules.client.CJClient'
-	serverMod = 'io.github.chlorojoules.server.CJServer'
+	includeServer = false
 }
