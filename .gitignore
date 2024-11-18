@@ -3,3 +3,4 @@ ChloroJoules.*
 build/
 .gradle/
 
+.idea/

@@ -7,8 +7,6 @@ import com.fox2code.foxloader.registry.*;
 public class CJInstance extends Mod {
 	public static final CJConfig CONFIG = new CJConfig();
 
-	public static RegisteredBlock bugBlock;
-
 	@Override
 	public void onPreInit() {
 		setConfigObject(CONFIG);
