@@ -70,6 +70,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	@Override
 	public void writeToNBT(NBTTagCompound tagCompound) {
 		tagCompound.setString("id", "CJMachineBase");
+		tagCompound.setString("cj_machine", machineBuilder.name);
 		tagCompound.setInteger("x", this.xCoord);
 		tagCompound.setInteger("y", this.yCoord);
 		tagCompound.setInteger("z", this.zCoord);
@@ -119,6 +120,9 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound) {
+		// TODO: Get builder from registry.
+		tagCompound.getString("cj_machine");
+
 		xCoord = tagCompound.getInteger("x");
 		yCoord = tagCompound.getInteger("y");
 		zCoord = tagCompound.getInteger("z");
