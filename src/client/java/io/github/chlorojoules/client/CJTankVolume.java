@@ -1,7 +1,5 @@
 package io.github.chlorojoules.client;
 
-import net.minecraft.src.game.block.BlockFluid;
-
 // This is to a fluid as an `ItemStack` is to an item.
 public class CJTankVolume {
 	// Maximum fluid volume.

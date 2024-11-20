@@ -1,7 +1,7 @@
 package io.github.chlorojoules.client.machine;
 
-import net.minecraft.src.game.block.Block;
-import net.minecraft.src.game.block.BlockFluid;
+import com.fox2code.foxloader.registry.RegisteredBlock;
+import com.fox2code.foxloader.registry.RegisteredItem;
 
 public class CJMachineRecipeComponent {
 	public CJMachineRecipeTarget target = CJMachineRecipeTarget.SLOT;
@@ -15,17 +15,19 @@ public class CJMachineRecipeComponent {
 		this.count = count;
 	}
 
-	public CJMachineRecipeComponent(int index, Block block, int count) {
+	public CJMachineRecipeComponent(
+			int index, RegisteredBlock block, int count) {
+
 		this.index = index;
+		this.id = block.getRegisteredBlockId();
+		this.count = count;
+	}
 
-		if(block instanceof BlockFluid) {
-			target = CJMachineRecipeTarget.TANK;
-			this.id = block.getBlockID();
-		}
-		else {
-			this.id = block.asRegisteredItem().getRegisteredItemId();
-		}
+	public CJMachineRecipeComponent(
+			int index, RegisteredItem item, int count) {
 
+		this.index = index;
+		this.id = item.getRegisteredItemId();
 		this.count = count;
 	}
 

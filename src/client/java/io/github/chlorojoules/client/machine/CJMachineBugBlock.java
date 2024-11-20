@@ -5,6 +5,7 @@ import io.github.chlorojoules.client.CJTileEntityMachineBase;
 import net.minecraft.src.game.block.Block;
 import net.minecraft.src.game.item.Item;
 import net.minecraft.src.game.item.ItemStack;
+import net.minecraft.src.game.level.World;
 import net.minecraft.src.game.nbt.NBTTagCompound;
 
 public class CJMachineBugBlock implements CJIMachine {
@@ -47,4 +48,8 @@ public class CJMachineBugBlock implements CJIMachine {
 			}
 		}
 	}
+
+	@Override
+	public void onNeighbourChange(
+			World world, int x, int y, int z) {}
 }

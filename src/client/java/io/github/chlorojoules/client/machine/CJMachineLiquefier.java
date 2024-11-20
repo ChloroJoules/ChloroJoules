@@ -1,6 +1,7 @@
 package io.github.chlorojoules.client.machine;
 
 import io.github.chlorojoules.client.*;
+import net.minecraft.src.game.level.World;
 
 public class CJMachineLiquefier implements CJIMachine {
 	@Override
@@ -15,4 +16,8 @@ public class CJMachineLiquefier implements CJIMachine {
 
 		builder.runRecipe(recipe, machineEntity);
 	}
+
+	@Override
+	public void onNeighbourChange(
+			World world, int x, int y, int z) {}
 }

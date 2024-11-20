@@ -8,7 +8,6 @@ import net.minecraft.src.client.gui.StringTranslate;
 import net.minecraft.src.game.item.ItemStack;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 import static io.github.chlorojoules.client.CJRarityInfo.raritySufficient;
 import static io.github.chlorojoules.client.gui.CJGuiGravity.*;
@@ -16,8 +15,10 @@ import static io.github.chlorojoules.client.gui.CJGuiMachineBaseLayout.FLUID_HEI
 import static io.github.chlorojoules.client.gui.CJGuiMachineBaseLayout.WORKING_HEIGHT;
 
 public class CJMachineBuilder {
-	private static final int FUEL_TANK_INSET = 10;
-	private static final int FUEL_TANK_SIZE = 4 * CJTank.BUCKET;
+	public static final int FUEL_TANK_INSET = 10;
+	public static final int FUEL_TANK_SIZE = 4 * CJTank.BUCKET;
+
+	public static final int JEWEL_SLOT_INSET = 35;
 
 	public String name = null;
 	public CJRarity rarity = CJRarity.MANUFACTURED;
@@ -106,7 +107,7 @@ public class CJMachineBuilder {
 		jewelSlotIndex = slots.size();
 
 		return addSlotGravity(
-				CJGuiGravity.BOTTOM_LEFT, 35,
+				CJGuiGravity.BOTTOM_LEFT, JEWEL_SLOT_INSET,
 				/* Align bottom of Jewel slot with fuel tank. */
 				(WORKING_HEIGHT - FLUID_HEIGHT) / 2, false);
 	}
@@ -299,10 +300,12 @@ public class CJMachineBuilder {
 				if(volume.current >= volume.max) return false;
 			}
 			else {
-				ItemStack inputStack =
+				ItemStack outputStack =
 						entity.stacks.get(component.index);
 
-				if(inputStack.stackSize >= inputStack.getMaxStackSize()) {
+				if(outputStack == null) continue;
+
+				if(outputStack.stackSize >= outputStack.getMaxStackSize()) {
 					return false;
 				}
 			}

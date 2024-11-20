@@ -11,6 +11,7 @@ import net.minecraft.src.game.entity.player.EntityPlayer;
 import net.minecraft.src.game.entity.player.InventoryPlayer;
 import net.minecraft.src.game.item.EnumTools;
 import net.minecraft.src.game.item.Item;
+import net.minecraft.src.game.item.ItemBucket;
 import net.minecraft.src.game.item.ItemStack;
 import net.minecraft.src.game.level.World;
 
@@ -45,25 +46,61 @@ public class CJBlockMachineBase extends BlockContainer {
 
 		CJTileEntityMachineBase machineEntity = machineEntity(world, x, y, z);
 
-		// TODO: If held item is a bucket which contains a fluid accepted by
-		//		 A `CJTank` of this machine -- fill that tank and empty the
-		//		 Bucket. If the bucket is empty -- fill from an available
-		//		 Output tank.
-		// TODO: When we autogenerate fluid buckets we will probably need to
-		//       Append Vanilla ones.
 		ItemStack heldItem = player.inventory.getCurrentItem();
-
 		if(heldItem == null) return false;
-		if(heldItem.itemID != Item.bucketWater.itemID) return false;
+
+		int heldID = heldItem.itemID;
+
+		// If the bucket is empty -- fill from an available output tank.
+		if(heldID == Item.bucketEmpty.itemID) {
+			int index = machineBuilder.getPrimaryOutputTankIndex();
+
+			if(index == -1) return false;
+
+			CJTankVolume volume = machineEntity.tanks.get(index);
+
+			int bucketID = -1;
+
+			for(int i = 0; i < CJClient.bucketFluids.size(); i++) {
+				int fluid = CJClient.bucketFluids.get(i);
+
+				if(fluid != volume.fluidID) continue;
+
+				bucketID = CJClient.buckets.get(i).getRegisteredItemId();
+			}
+
+			if(bucketID == -1) return false;
+
+			if(volume.removeFluid(0, CJTank.BUCKET, true) == CJTank.BUCKET) {
+				InventoryPlayer inventory = player.inventory;
+				ItemStack stack =
+						inventory.mainInventory[inventory.currentItem];
+
+				stack.itemID = bucketID;
+				return true;
+			}
+
+			return false;
+		}
+
+		int fluidID = -1;
+		for(int i = 0; i < CJClient.buckets.size(); i++) {
+			ItemBucket bucket = CJClient.buckets.get(i);
+
+			if(bucket.itemID != heldID) continue;
+
+			fluidID = CJClient.bucketFluids.get(i);
+		}
+
+		if(fluidID == -1) return false;
 
 		// TODO: Make this return different tanks depending on attempted fluid
 		//       Insertion.
 		int tankIndex = machineBuilder.getPrimaryInputTankIndex();
 		CJTankVolume tankVolume = machineEntity.tanks.get(tankIndex);
 
-		int waterID = Block.waterMoving.getBlockID();
-		if(tankVolume.fluidID == waterID || tankVolume.fluidID == 0) {
-			int filled = tankVolume.addFluid(waterID, CJTank.BUCKET, true);
+		if(tankVolume.fluidID == fluidID || tankVolume.fluidID == 0) {
+			int filled = tankVolume.addFluid(fluidID, CJTank.BUCKET, true);
 			if(filled == CJTank.BUCKET) {
 				InventoryPlayer inventory = player.inventory;
 				ItemStack stack =
@@ -103,6 +140,15 @@ public class CJBlockMachineBase extends BlockContainer {
 		machine.onBreak(world, x, y, z);
 
 		super.onBlockRemoval(world, x, y, z);
+	}
+
+	@Override
+	public void onNeighborBlockChange(
+			World world, int x, int y, int z, int ext) {
+
+		machineBuilder.machineImpl.onNeighbourChange(world, x, y, z);
+
+		super.onNeighborBlockChange(world, x, y, z, ext);
 	}
 
 	@Override
