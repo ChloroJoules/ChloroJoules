@@ -154,11 +154,15 @@ public class CJMachineBuilder {
 				CJGuiGravityInfo.getProgressBarAnchoredY(CENTER, 0));
 	}
 
+	// TODO: Make a recipe builder.
 	public CJMachineBuilder addRecipe(
 			int fuelVolume, CJMachineRecipeComponent in,
-			CJMachineRecipeComponent out, int ticks) {
+			CJMachineRecipeComponent out, int ticks, boolean allowPassive) {
 
-		recipies.add(new CJMachineRecipe(this, fuelVolume, in, out, ticks));
+		CJMachineRecipe recipe = new CJMachineRecipe(
+				this, fuelVolume, in, out, ticks, allowPassive);
+
+		recipies.add(recipe);
 
 		return this;
 	}

@@ -6,6 +6,7 @@ tile.flowing_water.name=Water
 message.cj_no_power=Not enough CJ
 message.cj_no_jewel=No jewel inserted
 message.cj_bad_jewel=Bad jewel inserted
+message.cj_poor_jewel=Low-tier jewel inserted
 message.cj_bad_recipe=No matching recipe
 message.cj_resource=Insufficient resources
 
@@ -13,11 +14,22 @@ message.cj_resource=Insufficient resources
 tile.cj_bugblock.name=BugBlock
 tile.cj_liquefier.name=Liquefier
 
+# Fluids.
+tile.cj_fluid_paste.name=Paste
+tile.cj_fluid_chlorojoules.name=ChloroJoules
+
 # Inventories.
 inventory.cj_liquefier=Liquefier
+inventory.cj_refinery=Refinery
+inventory.cj_solidifier=Solidifier
+
+inventory.cj_flooper=Flooper
+inventory.cj_whooper=Whooper
 
 # Items.
 item.cj_paste.name=Plant Paste
+item.cj_fluid_paste_bucket.name=Paste Bucket
+item.cj_fluid_chlorojoules_bucket.name=Bucket O' Joules
 
 item.cj_jewel_primal.name=Primal ChloroJewel
 item.cj_jewel_manufactured.name=Manufactured ChloroJewel

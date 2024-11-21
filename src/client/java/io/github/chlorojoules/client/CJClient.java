@@ -206,7 +206,7 @@ public class CJClient extends CJInstance implements ClientMod {
 									new CJMachineRecipeComponent(
 											1, fluidPaste, 50)
 											.setTarget(TANK),
-									50)
+									50, true)
 							.setImpl(CJMachineRecipeConsumer.class));
 
 			refinery = registerNewMachine(
@@ -230,7 +230,7 @@ public class CJClient extends CJInstance implements ClientMod {
 									new CJMachineRecipeComponent(
 											2, fluidChlorojoules, 5)
 											.setTarget(TANK),
-									100)
+									100, true)
 							.setImpl(CJMachineRecipeConsumer.class));
 
 			solidifier = registerNewMachine(
@@ -251,15 +251,15 @@ public class CJClient extends CJInstance implements ClientMod {
 											1, fluidPaste, 30)
 											.setTarget(TANK),
 									new CJMachineRecipeComponent(0, paste, 2),
-									150)
+									150, true)
 							.addRecipe(
 									100,
 									new CJMachineRecipeComponent(
-											1, fluidChlorojoules, 250)
+											0, fluidChlorojoules, 250)
 											.setTarget(TANK),
 									new CJMachineRecipeComponent(
 											0, manufacturedJewel, 1),
-									500)
+									500, false)
 							.setImpl(CJMachineRecipeConsumer.class));
 
 			// TODO: UI to allow floopers to be filtered on one fluid kind.

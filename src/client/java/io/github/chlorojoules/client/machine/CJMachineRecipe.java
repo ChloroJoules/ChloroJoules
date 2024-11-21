@@ -22,9 +22,10 @@ public class CJMachineRecipe {
 	public CJMachineRecipe(
 			CJMachineBuilder builder, int fuelVolume,
 			CJMachineRecipeComponent in, CJMachineRecipeComponent out,
-			int ticks) {
+			int ticks, boolean allowPassive) {
 
 		processTime = ticks;
+		this.allowPassive = allowPassive;
 
 		if(builder.fuelTankIndex == -1) {
 			throw new RuntimeException("No fuel tank in machine");
