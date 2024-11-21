@@ -179,6 +179,22 @@ public class CJMachineBuilder {
 		return -1;
 	}
 
+	public int getPrimaryInputSlotIndex() {
+		for(int i = 0; i < slots.size(); i++) {
+			if(!slots.get(i).output) return i;
+		}
+
+		return -1;
+	}
+
+	public int getPrimaryOutputSlotIndex() {
+		for(int i = 0; i < slots.size(); i++) {
+			if(slots.get(i).output) return i;
+		}
+
+		return -1;
+	}
+
 	public CJMachineRecipe getMatchingRecipe(CJTileEntityMachineBase entity) {
 		entity.errorMessage = null;
 

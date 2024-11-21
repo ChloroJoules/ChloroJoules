@@ -34,6 +34,8 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		// TODO: Should we cache this?
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
+		if(!(tileEntity instanceof CJTileEntityMachineBase)) return null;
+
 		return (CJTileEntityMachineBase) tileEntity;
 	}
 

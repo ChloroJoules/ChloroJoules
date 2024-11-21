@@ -6,8 +6,6 @@ import io.github.chlorojoules.client.CJTileEntityMachineBase;
 
 import net.minecraft.src.game.level.World;
 
-import java.util.logging.Logger;
-
 import static
 		io.github.chlorojoules.client.CJTileEntityMachineBase.machineEntity;
 

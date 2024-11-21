@@ -34,6 +34,7 @@ public class CJClient extends CJInstance implements ClientMod {
 	public static RegisteredBlock liquefier;
 	public static RegisteredBlock solidifier;
 	public static RegisteredBlock flooper;
+	public static RegisteredBlock whooper;
 
 	public static RegisteredItem paste;
 
@@ -158,8 +159,10 @@ public class CJClient extends CJInstance implements ClientMod {
 								CJGuiGravity.CENTER, (SLOT_IN_WIDTH * 4) / 3)
 						.addRecipe(
 								10,
-								new CJMachineRecipeComponent(0, Block.leaves, 1),
-								new CJMachineRecipeComponent(1, fluidPaste, 50)
+								new CJMachineRecipeComponent(
+										0, Block.leaves, 1),
+								new CJMachineRecipeComponent(
+										1, fluidPaste, 50)
 										.setTarget(CJMachineRecipeTarget.TANK),
 								50)
 						.setImpl(new CJMachineLiquefier()));
@@ -192,6 +195,12 @@ public class CJClient extends CJInstance implements ClientMod {
 								CJGuiGravity.CENTER, 0, 0, false,
 								2 * CJTank.BUCKET, 0)
 						.setImpl(new CJMachineFlooper()));
+
+		whooper = registerNewMachine(
+				"cj_whooper", new CJMachineBuilder()
+						.setMachineName("cj_flooper")
+						.addSlotGravity(CJGuiGravity.CENTER, 0, 0, false)
+						.setImpl(new CJMachineWhooper()));
 
 		RegisteredItemStack pasteStack = paste.newRegisteredItemStack();
 		RegisteredItemStack primalJewelStack =
