@@ -45,22 +45,18 @@ public class CJGuiMachineBase extends GuiContainer {
 	// TODO: This floats tooltips what appears to be in absolute rather than
 	//		 Relative space.
 	private void drawTooltip(String name, String description, int x, int y) {
-		int widthScaled = (width - xSize) / 2;
-		int heightScaled = (height - ySize) / 2;
-
 		int nameWidth = fontRenderer.getStringWidth(name);
 		int descriptionWidth = fontRenderer.getStringWidth(description);
 		int textWidth = Math.max(nameWidth, descriptionWidth);
 
 		// TODO: Loads of magic numbers down here.
-		int xSlot = x - widthScaled + 12;
-		int ySlot = y - heightScaled - 12;
+		int xSlot = x + 12;
+		int ySlot = y - 12;
 
 		this.drawGradientRect(
 				xSlot - 3, ySlot - 3,
 				xSlot + textWidth + 3, ySlot + 26,
-				TOOLTIP_BACKGROUND, TOOLTIP_BACKGROUND
-		);
+				TOOLTIP_BACKGROUND, TOOLTIP_BACKGROUND);
 
 		fontRenderer.drawStringWithShadow(description, xSlot, ySlot + 15, -1);
 		fontRenderer.drawStringWithShadow(name, xSlot, ySlot, -1);
