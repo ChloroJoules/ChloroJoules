@@ -137,7 +137,7 @@ public class CJBlockMachineBase extends BlockContainer {
 	public void onBlockRemoval(World world, int x, int y, int z) {
 		CJTileEntityMachineBase machine = machineEntity(world, x, y, z);
 
-		machine.onBreak(world, x, y, z);
+		if(machine != null) machine.onBreak(world, x, y, z);
 
 		super.onBlockRemoval(world, x, y, z);
 	}

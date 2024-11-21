@@ -14,6 +14,8 @@ public class CJMachineWhooper implements CJIMachine {
 	private CJTileEntityMachineBase[] adjacentMachines = null;
 	private TileEntityChest[] adjacentChests = null;
 
+	private TileEntity lastInsert = null;
+
 	public static int getChestMatchingOutputIndex(
 			TileEntityChest chest, int itemID) {
 
@@ -33,10 +35,14 @@ public class CJMachineWhooper implements CJIMachine {
 
 		for(int i = 0; i < chest.getSizeInventory(); i++) {
 			ItemStack stack = chest.getStackInSlot(i);
+
 			if(stack == null) {
 				return i;
 			}
-			else if(itemID != -1 && stack.itemID == itemID) {
+
+			if(stack.stackSize >= stack.getMaxStackSize()) continue;
+
+			if(itemID != -1 && stack.itemID == itemID) {
 				return i;
 			}
 		}
@@ -105,6 +111,8 @@ public class CJMachineWhooper implements CJIMachine {
 
 			// TODO: How can we de-duplicate this section?
 			if(adjacentMachine != null) {
+				if(adjacentMachine == lastInsert) continue;
+
 				// TODO: Get first non-null slot for multi-output machines.
 				slotIndex = adjacentMachine.machineBuilder
 						.getPrimaryOutputSlotIndex();
@@ -113,6 +121,8 @@ public class CJMachineWhooper implements CJIMachine {
 				inStack = adjacentMachine.stacks.get(slotIndex);
 			}
 			else if(adjacentChest != null) {
+				if(adjacentChest == lastInsert) continue;
+
 				slotIndex = getChestMatchingOutputIndex(
 								adjacentChest, currentItemID);
 
@@ -124,7 +134,8 @@ public class CJMachineWhooper implements CJIMachine {
 
 			// TODO: This is currently hardcoded to 1 item per tick.
 			if(stack == null) {
-				stack = new ItemStack(inStack.itemID, 1, inStack.itemDamage);
+				machineEntity.stacks.set(0, new ItemStack(
+						inStack.itemID, 1, inStack.itemDamage));
 			}
 			else {
 				stack.stackSize++;
@@ -157,6 +168,7 @@ public class CJMachineWhooper implements CJIMachine {
 		// TODO: This should use `quickMove` so the tile can filter which slot
 		//       To insert into. This means we need to sort out machine
 		//       Inventory quick move.
+		boolean didInsert = false;
 		for(int i = 0; i < adjacentMachines.length; ++i) {
 			ItemStack outStack = null;
 			int slotIndex = -1;
@@ -167,11 +179,41 @@ public class CJMachineWhooper implements CJIMachine {
 			TileEntityChest adjacentChest = adjacentChests[i];
 
 			if(adjacentMachine != null) {
-				slotIndex = adjacentMachine.machineBuilder
-						.getPrimaryInputSlotIndex();
+				for(int j = 0; j < adjacentMachine.stacks.size(); j++) {
+					if(adjacentMachine.machineBuilder.slots.get(j).output) {
+						continue;
+					}
+
+					outStack = adjacentMachine.stacks.get(j);
+
+					if(outStack == null) {
+						slotIndex = j;
+						break;
+					}
+
+					if(outStack.stackSize >= outStack.getMaxStackSize()) {
+						continue;
+					}
+
+					if(outStack.itemID == stack.itemID) {
+						slotIndex = j;
+						break;
+					}
+				}
 
 				if(slotIndex == -1) continue;
-				outStack = adjacentMachine.stacks.get(slotIndex);
+
+				if(outStack == null) {
+					adjacentMachine.stacks.set(
+							slotIndex, new ItemStack(
+									stack.itemID, 1, stack.itemDamage));
+				}
+				else {
+					outStack.stackSize++;
+				}
+
+				lastInsert = adjacentMachine;
+				didInsert = true;
 			}
 			else if(adjacentChest != null) {
 				slotIndex = getChestMatchingInputIndex(
@@ -179,24 +221,21 @@ public class CJMachineWhooper implements CJIMachine {
 
 				if(slotIndex == -1) continue;
 				outStack = adjacentChest.getStackInSlot(slotIndex);
-			}
 
-			if(adjacentMachine != null) {
-				if(outStack == null) {
-					adjacentMachine.stacks.set(
-							slotIndex, new ItemStack(
-									stack.itemID, stack.itemDamage, 1));
-				}
-				else outStack.stackSize++;
-			}
-			else if(adjacentChest != null) {
 				if(outStack == null) {
 					adjacentChest.setInventorySlotContents(
 							slotIndex, new ItemStack(
-									stack.itemID, stack.itemDamage, 1));
+									stack.itemID, 1, stack.itemDamage));
 				}
-				else outStack.stackSize++;
+				else {
+					outStack.stackSize++;
+				}
+
+				lastInsert = adjacentChest;
+				didInsert = true;
 			}
+
+			if(!didInsert) continue;
 
 			if(stack.stackSize == 1) {
 				machineEntity.stacks.set(0, null);

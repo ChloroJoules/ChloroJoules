@@ -198,7 +198,7 @@ public class CJClient extends CJInstance implements ClientMod {
 
 		whooper = registerNewMachine(
 				"cj_whooper", new CJMachineBuilder()
-						.setMachineName("cj_flooper")
+						.setMachineName("cj_whooper")
 						.addSlotGravity(CJGuiGravity.CENTER, 0, 0, false)
 						.setImpl(new CJMachineWhooper()));
 
