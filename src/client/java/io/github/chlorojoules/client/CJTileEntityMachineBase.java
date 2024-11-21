@@ -1,8 +1,10 @@
 package io.github.chlorojoules.client;
 
+import io.github.chlorojoules.client.machine.CJIMachine;
 import io.github.chlorojoules.client.machine.CJMachineBuilder;
 import net.minecraft.src.client.inventory.IInventory;
 import net.minecraft.src.game.block.tileentity.TileEntity;
+import net.minecraft.src.game.entity.other.EntityItem;
 import net.minecraft.src.game.entity.player.EntityPlayer;
 import net.minecraft.src.game.item.ItemStack;
 import net.minecraft.src.game.level.World;
@@ -28,6 +30,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	public CJRarity jewelRarity = CJRarity.MANUFACTURED;
 
 	public CJMachineBuilder machineBuilder;
+	public CJIMachine impl;
 
 	public static CJTileEntityMachineBase machineEntity(
 			World world, int x, int y, int z) {
@@ -40,36 +43,55 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		return (CJTileEntityMachineBase) tileEntity;
 	}
 
-	public CJTileEntityMachineBase() {}
-
-	public CJTileEntityMachineBase(CJMachineBuilder builder) {
+	private void initFromBuilder(CJMachineBuilder builder) {
 		machineBuilder = builder;
+
+		try {
+			impl = (CJIMachine) builder.machineImpl.newInstance();
+		}
+		catch(Exception e) {
+			throw new RuntimeException(e);
+		}
 
 		stacks = new ArrayList<>();
 		// TODO: There's probably a better way to do this.
 		for(int i = 0; i < builder.slots.size(); i++) stacks.add(null);
 
-		tanks = new ArrayList<>(builder.tankVolumes);
+		tanks = new ArrayList<>();
+		for(int i = 0; i < builder.tankVolumes.size(); i++) {
+			CJTankVolume volume = builder.tankVolumes.get(i);
+			CJTankVolume newVolume = new CJTankVolume();
+			newVolume.max = volume.max;
+			newVolume.fluidID = volume.fluidID;
+			newVolume.lockFluid = volume.lockFluid;
+			tanks.add(newVolume);
+		}
+	}
+
+	public CJTileEntityMachineBase() {}
+
+	public CJTileEntityMachineBase(CJMachineBuilder builder) {
+		initFromBuilder(builder);
 	}
 
 	public void onBreak(World world, int x, int y, int z) {
-		// TODO: Drop item stacks.
 		// TODO: Preserve fluid tanks etc. Should we make machines retain
 		//  	 Inventory on break?
-		/*
-		dropStack = new ItemStack(item.itemID, size, item.getItemDamage());
-		EntityItem entity = new EntityItem(world, x, y, z, dropStack);
 
-		world.entityJoinedWorld(entity);
-		if(entity.hasTagCompound()) {
-			entity.item.setTagCompound(stack.getTagCompound());
+		for(ItemStack stack : stacks) {
+			if(stack == null) continue;
+			EntityItem entity = new EntityItem(world, x, y, z, stack);
+			world.entityJoinedWorld(entity);
 		}
-		 */
+
+		stacks = null;
+		tanks = null;
+		operationTicks = 0;
 	}
 
 	@Override
 	public void updateEntity() {
-		machineBuilder.machineImpl.updateMachine(this);
+		impl.updateMachine(this);
 	}
 
 	@Override
@@ -124,13 +146,8 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	public void readFromNBT(NBTTagCompound tagCompound) {
 		super.readFromNBT(tagCompound);
 
-		machineBuilder =
-				CJClient.machines.get(tagCompound.getString("cj_machine"));
-
-		stacks = new ArrayList<>();
-		for(int i = 0; i < machineBuilder.slots.size(); i++) stacks.add(null);
-
-		tanks = new ArrayList<>(machineBuilder.tankVolumes);
+		initFromBuilder(
+				CJClient.machines.get(tagCompound.getString("cj_machine")));
 
 		// Deserialize slots.
 		NBTTagList itemsList = tagCompound.getTagList("items");

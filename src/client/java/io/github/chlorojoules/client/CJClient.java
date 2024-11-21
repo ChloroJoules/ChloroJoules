@@ -42,6 +42,7 @@ public class CJClient extends CJInstance implements ClientMod {
 	public static RegisteredBlock bugBlock;
 	public static RegisteredBlock liquefier;
 	public static RegisteredBlock solidifier;
+	public static RegisteredBlock refinery;
 	public static RegisteredBlock flooper;
 	public static RegisteredBlock whooper;
 
@@ -177,7 +178,7 @@ public class CJClient extends CJInstance implements ClientMod {
 							.addTank(15, 15, false, 4 * CJTank.BUCKET, 0)
 							.addSlot(50, 35, false)
 							.addSlot(75, 35, true)
-							.setImpl(new CJMachineBugBlock()));
+							.setImpl(CJMachineBugBlock.class));
 
 			liquefier = registerNewMachine(
 					"cj_liquefier", new CJMachineBuilder()
@@ -206,7 +207,31 @@ public class CJClient extends CJInstance implements ClientMod {
 											1, fluidPaste, 50)
 											.setTarget(TANK),
 									50)
-							.setImpl(new CJMachineRecipeConsumer()));
+							.setImpl(CJMachineRecipeConsumer.class));
+
+			refinery = registerNewMachine(
+					"cj_refinery", new CJMachineBuilder()
+							.setRarity(CJRarity.PRIMAL)
+							.addFuelTank()
+							.addTankGravityVCenter(
+									TOP_LEFT,
+									JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
+									false, 8 * CJTank.BUCKET, 0)
+							.addTankGravityVCenter(
+									CENTER, SLOT_IN_WIDTH * 4, true,
+									8 * CJTank.BUCKET, 0)
+							.addJewelSlot()
+							.addProgressBarGravityVCenter(CENTER, 0)
+							.addRecipe(
+									15,
+									new CJMachineRecipeComponent(
+											1, fluidPaste, 10)
+											.setTarget(TANK),
+									new CJMachineRecipeComponent(
+											2, fluidChlorojoules, 5)
+											.setTarget(TANK),
+									100)
+							.setImpl(CJMachineRecipeConsumer.class));
 
 			solidifier = registerNewMachine(
 					"cj_solidifier", new CJMachineBuilder()
@@ -222,24 +247,32 @@ public class CJClient extends CJInstance implements ClientMod {
 							.addProgressBarGravityVCenter(CENTER, 0)
 							.addRecipe(
 									20,
-									new CJMachineRecipeComponent(1, fluidPaste, 30)
+									new CJMachineRecipeComponent(
+											1, fluidPaste, 30)
 											.setTarget(TANK),
 									new CJMachineRecipeComponent(0, paste, 2),
 									150)
-							.setImpl(new CJMachineRecipeConsumer()));
+							.addRecipe(
+									100,
+									new CJMachineRecipeComponent(
+											1, fluidChlorojoules, 250)
+											.setTarget(TANK),
+									new CJMachineRecipeComponent(
+											0, manufacturedJewel, 1),
+									500)
+							.setImpl(CJMachineRecipeConsumer.class));
 
 			// TODO: UI to allow floopers to be filtered on one fluid kind.
 			flooper = registerNewMachine(
 					"cj_flooper", new CJMachineBuilder()
 							.addTankGravity(
 									CENTER, 0, 0, false, 2 * CJTank.BUCKET, 0)
-							.setImpl(new CJMachineFlooper()));
+							.setImpl(CJMachineFlooper.class));
 
 			whooper = registerNewMachine(
 					"cj_whooper", new CJMachineBuilder()
-							.setMachineName("cj_whooper")
 							.addSlotGravity(CENTER, 0, 0, false)
-							.setImpl(new CJMachineWhooper()));
+							.setImpl(CJMachineWhooper.class));
 		}
 	}
 

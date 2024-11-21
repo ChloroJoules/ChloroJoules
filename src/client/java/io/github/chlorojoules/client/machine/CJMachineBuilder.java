@@ -22,7 +22,7 @@ public class CJMachineBuilder {
 
 	public String name = null;
 	public CJRarity rarity = CJRarity.MANUFACTURED;
-	public CJIMachine machineImpl = null;
+	public Class<?> machineImpl = null;
 
 	public int fuelTankIndex = -1;
 	public int jewelSlotIndex = -1;
@@ -44,7 +44,7 @@ public class CJMachineBuilder {
 		return this;
 	}
 
-	public CJMachineBuilder setImpl(CJIMachine value) {
+	public CJMachineBuilder setImpl(Class<?> value) {
 		machineImpl = value;
 		return this;
 	}
