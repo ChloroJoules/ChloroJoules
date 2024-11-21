@@ -22,9 +22,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import static io.github.chlorojoules.client.gui.CJGuiGravity.*;
 import static io.github.chlorojoules.client.gui.CJGuiMachineBaseLayout.*;
 import static io.github.chlorojoules.client.CJRarityInfo.*;
 import static io.github.chlorojoules.client.machine.CJMachineBuilder.*;
+import static io.github.chlorojoules.client.machine.CJMachineRecipeTarget.*;
 
 public class CJClient extends CJInstance implements ClientMod {
 	public static Map<String, CJMachineBuilder> machines = new HashMap<>();
@@ -55,6 +57,7 @@ public class CJClient extends CJInstance implements ClientMod {
 	public RegisteredBlock registerNewMachine(
 			String name, CJMachineBuilder builder) {
 
+		builder.setMachineName(name);
 		machines.put(name, builder);
 
 		return registerNewBlock(name, new BlockBuilder()
@@ -165,82 +168,113 @@ public class CJClient extends CJInstance implements ClientMod {
 
 		// TODO: Feels like machines could be declared in JSON or smth (so too
 		//       For all our registry here -- make our lives easier?)
-		bugBlock = registerNewMachine(
-				"cj_bugblock", new CJMachineBuilder()
-						.setMachineName("cj_bugblock")
-						.setRarity(CJRarity.AWAKENED)
-						.addTank(15, 15, false, 4 * CJTank.BUCKET, 0)
-						.addSlot(50, 35, false)
-						.addSlot(75, 35, true)
-						.setImpl(new CJMachineBugBlock()));
+		// Machines.
+		{
 
-		liquefier = registerNewMachine(
-				"cj_liquefier", new CJMachineBuilder()
-						.setMachineName("cj_liquefier")
-						.setRarity(CJRarity.PRIMAL)
-						.addFuelTank()
-						.addTankGravityVCenter(
-								CJGuiGravity.TOP_RIGHT, 10, true,
-								8 * CJTank.BUCKET, 0)
-						.addSlotGravity(CJGuiGravity.CENTER, 0, 0, false)
-						/* TODO: Make Jewel slot maximum stack size 1. */
-						/*
-						 * TODO: Make Jewel slot visually distinct and reject
-						 *       Non-Jewel items.
-						 */
-						.addJewelSlot()
-						.addProgressBarGravityVCenter(
-								/*
-								 * TODO: Find a better way to center progress
-								 *       Bars between two elements.
-								 */
-								CJGuiGravity.CENTER, (SLOT_IN_WIDTH * 4) / 3)
-						.addRecipe(
-								10,
-								new CJMachineRecipeComponent(
-										0, Block.leaves, 1),
-								new CJMachineRecipeComponent(
-										1, fluidPaste, 50)
-										.setTarget(CJMachineRecipeTarget.TANK),
-								50)
-						.setImpl(new CJMachineRecipeConsumer()));
+			bugBlock = registerNewMachine(
+					"cj_bugblock", new CJMachineBuilder()
+							.setRarity(CJRarity.AWAKENED)
+							.addTank(15, 15, false, 4 * CJTank.BUCKET, 0)
+							.addSlot(50, 35, false)
+							.addSlot(75, 35, true)
+							.setImpl(new CJMachineBugBlock()));
 
-		solidifier = registerNewMachine(
-				"cj_solidifier", new CJMachineBuilder()
-						.setMachineName("cj_solidifier")
-						.setRarity(CJRarity.PRIMAL)
-						.addFuelTank()
-						.addTankGravityVCenter(
-								CJGuiGravity.TOP_LEFT,
-								JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
-								false, 8 * CJTank.BUCKET, 0)
-						.addSlotGravityVCenter(
-								CJGuiGravity.CENTER, SLOT_IN_WIDTH * 4, true)
-						.addJewelSlot()
-						.addProgressBarGravityVCenter(CJGuiGravity.CENTER, 0)
-						.addRecipe(
-								20,
-								new CJMachineRecipeComponent(1, fluidPaste, 30)
-										.setTarget(CJMachineRecipeTarget.TANK),
-								new CJMachineRecipeComponent(0, paste, 2),
-								150)
-						.setImpl(new CJMachineRecipeConsumer()));
+			liquefier = registerNewMachine(
+					"cj_liquefier", new CJMachineBuilder()
+							.setRarity(CJRarity.PRIMAL)
+							.addFuelTank()
+							.addTankGravityVCenter(
+									TOP_RIGHT, 10, true, 8 * CJTank.BUCKET, 0)
+							.addSlotGravity(CENTER, 0, 0, false)
+							/* TODO: Make Jewel slot maximum stack size 1. */
+							/*
+							 * TODO: Make Jewel slot visually distinct and
+							 *       Reject Non-Jewel items.
+							 */
+							.addJewelSlot()
+							/*
+							 * TODO: Find a better way to center progress Bars
+							 *       Between two elements.
+							 */
+							.addProgressBarGravityVCenter(
+									CENTER, (SLOT_IN_WIDTH * 4) / 3)
+							.addRecipe(
+									10,
+									new CJMachineRecipeComponent(
+											0, Block.leaves, 1),
+									new CJMachineRecipeComponent(
+											1, fluidPaste, 50)
+											.setTarget(TANK),
+									50)
+							.setImpl(new CJMachineRecipeConsumer()));
 
-		// TODO: UI to allow floopers to be filtered on one fluid kind.
-		flooper = registerNewMachine(
-				"cj_flooper", new CJMachineBuilder()
-						.setMachineName("cj_flooper")
-						.addTankGravity(
-								CJGuiGravity.CENTER, 0, 0, false,
-								2 * CJTank.BUCKET, 0)
-						.setImpl(new CJMachineFlooper()));
+			solidifier = registerNewMachine(
+					"cj_solidifier", new CJMachineBuilder()
+							.setRarity(CJRarity.PRIMAL)
+							.addFuelTank()
+							.addTankGravityVCenter(
+									TOP_LEFT,
+									JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
+									false, 8 * CJTank.BUCKET, 0)
+							.addSlotGravityVCenter(
+									CENTER, SLOT_IN_WIDTH * 4, true)
+							.addJewelSlot()
+							.addProgressBarGravityVCenter(CENTER, 0)
+							.addRecipe(
+									20,
+									new CJMachineRecipeComponent(1, fluidPaste, 30)
+											.setTarget(TANK),
+									new CJMachineRecipeComponent(0, paste, 2),
+									150)
+							.setImpl(new CJMachineRecipeConsumer()));
 
-		whooper = registerNewMachine(
-				"cj_whooper", new CJMachineBuilder()
-						.setMachineName("cj_whooper")
-						.addSlotGravity(CJGuiGravity.CENTER, 0, 0, false)
-						.setImpl(new CJMachineWhooper()));
+			// TODO: UI to allow floopers to be filtered on one fluid kind.
+			flooper = registerNewMachine(
+					"cj_flooper", new CJMachineBuilder()
+							.addTankGravity(
+									CENTER, 0, 0, false, 2 * CJTank.BUCKET, 0)
+							.setImpl(new CJMachineFlooper()));
 
+			whooper = registerNewMachine(
+					"cj_whooper", new CJMachineBuilder()
+							.setMachineName("cj_whooper")
+							.addSlotGravity(CENTER, 0, 0, false)
+							.setImpl(new CJMachineWhooper()));
+		}
+	}
+
+	@Override
+	public void onPostInit() {
+		// TODO: A two way mapping between bucket/fluid IDs would probably be
+		//       More efficient for lookup by `CJBlockMachineBase`.
+		// Register fluids/buckets.
+		for(int i = 0; i < Item.itemsList.length; i++) {
+			Item item = Item.itemsList[i];
+
+			if(item == null) continue;
+			if(!(item instanceof ItemBucket)) continue;
+			if(item == Item.bucketEmpty) continue;
+
+			buckets.add((ItemBucket) item);
+
+			// TODO: Replace with a Mixin once possible.
+			try {
+				Field field = ItemBucket.class.getDeclaredField("heldLiquid");
+				field.setAccessible(true);
+				int fluidID = (int) field.get(item);
+				bucketFluids.add(fluidID);
+
+				Logger.getLogger("ChloroJoules").info("Added bucket \"" +
+						item.getItemName() + "\" (" + item.itemID + ") for " +
+						"fluid \"" + Block.blocksList[fluidID].getBlockName() +
+						"\" (" + fluidID + ")");
+			}
+			catch(Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		// Recipe item stacks.
 		RegisteredItemStack pasteStack = paste.newRegisteredItemStack();
 		RegisteredItemStack primalJewelStack =
 				primalJewel.newRegisteredItemStack();
@@ -274,8 +308,10 @@ public class CJClient extends CJInstance implements ClientMod {
 
 		RegisteredItemStack ashStack = Item.ash.newRegisteredItemStack();
 
+		// Vanilla machine recipes.
 		registerFurnaceRecipe(Block.leaves.asRegisteredItem(), pasteStack);
 
+		// Crafting recipes.
 		registerRecipe(
 				primalJewelStack,
 				" ~ ",
@@ -321,36 +357,5 @@ public class CJClient extends CJInstance implements ClientMod {
 				'#', ironStack,
 				'~', pasteStack,
 				'|', chestStack);
-	}
-
-	@Override
-	public void onPostInit() {
-		// TODO: A two way mapping between bucket/fluid IDs would probably be
-		//       More efficient for lookup by `CJBlockMachineBase`.
-		for(int i = 0; i < Item.itemsList.length; i++) {
-			Item item = Item.itemsList[i];
-
-			if(item == null) continue;
-			if(!(item instanceof ItemBucket)) continue;
-			if(item == Item.bucketEmpty) continue;
-
-			buckets.add((ItemBucket) item);
-
-			// TODO: Replace with a Mixin once possible.
-			try {
-				Field field = ItemBucket.class.getDeclaredField("heldLiquid");
-				field.setAccessible(true);
-				int fluidID = (int) field.get(item);
-				bucketFluids.add(fluidID);
-
-				Logger.getLogger("ChloroJoules").info("Added bucket \"" +
-						item.getItemName() + "\" (" + item.itemID + ") for " +
-						"fluid \"" + Block.blocksList[fluidID].getBlockName() +
-						"\" (" + fluidID + ")");
-			}
-			catch(Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
 	}
 }
