@@ -3,7 +3,7 @@ package io.github.chlorojoules.client.machine;
 import io.github.chlorojoules.client.*;
 import net.minecraft.src.game.level.World;
 
-public class CJMachineLiquefier implements CJIMachine {
+public class CJMachineRecipeConsumer implements CJIMachine {
 	@Override
 	public void updateMachine(CJTileEntityMachineBase machineEntity) {
 		// TODO: Basic machines like this don't need their own `CJIMachine`

@@ -140,6 +140,7 @@ public class CJClient extends CJInstance implements ClientMod {
 		liquefier = registerNewMachine(
 				"cj_liquefier", new CJMachineBuilder()
 						.setMachineName("cj_liquefier")
+						.setRarity(CJRarity.PRIMAL)
 						.addFuelTank()
 						.addTankGravityVCenter(
 								CJGuiGravity.TOP_RIGHT, 10, true,
@@ -165,27 +166,28 @@ public class CJClient extends CJInstance implements ClientMod {
 										1, fluidPaste, 50)
 										.setTarget(CJMachineRecipeTarget.TANK),
 								50)
-						.setImpl(new CJMachineLiquefier()));
+						.setImpl(new CJMachineRecipeConsumer()));
 
 		solidifier = registerNewMachine(
 				"cj_solidifier", new CJMachineBuilder()
-					.setMachineName("cj_solidifier")
-					.addFuelTank()
-					.addTankGravityVCenter(
-							CJGuiGravity.TOP_LEFT,
-							JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
-							false, 8 * CJTank.BUCKET, 0)
-					.addSlotGravityVCenter(
-							CJGuiGravity.CENTER, SLOT_IN_WIDTH * 4, true)
-					.addJewelSlot()
-					.addProgressBarGravityVCenter(CJGuiGravity.CENTER, 0)
-					.addRecipe(
-							20,
-							new CJMachineRecipeComponent(1, fluidPaste, 30)
-									.setTarget(CJMachineRecipeTarget.TANK),
-							new CJMachineRecipeComponent(0, paste, 2),
-							150)
-					.setImpl(new CJMachineLiquefier()));
+						.setMachineName("cj_solidifier")
+						.setRarity(CJRarity.PRIMAL)
+						.addFuelTank()
+						.addTankGravityVCenter(
+								CJGuiGravity.TOP_LEFT,
+								JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
+								false, 8 * CJTank.BUCKET, 0)
+						.addSlotGravityVCenter(
+								CJGuiGravity.CENTER, SLOT_IN_WIDTH * 4, true)
+						.addJewelSlot()
+						.addProgressBarGravityVCenter(CJGuiGravity.CENTER, 0)
+						.addRecipe(
+								20,
+								new CJMachineRecipeComponent(1, fluidPaste, 30)
+										.setTarget(CJMachineRecipeTarget.TANK),
+								new CJMachineRecipeComponent(0, paste, 2),
+								150)
+						.setImpl(new CJMachineRecipeConsumer()));
 
 		// TODO: UI to allow floopers to be filtered on one fluid kind.
 		flooper = registerNewMachine(
@@ -206,18 +208,82 @@ public class CJClient extends CJInstance implements ClientMod {
 		RegisteredItemStack primalJewelStack =
 				primalJewel.newRegisteredItemStack();
 
+		RegisteredItemStack liquefierStack =
+				liquefier.newRegisteredItemStack();
+
+		RegisteredItemStack solidifierStack =
+				solidifier.newRegisteredItemStack();
+
+		RegisteredItemStack flooper4Stack = flooper.newRegisteredItemStack();
+		flooper4Stack.setRegisteredStackSize(4);
+
+		RegisteredItemStack whooper4Stack = whooper.newRegisteredItemStack();
+		whooper4Stack.setRegisteredStackSize(4);
+
 		RegisteredItemStack diamondStack =
 				Item.diamond.newRegisteredItemStack();
+
+		RegisteredItemStack ironStack =
+				Item.ingotIron.newRegisteredItemStack();
+
+		RegisteredItemStack flintStack =
+				Item.flint.newRegisteredItemStack();
+
+		RegisteredItemStack cauldronStack =
+				Block.cauldron.newRegisteredItemStack();
+
+		RegisteredItemStack chestStack =
+				Block.chest.newRegisteredItemStack();
+
+		RegisteredItemStack ashStack = Item.ash.newRegisteredItemStack();
 
 		registerFurnaceRecipe(Block.leaves.asRegisteredItem(), pasteStack);
 
 		registerRecipe(
 				primalJewelStack,
-				" # ",
-				"#@#",
-				" # ",
-				'#', pasteStack,
+				" ~ ",
+				"~@~",
+				" ~ ",
+				'~', pasteStack,
 				'@', diamondStack);
+
+		registerRecipe(
+				liquefierStack,
+				"#~#",
+				"~@~",
+				"#|#",
+				'#', ironStack,
+				'~', pasteStack,
+				'@', flintStack,
+				'|', cauldronStack);
+
+		registerRecipe(
+				solidifierStack,
+				"#@#",
+				"@~@",
+				"#|#",
+				'#', ironStack,
+				'~', pasteStack,
+				'@', ashStack,
+				'|', cauldronStack);
+
+		registerRecipe(
+				flooper4Stack,
+				" ~ ",
+				"~|~",
+				" # ",
+				'#', ironStack,
+				'~', pasteStack,
+				'|', cauldronStack);
+
+		registerRecipe(
+				whooper4Stack,
+				" ~ ",
+				"~|~",
+				" # ",
+				'#', ironStack,
+				'~', pasteStack,
+				'|', chestStack);
 	}
 
 	@Override
