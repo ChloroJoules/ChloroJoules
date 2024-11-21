@@ -6,6 +6,7 @@ import io.github.chlorojoules.client.gui.CJGuiGravity;
 import io.github.chlorojoules.client.machine.*;
 
 import net.minecraft.src.game.block.Block;
+import net.minecraft.src.game.block.tileentity.TileEntity;
 import net.minecraft.src.game.item.Item;
 
 import com.fox2code.foxloader.loader.ClientMod;
@@ -13,8 +14,12 @@ import com.fox2code.foxloader.registry.*;
 import net.minecraft.src.game.item.ItemBucket;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import static io.github.chlorojoules.client.gui.CJGuiMachineBaseLayout.*;
@@ -22,6 +27,8 @@ import static io.github.chlorojoules.client.CJRarityInfo.*;
 import static io.github.chlorojoules.client.machine.CJMachineBuilder.*;
 
 public class CJClient extends CJInstance implements ClientMod {
+	public static Map<String, CJMachineBuilder> machines = new HashMap<>();
+
 	public static List<ItemBucket> buckets = new ArrayList<>();
 	public static List<Integer> bucketFluids = new ArrayList<>();
 
@@ -47,6 +54,8 @@ public class CJClient extends CJInstance implements ClientMod {
 
 	public RegisteredBlock registerNewMachine(
 			String name, CJMachineBuilder builder) {
+
+		machines.put(name, builder);
 
 		return registerNewBlock(name, new BlockBuilder()
 				.setBlockName(name)
@@ -84,8 +93,36 @@ public class CJClient extends CJInstance implements ClientMod {
 										.setContainerItem(Item.bucketEmpty))));
 	}
 
+	public static void callStaticMethod(
+			Class<?> target, String name, Object... params)
+			throws InvocationTargetException, IllegalAccessException {
+
+		Method[] methods = target.getDeclaredMethods();
+
+		for(Method method : methods) {
+			if(!name.equals(method.getName())) continue;
+
+			method.setAccessible(true);
+			method.invoke(null, params);
+			return;
+		}
+
+		throw new RuntimeException(
+				"Method \"" + name + "\" could not be found in class \"" +
+				target.getName() + "\"");
+	}
+
 	@Override
 	public void onInit() {
+		try {
+			callStaticMethod(
+					TileEntity.class, "addMapping",
+					CJTileEntityMachineBase.class, "cj_machine_base");
+		}
+		catch(Exception e) {
+			throw new RuntimeException(e);
+		}
+
 		// Fluids.
 		{
 			fluidChlorojoules = registerNewFluid("cj_fluid_chlorojoules");

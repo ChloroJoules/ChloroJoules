@@ -10,6 +10,7 @@ import net.minecraft.src.game.nbt.NBTTagCompound;
 import net.minecraft.src.game.nbt.NBTTagList;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	// TODO: Make a tagging/name/enum system so we can keep track of slots
@@ -26,7 +27,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	public int operationLength = 1;
 	public CJRarity jewelRarity = CJRarity.MANUFACTURED;
 
-	public final CJMachineBuilder machineBuilder;
+	public CJMachineBuilder machineBuilder;
 
 	public static CJTileEntityMachineBase machineEntity(
 			World world, int x, int y, int z) {
@@ -38,6 +39,8 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 
 		return (CJTileEntityMachineBase) tileEntity;
 	}
+
+	public CJTileEntityMachineBase() {}
 
 	public CJTileEntityMachineBase(CJMachineBuilder builder) {
 		machineBuilder = builder;
@@ -71,13 +74,10 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 
 	@Override
 	public void writeToNBT(NBTTagCompound tagCompound) {
-		tagCompound.setString("id", "CJMachineBase");
-		tagCompound.setString("cj_machine", machineBuilder.name);
-		tagCompound.setInteger("x", this.xCoord);
-		tagCompound.setInteger("y", this.yCoord);
-		tagCompound.setInteger("z", this.zCoord);
+		super.writeToNBT(tagCompound);
 
-		/*
+		tagCompound.setString("cj_machine", machineBuilder.name);
+
 		// Serialize slots.
 		NBTTagList itemsList = new NBTTagList();
 		for(int i = 0; i < stacks.size(); i++) {
@@ -86,11 +86,11 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 			if(stack == null) continue;
 
 			NBTTagCompound slotTag = new NBTTagCompound();
-			slotTag.setByte("Slot", (byte) i);
+			slotTag.setByte("slot", (byte) i);
 			stack.writeToNBT(slotTag);
 			itemsList.setTag(slotTag);
 		}
-		tagCompound.setTag("Items", itemsList);
+		tagCompound.setTag("items", itemsList);
 
 		// Serialize tanks.
 		NBTTagList tanksList = new NBTTagList();
@@ -102,70 +102,70 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 			// NOTE: `max` and `lockFluid` are expected to be set statically
 			//       Per-machine so we don't need to serialize them.
 			NBTTagCompound volumeTag = new NBTTagCompound();
-			volumeTag.setByte("Volume", (byte) i);
-			volumeTag.setInteger("Current", tankVolume.current);
-			volumeTag.setInteger("Fluid", tankVolume.fluidID);
+			volumeTag.setByte("volume", (byte) i);
+			volumeTag.setInteger("current", tankVolume.current);
+			volumeTag.setInteger("fluid", tankVolume.fluidID);
 			tanksList.setTag(volumeTag);
 		}
-		tagCompound.setTag("Tanks", itemsList);
+		tagCompound.setTag("tanks", tanksList);
 
 		// Serialize progress.
 		NBTTagList progressBarList = new NBTTagList();
 		for(int i = 0; i < machineBuilder.progressBars.size(); i++) {
 			NBTTagCompound progressBarTag = new NBTTagCompound();
-			progressBarTag.setByte("Progress", (byte) i);
-			progressBarsTag.setShort("Ticks", (short) operationTicks);
+			progressBarTag.setByte("progress", (byte) i);
+			progressBarTag.setShort("ticks", (short) operationTicks);
 			progressBarList.setTag(progressBarTag);
 		}
-		tagCompound.setTag("Progresses", itemsList);*/
+		tagCompound.setTag("progresses", progressBarList);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound) {
-		// TODO: Get builder from registry.
-		tagCompound.getString("cj_machine");
+		super.readFromNBT(tagCompound);
 
-		xCoord = tagCompound.getInteger("x");
-		yCoord = tagCompound.getInteger("y");
-		zCoord = tagCompound.getInteger("z");
+		machineBuilder =
+				CJClient.machines.get(tagCompound.getString("cj_machine"));
 
-		/*
+		stacks = new ArrayList<>();
+		for(int i = 0; i < machineBuilder.slots.size(); i++) stacks.add(null);
+
+		tanks = new ArrayList<>(machineBuilder.tankVolumes);
+
 		// Deserialize slots.
-		NBTTagList itemsList = tagCompound.getTagList("Items");
+		NBTTagList itemsList = tagCompound.getTagList("items");
 		// TODO: Are tag lists always unordered? Is there a way we can
 		//       Request they be ordered to remove the need for the extra
 		//       `Slot` byte?
-		for(int i = 0; i < stacks.size(); i++) {
+		for(int i = 0; i < itemsList.tagCount(); i++) {
 			NBTTagCompound slotTag = (NBTTagCompound) itemsList.tagAt(i);
-			byte slotIndex = slotTag.getByte("Slot");
+			byte slotIndex = slotTag.getByte("slot");
 
 			stacks.set(slotIndex, new ItemStack(slotTag));
 		}
 
 		// Deserialize tanks.
-		NBTTagList tanksList = tagCompound.getTagList("Tanks");
-		for(int i = 0; i < tanks.size(); i++) {
+		NBTTagList tanksList = tagCompound.getTagList("tanks");
+		for(int i = 0; i < tanksList.tagCount(); i++) {
 			NBTTagCompound volumeTag = (NBTTagCompound) tanksList.tagAt(i);
-			byte tankIndex = volumeTag.getByte("Volume");
+			byte tankIndex = volumeTag.getByte("volume");
 
 			CJTankVolume volume = tanks.get(tankIndex);
-			volume.current = volumeTag.getInteger("Current");
-			volume.fluidID = volumeTag.getInteger("Fluid");
+			volume.current = volumeTag.getInteger("current");
+			volume.fluidID = volumeTag.getInteger("fluid");
 			tanks.set(tankIndex, volume);
 		}
 
 		// Deserialize progress.
-		NBTTagList progressBarList = tagCompound.getTagList("Progresses");
-		for(int i = 0; i < stacks.size(); i++) {
+		NBTTagList progressBarList = tagCompound.getTagList("progresses");
+		for(int i = 0; i < progressBarList.tagCount(); i++) {
 			NBTTagCompound progressBarTag =
 					(NBTTagCompound) progressBarList.tagAt(i);
 
-			byte progressBarIndex = progressBarTag.getByte("Progress");
-			operationTicks = progressBarsTag.getShort("Ticks");
-
-			machineBuilder.machineImpl.progressFromNBT(
-					this, progressBarIndex, progressBarTag);
-		}*/
+			// TODO: Does multiple progress bars even make sense?
+			//byte progressBarIndex = progressBarTag.getByte("progress");
+			operationTicks = progressBarTag.getShort("ticks");
+		}
 	}
 
 	@Override
