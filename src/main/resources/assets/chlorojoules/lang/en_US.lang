@@ -9,6 +9,10 @@ message.cj_bad_jewel=Bad jewel inserted
 message.cj_poor_jewel=Low-tier jewel inserted
 message.cj_bad_recipe=No matching recipe
 message.cj_resource=Insufficient resources
+message.cj_empty_fluid=Nothing
+message.cj_stopped=Machine Stopped
+message.cj_working=Machine Working
+message.cj_ok=All okay!
 
 # Blocks.
 tile.cj_bugblock.name=BugBlock

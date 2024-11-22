@@ -5,15 +5,18 @@ public class CJGuiMachineBaseLayout {
 	private static final int SLOT_WIDTH = 16;
 	private static final int SLOT_HEIGHT = 16;
 
-	// NOTE: Positional information from `resources/cj_machinebase.xcf` image
-	//       Source split by layer.
-
 	public static final int BASE_WIDTH = 176;
 	public static final int BASE_HEIGHT = 166;
 
+	public static final int INVENTORY_LABEL_X = 8;
+	public static final int INVENTORY_LABEL_Y = BASE_HEIGHT - 96 + 2;
+
+	// NOTE: Positional information from `resources/cj_machinebase.xcf` image
+	//       Source split by layer.
+
 	// Area where machine GUI elements should be placed.
 	public static final int WORKING_WIDTH = 176;
-	public static final int WORKING_HEIGHT = 73;
+	public static final int WORKING_HEIGHT = 86;
 
 	public static final int PROGRESS_FULL_X = 176;
 	public static final int PROGRESS_FULL_Y = 0;
@@ -59,4 +62,18 @@ public class CJGuiMachineBaseLayout {
 
 	public static final int FLUID_OFFSET_X = 1;
 	public static final int FLUID_OFFSET_Y = 1;
+
+	public static final int STATUS_OK_X = 194;
+	public static final int STATUS_OK_Y = 34;
+
+	public static final int STATUS_ERROR_X = 194;
+	public static final int STATUS_ERROR_Y = 43;
+
+	public static final int STATUS_WIDTH = 9;
+	public static final int STATUS_HEIGHT = 9;
+
+	public static final int STATUS_X =
+			BASE_WIDTH - (INVENTORY_LABEL_X + STATUS_WIDTH);
+
+	public static final int STATUS_Y = INVENTORY_LABEL_Y;
 }

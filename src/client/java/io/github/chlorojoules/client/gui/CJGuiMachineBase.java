@@ -13,6 +13,7 @@ import static io.github.chlorojoules.client.gui.CJGuiMachineBaseLayout.*;
 
 public class CJGuiMachineBase extends GuiContainer {
 	public static final int MACHINE_TEXT = 4210752;
+	public static final int MACHINE_OK = Block.COLOR_GREEN;
 	public static final int MACHINE_ERROR = Block.COLOR_RED;
 	public static final int TOOLTIP_BACKGROUND = -1073741824;
 
@@ -29,42 +30,65 @@ public class CJGuiMachineBase extends GuiContainer {
 		machineEntity = entity;
 	}
 
+	private boolean getIsMouseOverRect(
+			int mouseX, int mouseY, int x, int y, int width, int height) {
+
+		int widthScaled = (this.width - xSize) / 2;
+		int heightScaled = (this.height - ySize) / 2;
+
+		mouseX -= widthScaled;
+		mouseY -= heightScaled;
+
+		return mouseX >= x
+				&& mouseX < x + width
+				&& mouseY >= y
+				&& mouseY < y + height;
+	}
+
 	private boolean getIsMouseOverTank(CJTank tank, int x, int y) {
-		int widthScaled = (width - xSize) / 2;
-		int heightScaled = (height - ySize) / 2;
-
-		x -= widthScaled;
-		y -= heightScaled;
-
-		return x >= tank.xDisplayPosition - FLUID_OFFSET_X
-				&& x < tank.xDisplayPosition + FLUID_WIDTH + FLUID_OFFSET_X
-				&& y >= tank.yDisplayPosition - FLUID_OFFSET_Y
-				&& y < tank.yDisplayPosition + FLUID_HEIGHT + FLUID_OFFSET_Y;
+		return getIsMouseOverRect(
+				x + FLUID_OFFSET_X, y + FLUID_OFFSET_Y,
+				tank.xDisplayPosition, tank.yDisplayPosition,
+				FLUID_WIDTH - FLUID_OFFSET_X, FLUID_HEIGHT - FLUID_OFFSET_Y);
 	}
 
 	// TODO: This floats tooltips what appears to be in absolute rather than
 	//		 Relative space.
-	private void drawTooltip(String name, String description, int x, int y) {
+	private void drawTooltip(
+			String name, String description, int x, int y, int titleColor) {
+
 		int nameWidth = fontRenderer.getStringWidth(name);
-		int descriptionWidth = fontRenderer.getStringWidth(description);
+
+		int descriptionWidth = 0;
+		if(description != null) {
+			descriptionWidth = fontRenderer.getStringWidth(description);
+		}
+
 		int textWidth = Math.max(nameWidth, descriptionWidth);
 
 		// TODO: Loads of magic numbers down here.
 		int xSlot = x + 12;
 		int ySlot = y - 12;
 
+		// TODO: Smaller when no description.
 		this.drawGradientRect(
 				xSlot - 3, ySlot - 3,
 				xSlot + textWidth + 3, ySlot + 26,
 				TOOLTIP_BACKGROUND, TOOLTIP_BACKGROUND);
 
-		fontRenderer.drawStringWithShadow(description, xSlot, ySlot + 15, -1);
-		fontRenderer.drawStringWithShadow(name, xSlot, ySlot, -1);
+		if(description != null) {
+			fontRenderer.drawStringWithShadow(
+					description, xSlot, ySlot + 15, -1);
+		}
+
+		fontRenderer.drawStringWithShadow(name, xSlot, ySlot, titleColor);
 	}
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float deltaTicks) {
 		super.drawScreen(mouseX, mouseY, deltaTicks);
+
+		StringTranslate translate = StringTranslate.getInstance();
 
 		CJContainerMachineBase machine =
 				(CJContainerMachineBase) inventorySlots;
@@ -74,7 +98,7 @@ public class CJGuiMachineBase extends GuiContainer {
 			CJTankVolume tankVolume = machineEntity.tanks.get(i);
 
 			if(getIsMouseOverTank(tank, mouseX, mouseY)) {
-				String name = "Nothing";
+				String name = translate.translateKey("message.cj_empty_fluid");
 
 				if(tankVolume.fluidID != 0) {
 					Block fluid = Block.blocksList[tankVolume.fluidID];
@@ -84,10 +108,31 @@ public class CJGuiMachineBase extends GuiContainer {
 				drawTooltip(
 						name,
 						tankVolume.current + "/" + tankVolume.max + "mB",
-						mouseX, mouseY);
+						mouseX, mouseY, -1);
 
-				return;
+				break;
 			}
+		}
+
+		if(getIsMouseOverRect(
+				mouseX, mouseY,
+				STATUS_X, STATUS_Y,
+				STATUS_WIDTH, STATUS_HEIGHT)) {
+
+			String title = "message.cj_stopped";
+			int color = MACHINE_ERROR;
+			String name = machineEntity.errorMessage;
+
+			if(machineEntity.errorMessage == null) {
+				title = "message.cj_working";
+				color = MACHINE_OK;
+				name = "message.cj_ok";
+			}
+
+			drawTooltip(
+					translate.translateKey(title),
+					translate.translateKey(name), mouseX, mouseY,
+					color);
 		}
 	}
 
@@ -106,19 +151,9 @@ public class CJGuiMachineBase extends GuiContainer {
 				xSize / 2 - fontRenderer.getStringWidth(name) / 2, 6,
 				MACHINE_TEXT);
 
-		// Error message.
-		String errorMessage = machineEntity.errorMessage;
-		if(errorMessage != null) {
-			fontRenderer.drawString(
-					errorMessage,
-					xSize / 2 - fontRenderer.getStringWidth(errorMessage) / 2,
-					14,
-					MACHINE_ERROR);
-		}
-
 		// "Inventory" label.
 		fontRenderer.drawString(
-				inventory, 8, ySize - 96 + 2, MACHINE_TEXT);
+				inventory, INVENTORY_LABEL_X, INVENTORY_LABEL_Y, MACHINE_TEXT);
 	}
 
 	@Override
@@ -229,6 +264,21 @@ public class CJGuiMachineBase extends GuiContainer {
 					elementX, elementY,
 					PROGRESS_FULL_X, PROGRESS_FULL_Y,
 					width / machineEntity.operationLength, PROGRESS_HEIGHT);
+		}
+
+		// Draw status badge.
+		String message = machineEntity.errorMessage;
+		if(message == null) {
+			drawTexturedModalRect(
+					STATUS_X + baseX, STATUS_Y + baseY,
+					STATUS_OK_X, STATUS_OK_Y,
+					STATUS_WIDTH, STATUS_HEIGHT);
+		}
+		else {
+			drawTexturedModalRect(
+					STATUS_X + baseX, STATUS_Y + baseY,
+					STATUS_ERROR_X, STATUS_ERROR_Y,
+					STATUS_WIDTH, STATUS_HEIGHT);
 		}
 	}
 }
