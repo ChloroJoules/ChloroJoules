@@ -23,6 +23,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	public ArrayList<CJTankVolume> tanks;
 
 	public String errorMessage = null;
+	public boolean isWarning = false;
 
 	public boolean isPassive = false;
 	public int operationTicks = 0;

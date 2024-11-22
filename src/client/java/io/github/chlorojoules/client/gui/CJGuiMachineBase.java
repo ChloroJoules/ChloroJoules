@@ -14,6 +14,7 @@ import static io.github.chlorojoules.client.gui.CJGuiMachineBaseLayout.*;
 public class CJGuiMachineBase extends GuiContainer {
 	public static final int MACHINE_TEXT = 4210752;
 	public static final int MACHINE_OK = Block.COLOR_GREEN;
+	public static final int MACHINE_WARNING = Block.COLOR_ORANGE;
 	public static final int MACHINE_ERROR = Block.COLOR_RED;
 	public static final int TOOLTIP_BACKGROUND = -1073741824;
 
@@ -127,6 +128,10 @@ public class CJGuiMachineBase extends GuiContainer {
 				title = "message.cj_working";
 				color = MACHINE_OK;
 				name = "message.cj_ok";
+			}
+			else if(machineEntity.isWarning) {
+				title = "message.cj_warning";
+				color = MACHINE_WARNING;
 			}
 
 			drawTooltip(
@@ -275,10 +280,18 @@ public class CJGuiMachineBase extends GuiContainer {
 					STATUS_WIDTH, STATUS_HEIGHT);
 		}
 		else {
-			drawTexturedModalRect(
-					STATUS_X + baseX, STATUS_Y + baseY,
-					STATUS_ERROR_X, STATUS_ERROR_Y,
-					STATUS_WIDTH, STATUS_HEIGHT);
+			if(machineEntity.isWarning) {
+				drawTexturedModalRect(
+						STATUS_X + baseX, STATUS_Y + baseY,
+						STATUS_WARNING_X, STATUS_WARNING_Y,
+						STATUS_WIDTH, STATUS_HEIGHT);
+			}
+			else {
+				drawTexturedModalRect(
+						STATUS_X + baseX, STATUS_Y + baseY,
+						STATUS_ERROR_X, STATUS_ERROR_Y,
+						STATUS_WIDTH, STATUS_HEIGHT);
+			}
 		}
 	}
 }

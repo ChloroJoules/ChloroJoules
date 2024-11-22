@@ -201,6 +201,8 @@ public class CJMachineBuilder {
 
 	public CJMachineRecipe getMatchingRecipe(CJTileEntityMachineBase entity) {
 		entity.errorMessage = null;
+		entity.isWarning = false;
+		entity.isPassive = false;
 
 		StringTranslate translate = StringTranslate.getInstance();
 		CJMachineRecipe recipe = null;
@@ -262,8 +264,13 @@ public class CJMachineBuilder {
 
 					boolean isPrimal = (entity.jewelRarity == CJRarity.PRIMAL);
 					if(component.index == recipe.fuelIndex) {
-						if(recipe.allowPassive && isPrimal) {
+						if(recipe.allowPassive &&
+								isPrimal &&
+								volume.current < component.count) {
+
 							entity.isPassive = true;
+							entity.errorMessage = "message.cj_passive";
+							entity.isWarning = true;
 							continue;
 						}
 					}
