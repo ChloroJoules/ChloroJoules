@@ -6,6 +6,9 @@ import io.github.chlorojoules.client.gui.CJGuiGravity;
 import io.github.chlorojoules.client.machine.*;
 
 import net.minecraft.src.game.block.Block;
+import net.minecraft.src.game.block.BlockFluid;
+import net.minecraft.src.game.block.BlockFluidStationary;
+import net.minecraft.src.game.block.Material;
 import net.minecraft.src.game.block.tileentity.TileEntity;
 import net.minecraft.src.game.item.Item;
 
@@ -13,6 +16,7 @@ import com.fox2code.foxloader.loader.ClientMod;
 import com.fox2code.foxloader.registry.*;
 import net.minecraft.src.game.item.ItemBucket;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -70,16 +74,24 @@ public class CJClient extends CJInstance implements ClientMod {
 	}
 
 	private RegisteredBlock registerNewFluid(String name) {
+		Constructor<?> constructor =
+				BlockFluidStationary.class.getDeclaredConstructors()[0];
+
+		constructor.setAccessible(true);
+
 		return registerNewBlock(
 				name, new BlockBuilder()
 						.setBlockMaterial(GameRegistry.BuiltInMaterial.WATER)
 						.setBlockName(name)
-						.setBlockHardness(100.0F));
+						.setBlockHardness(100.0F)
+						.setGameBlockProvider(
+								(id, build, ext) ->
+										(BlockFluidStationary)
+												constructor.newInstance(
+														id, Material.water)));
 
 		// TODO: Implement `BlockFluid` wrapper/add a mixin to
 		//       Expose its constructor for provider.
-		//.setGameBlockProvider((id, build, ext) ->
-		// new Block(id, Material.water) {}));
 	}
 
 	private RegisteredItem registerFluidBucket(
@@ -90,9 +102,6 @@ public class CJClient extends CJInstance implements ClientMod {
 						.setItemName(name)
 						.setGameItemProvider(((id, builder, ext) ->
 								new ItemBucket(
-										// TODO: Re-using Vanilla providers
-										//       Seems to cause this offset
-										//       Issue.
 										id - 256, tile.getRegisteredBlockId())
 										.setContainerItem(Item.bucketEmpty))));
 	}
