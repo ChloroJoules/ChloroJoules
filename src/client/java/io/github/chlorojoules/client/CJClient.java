@@ -1,20 +1,17 @@
 package io.github.chlorojoules.client;
 
 import io.github.chlorojoules.CJInstance;
-
-import io.github.chlorojoules.client.gui.CJGuiGravity;
 import io.github.chlorojoules.client.machine.*;
 
 import net.minecraft.src.game.block.Block;
-import net.minecraft.src.game.block.BlockFluid;
 import net.minecraft.src.game.block.BlockFluidStationary;
 import net.minecraft.src.game.block.Material;
 import net.minecraft.src.game.block.tileentity.TileEntity;
 import net.minecraft.src.game.item.Item;
+import net.minecraft.src.game.item.ItemBucket;
 
 import com.fox2code.foxloader.loader.ClientMod;
 import com.fox2code.foxloader.registry.*;
-import net.minecraft.src.game.item.ItemBucket;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -42,6 +39,8 @@ public class CJClient extends CJInstance implements ClientMod {
 	public static RegisteredItem bucketFluidChlorojoules;
 	public static RegisteredBlock fluidPaste;
 	public static RegisteredItem bucketFluidPaste;
+
+	public static RegisteredBlock machineFrame;
 
 	public static RegisteredBlock bugBlock;
 	public static RegisteredBlock liquefier;
@@ -176,6 +175,19 @@ public class CJClient extends CJInstance implements ClientMod {
 							.setTooltipColor(AWAKENED_COLOR));
 		}
 
+		// Blocks.
+		{
+			machineFrame = registerNewBlock(
+					"cj_machine_frame", new BlockBuilder()
+							.setBlockMaterial(
+									GameRegistry.BuiltInMaterial.ROCK)
+							.setBlockHardness(1.5F)
+							.setBlockResistance(10.0F)
+							.setBlockStepSounds(
+									GameRegistry.BuiltInStepSounds.STONE)
+							.setEffectiveTool(RegisteredToolType.PICKAXE));
+		}
+
 		// TODO: Feels like machines could be declared in JSON or smth (so too
 		//       For all our registry here -- make our lives easier?)
 		// Machines.
@@ -232,14 +244,14 @@ public class CJClient extends CJInstance implements ClientMod {
 							.addJewelSlot()
 							.addProgressBarGravityVCenter(CENTER, 0)
 							.addRecipe(
-									15,
+									1,
 									new CJMachineRecipeComponent(
 											1, fluidPaste, 10)
 											.setTarget(TANK),
 									new CJMachineRecipeComponent(
 											2, fluidChlorojoules, 5)
 											.setTarget(TANK),
-									100, true)
+									10, true)
 							.setImpl(CJMachineRecipeConsumer.class));
 
 			solidifier = registerNewMachine(
@@ -321,6 +333,14 @@ public class CJClient extends CJInstance implements ClientMod {
 		RegisteredItemStack primalJewelStack =
 				primalJewel.newRegisteredItemStack();
 
+		RegisteredItemStack machineFrameStack =
+				machineFrame.newRegisteredItemStack();
+
+		RegisteredItemStack machineFrame4Stack =
+				machineFrame.newRegisteredItemStack();
+
+		machineFrame4Stack.setRegisteredStackSize(4);
+
 		RegisteredItemStack liquefierStack =
 				liquefier.newRegisteredItemStack();
 
@@ -332,6 +352,15 @@ public class CJClient extends CJInstance implements ClientMod {
 
 		RegisteredItemStack whooper4Stack = whooper.newRegisteredItemStack();
 		whooper4Stack.setRegisteredStackSize(4);
+
+		RegisteredItemStack furnaceStack =
+				Block.furnaceIdle.newRegisteredItemStack();
+
+		RegisteredItemStack cobblestoneStack =
+				Block.cobblestone.newRegisteredItemStack();
+
+		RegisteredItemStack bucketStack =
+				Item.bucketEmpty.newRegisteredItemStack();
 
 		RegisteredItemStack diamondStack =
 				Item.diamond.newRegisteredItemStack();
@@ -349,11 +378,21 @@ public class CJClient extends CJInstance implements ClientMod {
 				Block.chest.newRegisteredItemStack();
 
 		RegisteredItemStack ashStack = Item.ash.newRegisteredItemStack();
+		RegisteredItemStack coalStack = Item.coal.newRegisteredItemStack();
 
 		// Vanilla machine recipes.
 		registerFurnaceRecipe(Block.leaves.asRegisteredItem(), pasteStack);
 
 		// Crafting recipes.
+		registerRecipe(
+				machineFrame4Stack,
+				" ~ ",
+				"~|~",
+				" # ",
+				'#', ironStack,
+				'~', pasteStack,
+				'|', cauldronStack);
+
 		registerRecipe(
 				primalJewelStack,
 				" ~ ",
@@ -364,40 +403,40 @@ public class CJClient extends CJInstance implements ClientMod {
 
 		registerRecipe(
 				liquefierStack,
-				"#~#",
-				"~@~",
-				"#|#",
-				'#', ironStack,
-				'~', pasteStack,
+				"@@@",
+				"&|&",
+				"&%&",
+				'&', cobblestoneStack,
+				'%', furnaceStack,
 				'@', flintStack,
-				'|', cauldronStack);
+				'|', machineFrameStack);
 
 		registerRecipe(
 				solidifierStack,
-				"#@#",
-				"@~@",
-				"#|#",
-				'#', ironStack,
-				'~', pasteStack,
+				"&@&",
+				"@|@",
+				"&%&",
+				'&', cobblestoneStack,
 				'@', ashStack,
-				'|', cauldronStack);
+				'%', coalStack,
+				'|', machineFrameStack);
 
 		registerRecipe(
 				flooper4Stack,
-				" ~ ",
-				"~|~",
+				" % ",
+				" | ",
 				" # ",
+				'%', bucketStack,
 				'#', ironStack,
-				'~', pasteStack,
-				'|', cauldronStack);
+				'|', machineFrameStack);
 
 		registerRecipe(
 				whooper4Stack,
-				" ~ ",
-				"~|~",
+				" % ",
+				" | ",
 				" # ",
+				'%', chestStack,
 				'#', ironStack,
-				'~', pasteStack,
-				'|', chestStack);
+				'|', machineFrameStack);
 	}
 }

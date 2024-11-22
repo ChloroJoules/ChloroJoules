@@ -109,6 +109,10 @@ public class CJMachineWhooper implements CJIMachine {
 			CJTileEntityMachineBase adjacentMachine = adjacentMachines[i];
 			TileEntityChest adjacentChest = adjacentChests[i];
 
+			if(stack != null && stack.stackSize >= stack.getMaxStackSize()) {
+				break;
+			}
+
 			// TODO: How can we de-duplicate this section?
 			if(adjacentMachine != null) {
 				if(adjacentMachine == lastInsert) continue;
@@ -191,6 +195,9 @@ public class CJMachineWhooper implements CJIMachine {
 						break;
 					}
 
+					// TODO: If all slots are full -- still consider the insert
+					//		 Attempt successful so we don't end up cycling back
+					//		 On an input chest
 					if(outStack.stackSize >= outStack.getMaxStackSize()) {
 						continue;
 					}
