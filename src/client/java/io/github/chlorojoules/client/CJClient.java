@@ -126,6 +126,9 @@ public class CJClient extends CJInstance implements ClientMod {
 
 	@Override
 	public void onInit() {
+		// TODO: Allow all balancing to be controlled from config -- we may
+		//		 Need to request some upstream changes or provide our own
+		//		 Config UI.
 		try {
 			callStaticMethod(
 					TileEntity.class, "addMapping",
@@ -283,6 +286,7 @@ public class CJClient extends CJInstance implements ClientMod {
 									500, false)
 							.setImpl(CJMachineRecipeConsumer.class));
 
+			// TODO: Figure out how to make Gear controls.
 			// TODO: UI to allow floopers to be filtered on one fluid kind.
 			flooper = registerNewMachine(
 					"cj_flooper", new CJMachineBuilder()
