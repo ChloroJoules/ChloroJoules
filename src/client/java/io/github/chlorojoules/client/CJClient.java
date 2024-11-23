@@ -3,24 +3,21 @@ package io.github.chlorojoules.client;
 import io.github.chlorojoules.CJInstance;
 import io.github.chlorojoules.client.machine.*;
 
-import net.minecraft.src.game.block.Block;
-import net.minecraft.src.game.block.BlockFluidStationary;
-import net.minecraft.src.game.block.Material;
+import net.minecraft.src.game.block.*;
 import net.minecraft.src.game.block.tileentity.TileEntity;
 import net.minecraft.src.game.item.Item;
 import net.minecraft.src.game.item.ItemBucket;
 
 import com.fox2code.foxloader.loader.ClientMod;
 import com.fox2code.foxloader.registry.*;
+import net.minecraft.src.game.item.ItemStack;
+import net.minecraft.src.game.recipe.FurnaceRecipes;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 import static io.github.chlorojoules.client.gui.CJGuiGravity.*;
@@ -49,6 +46,7 @@ public class CJClient extends CJInstance implements ClientMod {
 	public static RegisteredBlock refinery;
 	public static RegisteredBlock pulverizer;
 	public static RegisteredBlock press;
+	public static RegisteredBlock furnace;
 	public static RegisteredBlock flooper;
 	public static RegisteredBlock whooper;
 
@@ -60,6 +58,8 @@ public class CJClient extends CJInstance implements ClientMod {
 	public static RegisteredItem awakenedJewel;
 
 	public static RegisteredItem jewelDust;
+	public static RegisteredItem ironDust;
+	public static RegisteredItem goldDust;
 
 	public static int fuelFluid;
 
@@ -185,6 +185,14 @@ public class CJClient extends CJInstance implements ClientMod {
 			jewelDust = registerNewItem(
 					"cj_jewel_dust", new ItemBuilder()
 							.setItemName("cj_jewel_dust"));
+
+			ironDust = registerNewItem(
+					"cj_iron_dust", new ItemBuilder()
+							.setItemName("cj_iron_dust"));
+
+			goldDust = registerNewItem(
+					"cj_gold_dust", new ItemBuilder()
+							.setItemName("cj_gold_dust"));
 		}
 
 		// Blocks.
@@ -303,6 +311,7 @@ public class CJClient extends CJInstance implements ClientMod {
 									500, false)
 							.setImpl(CJMachineRecipeConsumer.class));
 
+			// TODO: Secondary output.
 			pulverizer = registerNewMachine(
 					"cj_pulverizer", new CJMachineBuilder()
 							.addFuelTank()
@@ -342,6 +351,49 @@ public class CJClient extends CJInstance implements ClientMod {
 									new CJMachineRecipeComponent(
 											1, jewelDust, 64),
 									350, false)
+							.addRecipe(
+									30,
+									new CJMachineRecipeComponent(
+											0, Block.oreIron, 1),
+									new CJMachineRecipeComponent(
+											1, ironDust, 2),
+									150, false)
+							.addRecipe(
+									30,
+									new CJMachineRecipeComponent(
+											0, Block.oreIronNether, 1),
+									new CJMachineRecipeComponent(
+											1, ironDust, 3),
+									150, false)
+							.addRecipe(
+									30,
+									new CJMachineRecipeComponent(
+											0, Block.oreGold, 1),
+									new CJMachineRecipeComponent(
+											1, goldDust, 2),
+									150, false)
+							.addRecipe(
+									30,
+									new CJMachineRecipeComponent(
+											0, Block.oreGoldNether, 1),
+									new CJMachineRecipeComponent(
+											1, goldDust, 3),
+									150, false)
+							.addRecipe(
+									10,
+									new CJMachineRecipeComponent(
+											0, Block.sugarCane, 1),
+									new CJMachineRecipeComponent(
+											1, Item.sugar, 4),
+									150, false)
+							// TODO: Add dyes when we have damage values.
+							/*.addRecipe(
+									10,
+									new CJMachineRecipeComponent(
+											0, Item.bone, 1),
+									new CJMachineRecipeComponent(
+											1, Item.dyePowder, 3),
+									150, false)*/
 							.setImpl(CJMachineRecipeConsumer.class));
 
 			press = registerNewMachine(
@@ -361,7 +413,34 @@ public class CJClient extends CJInstance implements ClientMod {
 											0, jewelDust, 4),
 									new CJMachineRecipeComponent(
 											1, compactedJewelDust, 1),
-									50, false)
+									150, false)
+							.addRecipe(
+									15,
+									new CJMachineRecipeComponent(
+											0, Item.ingotIron, 1),
+									new CJMachineRecipeComponent(
+											1, Block.gear, 5),
+									75, false)
+							.setImpl(CJMachineRecipeConsumer.class));
+
+			furnace = registerNewMachine(
+					"cj_furnace", new CJMachineBuilder()
+							.addFuelTank()
+							.addSlotGravityVCenter(
+									TOP_LEFT,
+									JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
+									false)
+							.addSlotGravityVCenter(
+									CENTER, SLOT_IN_WIDTH * 4, true)
+							.addJewelSlot()
+							.addProgressBarGravityVCenter(CENTER, 0)
+							.addRecipeRarity(
+									30,
+									new CJMachineRecipeComponent(
+											0, compactedJewelDust, 1),
+									new CJMachineRecipeComponent(
+											1, refinedJewel, 1),
+									300, CJRarity.MANUFACTURED)
 							.setImpl(CJMachineRecipeConsumer.class));
 
 			// TODO: For `Soul Extractor` -- make base tool then socket a
@@ -471,8 +550,6 @@ public class CJClient extends CJInstance implements ClientMod {
 
 		// Vanilla machine recipes.
 		registerFurnaceRecipe(Block.leaves.asRegisteredItem(), pasteStack);
-		registerBlastFurnaceRecipe(
-				compactedJewelDust.asRegisteredItem(), refinedJewelStack);
 
 		// Crafting recipes.
 		registerRecipe(
@@ -529,5 +606,26 @@ public class CJClient extends CJInstance implements ClientMod {
 				'%', chestStack,
 				'#', ironStack,
 				'|', machineFrameStack);
+
+		// Consume furnace recipes.
+		FurnaceRecipes furnaceRecipes = FurnaceRecipes.instance;
+		Map<Integer, ItemStack> furnaceMap =
+				furnaceRecipes.getSmeltingList();
+
+		Set<Map.Entry<Integer, ItemStack>> furnaceEntries =
+				furnaceMap.entrySet();
+
+		CJMachineBuilder furnaceMachine = machines.get("cj_furnace");
+
+		for(Map.Entry<Integer, ItemStack> entry : furnaceEntries) {
+			furnaceMachine.addRecipe(
+					20,
+					new CJMachineRecipeComponent(0, entry.getKey(), 1),
+					// TODO: `ItemStack` constructor for
+					//       `CJMachineRecipeComponent`.
+					new CJMachineRecipeComponent(
+							1, entry.getValue().getRegisteredItem(), 1),
+					200, false); // Vanilla furnace ticks as base.
+		}
 	}
 }

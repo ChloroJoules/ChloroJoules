@@ -167,6 +167,20 @@ public class CJMachineBuilder {
 		return this;
 	}
 
+	public CJMachineBuilder addRecipeRarity(
+			int fuelVolume, CJMachineRecipeComponent in,
+			CJMachineRecipeComponent out, int ticks, CJRarity rarity) {
+
+		CJMachineRecipe recipe = new CJMachineRecipe(
+				this, fuelVolume, in, out, ticks, false);
+
+		recipe.requiredRarity = rarity;
+
+		recipies.add(recipe);
+
+		return this;
+	}
+
 	public int getPrimaryInputTankIndex() {
 		for(int i = 0; i < tanks.size(); i++) {
 			if(!tanks.get(i).output) return i;

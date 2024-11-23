@@ -9,7 +9,6 @@ public class CJMachineRecipe {
 	public ArrayList<CJMachineRecipeComponent> inputs = new ArrayList<>();
 	public ArrayList<CJMachineRecipeComponent> outputs = new ArrayList<>();
 
-	// TODO: Add flag for allowing passive operation.
 	public CJRarity requiredRarity = CJRarity.PRIMAL;
 
 	public int processTime = 20;
