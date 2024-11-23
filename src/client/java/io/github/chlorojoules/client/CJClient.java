@@ -59,6 +59,8 @@ public class CJClient extends CJInstance implements ClientMod {
 	public static RegisteredItem awakenedJewel;
 
 	public static RegisteredItem jewelDust;
+	public static RegisteredItem soulDust;
+	public static RegisteredItem soulEssence;
 	public static RegisteredItem ironDust;
 	public static RegisteredItem goldDust;
 
@@ -190,6 +192,14 @@ public class CJClient extends CJInstance implements ClientMod {
 					"cj_jewel_dust", new ItemBuilder()
 							.setItemName("cj_jewel_dust"));
 
+			soulDust = registerNewItem(
+					"cj_soul_dust", new ItemBuilder()
+							.setItemName("cj_soul_dust"));
+
+			soulEssence = registerNewItem(
+					"cj_soul_essence", new ItemBuilder()
+							.setItemName("cj_soul_essence"));
+
 			ironDust = registerNewItem(
 					"cj_iron_dust", new ItemBuilder()
 							.setItemName("cj_iron_dust"));
@@ -198,6 +208,9 @@ public class CJClient extends CJInstance implements ClientMod {
 					"cj_gold_dust", new ItemBuilder()
 							.setItemName("cj_gold_dust"));
 		}
+
+		// TODO: Feature request for registering ores.
+		// TODO: Feature request for registering loot table additions.
 
 		// Blocks.
 		{

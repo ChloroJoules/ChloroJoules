@@ -16,6 +16,7 @@ public class CJGuiMachineBase extends GuiContainer {
 	public static final int MACHINE_OK = Block.COLOR_GREEN;
 	public static final int MACHINE_WARNING = Block.COLOR_ORANGE;
 	public static final int MACHINE_ERROR = Block.COLOR_RED;
+	public static final int MACHINE_INFO = Block.COLOR_BLUE;
 	public static final int TOOLTIP_BACKGROUND = -1073741824;
 
 	private final CJTileEntityMachineBase machineEntity;
@@ -138,6 +139,18 @@ public class CJGuiMachineBase extends GuiContainer {
 					translate.translateKey(title),
 					translate.translateKey(name), mouseX, mouseY,
 					color);
+		}
+
+		if(getIsMouseOverRect(
+				mouseX, mouseY, INFO_X, INFO_Y, STATUS_WIDTH, STATUS_HEIGHT)) {
+
+			drawTooltip(
+					// TODO: Use this for fun flavour text?
+					translate.translateKey("message.help"),
+					translate.translateKey(
+							"message." + machineBuilder.name + ".help"),
+					mouseX, mouseY,
+					MACHINE_INFO);
 		}
 	}
 
@@ -293,5 +306,10 @@ public class CJGuiMachineBase extends GuiContainer {
 						STATUS_WIDTH, STATUS_HEIGHT);
 			}
 		}
+
+		drawTexturedModalRect(
+				INFO_X + baseX, INFO_Y + baseY,
+				STATUS_INFO_X, STATUS_INFO_Y,
+				STATUS_WIDTH, STATUS_HEIGHT);
 	}
 }

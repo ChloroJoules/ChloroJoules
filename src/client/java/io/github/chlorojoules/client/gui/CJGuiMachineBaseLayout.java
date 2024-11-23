@@ -72,9 +72,15 @@ public class CJGuiMachineBaseLayout {
 	public static final int STATUS_WARNING_X = 203;
 	public static final int STATUS_WARNING_Y = 34;
 
+	public static final int STATUS_INFO_X = 203;
+	public static final int STATUS_INFO_Y = 43;
+
 	public static final int STATUS_WIDTH = 9;
 	public static final int STATUS_HEIGHT = 9;
 
-	public static final int STATUS_X = INVENTORY_LABEL_X;
-	public static final int STATUS_Y = 5;
+	public static final int INFO_X = INVENTORY_LABEL_X;
+	public static final int INFO_Y = 5;
+
+	public static final int STATUS_X = INFO_X + (STATUS_WIDTH * 3) / 2;
+	public static final int STATUS_Y = INFO_Y;
 }
