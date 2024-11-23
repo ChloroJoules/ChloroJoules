@@ -47,6 +47,7 @@ public class CJClient extends CJInstance implements ClientMod {
 	public static RegisteredBlock pulverizer;
 	public static RegisteredBlock press;
 	public static RegisteredBlock furnace;
+	public static RegisteredBlock toolStation;
 	public static RegisteredBlock flooper;
 	public static RegisteredBlock whooper;
 
@@ -143,6 +144,9 @@ public class CJClient extends CJInstance implements ClientMod {
 			throw new RuntimeException(e);
 		}
 
+		// TODO: Hack in our own mod-wise tooltips to mark things as being from
+		//       Chlorojoules (Or just make a PR).
+
 		// Fluids.
 		{
 			fluidChlorojoules = registerNewFluid("cj_fluid_chlorojoules");
@@ -219,6 +223,10 @@ public class CJClient extends CJInstance implements ClientMod {
 
 		// TODO: Feels like machines could be declared in JSON or smth (so too
 		//       For all our registry here -- make our lives easier?)
+
+		// TODO: Need a big machine UI fixup to make them more distinct and
+		//       Improve alignment.
+
 		// Machines.
 		{
 			bugBlock = registerNewMachine(
@@ -442,6 +450,20 @@ public class CJClient extends CJInstance implements ClientMod {
 											1, refinedJewel, 1),
 									300, CJRarity.MANUFACTURED)
 							.setImpl(CJMachineRecipeConsumer.class));
+
+			toolStation = registerNewMachine(
+					"cj_tool_station", new CJMachineBuilder()
+							// TODO: These can just be centre-offset on either
+							//       Side.
+							.addSlotGravityVCenter(
+									TOP_LEFT,
+									JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
+									false)
+							.addSlotGravityVCenter(
+									CENTER, SLOT_IN_WIDTH * 4, true)
+							// TODO: Toggle direction in/out of tool.
+							.addProgressBarGravityVCenter(CENTER, 0)
+							.setImpl(CJMachineToolStation.class));
 
 			// TODO: For `Soul Extractor` -- make base tool then socket a
 			//       `Refined ChloroJewel` to use; allows player to reclaim
