@@ -41,11 +41,14 @@ public class CJClient extends CJInstance implements ClientMod {
 	public static RegisteredItem bucketFluidPaste;
 
 	public static RegisteredBlock machineFrame;
+	public static RegisteredBlock compactedJewelDust;
 
 	public static RegisteredBlock bugBlock;
 	public static RegisteredBlock liquefier;
 	public static RegisteredBlock solidifier;
 	public static RegisteredBlock refinery;
+	public static RegisteredBlock pulverizer;
+	public static RegisteredBlock press;
 	public static RegisteredBlock flooper;
 	public static RegisteredBlock whooper;
 
@@ -55,6 +58,8 @@ public class CJClient extends CJInstance implements ClientMod {
 	public static RegisteredItem manufacturedJewel;
 	public static RegisteredItem refinedJewel;
 	public static RegisteredItem awakenedJewel;
+
+	public static RegisteredItem jewelDust;
 
 	public static int fuelFluid;
 
@@ -176,6 +181,10 @@ public class CJClient extends CJInstance implements ClientMod {
 					"cj_jewel_awakened", new ItemBuilder()
 							.setItemName("cj_jewel_awakened")
 							.setTooltipColor(AWAKENED_COLOR));
+
+			jewelDust = registerNewItem(
+					"cj_jewel_dust", new ItemBuilder()
+							.setItemName("cj_jewel_dust"));
 		}
 
 		// Blocks.
@@ -189,13 +198,21 @@ public class CJClient extends CJInstance implements ClientMod {
 							.setBlockStepSounds(
 									GameRegistry.BuiltInStepSounds.STONE)
 							.setEffectiveTool(RegisteredToolType.PICKAXE));
+
+			compactedJewelDust = registerNewBlock(
+					"cj_block_jewel_dust", new BlockBuilder()
+							.setBlockMaterial(
+									GameRegistry.BuiltInMaterial.SAND)
+							.setBlockHardness(0.5F)
+							.setBlockStepSounds(
+									GameRegistry.BuiltInStepSounds.SAND)
+							.setEffectiveTool(RegisteredToolType.SHOVEL));
 		}
 
 		// TODO: Feels like machines could be declared in JSON or smth (so too
 		//       For all our registry here -- make our lives easier?)
 		// Machines.
 		{
-
 			bugBlock = registerNewMachine(
 					"cj_bugblock", new CJMachineBuilder()
 							.setRarity(CJRarity.AWAKENED)
@@ -285,6 +302,71 @@ public class CJClient extends CJInstance implements ClientMod {
 											0, manufacturedJewel, 1),
 									500, false)
 							.setImpl(CJMachineRecipeConsumer.class));
+
+			pulverizer = registerNewMachine(
+					"cj_pulverizer", new CJMachineBuilder()
+							.addFuelTank()
+							.addSlotGravityVCenter(
+									TOP_LEFT,
+									JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
+									false)
+							.addSlotGravityVCenter(
+									CENTER, SLOT_IN_WIDTH * 4, true)
+							.addJewelSlot()
+							.addProgressBarGravityVCenter(CENTER, 0)
+							.addRecipe(
+									10,
+									new CJMachineRecipeComponent(
+											0, primalJewel, 1),
+									new CJMachineRecipeComponent(
+											1, jewelDust, 2),
+									100, false)
+							.addRecipe(
+									10,
+									new CJMachineRecipeComponent(
+											0, manufacturedJewel, 1),
+									new CJMachineRecipeComponent(
+											1, jewelDust, 4),
+									200, false)
+							.addRecipe(
+									10,
+									new CJMachineRecipeComponent(
+											0, refinedJewel, 1),
+									new CJMachineRecipeComponent(
+											1, jewelDust, 16),
+									250, false)
+							.addRecipe(
+									10,
+									new CJMachineRecipeComponent(
+											0, awakenedJewel, 1),
+									new CJMachineRecipeComponent(
+											1, jewelDust, 64),
+									350, false)
+							.setImpl(CJMachineRecipeConsumer.class));
+
+			press = registerNewMachine(
+					"cj_press", new CJMachineBuilder()
+							.addFuelTank()
+							.addSlotGravityVCenter(
+									TOP_LEFT,
+									JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
+									false)
+							.addSlotGravityVCenter(
+									CENTER, SLOT_IN_WIDTH * 4, true)
+							.addJewelSlot()
+							.addProgressBarGravityVCenter(CENTER, 0)
+							.addRecipe(
+									60,
+									new CJMachineRecipeComponent(
+											0, jewelDust, 4),
+									new CJMachineRecipeComponent(
+											1, compactedJewelDust, 1),
+									50, false)
+							.setImpl(CJMachineRecipeConsumer.class));
+
+			// TODO: For `Soul Extractor` -- make base tool then socket a
+			//       `Refined ChloroJewel` to use; allows player to reclaim
+			//       The jewel once they don't need the tool anymore.
 
 			// TODO: Figure out how to make Gear controls.
 			// TODO: UI to allow floopers to be filtered on one fluid kind.
@@ -384,8 +466,13 @@ public class CJClient extends CJInstance implements ClientMod {
 		RegisteredItemStack ashStack = Item.ash.newRegisteredItemStack();
 		RegisteredItemStack coalStack = Item.coal.newRegisteredItemStack();
 
+		RegisteredItemStack refinedJewelStack =
+				refinedJewel.newRegisteredItemStack();
+
 		// Vanilla machine recipes.
 		registerFurnaceRecipe(Block.leaves.asRegisteredItem(), pasteStack);
+		registerBlastFurnaceRecipe(
+				compactedJewelDust.asRegisteredItem(), refinedJewelStack);
 
 		// Crafting recipes.
 		registerRecipe(
