@@ -122,6 +122,8 @@ public class CJMachineBuilder {
 				output, max, lockFluid);
 	}
 
+	// TODO: Add "ElementBuilder" which has sensible alignment/type defaults
+	//       Then set further sub-members from there.
 	public CJMachineBuilder addTankGravityVCenter(
 			CJGuiGravity anchor, int x, boolean output, int max,
 			int lockFluid) {
