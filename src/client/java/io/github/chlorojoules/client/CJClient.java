@@ -589,9 +589,10 @@ public class CJClient extends CJInstance implements ClientMod {
 		// Crafting recipes.
 		registerRecipe(
 				machineFrame4Stack,
-				" ~ ",
+				"%~%",
 				"~|~",
-				" # ",
+				"%#%",
+				'%', cobblestoneStack,
 				'#', ironStack,
 				'~', pasteStack,
 				'|', cauldronStack);
