@@ -224,6 +224,23 @@ public class CJMachineBuilder {
 		return -1;
 	}
 
+	private boolean componentMatch(
+			CJTileEntityMachineBase entity,
+			CJMachineRecipeComponent component, boolean input) {
+
+		if(component.target == CJMachineRecipeTarget.TANK) {
+			CJTankVolume volume = entity.tanks.get(component.index);
+
+			return volume.fluidID == component.id;
+		}
+		else {
+			ItemStack stack = entity.stacks.get(component.index);
+
+			if(stack == null) return !input;
+			return stack.itemID == component.id;
+		}
+	}
+
 	public CJMachineRecipe getMatchingRecipe(CJTileEntityMachineBase entity) {
 		entity.errorMessage = null;
 		entity.isWarning = false;
@@ -261,21 +278,18 @@ public class CJMachineBuilder {
 			for(int j = 0; j < recipe.inputs.size(); j++) {
 				CJMachineRecipeComponent component = recipe.inputs.get(j);
 
-				if(component.target == CJMachineRecipeTarget.TANK) {
-					CJTankVolume volume = entity.tanks.get(component.index);
-
-					if(volume.fluidID != component.id) {
-						matchedRecipe = false;
-						break;
-					}
+				if(!componentMatch(entity, component, true)) {
+					matchedRecipe = false;
+					break;
 				}
-				else {
-					ItemStack stack = entity.stacks.get(component.index);
+			}
 
-					if(stack == null || stack.itemID != component.id) {
-						matchedRecipe = false;
-						break;
-					}
+			for(int j = 0; j < recipe.outputs.size(); j++) {
+				CJMachineRecipeComponent component = recipe.outputs.get(j);
+
+				if(!componentMatch(entity, component, false)) {
+					matchedRecipe = false;
+					break;
 				}
 			}
 
