@@ -169,6 +169,15 @@ public class CJMachineBuilder {
 		return this;
 	}
 
+	public CJMachineBuilder addRecipeNoFuel(
+			CJMachineRecipeComponent in, CJMachineRecipeComponent out,
+			int ticks) {
+
+		recipies.add(new CJMachineRecipe(in, out, ticks));
+
+		return this;
+	}
+
 	public CJMachineBuilder addRecipeRarity(
 			int fuelVolume, CJMachineRecipeComponent in,
 			CJMachineRecipeComponent out, int ticks, CJRarity rarity) {

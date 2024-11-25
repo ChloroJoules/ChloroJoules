@@ -36,6 +36,8 @@ public class CJClient extends CJInstance implements ClientMod {
 	public static RegisteredItem bucketFluidChlorojoules;
 	public static RegisteredBlock fluidPaste;
 	public static RegisteredItem bucketFluidPaste;
+	public static RegisteredBlock fluidSouls;
+	public static RegisteredItem bucketFluidSouls;
 
 	public static RegisteredBlock machineFrame;
 	public static RegisteredBlock compactedJewelDust;
@@ -158,6 +160,10 @@ public class CJClient extends CJInstance implements ClientMod {
 			fluidPaste = registerNewFluid("cj_fluid_paste");
 			bucketFluidPaste = registerFluidBucket(
 					"cj_fluid_paste_bucket", fluidPaste);
+
+			fluidSouls = registerNewFluid("cj_fluid_souls");
+			bucketFluidSouls = registerFluidBucket(
+					"cj_fluid_souls_bucket", fluidSouls);
 		}
 		fuelFluid = fluidChlorojoules.getRegisteredBlockId();
 
@@ -470,13 +476,17 @@ public class CJClient extends CJInstance implements ClientMod {
 							//       Side.
 							.addSlotGravityVCenter(
 									TOP_LEFT,
+									JEWEL_SLOT_INSET,
+									false)
+							.addSlotGravityVCenter(
+									TOP_LEFT,
 									JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
 									false)
 							.addSlotGravityVCenter(
 									CENTER, SLOT_IN_WIDTH * 4, true)
 							// TODO: Toggle direction in/out of tool.
 							.addProgressBarGravityVCenter(CENTER, 0)
-							.setImpl(CJMachineToolStation.class));
+							.setImpl(CJMachineRecipeConsumer.class));
 
 			// TODO: For `Soul Extractor` -- make base tool then socket a
 			//       `Refined ChloroJewel` to use; allows player to reclaim

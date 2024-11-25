@@ -41,6 +41,17 @@ public class CJMachineRecipe {
 		outputs.add(out);
 	}
 
+	// In + In -> Out.
+	public CJMachineRecipe(
+			CJMachineRecipeComponent in, CJMachineRecipeComponent out,
+			int ticks) {
+
+		processTime = ticks;
+
+		inputs.add(in);
+		outputs.add(out);
+	}
+
 	public CJMachineRecipeComponent getFuelComponent() {
 		if(fuelIndex == -1) return null;
 
