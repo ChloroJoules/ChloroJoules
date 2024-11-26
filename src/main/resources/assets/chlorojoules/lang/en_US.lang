@@ -18,11 +18,16 @@ message.cj_ok=All okay!
 
 # Blocks.
 tile.chlorojoules.cj_machine_frame.name=Machine Frame
+tile.chlorojoules.cj_block_jewel_dust.name=Block of Jewel Dust
 
 tile.cj_bugblock.name=BugBlock
 tile.cj_liquefier.name=Liquefier
 tile.cj_refinery.name=Refinery
 tile.cj_solidifier.name=Solidifier
+tile.cj_pulverizer.name=Pulverizer
+tile.cj_press.name=Press
+tile.cj_furnace.name=Furnace
+tile.cj_tool_station.name=Tool Station
 
 tile.cj_flooper.name=Flooper
 tile.cj_whooper.name=Whooper
@@ -30,20 +35,31 @@ tile.cj_whooper.name=Whooper
 # Fluids.
 tile.cj_fluid_paste.name=Paste
 tile.cj_fluid_chlorojoules.name=ChloroJoules
+tile.cj_fluid_souls.name=Fluid Souls
 
 # Inventories.
 inventory.cj_bugblock=BugBlock
 inventory.cj_liquefier=Liquefier
 inventory.cj_refinery=Refinery
 inventory.cj_solidifier=Solidifier
+inventory.cj_pulverizer=Pulverizer
+inventory.cj_press=Press
+inventory.cj_furnace=Furnace
+inventory.cj_tool_station=Tool Station
 
 inventory.cj_flooper=Flooper
 inventory.cj_whooper=Whooper
 
 # Items.
-item.cj_paste.name=Plant Paste
 item.cj_fluid_paste_bucket.name=Paste Bucket
 item.cj_fluid_chlorojoules_bucket.name=Bucket O' Joules
+item.cj_fluid_souls_bucket.name=Fluid Souls Bucket
+
+item.cj_soul_dust.name=Soul Dust
+item.cj_soul_essence.name=Soul Essence
+item.cj_iron_dust.name=Iron Dust
+item.cj_gold_dust.name=Gold Dust
+item.cj_paste.name=Plant Paste
 
 item.cj_jewel_primal.name=Primal ChloroJewel
 item.cj_jewel_manufactured.name=Manufactured ChloroJewel
