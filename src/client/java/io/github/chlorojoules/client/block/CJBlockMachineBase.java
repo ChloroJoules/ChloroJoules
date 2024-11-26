@@ -1,5 +1,9 @@
-package io.github.chlorojoules.client;
+package io.github.chlorojoules.client.block;
 
+import io.github.chlorojoules.client.CJClient;
+import io.github.chlorojoules.client.CJTank;
+import io.github.chlorojoules.client.CJTankVolume;
+import io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.client.gui.CJGuiMachineBase;
 import io.github.chlorojoules.client.machine.CJMachineBuilder;
 import net.minecraft.client.Minecraft;
@@ -15,7 +19,7 @@ import net.minecraft.src.game.item.ItemBucket;
 import net.minecraft.src.game.item.ItemStack;
 import net.minecraft.src.game.level.World;
 
-import static io.github.chlorojoules.client.CJTileEntityMachineBase.machineEntity;
+import static io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase.machineEntity;
 
 public class CJBlockMachineBase extends BlockContainer {
 	private final CJMachineBuilder machineBuilder;

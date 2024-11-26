@@ -2,12 +2,12 @@ package io.github.chlorojoules.client.machine;
 
 import io.github.chlorojoules.client.CJTank;
 import io.github.chlorojoules.client.CJTankVolume;
-import io.github.chlorojoules.client.CJTileEntityMachineBase;
+import io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase;
 
 import net.minecraft.src.game.level.World;
 
 import static
-		io.github.chlorojoules.client.CJTileEntityMachineBase.machineEntity;
+		io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase.machineEntity;
 
 public class CJMachineFlooper implements CJIMachine {
 	// TODO: Generic API for machines which maintain a set of adjacent

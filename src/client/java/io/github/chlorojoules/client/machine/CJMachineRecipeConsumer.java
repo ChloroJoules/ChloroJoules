@@ -1,6 +1,6 @@
 package io.github.chlorojoules.client.machine;
 
-import io.github.chlorojoules.client.*;
+import io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase;
 import net.minecraft.src.game.level.World;
 
 public class CJMachineRecipeConsumer implements CJIMachine {
@@ -15,6 +15,5 @@ public class CJMachineRecipeConsumer implements CJIMachine {
 	}
 
 	@Override
-	public void onNeighbourChange(
-			World world, int x, int y, int z) {}
+	public void onNeighbourChange(World world, int x, int y, int z) {}
 }

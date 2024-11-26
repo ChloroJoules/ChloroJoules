@@ -1,6 +1,6 @@
 package io.github.chlorojoules.client.machine;
 
-import io.github.chlorojoules.client.CJTileEntityMachineBase;
+import io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase;
 import net.minecraft.src.game.level.World;
 
 public interface CJIMachine {

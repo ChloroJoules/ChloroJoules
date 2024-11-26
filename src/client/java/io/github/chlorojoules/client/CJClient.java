@@ -1,8 +1,11 @@
 package io.github.chlorojoules.client;
 
 import io.github.chlorojoules.CJInstance;
+import io.github.chlorojoules.client.block.CJBlockMachineBase;
+import io.github.chlorojoules.client.item.CJItemSoulExtractor;
 import io.github.chlorojoules.client.machine.*;
 
+import io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase;
 import net.minecraft.src.game.block.*;
 import net.minecraft.src.game.block.tileentity.TileEntity;
 import net.minecraft.src.game.item.Item;
@@ -65,6 +68,9 @@ public class CJClient extends CJInstance implements ClientMod {
 	public static RegisteredItem soulEssence;
 	public static RegisteredItem ironDust;
 	public static RegisteredItem goldDust;
+	public static RegisteredItem soulCore;
+
+	public static RegisteredItem soulExtractor;
 
 	public static int fuelFluid;
 
@@ -109,6 +115,7 @@ public class CJClient extends CJInstance implements ClientMod {
 		return registerNewItem(
 				name, new ItemBuilder()
 						.setItemName(name)
+						.setMaxStackSize(1)
 						.setGameItemProvider(((id, builder, ext) ->
 								new ItemBucket(
 										id - 256, tile.getRegisteredBlockId())
@@ -139,6 +146,7 @@ public class CJClient extends CJInstance implements ClientMod {
 		// TODO: Allow all balancing to be controlled from config -- we may
 		//		 Need to request some upstream changes or provide our own
 		//		 Config UI.
+
 		try {
 			callStaticMethod(
 					TileEntity.class, "addMapping",
@@ -150,6 +158,8 @@ public class CJClient extends CJInstance implements ClientMod {
 
 		// TODO: Hack in our own mod-wise tooltips to mark things as being from
 		//       Chlorojoules (Or just make a PR).
+
+		// TODO: Hide fluids from creative inventory.
 
 		// Fluids.
 		{
@@ -176,35 +186,42 @@ public class CJClient extends CJInstance implements ClientMod {
 
 			primalJewel = registerNewItem(
 					"cj_jewel_primal", new ItemBuilder()
+							.setMaxStackSize(1)
 							.setItemName("cj_jewel_primal")
 							.setTooltipColor(PRIMAL_COLOR));
 
 			manufacturedJewel = registerNewItem(
 					"cj_jewel_manufactured", new ItemBuilder()
+							.setMaxStackSize(1)
 							.setItemName("cj_jewel_manufactured")
 							.setTooltipColor(MANUFACTURED_COLOR));
 
 			refinedJewel = registerNewItem(
 					"cj_jewel_refined", new ItemBuilder()
+							.setMaxStackSize(1)
 							.setItemName("cj_jewel_refined")
 							.setTooltipColor(REFINED_COLOR));
 
 			awakenedJewel = registerNewItem(
 					"cj_jewel_awakened", new ItemBuilder()
+							.setMaxStackSize(1)
 							.setItemName("cj_jewel_awakened")
 							.setTooltipColor(AWAKENED_COLOR));
 
 			jewelDust = registerNewItem(
 					"cj_jewel_dust", new ItemBuilder()
-							.setItemName("cj_jewel_dust"));
+							.setItemName("cj_jewel_dust")
+							.setTooltipColor(REFINED_COLOR));
 
 			soulDust = registerNewItem(
 					"cj_soul_dust", new ItemBuilder()
-							.setItemName("cj_soul_dust"));
+							.setItemName("cj_soul_dust")
+							.setTooltipColor(REFINED_COLOR));
 
 			soulEssence = registerNewItem(
 					"cj_soul_essence", new ItemBuilder()
-							.setItemName("cj_soul_essence"));
+							.setItemName("cj_soul_essence")
+							.setTooltipColor(REFINED_COLOR));
 
 			ironDust = registerNewItem(
 					"cj_iron_dust", new ItemBuilder()
@@ -213,6 +230,20 @@ public class CJClient extends CJInstance implements ClientMod {
 			goldDust = registerNewItem(
 					"cj_gold_dust", new ItemBuilder()
 							.setItemName("cj_gold_dust"));
+
+			soulExtractor = registerNewItem(
+					"cj_soul_extractor", new ItemBuilder()
+							.setMaxStackSize(1)
+							.setItemName("cj_soul_extractor")
+							.setTooltipColor(REFINED_COLOR)
+							.setGameItemProvider(((id, build, ext) ->
+									new CJItemSoulExtractor(id))));
+
+			soulCore = registerNewItem(
+					"cj_soul_core", new ItemBuilder()
+							.setMaxStackSize(1)
+							.setItemName("cj_soul_core")
+							.setTooltipColor(AWAKENED_COLOR));
 		}
 
 		// TODO: Feature request for registering ores.
@@ -479,14 +510,11 @@ public class CJClient extends CJInstance implements ClientMod {
 									JEWEL_SLOT_INSET,
 									false)
 							.addSlotGravityVCenter(
-									TOP_LEFT,
+									CENTER,
 									JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
 									false)
-							.addSlotGravityVCenter(
-									CENTER, SLOT_IN_WIDTH * 4, true)
-							// TODO: Toggle direction in/out of tool.
 							.addProgressBarGravityVCenter(CENTER, 0)
-							.setImpl(CJMachineRecipeConsumer.class));
+							.setImpl(CJMachineToolStation.class));
 
 			// TODO: For `Soul Extractor` -- make base tool then socket a
 			//       `Refined ChloroJewel` to use; allows player to reclaim
@@ -557,6 +585,18 @@ public class CJClient extends CJInstance implements ClientMod {
 		RegisteredItemStack solidifierStack =
 				solidifier.newRegisteredItemStack();
 
+		RegisteredItemStack refineryStack =
+				refinery.newRegisteredItemStack();
+
+		RegisteredItemStack pulverizerStack =
+				pulverizer.newRegisteredItemStack();
+
+		RegisteredItemStack pressStack =
+				press.newRegisteredItemStack();
+
+		RegisteredItemStack toolStationStack =
+				toolStation.newRegisteredItemStack();
+
 		RegisteredItemStack flooper4Stack = flooper.newRegisteredItemStack();
 		flooper4Stack.setRegisteredStackSize(4);
 
@@ -569,8 +609,23 @@ public class CJClient extends CJInstance implements ClientMod {
 		RegisteredItemStack cobblestoneStack =
 				Block.cobblestone.newRegisteredItemStack();
 
+		RegisteredItemStack ironAxeStack =
+				Item.axeSteel.newRegisteredItemStack();
+
+		RegisteredItemStack ironPickaxeStack =
+				Item.pickaxeSteel.newRegisteredItemStack();
+
+		RegisteredItemStack ironShovelStack =
+				Item.shovelSteel.newRegisteredItemStack();
+
 		RegisteredItemStack bucketStack =
 				Item.bucketEmpty.newRegisteredItemStack();
+
+		RegisteredItemStack brickStack =
+				Item.brick.newRegisteredItemStack();
+
+		RegisteredItemStack ironBlockStack =
+				Block.blockIron.newRegisteredItemStack();
 
 		RegisteredItemStack diamondStack =
 				Item.diamond.newRegisteredItemStack();
@@ -578,8 +633,14 @@ public class CJClient extends CJInstance implements ClientMod {
 		RegisteredItemStack ironStack =
 				Item.ingotIron.newRegisteredItemStack();
 
+		RegisteredItemStack goldStack =
+				Item.ingotGold.newRegisteredItemStack();
+
 		RegisteredItemStack flintStack =
 				Item.flint.newRegisteredItemStack();
+
+		RegisteredItemStack gunpowderStack =
+				Item.gunpowder.newRegisteredItemStack();
 
 		RegisteredItemStack cauldronStack =
 				Block.cauldron.newRegisteredItemStack();
@@ -587,14 +648,27 @@ public class CJClient extends CJInstance implements ClientMod {
 		RegisteredItemStack chestStack =
 				Block.chest.newRegisteredItemStack();
 
+		RegisteredItemStack glassStack =
+				Block.glass.newRegisteredItemStack();
+
 		RegisteredItemStack ashStack = Item.ash.newRegisteredItemStack();
 		RegisteredItemStack coalStack = Item.coal.newRegisteredItemStack();
 
-		RegisteredItemStack refinedJewelStack =
-				refinedJewel.newRegisteredItemStack();
+		RegisteredItemStack jewelDustStack =
+				jewelDust.newRegisteredItemStack();
+
+		RegisteredItemStack soulDust2Stack =
+				soulDust.newRegisteredItemStack();
+
+		soulDust2Stack.setRegisteredStackSize(2);
+
+		RegisteredItemStack soulEssenceStack =
+				soulEssence.newRegisteredItemStack();
 
 		// Vanilla machine recipes.
 		registerFurnaceRecipe(Block.leaves.asRegisteredItem(), pasteStack);
+		registerFurnaceRecipe(goldDust, goldStack);
+		registerFurnaceRecipe(ironDust, ironStack);
 
 		// Crafting recipes.
 		registerRecipe(
@@ -636,6 +710,57 @@ public class CJClient extends CJInstance implements ClientMod {
 				'|', machineFrameStack);
 
 		registerRecipe(
+				refineryStack,
+				"&%&",
+				"@|@",
+				"&&&",
+				'&', cobblestoneStack,
+				'@', glassStack,
+				'%', bucketStack,
+				'|', machineFrameStack);
+
+		registerRecipe(
+				pulverizerStack,
+				"&@&",
+				"@|@",
+				"&%&",
+				'&', cobblestoneStack,
+				'@', flintStack,
+				'%', gunpowderStack,
+				'|', machineFrameStack);
+
+		registerRecipe(
+				pressStack,
+				"&@&",
+				"%|%",
+				"&%&",
+				'&', cobblestoneStack,
+				'@', ironBlockStack,
+				'%', brickStack,
+				'|', machineFrameStack);
+
+		registerRecipe(
+				pressStack,
+				"&&&",
+				"@|@",
+				"%&%",
+				'&', cobblestoneStack,
+				'@', coalStack,
+				'%', furnaceStack,
+				'|', machineFrameStack);
+
+		registerRecipe(
+				toolStationStack,
+				"&&&",
+				"a|c",
+				"%b%",
+				'&', cobblestoneStack,
+				'a', ironAxeStack,
+				'b', ironPickaxeStack,
+				'c', ironShovelStack,
+				'|', machineFrameStack);
+
+		registerRecipe(
 				flooper4Stack,
 				" % ",
 				" | ",
@@ -652,6 +777,11 @@ public class CJClient extends CJInstance implements ClientMod {
 				'%', chestStack,
 				'#', ironStack,
 				'|', machineFrameStack);
+
+		registerShapelessRecipe(
+				soulDust2Stack, jewelDustStack, soulEssenceStack);
+
+		// TODO: Add an auto-crafter.
 
 		// Consume furnace recipes.
 		FurnaceRecipes furnaceRecipes = FurnaceRecipes.instance;

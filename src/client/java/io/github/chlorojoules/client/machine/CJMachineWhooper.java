@@ -1,14 +1,10 @@
 package io.github.chlorojoules.client.machine;
 
-import io.github.chlorojoules.client.CJTank;
-import io.github.chlorojoules.client.CJTankVolume;
-import io.github.chlorojoules.client.CJTileEntityMachineBase;
+import io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase;
 import net.minecraft.src.game.block.tileentity.TileEntity;
 import net.minecraft.src.game.block.tileentity.TileEntityChest;
 import net.minecraft.src.game.item.ItemStack;
 import net.minecraft.src.game.level.World;
-
-import java.util.logging.Logger;
 
 public class CJMachineWhooper implements CJIMachine {
 	private CJTileEntityMachineBase[] adjacentMachines = null;

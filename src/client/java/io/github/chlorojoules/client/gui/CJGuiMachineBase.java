@@ -1,7 +1,9 @@
 package io.github.chlorojoules.client.gui;
 
 import io.github.chlorojoules.client.*;
+import io.github.chlorojoules.client.container.CJContainerMachineBase;
 import io.github.chlorojoules.client.machine.CJMachineBuilder;
+import io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase;
 import net.minecraft.src.client.gui.GuiContainer;
 import net.minecraft.src.client.gui.StringTranslate;
 import net.minecraft.src.game.block.Block;

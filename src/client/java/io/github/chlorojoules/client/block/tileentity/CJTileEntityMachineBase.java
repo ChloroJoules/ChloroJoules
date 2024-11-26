@@ -1,5 +1,8 @@
-package io.github.chlorojoules.client;
+package io.github.chlorojoules.client.block.tileentity;
 
+import io.github.chlorojoules.client.CJClient;
+import io.github.chlorojoules.client.CJRarity;
+import io.github.chlorojoules.client.CJTankVolume;
 import io.github.chlorojoules.client.machine.CJIMachine;
 import io.github.chlorojoules.client.machine.CJMachineBuilder;
 import net.minecraft.src.client.inventory.IInventory;
@@ -12,7 +15,6 @@ import net.minecraft.src.game.nbt.NBTTagCompound;
 import net.minecraft.src.game.nbt.NBTTagList;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	// TODO: Make a tagging/name/enum system so we can keep track of slots

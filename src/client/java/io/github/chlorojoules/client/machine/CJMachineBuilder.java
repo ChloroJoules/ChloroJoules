@@ -4,6 +4,7 @@ import io.github.chlorojoules.client.*;
 import io.github.chlorojoules.client.gui.CJGuiElement;
 import io.github.chlorojoules.client.gui.CJGuiGravity;
 import io.github.chlorojoules.client.gui.CJGuiGravityInfo;
+import io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase;
 import net.minecraft.src.client.gui.StringTranslate;
 import net.minecraft.src.game.item.ItemStack;
 

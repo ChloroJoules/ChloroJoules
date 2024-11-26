@@ -18,7 +18,7 @@ message.cj_ok=All okay!
 
 # Blocks.
 tile.chlorojoules.cj_machine_frame.name=Machine Frame
-tile.chlorojoules.cj_block_jewel_dust.name=Block of Jewel Dust
+tile.chlorojoules.cj_block_jewel_dust.name=Compacted Jewel Dust
 
 tile.cj_bugblock.name=BugBlock
 tile.cj_liquefier.name=Liquefier

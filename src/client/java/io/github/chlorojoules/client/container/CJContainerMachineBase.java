@@ -1,5 +1,7 @@
-package io.github.chlorojoules.client;
+package io.github.chlorojoules.client.container;
 
+import io.github.chlorojoules.client.CJTank;
+import io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.client.gui.CJGuiMachineBaseSlot;
 import io.github.chlorojoules.client.machine.CJMachineBuilder;
 import io.github.chlorojoules.client.machine.CJMachineSlotInfo;
