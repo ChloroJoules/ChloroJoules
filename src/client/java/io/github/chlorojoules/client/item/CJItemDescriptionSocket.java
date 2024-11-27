@@ -2,6 +2,7 @@ package io.github.chlorojoules.client.item;
 
 import io.github.chlorojoules.client.CJRarity;
 import io.github.chlorojoules.client.CJRarityInfo;
+import net.minecraft.src.client.gui.StringTranslate;
 import net.minecraft.src.game.item.ItemStack;
 import net.minecraft.src.game.item.description.ItemDesc;
 
@@ -13,6 +14,10 @@ public class CJItemDescriptionSocket extends ItemDesc {
 		if(!(item.getItem() instanceof CJIItemSocket)) return;
 
 		CJRarity rarity = CJRarityInfo.getDamageRarity(item.itemDamage);
-		desc.add(CJRarityInfo.getRarityDescription(rarity).description);
+
+		String description =
+				CJRarityInfo.getRarityDescription(rarity).description;
+
+		desc.add(StringTranslate.getInstance().translateKey(description));
 	}
 }

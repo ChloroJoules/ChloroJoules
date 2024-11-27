@@ -6,6 +6,7 @@ tile.flowing_water.name=Water
 message.cj_no_power=Not enough CJ
 message.cj_no_jewel=No jewel inserted
 message.cj_bad_jewel=Bad jewel inserted
+message.cj_full_tool=Tool already has jewel
 message.cj_poor_jewel=Low-tier jewel inserted
 message.cj_bad_recipe=No matching recipe
 message.cj_resource=Insufficient resources
@@ -15,6 +16,31 @@ message.cj_warning=Machine Efficiency Reduced
 message.cj_stopped=Machine Stopped
 message.cj_working=Machine Working
 message.cj_ok=All okay!
+
+# Help messages.
+message.cj_bugblock.help=Adds all the bugs!
+message.cj_bugblock.flavor=It will not threaten to kill you -- and in fact, cannot speak
+message.cj_liquefier.help=Turns items into fluids
+message.cj_liquefier.flavor=Conducting a Fluid-ic ritual
+message.cj_refinery.help=Refinery
+message.cj_refinery.flavor=Refinery
+message.cj_solidifier.help=Solidifier
+message.cj_solidifier.flavor=Solidifier
+message.cj_pulverizer.help=Pulverizer
+message.cj_pulverizer.flavor=Pulverizer
+message.cj_press.help=Press
+message.cj_press.flavor=Press
+message.cj_furnace.help=Furnace
+message.cj_furnace.flavor=Furnace
+message.cj_tool_station.help=Tool Station
+message.cj_tool_station.flavor=Tool Station
+
+## NOTE: See `ChatColors.java`.
+message.cj_tool_none=§CNo Jewel
+message.cj_tool_primal=§7Primal Jewel
+message.cj_tool_manufactured=§AManufactured Jewel
+message.cj_tool_refined=§ERefined Jewel
+message.cj_tool_awakened=§BAwakened Jewel
 
 # Blocks.
 tile.chlorojoules.cj_machine_frame.name=Machine Frame
@@ -56,6 +82,8 @@ item.cj_fluid_chlorojoules_bucket.name=Bucket O' Joules
 item.cj_fluid_souls_bucket.name=Fluid Souls Bucket
 
 item.cj_soul_dust.name=Soul Dust
+item.cj_soul_core.name=Soul Core
+item.cj_soul_extractor.name=Soul Extractor
 item.cj_soul_essence.name=Soul Essence
 item.cj_iron_dust.name=Iron Dust
 item.cj_gold_dust.name=Gold Dust

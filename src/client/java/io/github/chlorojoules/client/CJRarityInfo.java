@@ -1,9 +1,7 @@
 package io.github.chlorojoules.client;
 
 import io.github.chlorojoules.client.item.CJItemDescription;
-import net.minecraft.src.client.gui.StringTranslate;
 import net.minecraft.src.game.block.Block;
-import net.minecraft.src.game.item.description.ItemDesc;
 
 import java.awt.*;
 
@@ -12,30 +10,25 @@ import static io.github.chlorojoules.client.CJRarity.*;
 public class CJRarityInfo {
 	public static final int PRIMAL_COLOR = Color.GRAY.getRGB();
 	public static final int MANUFACTURED_COLOR = 0;
-	public static final int REFINED_COLOR = -100999924;
+	public static final int REFINED_COLOR = Block.COLOR_YELLOW;
 	public static final int AWAKENED_COLOR = Block.COLOR_CYAN;
 
 	public static final int MAX_DAMAGE = 4;
 
 	private static final CJItemDescription noneDescription =
-			new CJItemDescription(StringTranslate.getInstance().translateKey(
-					"message.cj_tool_none"));
+			new CJItemDescription("message.cj_tool_none");
 
 	private static final CJItemDescription primalDescription =
-			new CJItemDescription(StringTranslate.getInstance().translateKey(
-					"message.cj_tool_primal"));
+			new CJItemDescription("message.cj_tool_primal");
 
 	private static final CJItemDescription manufacturedDescription =
-			new CJItemDescription(StringTranslate.getInstance().translateKey(
-					"message.cj_tool_manufacturer"));
+			new CJItemDescription("message.cj_tool_manufactured");
 
 	private static final CJItemDescription refinedDescription =
-			new CJItemDescription(StringTranslate.getInstance().translateKey(
-					"message.cj_tool_refined"));
+			new CJItemDescription("message.cj_tool_refined");
 
 	private static final CJItemDescription awakenedDescription =
-			new CJItemDescription(StringTranslate.getInstance().translateKey(
-					"message.cj_tool_awakened"));
+			new CJItemDescription("message.cj_tool_awakened");
 
 	public static int getRarityColor(CJRarity rarity) {
 		switch(rarity) {

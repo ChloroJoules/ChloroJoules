@@ -11,10 +11,12 @@ import net.minecraft.src.game.entity.player.InventoryPlayer;
 
 import org.lwjgl.opengl.GL11;
 
+import java.awt.*;
+
 import static io.github.chlorojoules.client.gui.CJGuiMachineBaseLayout.*;
 
 public class CJGuiMachineBase extends GuiContainer {
-	public static final int MACHINE_TEXT = 4210752;
+	public static final int MACHINE_TEXT = Color.DARK_GRAY.getRGB();
 	public static final int MACHINE_OK = Block.COLOR_GREEN;
 	public static final int MACHINE_WARNING = Block.COLOR_ORANGE;
 	public static final int MACHINE_ERROR = Block.COLOR_RED;
@@ -82,7 +84,7 @@ public class CJGuiMachineBase extends GuiContainer {
 
 		if(description != null) {
 			fontRenderer.drawStringWithShadow(
-					description, xSlot, ySlot + 15, -1);
+					description, xSlot, ySlot + 15, Color.GRAY.getRGB());
 		}
 
 		fontRenderer.drawStringWithShadow(name, xSlot, ySlot, titleColor);
@@ -147,10 +149,10 @@ public class CJGuiMachineBase extends GuiContainer {
 				mouseX, mouseY, INFO_X, INFO_Y, STATUS_WIDTH, STATUS_HEIGHT)) {
 
 			drawTooltip(
-					// TODO: Use this for fun flavour text?
-					translate.translateKey("message.help"),
 					translate.translateKey(
 							"message." + machineBuilder.name + ".help"),
+					translate.translateKey(
+							"message." + machineBuilder.name + ".flavor"),
 					mouseX, mouseY,
 					MACHINE_INFO);
 		}
