@@ -9,7 +9,7 @@ import static io.github.chlorojoules.client.CJRarity.*;
 
 public class CJRarityInfo {
 	public static final int PRIMAL_COLOR = Color.GRAY.getRGB();
-	public static final int MANUFACTURED_COLOR = 0;
+	public static final int MANUFACTURED_COLOR = Block.COLOR_GREEN;
 	public static final int REFINED_COLOR = Block.COLOR_YELLOW;
 	public static final int AWAKENED_COLOR = Block.COLOR_CYAN;
 

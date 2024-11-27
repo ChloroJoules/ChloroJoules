@@ -19,21 +19,26 @@ message.cj_ok=All okay!
 
 # Help messages.
 message.cj_bugblock.help=Adds all the bugs!
-message.cj_bugblock.flavor=It will not threaten to kill you -- and in fact, cannot speak
+message.cj_bugblock.flavor=Will never threaten to stab you and, in fact, cannot speak
 message.cj_liquefier.help=Turns items into fluids
 message.cj_liquefier.flavor=Conducting a Fluid-ic ritual
-message.cj_refinery.help=Refinery
-message.cj_refinery.flavor=Refinery
-message.cj_solidifier.help=Solidifier
-message.cj_solidifier.flavor=Solidifier
-message.cj_pulverizer.help=Pulverizer
-message.cj_pulverizer.flavor=Pulverizer
-message.cj_press.help=Press
-message.cj_press.flavor=Press
-message.cj_furnace.help=Furnace
-message.cj_furnace.flavor=Furnace
-message.cj_tool_station.help=Tool Station
-message.cj_tool_station.flavor=Tool Station
+message.cj_refinery.help=Refines fluids into more pure fluids
+message.cj_refinery.flavor=For refined tastes
+message.cj_solidifier.help=Turns fluids back into items
+message.cj_solidifier.flavor=In a relationship with the Liquefier
+message.cj_pulverizer.help=Grinds down items for better yield
+message.cj_pulverizer.flavor=I hardly know her
+message.cj_press.help=Compresses items into compacted items
+message.cj_press.flavor=Pushing down on me, pushing down on you...
+message.cj_furnace.help=Smelts items using ChloroJoules
+message.cj_furnace.flavor=Now that's what I call efficiency
+message.cj_tool_station.help=Manipulate tools' ChloroJewels
+message.cj_tool_station.flavor=Jewels for your Joule powered Tools
+
+message.cj_flooper.help=Routes fluids between adjacent machines
+message.cj_flooper.flavor=Can't read floppy disks
+message.cj_whooper.help=Routes items between adjacent inventories
+message.cj_whooper.flavor=Not a substitute for basketball
 
 ## NOTE: See `ChatColors.java`.
 message.cj_tool_none=§CNo Jewel
@@ -84,9 +89,11 @@ item.cj_fluid_souls_bucket.name=Fluid Souls Bucket
 item.cj_soul_dust.name=Soul Dust
 item.cj_soul_core.name=Soul Core
 item.cj_soul_extractor.name=Soul Extractor
+item.cj_soul_sword.name=Soul Slayer
 item.cj_soul_essence.name=Soul Essence
 item.cj_iron_dust.name=Iron Dust
 item.cj_gold_dust.name=Gold Dust
+item.cj_jewel_dust.name=ChloroJewel Dust
 item.cj_paste.name=Plant Paste
 
 item.cj_jewel_primal.name=Primal ChloroJewel

@@ -3,6 +3,7 @@ package io.github.chlorojoules.client;
 import io.github.chlorojoules.CJInstance;
 import io.github.chlorojoules.client.block.CJBlockMachineBase;
 import io.github.chlorojoules.client.item.CJItemSoulExtractor;
+import io.github.chlorojoules.client.item.CJItemToolSoulSword;
 import io.github.chlorojoules.client.machine.*;
 
 import io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase;
@@ -71,6 +72,7 @@ public class CJClient extends CJInstance implements ClientMod {
 	public static RegisteredItem soulCore;
 
 	public static RegisteredItem soulExtractor;
+	public static RegisteredItem soulSword;
 
 	public static int fuelFluid;
 
@@ -238,6 +240,14 @@ public class CJClient extends CJInstance implements ClientMod {
 							.setTooltipColor(REFINED_COLOR)
 							.setGameItemProvider(((id, build, ext) ->
 									new CJItemSoulExtractor(id))));
+
+			soulSword = registerNewItem(
+					"cj_soul_sword", new ItemBuilder()
+							.setMaxStackSize(1)
+							.setItemName("cj_soul_sword")
+							.setTooltipColor(REFINED_COLOR)
+							.setGameItemProvider(((id, build, ext) ->
+									new CJItemToolSoulSword(id))));
 
 			soulCore = registerNewItem(
 					"cj_soul_core", new ItemBuilder()

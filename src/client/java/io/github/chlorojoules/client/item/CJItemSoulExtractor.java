@@ -1,8 +1,11 @@
 package io.github.chlorojoules.client.item;
 
+import com.fox2code.foxloader.network.NetworkPlayer;
 import io.github.chlorojoules.client.CJClient;
 import io.github.chlorojoules.client.CJRarity;
 import io.github.chlorojoules.client.CJRarityInfo;
+import net.minecraft.fox2code.ChatColors;
+import net.minecraft.src.client.gui.StringTranslate;
 import net.minecraft.src.game.block.Block;
 import net.minecraft.src.game.entity.other.EntityItem;
 import net.minecraft.src.game.entity.player.EntityPlayer;
@@ -25,6 +28,17 @@ public class CJItemSoulExtractor extends Item implements CJIItemSocket {
 			float x, float y, float z) {
 
 		// TODO: Sound effects.
+
+		int rarityDamage = CJRarityInfo.getRarityDamage(CJRarity.REFINED);
+		if(itemstack.itemDamage > rarityDamage) {
+			String string = StringTranslate.getInstance().translateKey(
+					"message.cj_poor_jewel");
+
+			((NetworkPlayer) player).displayChatMessage(
+					ChatColors.RED + string);
+
+			return false;
+		}
 
 		int id = world.getBlockId(blockX, blockY, blockZ);
 
