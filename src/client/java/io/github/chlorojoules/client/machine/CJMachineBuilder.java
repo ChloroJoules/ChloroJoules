@@ -7,6 +7,7 @@ import io.github.chlorojoules.client.gui.CJGuiGravityInfo;
 import io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase;
 import net.minecraft.src.client.gui.StringTranslate;
 import net.minecraft.src.game.item.ItemStack;
+import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
 
@@ -232,12 +233,15 @@ public class CJMachineBuilder {
 		if(component.target == CJMachineRecipeTarget.TANK) {
 			CJTankVolume volume = entity.tanks.get(component.index);
 
+			if(volume.fluidID == 0) return !input;
+
 			return volume.fluidID == component.id;
 		}
 		else {
 			ItemStack stack = entity.stacks.get(component.index);
 
 			if(stack == null) return !input;
+
 			return stack.itemID == component.id;
 		}
 	}

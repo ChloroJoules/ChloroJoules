@@ -16,10 +16,16 @@ public class CJMachineRecipeComponent {
 	}
 
 	public CJMachineRecipeComponent(
-			int index, RegisteredBlock block, int count) {
+			int index, RegisteredBlock block, int count, boolean as_block_id) {
 
 		this.index = index;
-		this.id = block.getRegisteredBlockId();
+		if(!as_block_id) {
+			this.id = block.asRegisteredItem().getRegisteredItemId();
+		}
+		else {
+			this.id = block.getRegisteredBlockId();
+		}
+
 		this.count = count;
 	}
 

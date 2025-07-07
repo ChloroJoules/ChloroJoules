@@ -74,6 +74,8 @@ public class CJClient extends CJInstance implements ClientMod {
 	public static RegisteredItem soulExtractor;
 	public static RegisteredItem soulSword;
 
+	public static RegisteredItem ironRod;
+
 	public static int fuelFluid;
 
 	public RegisteredBlock registerNewMachine(
@@ -254,6 +256,10 @@ public class CJClient extends CJInstance implements ClientMod {
 							.setMaxStackSize(1)
 							.setItemName("cj_soul_core")
 							.setTooltipColor(AWAKENED_COLOR));
+
+			ironRod = registerNewItem(
+					"cj_iron_rod", new ItemBuilder()
+							.setItemName("cj_iron_rod"));
 		}
 
 		// TODO: Feature request for registering ores.
@@ -287,6 +293,8 @@ public class CJClient extends CJInstance implements ClientMod {
 		// TODO: Need a big machine UI fixup to make them more distinct and
 		//       Improve alignment.
 
+		// TODO: Make achievements to get ready for when they start working!
+
 		// Machines.
 		{
 			bugBlock = registerNewMachine(
@@ -319,9 +327,9 @@ public class CJClient extends CJInstance implements ClientMod {
 							.addRecipe(
 									10,
 									new CJMachineRecipeComponent(
-											0, Block.leaves, 1),
+											0, Block.leaves, 1, false),
 									new CJMachineRecipeComponent(
-											1, fluidPaste, 50)
+											1, fluidPaste, 50, true)
 											.setTarget(TANK),
 									50, true)
 							.setImpl(CJMachineRecipeConsumer.class));
@@ -342,10 +350,10 @@ public class CJClient extends CJInstance implements ClientMod {
 							.addRecipe(
 									1,
 									new CJMachineRecipeComponent(
-											1, fluidPaste, 10)
+											1, fluidPaste, 10, true)
 											.setTarget(TANK),
 									new CJMachineRecipeComponent(
-											2, fluidChlorojoules, 5)
+											2, fluidChlorojoules, 5, true)
 											.setTarget(TANK),
 									10, true)
 							.setImpl(CJMachineRecipeConsumer.class));
@@ -365,14 +373,14 @@ public class CJClient extends CJInstance implements ClientMod {
 							.addRecipe(
 									20,
 									new CJMachineRecipeComponent(
-											1, fluidPaste, 30)
+											1, fluidPaste, 30, true)
 											.setTarget(TANK),
 									new CJMachineRecipeComponent(0, paste, 2),
 									150, true)
 							.addRecipe(
 									100,
 									new CJMachineRecipeComponent(
-											0, fluidChlorojoules, 250)
+											0, fluidChlorojoules, 250, true)
 											.setTarget(TANK),
 									new CJMachineRecipeComponent(
 											0, manufacturedJewel, 1),
@@ -422,35 +430,35 @@ public class CJClient extends CJInstance implements ClientMod {
 							.addRecipe(
 									30,
 									new CJMachineRecipeComponent(
-											0, Block.oreIron, 1),
+											0, Block.oreIron, 1, false),
 									new CJMachineRecipeComponent(
 											1, ironDust, 2),
 									150, false)
 							.addRecipe(
 									30,
 									new CJMachineRecipeComponent(
-											0, Block.oreIronNether, 1),
+											0, Block.oreIronNether, 1, false),
 									new CJMachineRecipeComponent(
 											1, ironDust, 3),
 									150, false)
 							.addRecipe(
 									30,
 									new CJMachineRecipeComponent(
-											0, Block.oreGold, 1),
+											0, Block.oreGold, 1, false),
 									new CJMachineRecipeComponent(
 											1, goldDust, 2),
 									150, false)
 							.addRecipe(
 									30,
 									new CJMachineRecipeComponent(
-											0, Block.oreGoldNether, 1),
+											0, Block.oreGoldNether, 1, false),
 									new CJMachineRecipeComponent(
 											1, goldDust, 3),
 									150, false)
 							.addRecipe(
 									10,
 									new CJMachineRecipeComponent(
-											0, Block.sugarCane, 1),
+											0, Block.sugarCane, 1, false),
 									new CJMachineRecipeComponent(
 											1, Item.sugar, 4),
 									150, false)
@@ -480,14 +488,14 @@ public class CJClient extends CJInstance implements ClientMod {
 									new CJMachineRecipeComponent(
 											0, jewelDust, 4),
 									new CJMachineRecipeComponent(
-											1, compactedJewelDust, 1),
+											1, compactedJewelDust, 1, false),
 									150, false)
 							.addRecipe(
 									15,
 									new CJMachineRecipeComponent(
 											0, Item.ingotIron, 1),
 									new CJMachineRecipeComponent(
-											1, Block.gear, 5),
+											1, Block.gear, 5, false),
 									75, false)
 							.setImpl(CJMachineRecipeConsumer.class));
 
@@ -505,7 +513,7 @@ public class CJClient extends CJInstance implements ClientMod {
 							.addRecipeRarity(
 									30,
 									new CJMachineRecipeComponent(
-											0, compactedJewelDust, 1),
+											0, compactedJewelDust, 1, false),
 									new CJMachineRecipeComponent(
 											1, refinedJewel, 1),
 									300, CJRarity.MANUFACTURED)
@@ -613,8 +621,13 @@ public class CJClient extends CJInstance implements ClientMod {
 		RegisteredItemStack whooper4Stack = whooper.newRegisteredItemStack();
 		whooper4Stack.setRegisteredStackSize(4);
 
+		RegisteredItemStack ironRodStack = ironRod.newRegisteredItemStack();
+
 		RegisteredItemStack furnaceStack =
 				Block.furnaceIdle.newRegisteredItemStack();
+
+		RegisteredItemStack poweredFurnaceStack =
+				furnace.newRegisteredItemStack();
 
 		RegisteredItemStack cobblestoneStack =
 				Block.cobblestone.newRegisteredItemStack();
@@ -675,6 +688,19 @@ public class CJClient extends CJInstance implements ClientMod {
 		RegisteredItemStack soulEssenceStack =
 				soulEssence.newRegisteredItemStack();
 
+		RegisteredItemStack soulExtractorStack =
+				soulExtractor.newRegisteredItemStack();
+
+		soulExtractorStack.setRegisteredDamage(MAX_DAMAGE);
+
+		RegisteredItemStack soulSwordStack =
+				soulSword.newRegisteredItemStack();
+
+		soulSwordStack.setRegisteredDamage(MAX_DAMAGE);
+
+		RegisteredItemStack soulCoreStack = soulCore.newRegisteredItemStack();
+		RegisteredItemStack magmaStack = Block.magma.newRegisteredItemStack();
+
 		// Vanilla machine recipes.
 		registerFurnaceRecipe(Block.leaves.asRegisteredItem(), pasteStack);
 		registerFurnaceRecipe(goldDust, goldStack);
@@ -690,6 +716,13 @@ public class CJClient extends CJInstance implements ClientMod {
 				'#', ironStack,
 				'~', pasteStack,
 				'|', cauldronStack);
+
+		registerRecipe(
+				ironRodStack,
+				"  #",
+				" # ",
+				"#  ",
+				'#', ironStack);
 
 		registerRecipe(
 				primalJewelStack,
@@ -750,7 +783,7 @@ public class CJClient extends CJInstance implements ClientMod {
 				'|', machineFrameStack);
 
 		registerRecipe(
-				pressStack,
+				poweredFurnaceStack,
 				"&&&",
 				"@|@",
 				"%&%",
@@ -787,6 +820,24 @@ public class CJClient extends CJInstance implements ClientMod {
 				'%', chestStack,
 				'#', ironStack,
 				'|', machineFrameStack);
+
+		registerRecipe(
+				soulSwordStack,
+				"  #",
+				" % ",
+				"@  ",
+				'%', soulCoreStack,
+				'#', magmaStack,
+				'@', ironRodStack);
+
+		registerRecipe(
+				soulExtractorStack,
+				" %#",
+				" @%",
+				"@  ",
+				'%', pasteStack,
+				'#', ironStack,
+				'@', ironRodStack);
 
 		registerShapelessRecipe(
 				soulDust2Stack, jewelDustStack, soulEssenceStack);
