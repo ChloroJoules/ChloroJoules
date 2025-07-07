@@ -5,12 +5,11 @@ import io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase;
 import net.minecraft.src.client.inventory.IInventory;
 import net.minecraft.src.game.item.ItemStack;
 import net.minecraft.src.game.level.World;
-import org.lwjgl.input.Mouse;
 
-public class CJMachineWhooper implements CJIMachine {
+public class CJMachineSwooper implements CJIMachine {
 	private IInventory[] adjacentInventories = null;
 
-	// TODO: Unlink recipient/transmitter on destruction.
+	// TODO: Avoid exporting back to linked device.
 	public CJTileEntityMachineBase linked = null;
 
 	@Override
@@ -25,37 +24,35 @@ public class CJMachineWhooper implements CJIMachine {
 
 		if(linked == null) return;
 
-		ItemStack stack = machineEntity.stacks.get(0);
-		int currentItemID = -1;
+		ItemStack stack = linked.stacks.get(0);
+		if(stack == null) return;
 
-		if(stack != null) {
-			if(stack.stackSize >= stack.getMaxStackSize()) return;
+		int currentItemID = stack.itemID;
 
-			currentItemID = stack.itemID;
-		}
-
+		// TODO: This should use `quickMove` so the tile can filter which slot
+		//       To insert into. This means we need to sort out machine
+		//       Inventory quick move.
 		for(IInventory inventory : adjacentInventories) {
 			if(inventory == null) continue;
 
-			int slotIndex = CJInventoryHelper.getMatchingOutputIndex(
+			int slotIndex = CJInventoryHelper.getMatchingInputIndex(
 					inventory, currentItemID);
 
 			if(slotIndex == -1) continue;
-			ItemStack inStack = inventory.getStackInSlot(slotIndex);
 
-			if(inStack == null) continue;
+			ItemStack outStack = inventory.getStackInSlot(slotIndex);
 
-			// TODO: This is currently hardcoded to 1 item per tick.
-			if(stack == null) {
-				machineEntity.stacks.set(0, new ItemStack(
-						inStack.itemID, 1, inStack.itemDamage));
+			if(outStack == null) {
+				inventory.setInventorySlotContents(
+						slotIndex, new ItemStack(
+								stack.itemID, 1, stack.itemDamage));
 			}
-			else stack.stackSize++;
+			else outStack.stackSize++;
 
-			if(inStack.stackSize == 1) {
-				inventory.setInventorySlotContents(slotIndex, null);
+			if(stack.stackSize == 1) {
+				linked.stacks.set(0, null);
 			}
-			else inStack.stackSize--;
+			else stack.stackSize--;
 
 			break;
 		}

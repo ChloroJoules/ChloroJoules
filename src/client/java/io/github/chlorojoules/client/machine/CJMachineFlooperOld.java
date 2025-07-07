@@ -3,18 +3,14 @@ package io.github.chlorojoules.client.machine;
 import io.github.chlorojoules.client.CJTank;
 import io.github.chlorojoules.client.CJTankVolume;
 import io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase;
-
 import net.minecraft.src.game.level.World;
 
-import static
-		io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase.machineEntity;
+import static io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase.machineEntity;
 
-public class CJMachineFlooper implements CJIMachine {
+public class CJMachineFlooperOld implements CJIMachine {
 	// TODO: Generic API for machines which maintain a set of adjacent
 	//       Machines.
 	private CJTileEntityMachineBase[] adjacentMachines = null;
-
-	public CJMachineSlooper linked = null;
 
 	// NOTE: Transfers up to count -- may transfer less.
 	public static boolean tankTransfer(

@@ -6,20 +6,17 @@ package io.github.chlorojoules.client;
 
 // NOTE: All units are in millibuckets.
 
+import io.github.chlorojoules.client.gui.CJGuiElement;
+
 // This is to a fluid as a `Slot` is to an item.
-public class CJTank {
+public class CJTank extends CJGuiElement {
 	// Millibuckets per bucket.
 	public static final int BUCKET = 1000;
-
-	// Display position.
-	public int xDisplayPosition;
-	public int yDisplayPosition;
 
 	// Whether tank is an output.
 	public boolean output = false;
 
 	public CJTank(int x, int y) {
-		xDisplayPosition = x;
-		yDisplayPosition = y;
+		super(x, y);
 	}
 }

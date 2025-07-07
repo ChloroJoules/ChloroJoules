@@ -52,7 +52,8 @@ public class CJContainerMachineBase extends Container {
 			CJMachineSlotInfo info = machineBuilder.slots.get(i);
 
 			CJGuiMachineBaseSlot slot = new CJGuiMachineBaseSlot(
-					player, machineEntity, i, info.x, info.y);
+					player, machineEntity, i,
+					info.xDisplayPosition, info.yDisplayPosition);
 
 			slot.setOutput(info.output);
 

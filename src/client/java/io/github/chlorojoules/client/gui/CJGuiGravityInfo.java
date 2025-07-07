@@ -45,6 +45,17 @@ public class CJGuiGravityInfo {
 		return getAnchoredY(anchor, y, height);
 	}
 
+	public static int getCoordinateAnchoredX(
+			CJGuiGravity anchor, int x) {
+
+		return getAnchoredX(anchor, x, 0);
+	}
+
+	public static int getCoordinateAnchoredY(
+			CJGuiGravity anchor, int y) {
+
+		return getAnchoredY(anchor, y, 0);
+	}
 	public static int getTankAnchoredX(CJGuiGravity anchor, int x) {
 		return getAnchoredX(anchor, x, FLUID_WIDTH);
 	}

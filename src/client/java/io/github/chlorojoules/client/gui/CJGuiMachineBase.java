@@ -9,6 +9,7 @@ import net.minecraft.src.client.gui.StringTranslate;
 import net.minecraft.src.game.block.Block;
 import net.minecraft.src.game.entity.player.InventoryPlayer;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -265,6 +266,34 @@ public class CJGuiMachineBase extends GuiContainer {
 					tankX, tankY,
 					FLUID_EMPTY_X, FLUID_EMPTY_Y,
 					FLUID_WIDTH, tankEmptyDrawHeight);
+		}
+
+		// Draw coordinates.
+		CJGuiCoordinate coordinate;
+		int coordinateX;
+		int coordinateY;
+		for(int i = 0; i < machineBuilder.linkCoordinates.size(); i++) {
+			coordinate = machineBuilder.linkCoordinates.get(i);
+			coordinateX = baseX + coordinate.xDisplayPosition;
+			coordinateY = baseY + coordinate.yDisplayPosition;
+
+			int[] coordinateDisplay = machineEntity.coordinateDisplays.get(i);
+
+			String string;
+			if(coordinateDisplay != null) {
+				string = StringTranslate.getInstance().translateKeyFormat(
+						coordinate.label,
+						coordinateDisplay[0],
+						coordinateDisplay[1],
+						coordinateDisplay[2]);
+			}
+			else {
+				string = StringTranslate.getInstance().translateKey(
+						"message.cj_coordinate_unset");
+			}
+
+			drawCenteredString(
+					fontRenderer, string, coordinateX, coordinateY, 0);
 		}
 
 		// Draw progress bars.

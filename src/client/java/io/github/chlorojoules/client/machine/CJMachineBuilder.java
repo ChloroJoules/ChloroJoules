@@ -5,9 +5,9 @@ import io.github.chlorojoules.client.gui.CJGuiElement;
 import io.github.chlorojoules.client.gui.CJGuiGravity;
 import io.github.chlorojoules.client.gui.CJGuiGravityInfo;
 import io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase;
+import io.github.chlorojoules.client.gui.CJGuiCoordinate;
 import net.minecraft.src.client.gui.StringTranslate;
 import net.minecraft.src.game.item.ItemStack;
-import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
 
@@ -33,8 +33,12 @@ public class CJMachineBuilder {
 	public ArrayList<CJTank> tanks = new ArrayList<>();
 	public ArrayList<CJTankVolume> tankVolumes = new ArrayList<>();
 	public ArrayList<CJGuiElement> progressBars = new ArrayList<>();
+	// TODO: This is kind of hardcoded -- is there a way we can make
+	//  	 `CJGuiElement` more generic/programmable?
+	public ArrayList<CJGuiCoordinate> linkCoordinates =
+			new ArrayList<>();
 
-	public ArrayList<CJMachineRecipe> recipies = new ArrayList<>();
+	public ArrayList<CJMachineRecipe> recipes = new ArrayList<>();
 
 	public CJMachineBuilder setMachineName(String value) {
 		name = value;
@@ -53,7 +57,6 @@ public class CJMachineBuilder {
 
 	// TODO: Mechanism for anchoring/centering slots/tanks in builder
 	//       Interface.
-	// TODO: Helper for ChloroJewel slots.
 	public CJMachineBuilder addSlot(int x, int y, boolean output) {
 		slots.add(new CJMachineSlotInfo(x, y, output));
 
@@ -76,6 +79,30 @@ public class CJMachineBuilder {
 				CJGuiGravityInfo.getSlotAnchoredX(anchor, x, output),
 				CJGuiGravityInfo.getSlotAnchoredY(CENTER, 0, output),
 				output);
+	}
+
+	public CJMachineBuilder addCoordinate(int x, int y, String label) {
+		linkCoordinates.add(new CJGuiCoordinate(x, y, label));
+
+		return this;
+	}
+
+	public CJMachineBuilder addCoordinateGravity(
+			CJGuiGravity anchor, int x, int y, String label) {
+
+		return addCoordinate(
+				CJGuiGravityInfo.getCoordinateAnchoredX(anchor, x),
+				CJGuiGravityInfo.getCoordinateAnchoredY(anchor, y),
+				label);
+	}
+
+	public CJMachineBuilder addCoordinateGravityHCenter(
+			CJGuiGravity anchor, int y, String label) {
+
+		return addCoordinate(
+				CJGuiGravityInfo.getCoordinateAnchoredX(CENTER, 0),
+				CJGuiGravityInfo.getCoordinateAnchoredY(anchor, y),
+				label);
 	}
 
 	// TODO: Add helper for adding specifically fuel tanks.
@@ -166,7 +193,7 @@ public class CJMachineBuilder {
 		CJMachineRecipe recipe = new CJMachineRecipe(
 				this, fuelVolume, in, out, ticks, allowPassive);
 
-		recipies.add(recipe);
+		recipes.add(recipe);
 
 		return this;
 	}
@@ -175,7 +202,7 @@ public class CJMachineBuilder {
 			CJMachineRecipeComponent in, CJMachineRecipeComponent out,
 			int ticks) {
 
-		recipies.add(new CJMachineRecipe(in, out, ticks));
+		recipes.add(new CJMachineRecipe(in, out, ticks));
 
 		return this;
 	}
@@ -189,7 +216,7 @@ public class CJMachineBuilder {
 
 		recipe.requiredRarity = rarity;
 
-		recipies.add(recipe);
+		recipes.add(recipe);
 
 		return this;
 	}
@@ -276,9 +303,9 @@ public class CJMachineBuilder {
 		}
 
 		boolean matchedRecipe = false;
-		for(int i = 0; i < entity.machineBuilder.recipies.size(); i++) {
+		for(int i = 0; i < entity.machineBuilder.recipes.size(); i++) {
 			matchedRecipe = true;
-			recipe = entity.machineBuilder.recipies.get(i);
+			recipe = entity.machineBuilder.recipes.get(i);
 
 			for(int j = 0; j < recipe.inputs.size(); j++) {
 				CJMachineRecipeComponent component = recipe.inputs.get(j);

@@ -101,6 +101,8 @@ public class CJBlockMachineBase extends BlockContainer {
 		// TODO: Make this return different tanks depending on attempted fluid
 		//       Insertion.
 		int tankIndex = machineBuilder.getPrimaryInputTankIndex();
+		if(tankIndex == -1) return false;
+
 		CJTankVolume tankVolume = machineEntity.tanks.get(tankIndex);
 
 		if(tankVolume.fluidID == fluidID || tankVolume.fluidID == 0) {

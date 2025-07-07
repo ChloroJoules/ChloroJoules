@@ -2,6 +2,8 @@ package io.github.chlorojoules.client;
 
 import io.github.chlorojoules.CJInstance;
 import io.github.chlorojoules.client.block.CJBlockMachineBase;
+import io.github.chlorojoules.client.item.CJItemLinker;
+import io.github.chlorojoules.client.item.CJItemLinkerFull;
 import io.github.chlorojoules.client.item.CJItemSoulExtractor;
 import io.github.chlorojoules.client.item.CJItemToolSoulSword;
 import io.github.chlorojoules.client.machine.*;
@@ -54,8 +56,11 @@ public class CJClient extends CJInstance implements ClientMod {
 	public static RegisteredBlock press;
 	public static RegisteredBlock furnace;
 	public static RegisteredBlock toolStation;
+
 	public static RegisteredBlock flooper;
+	public static RegisteredBlock slooper;
 	public static RegisteredBlock whooper;
+	public static RegisteredBlock swooper;
 
 	public static RegisteredItem paste;
 
@@ -73,6 +78,8 @@ public class CJClient extends CJInstance implements ClientMod {
 
 	public static RegisteredItem soulExtractor;
 	public static RegisteredItem soulSword;
+	public static RegisteredItem linker;
+	public static RegisteredItem linkerFull;
 
 	public static RegisteredItem ironRod;
 
@@ -250,6 +257,22 @@ public class CJClient extends CJInstance implements ClientMod {
 							.setTooltipColor(REFINED_COLOR)
 							.setGameItemProvider(((id, build, ext) ->
 									new CJItemToolSoulSword(id))));
+
+			linker = registerNewItem(
+					"cj_linker", new ItemBuilder()
+							.setMaxStackSize(1)
+							.setItemName("cj_linker")
+							.setTooltipColor(MANUFACTURED_COLOR)
+							.setGameItemProvider(((id, build, ext) ->
+									new CJItemLinker(id))));
+
+			linkerFull = registerNewItem(
+					"cj_linker_full", new ItemBuilder()
+							.setMaxStackSize(1)
+							.setItemName("cj_linker_full")
+							.setTooltipColor(MANUFACTURED_COLOR)
+							.setGameItemProvider(((id, build, ext) ->
+									new CJItemLinkerFull(id))));
 
 			soulCore = registerNewItem(
 					"cj_soul_core", new ItemBuilder()
@@ -542,14 +565,30 @@ public class CJClient extends CJInstance implements ClientMod {
 			// TODO: UI to allow floopers to be filtered on one fluid kind.
 			flooper = registerNewMachine(
 					"cj_flooper", new CJMachineBuilder()
+							.addCoordinateGravityHCenter(
+									CENTER, 12, "message.cj_unlinked_hint")
 							.addTankGravity(
 									CENTER, 0, 0, false, 2 * CJTank.BUCKET, 0)
 							.setImpl(CJMachineFlooper.class));
 
+			slooper = registerNewMachine(
+					"cj_slooper", new CJMachineBuilder()
+							.addCoordinateGravityHCenter(
+									CENTER, 12, "message.cj_unlinked_hint")
+							.setImpl(CJMachineSlooper.class));
+
 			whooper = registerNewMachine(
 					"cj_whooper", new CJMachineBuilder()
+							.addCoordinateGravityHCenter(
+									CENTER, 12, "message.cj_unlinked_hint")
 							.addSlotGravity(CENTER, 0, 0, false)
 							.setImpl(CJMachineWhooper.class));
+
+			swooper = registerNewMachine(
+					"cj_swooper", new CJMachineBuilder()
+							.addCoordinateGravityHCenter(
+									CENTER, 12, "message.cj_unlinked_hint")
+							.setImpl(CJMachineSwooper.class));
 		}
 	}
 
@@ -615,11 +654,11 @@ public class CJClient extends CJInstance implements ClientMod {
 		RegisteredItemStack toolStationStack =
 				toolStation.newRegisteredItemStack();
 
-		RegisteredItemStack flooper4Stack = flooper.newRegisteredItemStack();
-		flooper4Stack.setRegisteredStackSize(4);
+		//RegisteredItemStack flooper4Stack = flooper.newRegisteredItemStack();
+		//flooper4Stack.setRegisteredStackSize(4);
 
-		RegisteredItemStack whooper4Stack = whooper.newRegisteredItemStack();
-		whooper4Stack.setRegisteredStackSize(4);
+//		RegisteredItemStack whooper4Stack = whooper.newRegisteredItemStack();
+//		whooper4Stack.setRegisteredStackSize(4);
 
 		RegisteredItemStack ironRodStack = ironRod.newRegisteredItemStack();
 
@@ -803,23 +842,23 @@ public class CJClient extends CJInstance implements ClientMod {
 				'c', ironShovelStack,
 				'|', machineFrameStack);
 
-		registerRecipe(
-				flooper4Stack,
-				" % ",
-				" | ",
-				" # ",
-				'%', bucketStack,
-				'#', ironStack,
-				'|', machineFrameStack);
+//		registerRecipe(
+//				flooper4Stack,
+//				" % ",
+//				" | ",
+//				" # ",
+//				'%', bucketStack,
+//				'#', ironStack,
+//				'|', machineFrameStack);
 
-		registerRecipe(
-				whooper4Stack,
-				" % ",
-				" | ",
-				" # ",
-				'%', chestStack,
-				'#', ironStack,
-				'|', machineFrameStack);
+//		registerRecipe(
+//				whooper4Stack,
+//				" % ",
+//				" | ",
+//				" # ",
+//				'%', chestStack,
+//				'#', ironStack,
+//				'|', machineFrameStack);
 
 		registerRecipe(
 				soulSwordStack,

@@ -1,13 +1,13 @@
 package io.github.chlorojoules.client.machine;
 
-public class CJMachineSlotInfo {
-	public int x;
-	public int y;
+import io.github.chlorojoules.client.gui.CJGuiElement;
+
+public class CJMachineSlotInfo extends CJGuiElement {
 	public boolean output;
 
 	public CJMachineSlotInfo(int x, int y, boolean output) {
-		this.x = x;
-		this.y = y;
+		super(x, y);
+
 		this.output = output;
 	}
 }

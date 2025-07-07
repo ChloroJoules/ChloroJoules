@@ -23,6 +23,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	//		 Be read here.
 	public ArrayList<ItemStack> stacks;
 	public ArrayList<CJTankVolume> tanks;
+	public ArrayList<int[]> coordinateDisplays;
 
 	public String errorMessage = null;
 	public boolean isWarning = false;
@@ -68,6 +69,11 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 			newVolume.fluidID = volume.fluidID;
 			newVolume.lockFluid = volume.lockFluid;
 			tanks.add(newVolume);
+		}
+
+		coordinateDisplays = new ArrayList<>();
+		for(int i = 0; i < builder.linkCoordinates.size(); i++) {
+			coordinateDisplays.add(null);
 		}
 	}
 

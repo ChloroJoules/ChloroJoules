@@ -16,6 +16,19 @@ message.cj_warning=Machine Efficiency Reduced
 message.cj_stopped=Machine Stopped
 message.cj_working=Machine Working
 message.cj_ok=All okay!
+message.cj_link_coordinate=§7Linked to §LX: %d Y: %d Z: %d
+message.cj_unlinked_hint=§CUse an Oop Stick to link
+message.cj_unlinked=Not linked
+message.cj_coordinate_unset=§CCoordinates unset
+
+# Tool messages.
+message.cj_not_extractor=§CBlock is not a Flooper or Whooper
+message.cj_not_slooper=§CBlock is not a Slooper
+message.cj_not_swooper=§CBlock is not a Swooper
+message.cj_linked_position=§ABlock stored §L[ %d, %d, %d ]
+message.cj_link_query=§AStored position §L[ %d, %d, %d ]
+message.cj_link_clear=§ACleared linked position
+message.cj_linked_pair=§ABlock linked from §L[ %d, %d, %d ] §Ato §L[ %d, %d, %d ]
 
 # Help messages.
 message.cj_bugblock.help=Adds all the bugs!
@@ -24,7 +37,7 @@ message.cj_liquefier.help=Turns items into fluids
 message.cj_liquefier.flavor=Conducting a Fluid-ic ritual
 message.cj_refinery.help=Refines fluids into more pure fluids
 message.cj_refinery.flavor=For refined tastes
-message.cj_solidifier.help=Turns fluids back into items
+message.cj_solidifier.help=Turns fluids into items
 message.cj_solidifier.flavor=In a relationship with the Liquefier
 message.cj_pulverizer.help=Grinds down items for better yield
 message.cj_pulverizer.flavor=I hardly know her
@@ -35,10 +48,15 @@ message.cj_furnace.flavor=Now that's what I call efficiency
 message.cj_tool_station.help=Manipulate tools' ChloroJewels
 message.cj_tool_station.flavor=Jewels for your Joule powered Tools
 
-message.cj_flooper.help=Routes fluids between adjacent machines
+message.cj_flooper.help=Extracts fluids from adjacent inventories
 message.cj_flooper.flavor=Can't read floppy disks
-message.cj_whooper.help=Routes items between adjacent inventories
-message.cj_whooper.flavor=Not a substitute for basketball
+message.cj_slooper.help=Inserts fluids into adjacent inventories from linked flooper
+message.cj_slooper.flavor=Drinks broth loudly
+
+message.cj_whooper.help=Extracts items from adjacent inventories
+message.cj_whooper.flavor=Not Quagsire
+message.cj_swooper.help=Inserts items into adjacent inventories from linked whooper
+message.cj_swooper.flavor=An adequate basketball player
 
 ## NOTE: See `ChatColors.java`.
 message.cj_tool_none=§CNo Jewel
@@ -61,7 +79,9 @@ tile.cj_furnace.name=Furnace
 tile.cj_tool_station.name=Tool Station
 
 tile.cj_flooper.name=Flooper
+tile.cj_slooper.name=Slooper
 tile.cj_whooper.name=Whooper
+tile.cj_swooper.name=Swooper
 
 # Fluids.
 tile.cj_fluid_paste.name=Paste
@@ -79,7 +99,9 @@ inventory.cj_furnace=Furnace
 inventory.cj_tool_station=Tool Station
 
 inventory.cj_flooper=Flooper
+inventory.cj_slooper=Slooper
 inventory.cj_whooper=Whooper
+inventory.cj_swooper=Swooper
 
 # Items.
 item.cj_fluid_paste_bucket.name=Paste Bucket
@@ -90,6 +112,8 @@ item.cj_soul_dust.name=Soul Dust
 item.cj_soul_core.name=Soul Core
 item.cj_soul_extractor.name=Soul Extractor
 item.cj_soul_sword.name=Soul Slayer
+item.cj_linker.name=Oop Stick
+item.cj_linker_full.name=Oop Stick
 item.cj_soul_essence.name=Soul Essence
 item.cj_iron_dust.name=Iron Dust
 item.cj_gold_dust.name=Gold Dust
