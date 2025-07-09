@@ -29,6 +29,8 @@ public class CJGuiMachineBase extends GuiContainer {
 	private final CJTileEntityMachineBase machineEntity;
 	private final CJMachineBuilder machineBuilder;
 
+	private boolean wasMousePressed = false;
+
 	public CJGuiMachineBase(
 			InventoryPlayer inventoryPlayer, CJTileEntityMachineBase entity,
 			CJMachineBuilder builder) {
@@ -66,23 +68,25 @@ public class CJGuiMachineBase extends GuiContainer {
 	private void drawTooltip(
 			String name, String description, int x, int y, int titleColor) {
 
+		// TODO: Loads of magic numbers in here.
 		int nameWidth = fontRenderer.getStringWidth(name);
+		int boxHeight = 12;
 
 		int descriptionWidth = 0;
 		if(description != null) {
 			descriptionWidth = fontRenderer.getStringWidth(description);
+			boxHeight += 14;
 		}
 
 		int textWidth = Math.max(nameWidth, descriptionWidth);
 
-		// TODO: Loads of magic numbers down here.
 		int xSlot = x + 12;
 		int ySlot = y - 12;
 
 		// TODO: Smaller when no description.
 		this.drawGradientRect(
 				xSlot - 3, ySlot - 3,
-				xSlot + textWidth + 3, ySlot + 26,
+				xSlot + textWidth + 3, ySlot + boxHeight,
 				TOOLTIP_BACKGROUND, TOOLTIP_BACKGROUND);
 
 		if(description != null) {
@@ -120,6 +124,32 @@ public class CJGuiMachineBase extends GuiContainer {
 						mouseX, mouseY, -1);
 
 				break;
+			}
+		}
+
+		for(int i = 0; i < machineBuilder.buttons.size(); ++i) {
+			CJGuiButton button = machineBuilder.buttons.get(i);
+
+			if(getIsMouseOverRect(
+					mouseX, mouseY,
+					button.xDisplayPosition, button.yDisplayPosition,
+					BUTTON_WIDTH, BUTTON_HEIGHT)) {
+
+				drawTooltip(
+						translate.translateKey(button.tooltip),
+						null,
+						mouseX, mouseY,
+						Color.WHITE.getRGB());
+
+				if(Mouse.isButtonDown(0)) {
+					if(!wasMousePressed) {
+						machineEntity.buttonStates.set(
+								i, !machineEntity.buttonStates.get(i));
+					}
+
+					wasMousePressed = true;
+				}
+				else wasMousePressed = false;
 			}
 		}
 
@@ -318,6 +348,35 @@ public class CJGuiMachineBase extends GuiContainer {
 					elementX, elementY,
 					PROGRESS_FULL_X, PROGRESS_FULL_Y,
 					width / machineEntity.operationLength, PROGRESS_HEIGHT);
+		}
+
+		// Draw buttons.
+		CJGuiButton button;
+		for(int i = 0; i < machineBuilder.buttons.size(); ++i) {
+			button = machineBuilder.buttons.get(i);
+			elementX = baseX + button.xDisplayPosition;
+			elementY = baseY + button.yDisplayPosition;
+
+			boolean state = machineEntity.buttonStates.get(i);
+			int srcX = state ? BUTTON_ACTIVE_X : BUTTON_INACTIVE_X;
+			int srcY = state ? BUTTON_ACTIVE_Y : BUTTON_INACTIVE_Y;
+
+			drawTexturedModalRect(
+					elementX, elementY,
+					srcX, srcY,
+					BUTTON_WIDTH, BUTTON_HEIGHT);
+
+			elementX += BUTTON_LABEL_INSET;
+			elementY += BUTTON_LABEL_INSET;
+
+			int[] labelCoords = button.getLabelCoords();
+
+			if(labelCoords != null) {
+				drawTexturedModalRect(
+						elementX, elementY,
+						labelCoords[0], labelCoords[1],
+						LABEL_WIDTH, LABEL_HEIGHT);
+			}
 		}
 
 		// Draw status badge.

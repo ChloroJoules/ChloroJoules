@@ -25,6 +25,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	//		 Be read here.
 	public ArrayList<ItemStack> stacks;
 	public ArrayList<CJTankVolume> tanks;
+	public ArrayList<Boolean> buttonStates;
 	public ArrayList<CJGuiCoordinateDisplay> coordinateDisplays;
 
 	public String errorMessage = null;
@@ -71,6 +72,11 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 			newVolume.fluidID = volume.fluidID;
 			newVolume.lockFluid = volume.lockFluid;
 			tanks.add(newVolume);
+		}
+
+		buttonStates = new ArrayList<>();
+		for(int i = 0; i < builder.buttons.size(); i++) {
+			buttonStates.add(false);
 		}
 
 		coordinateDisplays = new ArrayList<>();
@@ -155,6 +161,15 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 			progressBarList.setTag(progressBarTag);
 		}
 		tagCompound.setTag("progresses", progressBarList);
+
+		// Serialize buttons.
+		NBTTagList buttonList = new NBTTagList();
+		for(int i = 0; i < machineBuilder.buttons.size(); i++) {
+			NBTTagCompound buttonTag = new NBTTagCompound();
+			buttonTag.setBoolean("state", buttonStates.get(i));
+			buttonList.setTag(buttonTag);
+		}
+		tagCompound.setTag("buttons", buttonList);
 	}
 
 	public int getWorldBlockId() {
@@ -212,6 +227,14 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 			// TODO: Does multiple progress bars even make sense?
 			//byte progressBarIndex = progressBarTag.getByte("progress");
 			operationTicks = progressBarTag.getShort("ticks");
+		}
+
+		// Deserialize buttons.
+		NBTTagList buttonsList = tagCompound.getTagList("buttons");
+		for(int i = 0; i < buttonsList.tagCount(); i++) {
+			NBTTagCompound buttonTag = (NBTTagCompound) buttonsList.tagAt(i);
+
+			buttonStates.set(i, buttonTag.getBoolean("state"));
 		}
 	}
 

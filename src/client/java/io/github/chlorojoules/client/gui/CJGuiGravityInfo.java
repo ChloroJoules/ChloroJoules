@@ -45,6 +45,14 @@ public class CJGuiGravityInfo {
 		return getAnchoredY(anchor, y, height);
 	}
 
+	public static int getButtonAnchoredX(CJGuiGravity anchor, int x) {
+		return getAnchoredX(anchor, x, BUTTON_WIDTH);
+	}
+
+	public static int getButtonAnchoredY(CJGuiGravity anchor, int y) {
+		return getAnchoredY(anchor, y, BUTTON_HEIGHT);
+	}
+
 	public static int getCoordinateAnchoredX(
 			CJGuiGravity anchor, int x) {
 

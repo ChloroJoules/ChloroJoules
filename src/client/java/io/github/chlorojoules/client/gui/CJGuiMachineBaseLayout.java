@@ -78,6 +78,23 @@ public class CJGuiMachineBaseLayout {
 	public static final int STATUS_WIDTH = 9;
 	public static final int STATUS_HEIGHT = 9;
 
+	public static final int BUTTON_INACTIVE_X = 176;
+	public static final int BUTTON_INACTIVE_Y = 131;
+
+	public static final int BUTTON_ACTIVE_X = 196;
+	public static final int BUTTON_ACTIVE_Y = 131;
+
+	public static final int BUTTON_WIDTH = 20;
+	public static final int BUTTON_HEIGHT = 20;
+
+	public static final int BUTTON_LABEL_INSET = 2;
+
+	public static final int LABEL_JEWEL_X = 178;
+	public static final int LABEL_JEWEL_Y = 153;
+
+	public static final int LABEL_WIDTH = 16;
+	public static final int LABEL_HEIGHT = 16;
+
 	public static final int INFO_X = INVENTORY_LABEL_X;
 	public static final int INFO_Y = 5;
 

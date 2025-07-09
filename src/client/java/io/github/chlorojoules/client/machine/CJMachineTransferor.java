@@ -1,6 +1,8 @@
 package io.github.chlorojoules.client.machine;
 
 import io.github.chlorojoules.client.CJInventoryHelper;
+import io.github.chlorojoules.client.CJTank;
+import io.github.chlorojoules.client.CJTankVolume;
 import io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.client.gui.CJGuiCoordinateDisplay;
 import net.minecraft.src.client.inventory.IInventory;
@@ -20,6 +22,7 @@ public class CJMachineTransferor implements CJIMachine {
 	public static final int MAX_DAMAGE = RECEIVE_FLUIDS;
 
 	private IInventory[] adjacentInventories = null;
+	private CJTileEntityMachineBase[] adjacentMachines = null;
 
 	public int[] linked = null;
 
@@ -100,9 +103,49 @@ public class CJMachineTransferor implements CJIMachine {
 		}
 	}
 
+	private void updateTransmitFluid(CJTileEntityMachineBase machineEntity) {
+		CJTankVolume volume = machineEntity.tanks.get(0);
+
+		for(CJTileEntityMachineBase adjacent : adjacentMachines) {
+			if(adjacent == null) continue;
+
+			for(int j = 0; j < adjacent.tanks.size(); j++) {
+				CJTankVolume adjacentVolume = adjacent.tanks.get(j);
+				CJTank adjacentTank = adjacent.machineBuilder.tanks.get(j);
+
+				if(!adjacentTank.output) continue;
+
+				// TODO: Hardcoded flow rate.
+				if(volume.transferFrom(adjacentVolume, 10)) return;
+			}
+		}
+	}
+
+	private void updateReceiveFluid(CJTileEntityMachineBase machineEntity) {
+		CJTileEntityMachineBase linkedEntity =
+				machineEntity(
+						machineEntity.worldObj,
+						linked[0], linked[1], linked[2]);
+
+		CJTankVolume volume = linkedEntity.tanks.get(0);
+
+		for(CJTileEntityMachineBase adjacent : adjacentMachines) {
+			if(adjacent == null) continue;
+
+			for(int j = 0; j < adjacent.tanks.size(); j++) {
+				CJTankVolume adjacentVolume = adjacent.tanks.get(j);
+				CJTank adjacentTank = adjacent.machineBuilder.tanks.get(j);
+
+				if(adjacentTank.output) continue;
+
+				if(adjacentVolume.transferFrom(volume, 10)) return;
+			}
+		}
+	}
+
 	@Override
 	public void updateMachine(CJTileEntityMachineBase machineEntity) {
-		if(adjacentInventories == null) {
+		if(adjacentInventories == null || adjacentMachines == null) {
 			onNeighbourChange(
 					machineEntity.worldObj,
 					machineEntity.getRegisteredX(),
@@ -127,8 +170,14 @@ public class CJMachineTransferor implements CJIMachine {
 				break;
 			}
 
-			case TRANSMIT_FLUIDS: break;
-			case RECEIVE_FLUIDS: break;
+			case TRANSMIT_FLUIDS: {
+				updateTransmitFluid(machineEntity);
+				break;
+			}
+			case RECEIVE_FLUIDS: {
+				updateReceiveFluid(machineEntity);
+				break;
+			}
 
 			case INACTIVE:
 			default: break;
@@ -140,15 +189,22 @@ public class CJMachineTransferor implements CJIMachine {
 		adjacentInventories = CJInventoryHelper.getAdjacentInventories(
 				world, x, y, z);
 
+		adjacentMachines = CJInventoryHelper.getAdjacentMachines(
+				world, x, y, z);
+
 		if(linked != null) {
 			CJTileEntityMachineBase linkedEntity =
 					machineEntity(world, linked[0], linked[1], linked[2]);
 
 			for(int i = 0; i < adjacentInventories.length; ++i) {
 				IInventory inventory = adjacentInventories[i];
+				CJTileEntityMachineBase machine = adjacentMachines[i];
 
 				if(inventory == linkedEntity) {
 					adjacentInventories[i] = null;
+				}
+				else if(machine == linkedEntity) {
+					adjacentMachines[i] = null;
 				}
 			}
 		}
@@ -189,26 +245,9 @@ public class CJMachineTransferor implements CJIMachine {
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound) {
 		linked = tagCompound.getIntArray("link_position");
-
 	}
 
 /*
-	// NOTE: Transfers up to count -- may transfer less.
-	public static boolean tankTransfer(
-			CJTankVolume in, CJTankVolume out, int count) {
-
-		if(in.current == 0) return false;
-
-		int amount = Math.min(in.current, count);
-		if(amount == 0) return false;
-
-		int added = out.addFluid(in.fluidID, amount, false);
-		if(added == 0) return false;
-
-		in.removeFluid(0, added, true);
-
-		return true;
-	}
 
 	@Override
 	public void updateMachine(CJTileEntityMachineBase machineEntity) {
@@ -222,13 +261,10 @@ public class CJMachineTransferor implements CJIMachine {
 					machineEntity.getRegisteredZ());
 		}
 
-		// TODO: Upgrade Flooper with ChloroJewel.
-		// TODO: Avoid looping back on the same flooper which was just received
 		//       From -- make creating flooper chains easier.
 
 		CJTankVolume volume = machineEntity.tanks.get(0);
 
-		// TODO: De-duplicate once we need this for pipes/auto-push/pull etc.
 		// Machine to Flooper.
 		boolean didTransfer = false;
 		int inTank = -1;

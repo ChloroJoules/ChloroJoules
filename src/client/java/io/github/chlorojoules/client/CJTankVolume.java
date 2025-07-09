@@ -53,4 +53,19 @@ public class CJTankVolume {
 
 		return amount;
 	}
+
+	// NOTE: Transfers up to count into tank from `in` -- may transfer less.
+	public boolean transferFrom(CJTankVolume in, int count) {
+		if(in.current == 0) return false;
+
+		int amount = Math.min(in.current, count);
+		if(amount == 0) return false;
+
+		int added = addFluid(in.fluidID, amount, false);
+		if(added == 0) return false;
+
+		in.removeFluid(0, added, true);
+
+		return true;
+	}
 }

@@ -51,6 +51,8 @@ message.cj_furnace.flavor=Now that's what I call efficiency
 message.cj_tool_station.help=Manipulate tools' ChloroJewels
 message.cj_tool_station.flavor=Jewels for your Joule powered Tools
 
+message.cj_enable_refine_fuel=Allow processing of fuel tank
+
 message.cj_transferor.help=Transfers items or fluids through the air
 message.cj_transferor.flavor=Quagsire the floppy disk basketball broth enjoyer
 

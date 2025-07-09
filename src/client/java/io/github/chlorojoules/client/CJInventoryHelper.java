@@ -7,6 +7,8 @@ import net.minecraft.src.game.block.tileentity.TileEntityChest;
 import net.minecraft.src.game.item.ItemStack;
 import net.minecraft.src.game.level.World;
 
+import static io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase.machineEntity;
+
 public class CJInventoryHelper {
 	private static IInventory getAdjacentInventory(
 			World world, int x, int y, int z) {
@@ -32,6 +34,22 @@ public class CJInventoryHelper {
 		adjacentInventories[5] = getAdjacentInventory(world, x, y, z - 1);
 
 		return adjacentInventories;
+	}
+
+	public static CJTileEntityMachineBase[] getAdjacentMachines(
+			World world, int x, int y, int z) {
+
+		CJTileEntityMachineBase[] adjacentMachines =
+				new CJTileEntityMachineBase[6];
+
+		adjacentMachines[0] = machineEntity(world, x + 1, y, z);
+		adjacentMachines[1] = machineEntity(world, x - 1, y, z);
+		adjacentMachines[2] = machineEntity(world, x, y + 1, z);
+		adjacentMachines[3] = machineEntity(world, x, y - 1, z);
+		adjacentMachines[4] = machineEntity(world, x, y, z + 1);
+		adjacentMachines[5] = machineEntity(world, x, y, z - 1);
+
+		return adjacentMachines;
 	}
 
 	public static int getMatchingOutputIndex(

@@ -3,6 +3,7 @@ package io.github.chlorojoules.client;
 import com.fox2code.foxloader.client.CreativeItems;
 import io.github.chlorojoules.CJInstance;
 import io.github.chlorojoules.client.block.CJBlockMachineBase;
+import io.github.chlorojoules.client.gui.CJGuiButton;
 import io.github.chlorojoules.client.item.*;
 import io.github.chlorojoules.client.machine.*;
 
@@ -365,7 +366,7 @@ public class CJClient extends CJInstance implements ClientMod {
 									new CJMachineRecipeComponent(
 											1, fluidPaste, 50, true)
 											.setTarget(TANK),
-									50, true)
+									50, true, -1)
 							.setImpl(CJMachineRecipeConsumer.class), null, 0);
 
 			refinery = registerNewMachine(
@@ -389,7 +390,7 @@ public class CJClient extends CJInstance implements ClientMod {
 									new CJMachineRecipeComponent(
 											2, fluidChlorojoules, 5, true)
 											.setTarget(TANK),
-									10, true)
+									10, true, -1)
 							.setImpl(CJMachineRecipeConsumer.class), null, 0);
 
 			solidifier = registerNewMachine(
@@ -404,13 +405,18 @@ public class CJClient extends CJInstance implements ClientMod {
 									CENTER, SLOT_IN_WIDTH * 4, true)
 							.addJewelSlot()
 							.addProgressBarGravityVCenter(CENTER, 0)
+							.addButtonGravity(
+									BOTTOM_RIGHT, JEWEL_SLOT_INSET,
+									(WORKING_HEIGHT - FLUID_HEIGHT) / 2,
+									"message.cj_enable_refine_fuel",
+									CJGuiButton.JEWEL)
 							.addRecipe(
 									20,
 									new CJMachineRecipeComponent(
 											1, fluidPaste, 30, true)
 											.setTarget(TANK),
 									new CJMachineRecipeComponent(0, paste, 2),
-									150, true)
+									150, true, -1)
 							.addRecipe(
 									100,
 									new CJMachineRecipeComponent(
@@ -418,7 +424,7 @@ public class CJClient extends CJInstance implements ClientMod {
 											.setTarget(TANK),
 									new CJMachineRecipeComponent(
 											0, manufacturedJewel, 1),
-									500, false)
+									500, false, 0)
 							.setImpl(CJMachineRecipeConsumer.class), null, 0);
 
 			// TODO: Secondary output.
@@ -439,63 +445,63 @@ public class CJClient extends CJInstance implements ClientMod {
 											0, primalJewel, 1),
 									new CJMachineRecipeComponent(
 											1, jewelDust, 2),
-									100, false)
+									100, false, -1)
 							.addRecipe(
 									10,
 									new CJMachineRecipeComponent(
 											0, manufacturedJewel, 1),
 									new CJMachineRecipeComponent(
 											1, jewelDust, 4),
-									200, false)
+									200, false, -1)
 							.addRecipe(
 									10,
 									new CJMachineRecipeComponent(
 											0, refinedJewel, 1),
 									new CJMachineRecipeComponent(
 											1, jewelDust, 16),
-									250, false)
+									250, false, -1)
 							.addRecipe(
 									10,
 									new CJMachineRecipeComponent(
 											0, awakenedJewel, 1),
 									new CJMachineRecipeComponent(
 											1, jewelDust, 64),
-									350, false)
+									350, false, -1)
 							.addRecipe(
 									30,
 									new CJMachineRecipeComponent(
 											0, Block.oreIron, 1, false),
 									new CJMachineRecipeComponent(
 											1, ironDust, 2),
-									150, false)
+									150, false, -1)
 							.addRecipe(
 									30,
 									new CJMachineRecipeComponent(
 											0, Block.oreIronNether, 1, false),
 									new CJMachineRecipeComponent(
 											1, ironDust, 3),
-									150, false)
+									150, false, -1)
 							.addRecipe(
 									30,
 									new CJMachineRecipeComponent(
 											0, Block.oreGold, 1, false),
 									new CJMachineRecipeComponent(
 											1, goldDust, 2),
-									150, false)
+									150, false, -1)
 							.addRecipe(
 									30,
 									new CJMachineRecipeComponent(
 											0, Block.oreGoldNether, 1, false),
 									new CJMachineRecipeComponent(
 											1, goldDust, 3),
-									150, false)
+									150, false, -1)
 							.addRecipe(
 									10,
 									new CJMachineRecipeComponent(
 											0, Block.sugarCane, 1, false),
 									new CJMachineRecipeComponent(
 											1, Item.sugar, 4),
-									150, false)
+									150, false, -1)
 							// TODO: Add dyes when we have damage values.
 							/*.addRecipe(
 									10,
@@ -523,14 +529,14 @@ public class CJClient extends CJInstance implements ClientMod {
 											0, jewelDust, 4),
 									new CJMachineRecipeComponent(
 											1, compactedJewelDust, 1, false),
-									150, false)
+									150, false, -1)
 							.addRecipe(
 									15,
 									new CJMachineRecipeComponent(
 											0, Item.ingotIron, 1),
 									new CJMachineRecipeComponent(
 											1, Block.gear, 5, false),
-									75, false)
+									75, false, -1)
 							.setImpl(CJMachineRecipeConsumer.class), null, 0);
 
 			furnace = registerNewMachine(
@@ -550,7 +556,7 @@ public class CJClient extends CJInstance implements ClientMod {
 											0, compactedJewelDust, 1, false),
 									new CJMachineRecipeComponent(
 											1, refinedJewel, 1),
-									300, CJRarity.MANUFACTURED)
+									300, CJRarity.MANUFACTURED, -1)
 							.setImpl(CJMachineRecipeConsumer.class), null, 0);
 
 			toolStation = registerNewMachine(
@@ -905,7 +911,7 @@ public class CJClient extends CJInstance implements ClientMod {
 					//       `CJMachineRecipeComponent`.
 					new CJMachineRecipeComponent(
 							1, entry.getValue().getRegisteredItem(), 1),
-					200, false); // Vanilla furnace ticks as base.
+					200, false, -1); // Vanilla furnace ticks as base.
 		}
 	}
 }

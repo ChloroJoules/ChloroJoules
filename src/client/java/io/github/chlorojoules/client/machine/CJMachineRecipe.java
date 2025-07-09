@@ -17,6 +17,8 @@ public class CJMachineRecipe {
 
 	boolean allowPassive = true;
 
+	public int requiredButton = -1;
+
 	// Fuel + In -> Out.
 	public CJMachineRecipe(
 			CJMachineBuilder builder, int fuelVolume,

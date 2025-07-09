@@ -1,11 +1,8 @@
 package io.github.chlorojoules.client.machine;
 
 import io.github.chlorojoules.client.*;
-import io.github.chlorojoules.client.gui.CJGuiElement;
-import io.github.chlorojoules.client.gui.CJGuiGravity;
-import io.github.chlorojoules.client.gui.CJGuiGravityInfo;
+import io.github.chlorojoules.client.gui.*;
 import io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase;
-import io.github.chlorojoules.client.gui.CJGuiCoordinate;
 import net.minecraft.src.client.gui.StringTranslate;
 import net.minecraft.src.game.item.ItemStack;
 
@@ -33,6 +30,7 @@ public class CJMachineBuilder {
 	public ArrayList<CJTank> tanks = new ArrayList<>();
 	public ArrayList<CJTankVolume> tankVolumes = new ArrayList<>();
 	public ArrayList<CJGuiElement> progressBars = new ArrayList<>();
+	public ArrayList<CJGuiButton> buttons = new ArrayList<>();
 	// TODO: This is kind of hardcoded -- is there a way we can make
 	//  	 `CJGuiElement` more generic/programmable?
 	public ArrayList<CJGuiCoordinate> linkCoordinates =
@@ -95,6 +93,23 @@ public class CJMachineBuilder {
 				CJGuiGravityInfo.getSlotAnchoredX(anchor, x, output),
 				CJGuiGravityInfo.getSlotAnchoredY(CENTER, 0, output),
 				output);
+	}
+
+	public CJMachineBuilder addButton(
+			int x, int y, String tooltip, int label) {
+
+		buttons.add(new CJGuiButton(x, y, tooltip, label));
+
+		return this;
+	}
+
+	public CJMachineBuilder addButtonGravity(
+			CJGuiGravity anchor, int x, int y, String tooltip, int label) {
+
+		return addButton(
+				CJGuiGravityInfo.getButtonAnchoredX(anchor, x),
+				CJGuiGravityInfo.getButtonAnchoredY(anchor, y),
+				tooltip, label);
 	}
 
 	public CJMachineBuilder addCoordinate(int x, int y, String label) {
@@ -204,10 +219,13 @@ public class CJMachineBuilder {
 	// TODO: Make a recipe builder.
 	public CJMachineBuilder addRecipe(
 			int fuelVolume, CJMachineRecipeComponent in,
-			CJMachineRecipeComponent out, int ticks, boolean allowPassive) {
+			CJMachineRecipeComponent out, int ticks, boolean allowPassive,
+			int requiredButton) {
 
 		CJMachineRecipe recipe = new CJMachineRecipe(
 				this, fuelVolume, in, out, ticks, allowPassive);
+
+		recipe.requiredButton = requiredButton;
 
 		recipes.add(recipe);
 
@@ -225,12 +243,14 @@ public class CJMachineBuilder {
 
 	public CJMachineBuilder addRecipeRarity(
 			int fuelVolume, CJMachineRecipeComponent in,
-			CJMachineRecipeComponent out, int ticks, CJRarity rarity) {
+			CJMachineRecipeComponent out, int ticks, CJRarity rarity,
+			int requiredButton) {
 
 		CJMachineRecipe recipe = new CJMachineRecipe(
 				this, fuelVolume, in, out, ticks, false);
 
 		recipe.requiredRarity = rarity;
+		recipe.requiredButton = requiredButton;
 
 		recipes.add(recipe);
 
@@ -322,6 +342,12 @@ public class CJMachineBuilder {
 		for(int i = 0; i < entity.machineBuilder.recipes.size(); i++) {
 			matchedRecipe = true;
 			recipe = entity.machineBuilder.recipes.get(i);
+
+			if(recipe.requiredButton != -1) {
+				if(!entity.buttonStates.get(recipe.requiredButton)) {
+					matchedRecipe = false;
+				}
+			}
 
 			for(int j = 0; j < recipe.inputs.size(); j++) {
 				CJMachineRecipeComponent component = recipe.inputs.get(j);
