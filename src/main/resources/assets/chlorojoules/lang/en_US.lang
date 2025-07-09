@@ -32,6 +32,8 @@ message.cj_link_clear=§ACleared linked position
 message.cj_linked_pair=§ABlock linked from §L[ %d, %d, %d ] §Ato §L[ %d, %d, %d ]
 message.cj_link_switch_fluid=§9Switched to fluid mode
 message.cj_link_switch_item=§6Switched to item mode
+message.cj_link_switch_multi_fluid=§9Switched to multi-fluid mode
+message.cj_link_switch_multi_item=§6Switched to multi-item mode
 
 # Help messages.
 message.cj_bugblock.help=Adds all the bugs!

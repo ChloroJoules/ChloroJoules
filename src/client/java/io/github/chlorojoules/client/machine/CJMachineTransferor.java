@@ -9,6 +9,7 @@ import net.minecraft.src.client.inventory.IInventory;
 import net.minecraft.src.game.item.ItemStack;
 import net.minecraft.src.game.level.World;
 import net.minecraft.src.game.nbt.NBTTagCompound;
+import org.lwjgl.input.Mouse;
 
 import static io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase.machineEntity;
 
@@ -19,12 +20,16 @@ public class CJMachineTransferor implements CJIMachine {
 	public static final int RECEIVE_ITEMS = 2;
 	public static final int TRANSMIT_FLUIDS = 3;
 	public static final int RECEIVE_FLUIDS = 4;
-	public static final int MAX_DAMAGE = RECEIVE_FLUIDS;
+	// TODO: Implement multi-receivers.
+	public static final int MULTI_TRANSMIT_ITEMS = 5;
+	public static final int MULTI_TRANSMIT_FLUIDS = 6;
+	public static final int MAX_DAMAGE = MULTI_TRANSMIT_FLUIDS;
 
 	private IInventory[] adjacentInventories = null;
 	private CJTileEntityMachineBase[] adjacentMachines = null;
 
 	public int[] linked = null;
+	public int[] lastReceiver = null;
 
 	private void updateTransmit(CJTileEntityMachineBase machineEntity) {
 		ItemStack stack = machineEntity.stacks.get(0);
@@ -69,6 +74,21 @@ public class CJMachineTransferor implements CJIMachine {
 						machineEntity.worldObj,
 						linked[0], linked[1], linked[2]);
 
+		CJMachineTransferor linkedTransferor =
+				(CJMachineTransferor) linkedEntity.impl;
+
+		if(linkedTransferor.lastReceiver != null &&
+				linkedEntity.getWorldBlockMetadata() == MULTI_TRANSMIT_ITEMS) {
+
+			if(machineEntity.xCoord == linkedTransferor.lastReceiver[0] &&
+					machineEntity.yCoord == linkedTransferor.lastReceiver[1] &&
+					machineEntity.zCoord == linkedTransferor.lastReceiver[2]) {
+
+				lastReceiver = null;
+				return;
+			}
+		}
+
 		ItemStack stack = linkedEntity.stacks.get(0);
 		if(stack == null) return;
 
@@ -84,6 +104,12 @@ public class CJMachineTransferor implements CJIMachine {
 					inventory, currentItemID);
 
 			if(slotIndex == -1) continue;
+
+			linkedTransferor.lastReceiver = new int[] {
+					machineEntity.xCoord,
+					machineEntity.yCoord,
+					machineEntity.zCoord
+			};
 
 			ItemStack outStack = inventory.getStackInSlot(slotIndex);
 
@@ -127,6 +153,21 @@ public class CJMachineTransferor implements CJIMachine {
 						machineEntity.worldObj,
 						linked[0], linked[1], linked[2]);
 
+		CJMachineTransferor linkedTransferor =
+				(CJMachineTransferor) linkedEntity.impl;
+
+		if(linkedTransferor.lastReceiver != null &&
+				linkedEntity.getWorldBlockMetadata() == MULTI_TRANSMIT_FLUIDS) {
+
+			if(machineEntity.xCoord == linkedTransferor.lastReceiver[0] &&
+					machineEntity.yCoord == linkedTransferor.lastReceiver[1] &&
+					machineEntity.zCoord == linkedTransferor.lastReceiver[2]) {
+
+				lastReceiver = null;
+				return;
+			}
+		}
+
 		CJTankVolume volume = linkedEntity.tanks.get(0);
 
 		for(CJTileEntityMachineBase adjacent : adjacentMachines) {
@@ -138,7 +179,15 @@ public class CJMachineTransferor implements CJIMachine {
 
 				if(adjacentTank.output) continue;
 
-				if(adjacentVolume.transferFrom(volume, 10)) return;
+				if(adjacentVolume.transferFrom(volume, 10)) {
+					linkedTransferor.lastReceiver = new int[] {
+							machineEntity.xCoord,
+							machineEntity.yCoord,
+							machineEntity.zCoord
+					};
+
+					return;
+				}
 			}
 		}
 	}
@@ -161,6 +210,7 @@ public class CJMachineTransferor implements CJIMachine {
 		}
 
 		switch(machineEntity.getWorldBlockMetadata()) {
+			case MULTI_TRANSMIT_ITEMS:
 			case TRANSMIT_ITEMS: {
 				updateTransmit(machineEntity);
 				break;
@@ -170,6 +220,7 @@ public class CJMachineTransferor implements CJIMachine {
 				break;
 			}
 
+			case MULTI_TRANSMIT_FLUIDS:
 			case TRANSMIT_FLUIDS: {
 				updateTransmitFluid(machineEntity);
 				break;
@@ -234,81 +285,15 @@ public class CJMachineTransferor implements CJIMachine {
 
 	@Override
 	public void writeToNBT(NBTTagCompound tagCompound) {
+		if(linked == null) return;
+
 		tagCompound.setIntArray(
 				"link_position",
-				new int[] {
-						linked[0],
-						linked[1],
-						linked[2]});
+				new int[] { linked[0], linked[1], linked[2]});
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound) {
 		linked = tagCompound.getIntArray("link_position");
 	}
-
-/*
-
-	@Override
-	public void updateMachine(CJTileEntityMachineBase machineEntity) {
-		// TODO: Add init method which takes the `TileEntity`.
-		if(adjacentMachines == null) {
-			adjacentMachines = new CJTileEntityMachineBase[6];
-			onNeighbourChange(
-					machineEntity.worldObj,
-					machineEntity.getRegisteredX(),
-					machineEntity.getRegisteredY(),
-					machineEntity.getRegisteredZ());
-		}
-
-		//       From -- make creating flooper chains easier.
-
-		CJTankVolume volume = machineEntity.tanks.get(0);
-
-		// Machine to Flooper.
-		boolean didTransfer = false;
-		int inTank = -1;
-		for(int i = 0; i < adjacentMachines.length; ++i) {
-			CJTileEntityMachineBase adjacent = adjacentMachines[i];
-			if(adjacent == null) continue;
-
-			for(int j = 0; j < adjacent.tanks.size(); j++) {
-				CJTankVolume adjacentVolume = adjacent.tanks.get(j);
-				CJTank adjacentTank = adjacent.machineBuilder.tanks.get(j);
-
-				if(!adjacentTank.output) continue;
-
-				if(tankTransfer(adjacentVolume, volume, 10)) {
-					inTank = i;
-					didTransfer = true;
-					break;
-				}
-			}
-
-			if(didTransfer) break;
-		}
-
-		// Flooper to machine.
-		didTransfer = false;
-		for(int i = 0; i < adjacentMachines.length; ++i) {
-			CJTileEntityMachineBase adjacent = adjacentMachines[i];
-			if(adjacent == null) continue;
-			if(i == inTank) continue;
-
-			for(int j = 0; j < adjacent.tanks.size(); j++) {
-				CJTankVolume adjacentVolume = adjacent.tanks.get(j);
-				CJTank adjacentTank = adjacent.machineBuilder.tanks.get(j);
-
-				if(adjacentTank.output) continue;
-
-				if(tankTransfer(volume, adjacentVolume, 10)) {
-					didTransfer = true;
-					break;
-				}
-			}
-
-			if(didTransfer) break;
-		}
-	}
-*/
 }

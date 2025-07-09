@@ -277,14 +277,18 @@ public class CJClient extends CJInstance implements ClientMod {
 					"cj_linker", new ItemBuilder()
 							.setMaxStackSize(1)
 							.setItemName("cj_linker")
-							.setTooltipColor(MANUFACTURED_COLOR)
 							.setGameItemProvider(((id, build, ext) ->
 									new CJItemLinker(
 											id, new String[] {
 													"cj_link_item_empty",
 													"cj_link_item_full",
 													"cj_link_fluid_empty",
-													"cj_link_fluid_full" }))));
+													"cj_link_fluid_full",
+													"cj_multi_item_empty",
+													"cj_multi_item_full",
+													"cj_multi_fluid_empty",
+													"cj_multi_fluid_full" })))
+							.setTooltipColor(MANUFACTURED_COLOR));
 
 			soulCore = registerNewItem(
 					"cj_soul_core", new ItemBuilder()
@@ -588,16 +592,20 @@ public class CJClient extends CJInstance implements ClientMod {
 									CENTER, 0, 0, false, 2 * CJTank.BUCKET, 0)
 							.addSlotGravity(CENTER, 0, 0, false)
 							.setSlotDamageExclusive(0, new int[] {
-									CJMachineTransferor.TRANSMIT_ITEMS})
+									CJMachineTransferor.TRANSMIT_ITEMS,
+									CJMachineTransferor.MULTI_TRANSMIT_ITEMS })
 							.setTankDamageExclusive(0, new int[] {
-									CJMachineTransferor.TRANSMIT_FLUIDS})
+									CJMachineTransferor.TRANSMIT_FLUIDS,
+									CJMachineTransferor.MULTI_TRANSMIT_FLUIDS })
 							.setImpl(CJMachineTransferor.class),
 							new String[] {
 									"cj_inactive",
 									"cj_whooper",
 									"cj_swooper",
 									"cj_flooper",
-									"cj_slooper"
+									"cj_slooper",
+									"cj_multi_whooper",
+									"cj_multi_flooper"
 							}, CJMachineTransferor.MAX_DAMAGE);
 		}
 	}

@@ -22,6 +22,10 @@ public class CJItemLinker extends Item {
 	public static final int ITEM_FULL = 1;
 	public static final int FLUID_EMPTY = 2;
 	public static final int FLUID_FULL = 3;
+	public static final int MULTI_ITEM_EMPTY = 4;
+	public static final int MULTI_ITEM_FULL = 5;
+	public static final int MULTI_FLUID_EMPTY = 6;
+	public static final int MULTI_FLUID_FULL = 7;
 
 	private Icon[] linkerIcons;
 	private String[] linkerIconNames;
@@ -63,8 +67,12 @@ public class CJItemLinker extends Item {
 			return false;
 		}
 
+		boolean isMulti = itemstack.itemDamage > FLUID_FULL;
+
 		if(itemstack.itemDamage == ITEM_EMPTY ||
-				itemstack.itemDamage == FLUID_EMPTY) {
+				itemstack.itemDamage == FLUID_EMPTY ||
+				itemstack.itemDamage == MULTI_ITEM_EMPTY ||
+				itemstack.itemDamage == MULTI_FLUID_EMPTY) {
 
 			setItemTagIntArray(
 					itemstack, "linked_position",
@@ -105,8 +113,12 @@ public class CJItemLinker extends Item {
 		CJMachineTransferor inserter =
 				(CJMachineTransferor) inserterMachine.impl;
 
-		if(extractor.linked != null) extractor.breakLink(world);
+		if(extractor.linked != null && !isMulti) {
+			Mouse.setGrabbed(false);
+			extractor.breakLink(world);
+		}
 
+		// TODO: Maintain list of linked in multi-mode.
 		extractor.linked = new int[] { blockX, blockY, blockZ };
 		inserter.linked = position;
 
@@ -124,15 +136,29 @@ public class CJItemLinker extends Item {
 			inserterMachine.setWorldBlockMetadata(
 					CJMachineTransferor.RECEIVE_ITEMS);
 		}
-		else {
+		else if(itemstack.itemDamage == FLUID_FULL) {
 			extractorMachine.setWorldBlockMetadata(
 					CJMachineTransferor.TRANSMIT_FLUIDS);
 
 			inserterMachine.setWorldBlockMetadata(
 					CJMachineTransferor.RECEIVE_FLUIDS);
 		}
+		else if(itemstack.itemDamage == MULTI_ITEM_FULL) {
+			extractorMachine.setWorldBlockMetadata(
+					CJMachineTransferor.MULTI_TRANSMIT_ITEMS);
 
-		itemstack.itemDamage--;
+			inserterMachine.setWorldBlockMetadata(
+					CJMachineTransferor.RECEIVE_ITEMS);
+		}
+		else if(itemstack.itemDamage == MULTI_FLUID_FULL) {
+			extractorMachine.setWorldBlockMetadata(
+					CJMachineTransferor.MULTI_TRANSMIT_FLUIDS);
+
+			inserterMachine.setWorldBlockMetadata(
+					CJMachineTransferor.RECEIVE_FLUIDS);
+		}
+
+		if(!isMulti) itemstack.itemDamage--;
 
 		return true;
 	}
@@ -168,7 +194,22 @@ public class CJItemLinker extends Item {
 				string = StringTranslate.getInstance().translateKey(
 						"message.cj_link_switch_fluid");
 			}
+			else if(itemstack.itemDamage == FLUID_EMPTY ||
+					itemstack.itemDamage == FLUID_FULL) {
+
+				itemstack.setItemDamage(MULTI_ITEM_EMPTY);
+				string = StringTranslate.getInstance().translateKey(
+						"message.cj_link_switch_multi_item");
+			}
+			else if(itemstack.itemDamage == MULTI_ITEM_EMPTY ||
+					itemstack.itemDamage == MULTI_ITEM_FULL) {
+
+				itemstack.setItemDamage(MULTI_FLUID_EMPTY);
+				string = StringTranslate.getInstance().translateKey(
+						"message.cj_link_switch_multi_fluid");
+			}
 			else {
+
 				itemstack.setItemDamage(ITEM_EMPTY);
 				string = StringTranslate.getInstance().translateKey(
 						"message.cj_link_switch_item");
@@ -178,7 +219,10 @@ public class CJItemLinker extends Item {
 					ChatColors.BLUE + string);
 		}
 
-		if(itemstack.itemDamage != ITEM_FULL) return itemstack;
+		if(itemstack.itemDamage != ITEM_FULL &&
+				itemstack.itemDamage != FLUID_FULL &&
+				itemstack.itemDamage != MULTI_ITEM_FULL &&
+				itemstack.itemDamage != MULTI_FLUID_FULL) return itemstack;
 
 		String string = StringTranslate.getInstance().translateKey(
 				"message.cj_link_clear");
@@ -186,10 +230,7 @@ public class CJItemLinker extends Item {
 		((NetworkPlayer) player).displayChatMessage(
 				ChatColors.GREEN + string);
 
-		if(itemstack.itemDamage == ITEM_FULL) {
-			itemstack.setItemDamage(ITEM_EMPTY);
-		}
-		else itemstack.setItemDamage(FLUID_EMPTY);
+		itemstack.itemDamage--;
 
 		return itemstack;
 	}
