@@ -9,6 +9,7 @@ import net.minecraft.src.client.gui.Container;
 import net.minecraft.src.game.entity.player.EntityPlayer;
 import net.minecraft.src.game.entity.player.InventoryPlayer;
 import net.minecraft.src.game.item.ItemStack;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
 
@@ -51,16 +52,38 @@ public class CJContainerMachineBase extends Container {
 		for(int i = 0; i < machineBuilder.slots.size(); i++) {
 			CJMachineSlotInfo info = machineBuilder.slots.get(i);
 
-			CJGuiMachineBaseSlot slot = new CJGuiMachineBaseSlot(
-					player, machineEntity, i,
-					info.xDisplayPosition, info.yDisplayPosition);
+			if(info.damageExclusive != null) {
+				boolean matchesExclusiveMetadata =
+						ArrayUtils.contains(
+								info.damageExclusive,
+								machineEntity.getWorldBlockMetadata());
 
-			slot.setOutput(info.output);
+				if(!matchesExclusiveMetadata) continue;
+			}
+
+			CJGuiMachineBaseSlot slot =
+					new CJGuiMachineBaseSlot(
+							player, machineEntity, i,
+							info.xDisplayPosition, info.yDisplayPosition)
+					.setOutput(info.output);
 
 			addSlot(slot);
 		}
 
-		tanks.addAll(machineBuilder.tanks);
+		for(int i = 0; i < machineBuilder.tanks.size(); ++i) {
+			CJTank tank = machineBuilder.tanks.get(i);
+
+			if(tank.damageExclusive != null) {
+				boolean matchesExclusiveMetadata =
+						ArrayUtils.contains(
+								tank.damageExclusive,
+								machineEntity.getWorldBlockMetadata());
+
+				if(!matchesExclusiveMetadata) continue;
+			}
+
+			tanks.add(tank);
+		}
 
 		addPlayerInventory(inventoryPlayer);
 	}

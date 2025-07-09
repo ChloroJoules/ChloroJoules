@@ -14,8 +14,9 @@ public class CJItemToolSoulSword extends ItemTool implements CJIItemSocket {
 	public CJItemToolSoulSword(int id) {
 		super(id - 256, 0, EnumToolMaterial.EMERALD, EnumTools.SWORD);
 
-		setMaxDamage(CJRarityInfo.MAX_DAMAGE);
+		setMaxDamage(0);
 		addDescription(new CJItemDescriptionSocket());
+		setHasSubtypes(true);
 
 		// TODO: Adjust by Jewel value.
 		weaponDamage = 8;

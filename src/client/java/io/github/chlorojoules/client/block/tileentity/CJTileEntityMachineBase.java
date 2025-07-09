@@ -3,6 +3,7 @@ package io.github.chlorojoules.client.block.tileentity;
 import io.github.chlorojoules.client.CJClient;
 import io.github.chlorojoules.client.CJRarity;
 import io.github.chlorojoules.client.CJTankVolume;
+import io.github.chlorojoules.client.gui.CJGuiCoordinateDisplay;
 import io.github.chlorojoules.client.machine.CJIMachine;
 import io.github.chlorojoules.client.machine.CJMachineBuilder;
 import net.minecraft.src.client.inventory.IInventory;
@@ -13,6 +14,7 @@ import net.minecraft.src.game.item.ItemStack;
 import net.minecraft.src.game.level.World;
 import net.minecraft.src.game.nbt.NBTTagCompound;
 import net.minecraft.src.game.nbt.NBTTagList;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 
@@ -23,7 +25,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	//		 Be read here.
 	public ArrayList<ItemStack> stacks;
 	public ArrayList<CJTankVolume> tanks;
-	public ArrayList<int[]> coordinateDisplays;
+	public ArrayList<CJGuiCoordinateDisplay> coordinateDisplays;
 
 	public String errorMessage = null;
 	public boolean isWarning = false;
@@ -96,6 +98,8 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		stacks = null;
 		tanks = null;
 		operationTicks = 0;
+
+		impl.onBreak(world, x, y, z);
 	}
 
 	@Override
@@ -108,6 +112,8 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		super.writeToNBT(tagCompound);
 
 		tagCompound.setString("cj_machine", machineBuilder.name);
+
+		impl.writeToNBT(tagCompound);
 
 		// Serialize slots.
 		NBTTagList itemsList = new NBTTagList();
@@ -151,12 +157,27 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		tagCompound.setTag("progresses", progressBarList);
 	}
 
+	public int getWorldBlockId() {
+		return worldObj.getBlockId(xCoord, yCoord, zCoord);
+	}
+
+	public int getWorldBlockMetadata() {
+		return worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+	}
+
+	public void setWorldBlockMetadata(int metadata) {
+		worldObj.setBlockMetadata(xCoord, yCoord, zCoord, metadata);
+		worldObj.notifyBlockChange(xCoord, yCoord, zCoord, getWorldBlockId());
+	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound) {
 		super.readFromNBT(tagCompound);
 
 		initFromBuilder(
 				CJClient.machines.get(tagCompound.getString("cj_machine")));
+
+		impl.readFromNBT(tagCompound);
 
 		// Deserialize slots.
 		NBTTagList itemsList = tagCompound.getTagList("items");

@@ -22,6 +22,7 @@ message.cj_unlinked=Not linked
 message.cj_coordinate_unset=§CCoordinates unset
 
 # Tool messages.
+message.cj_not_transferor=§CBlock is not a Transferor
 message.cj_not_extractor=§CBlock is not a Flooper or Whooper
 message.cj_not_slooper=§CBlock is not a Slooper
 message.cj_not_swooper=§CBlock is not a Swooper
@@ -29,6 +30,8 @@ message.cj_linked_position=§ABlock stored §L[ %d, %d, %d ]
 message.cj_link_query=§AStored position §L[ %d, %d, %d ]
 message.cj_link_clear=§ACleared linked position
 message.cj_linked_pair=§ABlock linked from §L[ %d, %d, %d ] §Ato §L[ %d, %d, %d ]
+message.cj_link_switch_fluid=§9Switched to fluid mode
+message.cj_link_switch_item=§6Switched to item mode
 
 # Help messages.
 message.cj_bugblock.help=Adds all the bugs!
@@ -47,6 +50,9 @@ message.cj_furnace.help=Smelts items using ChloroJoules
 message.cj_furnace.flavor=Now that's what I call efficiency
 message.cj_tool_station.help=Manipulate tools' ChloroJewels
 message.cj_tool_station.flavor=Jewels for your Joule powered Tools
+
+message.cj_transferor.help=Transfers items or fluids through the air
+message.cj_transferor.flavor=Quagsire the floppy disk basketball broth enjoyer
 
 message.cj_flooper.help=Extracts fluids from adjacent inventories
 message.cj_flooper.flavor=Can't read floppy disks
@@ -78,10 +84,11 @@ tile.cj_press.name=Press
 tile.cj_furnace.name=Furnace
 tile.cj_tool_station.name=Tool Station
 
-tile.cj_flooper.name=Flooper
-tile.cj_slooper.name=Slooper
-tile.cj_whooper.name=Whooper
-tile.cj_swooper.name=Swooper
+tile.cj_transferor.cj_inactive.name=Transferor
+tile.cj_transferor.cj_flooper.name=Transferor [Transmit Fluid]
+tile.cj_transferor.cj_slooper.name=Transferor [Receive Fluid]
+tile.cj_transferor.cj_whooper.name=Transferor [Transmit Item]
+tile.cj_transferor.cj_swooper.name=Transferor [Receive Item]
 
 # Fluids.
 tile.cj_fluid_paste.name=Paste
@@ -97,11 +104,7 @@ inventory.cj_pulverizer=Pulverizer
 inventory.cj_press=Press
 inventory.cj_furnace=Furnace
 inventory.cj_tool_station=Tool Station
-
-inventory.cj_flooper=Flooper
-inventory.cj_slooper=Slooper
-inventory.cj_whooper=Whooper
-inventory.cj_swooper=Swooper
+inventory.cj_transferor=Transferor
 
 # Items.
 item.cj_fluid_paste_bucket.name=Paste Bucket

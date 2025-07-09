@@ -11,14 +11,16 @@ import net.minecraft.src.game.entity.other.EntityItem;
 import net.minecraft.src.game.entity.player.EntityPlayer;
 import net.minecraft.src.game.item.Item;
 import net.minecraft.src.game.item.ItemStack;
+import net.minecraft.src.game.item.description.ItemDescTool;
 import net.minecraft.src.game.level.World;
 
 public class CJItemSoulExtractor extends Item implements CJIItemSocket {
 	public CJItemSoulExtractor(int id) {
 		super(id - 256);
 
-		setMaxDamage(CJRarityInfo.MAX_DAMAGE);
+		setMaxDamage(0);
 		addDescription(new CJItemDescriptionSocket());
+		setHasSubtypes(true);
 	}
 
 	@Override

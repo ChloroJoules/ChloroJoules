@@ -92,7 +92,4 @@ public class CJMachineToolStation implements CJIMachine {
 			machineEntity.stacks.set(INPUT_SLOT, null);
 		}
 	}
-
-	@Override
-	public void onNeighbourChange(World world, int x, int y, int z) {}
 }

@@ -6,9 +6,16 @@ package io.github.chlorojoules.client.gui;
 public class CJGuiElement {
 	public int xDisplayPosition;
 	public int yDisplayPosition;
+	public int[] damageExclusive = null;
 
 	public CJGuiElement(int x, int y) {
 		xDisplayPosition = x;
 		yDisplayPosition = y;
+	}
+
+	public CJGuiElement setDamageExclusive(int[] damageExclusive) {
+		this.damageExclusive = damageExclusive;
+
+		return this;
 	}
 }

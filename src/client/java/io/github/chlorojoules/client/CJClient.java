@@ -1,11 +1,9 @@
 package io.github.chlorojoules.client;
 
+import com.fox2code.foxloader.client.CreativeItems;
 import io.github.chlorojoules.CJInstance;
 import io.github.chlorojoules.client.block.CJBlockMachineBase;
-import io.github.chlorojoules.client.item.CJItemLinker;
-import io.github.chlorojoules.client.item.CJItemLinkerFull;
-import io.github.chlorojoules.client.item.CJItemSoulExtractor;
-import io.github.chlorojoules.client.item.CJItemToolSoulSword;
+import io.github.chlorojoules.client.item.*;
 import io.github.chlorojoules.client.machine.*;
 
 import io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase;
@@ -56,11 +54,7 @@ public class CJClient extends CJInstance implements ClientMod {
 	public static RegisteredBlock press;
 	public static RegisteredBlock furnace;
 	public static RegisteredBlock toolStation;
-
-	public static RegisteredBlock flooper;
-	public static RegisteredBlock slooper;
-	public static RegisteredBlock whooper;
-	public static RegisteredBlock swooper;
+	public static RegisteredBlock transferor;
 
 	public static RegisteredItem paste;
 
@@ -79,24 +73,44 @@ public class CJClient extends CJInstance implements ClientMod {
 	public static RegisteredItem soulExtractor;
 	public static RegisteredItem soulSword;
 	public static RegisteredItem linker;
-	public static RegisteredItem linkerFull;
 
 	public static RegisteredItem ironRod;
 
 	public static int fuelFluid;
 
 	public RegisteredBlock registerNewMachine(
-			String name, CJMachineBuilder builder) {
+			String name, CJMachineBuilder builder,
+			String[] iconNames, int maxMetadata) {
 
 		builder.setMachineName(name);
 		machines.put(name, builder);
 
-		return registerNewBlock(name, new BlockBuilder()
+		BlockBuilder blockBuilder = new BlockBuilder()
 				.setBlockName(name)
 				.setGameBlockProvider(
 						((id, build, ext) ->
-								new CJBlockMachineBase(id, builder)))
-				.setTooltipColor(CJRarityInfo.getRarityColor(builder.rarity)));
+								new CJBlockMachineBase(
+										id, builder, iconNames, maxMetadata)))
+				.setTooltipColor(getRarityColor(builder.rarity))
+				.setItemBlock(new ItemBuilder()
+						.setGameItemProvider(
+								((id, build, block) ->
+										new CJItemBlockMachineBase(
+												id, block, maxMetadata)))
+						.hideFromCreativeInventory());
+
+		RegisteredBlock block = registerNewBlock(name, blockBuilder);
+
+		addItemDamagesToCreative(block.asRegisteredItem(), maxMetadata);
+
+		return block;
+	}
+
+	private void addItemDamagesToCreative(RegisteredItem item, int maxDamage) {
+		for(int i = 0; i <= maxDamage; ++i) {
+			ItemStack stack = new ItemStack(item.getRegisteredItemId(), 1, i);
+			CreativeItems.addToCreativeInventory(stack);
+		}
 	}
 
 	private RegisteredBlock registerNewFluid(String name) {
@@ -264,15 +278,12 @@ public class CJClient extends CJInstance implements ClientMod {
 							.setItemName("cj_linker")
 							.setTooltipColor(MANUFACTURED_COLOR)
 							.setGameItemProvider(((id, build, ext) ->
-									new CJItemLinker(id))));
-
-			linkerFull = registerNewItem(
-					"cj_linker_full", new ItemBuilder()
-							.setMaxStackSize(1)
-							.setItemName("cj_linker_full")
-							.setTooltipColor(MANUFACTURED_COLOR)
-							.setGameItemProvider(((id, build, ext) ->
-									new CJItemLinkerFull(id))));
+									new CJItemLinker(
+											id, new String[] {
+													"cj_link_item_empty",
+													"cj_link_item_full",
+													"cj_link_fluid_empty",
+													"cj_link_fluid_full" }))));
 
 			soulCore = registerNewItem(
 					"cj_soul_core", new ItemBuilder()
@@ -326,7 +337,7 @@ public class CJClient extends CJInstance implements ClientMod {
 							.addTank(15, 15, false, 4 * CJTank.BUCKET, 0)
 							.addSlot(50, 35, false)
 							.addSlot(75, 35, true)
-							.setImpl(CJMachineBugBlock.class));
+							.setImpl(CJMachineBugBlock.class), null, 0);
 
 			liquefier = registerNewMachine(
 					"cj_liquefier", new CJMachineBuilder()
@@ -355,7 +366,7 @@ public class CJClient extends CJInstance implements ClientMod {
 											1, fluidPaste, 50, true)
 											.setTarget(TANK),
 									50, true)
-							.setImpl(CJMachineRecipeConsumer.class));
+							.setImpl(CJMachineRecipeConsumer.class), null, 0);
 
 			refinery = registerNewMachine(
 					"cj_refinery", new CJMachineBuilder()
@@ -379,7 +390,7 @@ public class CJClient extends CJInstance implements ClientMod {
 											2, fluidChlorojoules, 5, true)
 											.setTarget(TANK),
 									10, true)
-							.setImpl(CJMachineRecipeConsumer.class));
+							.setImpl(CJMachineRecipeConsumer.class), null, 0);
 
 			solidifier = registerNewMachine(
 					"cj_solidifier", new CJMachineBuilder()
@@ -408,7 +419,7 @@ public class CJClient extends CJInstance implements ClientMod {
 									new CJMachineRecipeComponent(
 											0, manufacturedJewel, 1),
 									500, false)
-							.setImpl(CJMachineRecipeConsumer.class));
+							.setImpl(CJMachineRecipeConsumer.class), null, 0);
 
 			// TODO: Secondary output.
 			pulverizer = registerNewMachine(
@@ -493,7 +504,7 @@ public class CJClient extends CJInstance implements ClientMod {
 									new CJMachineRecipeComponent(
 											1, Item.dyePowder, 3),
 									150, false)*/
-							.setImpl(CJMachineRecipeConsumer.class));
+							.setImpl(CJMachineRecipeConsumer.class), null, 0);
 
 			press = registerNewMachine(
 					"cj_press", new CJMachineBuilder()
@@ -520,7 +531,7 @@ public class CJClient extends CJInstance implements ClientMod {
 									new CJMachineRecipeComponent(
 											1, Block.gear, 5, false),
 									75, false)
-							.setImpl(CJMachineRecipeConsumer.class));
+							.setImpl(CJMachineRecipeConsumer.class), null, 0);
 
 			furnace = registerNewMachine(
 					"cj_furnace", new CJMachineBuilder()
@@ -540,7 +551,7 @@ public class CJClient extends CJInstance implements ClientMod {
 									new CJMachineRecipeComponent(
 											1, refinedJewel, 1),
 									300, CJRarity.MANUFACTURED)
-							.setImpl(CJMachineRecipeConsumer.class));
+							.setImpl(CJMachineRecipeConsumer.class), null, 0);
 
 			toolStation = registerNewMachine(
 					"cj_tool_station", new CJMachineBuilder()
@@ -555,7 +566,7 @@ public class CJClient extends CJInstance implements ClientMod {
 									JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
 									false)
 							.addProgressBarGravityVCenter(CENTER, 0)
-							.setImpl(CJMachineToolStation.class));
+							.setImpl(CJMachineToolStation.class), null, 0);
 
 			// TODO: For `Soul Extractor` -- make base tool then socket a
 			//       `Refined ChloroJewel` to use; allows player to reclaim
@@ -563,32 +574,25 @@ public class CJClient extends CJInstance implements ClientMod {
 
 			// TODO: Figure out how to make Gear controls.
 			// TODO: UI to allow floopers to be filtered on one fluid kind.
-			flooper = registerNewMachine(
-					"cj_flooper", new CJMachineBuilder()
+			transferor = registerNewMachine(
+					"cj_transferor", new CJMachineBuilder()
 							.addCoordinateGravityHCenter(
-									CENTER, 12, "message.cj_unlinked_hint")
+									CENTER, 12, "message.cj_link_coordinate")
 							.addTankGravity(
 									CENTER, 0, 0, false, 2 * CJTank.BUCKET, 0)
-							.setImpl(CJMachineFlooper.class));
-
-			slooper = registerNewMachine(
-					"cj_slooper", new CJMachineBuilder()
-							.addCoordinateGravityHCenter(
-									CENTER, 12, "message.cj_unlinked_hint")
-							.setImpl(CJMachineSlooper.class));
-
-			whooper = registerNewMachine(
-					"cj_whooper", new CJMachineBuilder()
-							.addCoordinateGravityHCenter(
-									CENTER, 12, "message.cj_unlinked_hint")
 							.addSlotGravity(CENTER, 0, 0, false)
-							.setImpl(CJMachineWhooper.class));
-
-			swooper = registerNewMachine(
-					"cj_swooper", new CJMachineBuilder()
-							.addCoordinateGravityHCenter(
-									CENTER, 12, "message.cj_unlinked_hint")
-							.setImpl(CJMachineSwooper.class));
+							.setSlotDamageExclusive(0, new int[] {
+									CJMachineTransferor.TRANSMIT_ITEMS})
+							.setTankDamageExclusive(0, new int[] {
+									CJMachineTransferor.TRANSMIT_FLUIDS})
+							.setImpl(CJMachineTransferor.class),
+							new String[] {
+									"cj_inactive",
+									"cj_whooper",
+									"cj_swooper",
+									"cj_flooper",
+									"cj_slooper"
+							}, CJMachineTransferor.MAX_DAMAGE);
 		}
 	}
 

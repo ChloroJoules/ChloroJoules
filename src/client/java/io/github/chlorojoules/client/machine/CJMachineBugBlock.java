@@ -47,7 +47,4 @@ public class CJMachineBugBlock implements CJIMachine {
 			}
 		}
 	}
-
-	@Override
-	public void onNeighbourChange(World world, int x, int y, int z) {}
 }

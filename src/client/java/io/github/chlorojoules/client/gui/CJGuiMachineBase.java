@@ -4,11 +4,13 @@ import io.github.chlorojoules.client.*;
 import io.github.chlorojoules.client.container.CJContainerMachineBase;
 import io.github.chlorojoules.client.machine.CJMachineBuilder;
 import io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase;
+import io.github.chlorojoules.client.machine.CJMachineSlotInfo;
 import net.minecraft.src.client.gui.GuiContainer;
 import net.minecraft.src.client.gui.StringTranslate;
 import net.minecraft.src.game.block.Block;
 import net.minecraft.src.game.entity.player.InventoryPlayer;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
@@ -277,15 +279,16 @@ public class CJGuiMachineBase extends GuiContainer {
 			coordinateX = baseX + coordinate.xDisplayPosition;
 			coordinateY = baseY + coordinate.yDisplayPosition;
 
-			int[] coordinateDisplay = machineEntity.coordinateDisplays.get(i);
+			CJGuiCoordinateDisplay coordinateDisplay =
+					machineEntity.coordinateDisplays.get(i);
 
 			String string;
 			if(coordinateDisplay != null) {
 				string = StringTranslate.getInstance().translateKeyFormat(
 						coordinate.label,
-						coordinateDisplay[0],
-						coordinateDisplay[1],
-						coordinateDisplay[2]);
+						coordinateDisplay.value[0],
+						coordinateDisplay.value[1],
+						coordinateDisplay.value[2]);
 			}
 			else {
 				string = StringTranslate.getInstance().translateKey(

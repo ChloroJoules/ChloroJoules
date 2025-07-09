@@ -10,24 +10,28 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.src.game.block.Block;
 import net.minecraft.src.game.block.BlockContainer;
 import net.minecraft.src.game.block.Material;
+import net.minecraft.src.game.block.texture.Face;
 import net.minecraft.src.game.block.tileentity.TileEntity;
 import net.minecraft.src.game.entity.player.EntityPlayer;
 import net.minecraft.src.game.entity.player.InventoryPlayer;
-import net.minecraft.src.game.item.EnumTools;
-import net.minecraft.src.game.item.Item;
-import net.minecraft.src.game.item.ItemBucket;
-import net.minecraft.src.game.item.ItemStack;
+import net.minecraft.src.game.item.*;
 import net.minecraft.src.game.level.World;
 
 import static io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase.machineEntity;
 
 public class CJBlockMachineBase extends BlockContainer {
+	private final String[] iconNames;
 	private final CJMachineBuilder machineBuilder;
 
-	public CJBlockMachineBase(int id, CJMachineBuilder builder) {
+	public CJBlockMachineBase(
+			int id, CJMachineBuilder machineBuilder,
+			String[] iconNames, int maxDamage) {
+
 		super(id, Material.rock);
 
-		machineBuilder = builder;
+		this.machineBuilder = machineBuilder;
+		this.maxMetadata = maxDamage;
+		this.iconNames = iconNames;
 
 		// Machines have the same basic block properties by default.
 		super.setHardness(1.5F);
@@ -131,6 +135,7 @@ public class CJBlockMachineBase extends BlockContainer {
 			return true;
 		}
 
+		// TODO: Allow tools to query device without opening GUI.
 		CJGuiMachineBase gui = new CJGuiMachineBase(
 				player.inventory, machineEntity, machineBuilder);
 
@@ -163,5 +168,27 @@ public class CJBlockMachineBase extends BlockContainer {
 	protected TileEntity getBlockEntity() {
 		return new CJTileEntityMachineBase(machineBuilder);
 	}
-}
 
+	@Override
+	protected void allocateTextures() {
+		if(iconNames == null) {
+			super.allocateTextures();
+			return;
+		}
+
+		for(int i = 0; i <= maxMetadata; i++) {
+			this.addTexture(iconNames[i], Face.ALL, i);
+		}
+	}
+
+	@Override
+	protected int damageDropped(int metadata) {
+		// TODO: Let machine determine whether it wants to preserve DV.
+		return metadata;
+	}
+
+	public String getIconName(String itemName, int metadata) {
+		if(iconNames == null) return getBlockName();
+		return itemName + "." + iconNames[metadata];
+	}
+}

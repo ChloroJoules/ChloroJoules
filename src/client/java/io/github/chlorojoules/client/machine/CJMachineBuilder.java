@@ -63,6 +63,22 @@ public class CJMachineBuilder {
 		return this;
 	}
 
+	public CJMachineBuilder setSlotDamageExclusive(
+			int slot, int[] damageExclusive) {
+
+		slots.get(slot).setDamageExclusive(damageExclusive);
+
+		return this;
+	}
+
+	public CJMachineBuilder setTankDamageExclusive(
+			int tank, int[] damageExclusive) {
+
+		tanks.get(tank).setDamageExclusive(damageExclusive);
+
+		return this;
+	}
+
 	public CJMachineBuilder addSlotGravity(
 			CJGuiGravity anchor, int x, int y, boolean output) {
 
