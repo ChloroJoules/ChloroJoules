@@ -56,6 +56,7 @@ public class CJClient extends CJInstance implements ClientMod {
 	public static RegisteredBlock furnace;
 	public static RegisteredBlock toolStation;
 	public static RegisteredBlock transferor;
+	public static RegisteredBlock tank;
 
 	public static RegisteredItem paste;
 
@@ -339,7 +340,8 @@ public class CJClient extends CJInstance implements ClientMod {
 			bugBlock = registerNewMachine(
 					"cj_bugblock", new CJMachineBuilder()
 							.setRarity(CJRarity.AWAKENED)
-							.addTank(15, 15, false, 4 * CJTank.BUCKET, 0)
+							.addTank(
+									15, 15, false, false, 4 * CJTank.BUCKET, 0)
 							.addSlot(50, 35, false)
 							.addSlot(75, 35, true)
 							.setImpl(CJMachineBugBlock.class), null, 0);
@@ -349,7 +351,8 @@ public class CJClient extends CJInstance implements ClientMod {
 							.setRarity(CJRarity.PRIMAL)
 							.addFuelTank()
 							.addTankGravityVCenter(
-									TOP_RIGHT, 10, true, 8 * CJTank.BUCKET, 0)
+									TOP_RIGHT, 10, true, false,
+									8 * CJTank.BUCKET, 0)
 							.addSlotGravity(CENTER, 0, 0, false)
 							/* TODO: Make Jewel slot maximum stack size 1. */
 							/*
@@ -380,19 +383,19 @@ public class CJClient extends CJInstance implements ClientMod {
 							.addTankGravityVCenter(
 									TOP_LEFT,
 									JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
-									false, 8 * CJTank.BUCKET, 0)
+									false, false, 8 * CJTank.BUCKET, 0)
 							.addTankGravityVCenter(
-									CENTER, SLOT_IN_WIDTH * 4, true,
+									CENTER, SLOT_IN_WIDTH * 4, true, false,
 									8 * CJTank.BUCKET, 0)
 							.addJewelSlot()
 							.addProgressBarGravityVCenter(CENTER, 0)
 							.addRecipe(
 									1,
 									new CJMachineRecipeComponent(
-											1, fluidPaste, 10, true)
+											1, fluidPaste, 20, true)
 											.setTarget(TANK),
 									new CJMachineRecipeComponent(
-											2, fluidChlorojoules, 5, true)
+											2, fluidChlorojoules, 25, true)
 											.setTarget(TANK),
 									10, true, -1)
 							.setImpl(CJMachineRecipeConsumer.class), null, 0);
@@ -404,7 +407,7 @@ public class CJClient extends CJInstance implements ClientMod {
 							.addTankGravityVCenter(
 									TOP_LEFT,
 									JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
-									false, 8 * CJTank.BUCKET, 0)
+									false, false, 8 * CJTank.BUCKET, 0)
 							.addSlotGravityVCenter(
 									CENTER, SLOT_IN_WIDTH * 4, true)
 							.addJewelSlot()
@@ -589,7 +592,8 @@ public class CJClient extends CJInstance implements ClientMod {
 							.addCoordinateGravityHCenter(
 									CENTER, 12, "message.cj_link_coordinate")
 							.addTankGravity(
-									CENTER, 0, 0, false, 2 * CJTank.BUCKET, 0)
+									CENTER, 0, 0, false, false,
+									2 * CJTank.BUCKET, 0)
 							.addSlotGravity(CENTER, 0, 0, false)
 							.setSlotDamageExclusive(0, new int[] {
 									CJMachineTransferor.TRANSMIT_ITEMS,
@@ -598,15 +602,22 @@ public class CJClient extends CJInstance implements ClientMod {
 									CJMachineTransferor.TRANSMIT_FLUIDS,
 									CJMachineTransferor.MULTI_TRANSMIT_FLUIDS })
 							.setImpl(CJMachineTransferor.class),
-							new String[] {
-									"cj_inactive",
-									"cj_whooper",
-									"cj_swooper",
-									"cj_flooper",
-									"cj_slooper",
-									"cj_multi_whooper",
-									"cj_multi_flooper"
-							}, CJMachineTransferor.MAX_DAMAGE);
+					new String[] {
+							"cj_inactive",
+							"cj_whooper",
+							"cj_swooper",
+							"cj_flooper",
+							"cj_slooper",
+							"cj_multi_whooper",
+							"cj_multi_flooper" },
+					CJMachineTransferor.MAX_DAMAGE);
+
+			tank = registerNewMachine(
+					"cj_tank", new CJMachineBuilder()
+							.addTankGravity(
+									CENTER, 0, 0, false, true,
+									16 * CJTank.BUCKET, 0),
+					null, 0);
 		}
 	}
 

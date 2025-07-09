@@ -52,6 +52,8 @@ message.cj_furnace.help=Smelts items using ChloroJoules
 message.cj_furnace.flavor=Now that's what I call efficiency
 message.cj_tool_station.help=Manipulate tools' ChloroJewels
 message.cj_tool_station.flavor=Jewels for your Joule powered Tools
+message.cj_tank.help=Stores fluid
+message.cj_tank.flavor=Has a pocket healer
 
 message.cj_enable_refine_fuel=Allow processing of fuel tank
 
@@ -87,12 +89,15 @@ tile.cj_pulverizer.name=Pulverizer
 tile.cj_press.name=Press
 tile.cj_furnace.name=Furnace
 tile.cj_tool_station.name=Tool Station
+tile.cj_tank.name=Tank
 
 tile.cj_transferor.cj_inactive.name=Transferor
 tile.cj_transferor.cj_flooper.name=Transferor [Transmit Fluid]
 tile.cj_transferor.cj_slooper.name=Transferor [Receive Fluid]
 tile.cj_transferor.cj_whooper.name=Transferor [Transmit Item]
 tile.cj_transferor.cj_swooper.name=Transferor [Receive Item]
+tile.cj_transferor.cj_multi_flooper.name=Transferor [Multi-Transmit Fluid]
+tile.cj_transferor.cj_multi_whooper.name=Transferor [Multi-Transmit Item]
 
 # Fluids.
 tile.cj_fluid_paste.name=Paste
@@ -109,6 +114,7 @@ inventory.cj_press=Press
 inventory.cj_furnace=Furnace
 inventory.cj_tool_station=Tool Station
 inventory.cj_transferor=Transferor
+inventory.cj_tank=Tank
 
 # Items.
 item.cj_fluid_paste_bucket.name=Paste Bucket
@@ -126,6 +132,7 @@ item.cj_iron_dust.name=Iron Dust
 item.cj_gold_dust.name=Gold Dust
 item.cj_jewel_dust.name=ChloroJewel Dust
 item.cj_paste.name=Plant Paste
+item.cj_iron_rod.name=Iron Rod
 
 item.cj_jewel_primal.name=Primal ChloroJewel
 item.cj_jewel_manufactured.name=Manufactured ChloroJewel

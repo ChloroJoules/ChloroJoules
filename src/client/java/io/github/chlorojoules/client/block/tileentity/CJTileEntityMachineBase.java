@@ -53,11 +53,13 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	private void initFromBuilder(CJMachineBuilder builder) {
 		machineBuilder = builder;
 
-		try {
-			impl = (CJIMachine) builder.machineImpl.newInstance();
-		}
-		catch(Exception e) {
-			throw new RuntimeException(e);
+		if(builder.machineImpl != null) {
+			try {
+				impl = (CJIMachine) builder.machineImpl.newInstance();
+			}
+			catch(Exception e) {
+				throw new RuntimeException(e);
+			}
 		}
 
 		stacks = new ArrayList<>();
@@ -105,11 +107,15 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		tanks = null;
 		operationTicks = 0;
 
-		impl.onBreak(world, x, y, z);
+		if(impl != null) {
+			impl.onBreak(world, x, y, z);
+		}
 	}
 
 	@Override
 	public void updateEntity() {
+		if(impl == null) return;
+
 		impl.updateMachine(this);
 	}
 
@@ -119,7 +125,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 
 		tagCompound.setString("cj_machine", machineBuilder.name);
 
-		impl.writeToNBT(tagCompound);
+		if(impl != null) impl.writeToNBT(tagCompound);
 
 		// Serialize slots.
 		NBTTagList itemsList = new NBTTagList();
@@ -192,7 +198,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		initFromBuilder(
 				CJClient.machines.get(tagCompound.getString("cj_machine")));
 
-		impl.readFromNBT(tagCompound);
+		if(impl != null) impl.readFromNBT(tagCompound);
 
 		// Deserialize slots.
 		NBTTagList itemsList = tagCompound.getTagList("items");

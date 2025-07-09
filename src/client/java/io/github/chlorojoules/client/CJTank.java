@@ -13,8 +13,8 @@ public class CJTank extends CJGuiElement {
 	// Millibuckets per bucket.
 	public static final int BUCKET = 1000;
 
-	// Whether tank is an output.
 	public boolean output = false;
+	public boolean bidirectional = false;
 
 	public CJTank(int x, int y) {
 		super(x, y);

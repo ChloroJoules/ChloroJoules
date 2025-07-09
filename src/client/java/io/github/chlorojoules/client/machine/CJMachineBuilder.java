@@ -136,14 +136,15 @@ public class CJMachineBuilder {
 				label);
 	}
 
-	// TODO: Add helper for adding specifically fuel tanks.
 	// NOTE: Pass the block ID of the flowing variant of the fluid you want
 	//       To set as locked to `lockFluid`, otherwise `0`.
 	public CJMachineBuilder addTank(
-			int x, int y, boolean output, int max, int lockFluid) {
+			int x, int y, boolean output, boolean bidirectional,
+			int max, int lockFluid) {
 
 		CJTank tank = new CJTank(x, y);
 		tank.output = output;
+		tank.bidirectional = bidirectional;
 		tanks.add(tank);
 
 		CJTankVolume tankVolume = new CJTankVolume();
@@ -159,8 +160,8 @@ public class CJMachineBuilder {
 		fuelTankIndex = tanks.size();
 
 		return addTankGravityVCenter(
-				CJGuiGravity.TOP_LEFT, FUEL_TANK_INSET, false, FUEL_TANK_SIZE,
-				CJClient.fuelFluid);
+				CJGuiGravity.TOP_LEFT, FUEL_TANK_INSET, false, false,
+				FUEL_TANK_SIZE, CJClient.fuelFluid);
 	}
 
 	public CJMachineBuilder addJewelSlot() {
@@ -173,25 +174,25 @@ public class CJMachineBuilder {
 	}
 
 	public CJMachineBuilder addTankGravity(
-			CJGuiGravity anchor, int x, int y, boolean output, int max,
-			int lockFluid) {
+			CJGuiGravity anchor, int x, int y, boolean output,
+			boolean bidirectional, int max, int lockFluid) {
 
 		return addTank(
 				CJGuiGravityInfo.getTankAnchoredX(anchor, x),
 				CJGuiGravityInfo.getTankAnchoredY(anchor, y),
-				output, max, lockFluid);
+				output, bidirectional, max, lockFluid);
 	}
 
 	// TODO: Add "ElementBuilder" which has sensible alignment/type defaults
 	//       Then set further sub-members from there.
 	public CJMachineBuilder addTankGravityVCenter(
-			CJGuiGravity anchor, int x, boolean output, int max,
-			int lockFluid) {
+			CJGuiGravity anchor, int x, boolean output, boolean bidirectional,
+			int max, int lockFluid) {
 
 		return addTank(
 				CJGuiGravityInfo.getTankAnchoredX(anchor, x),
 				CJGuiGravityInfo.getTankAnchoredY(CENTER, 0),
-				output, max, lockFluid);
+				output, bidirectional, max, lockFluid);
 	}
 
 	public CJMachineBuilder addProgressBar(int x, int y) {

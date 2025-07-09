@@ -9,7 +9,6 @@ import net.minecraft.src.client.inventory.IInventory;
 import net.minecraft.src.game.item.ItemStack;
 import net.minecraft.src.game.level.World;
 import net.minecraft.src.game.nbt.NBTTagCompound;
-import org.lwjgl.input.Mouse;
 
 import static io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase.machineEntity;
 
@@ -20,7 +19,6 @@ public class CJMachineTransferor implements CJIMachine {
 	public static final int RECEIVE_ITEMS = 2;
 	public static final int TRANSMIT_FLUIDS = 3;
 	public static final int RECEIVE_FLUIDS = 4;
-	// TODO: Implement multi-receivers.
 	public static final int MULTI_TRANSMIT_ITEMS = 5;
 	public static final int MULTI_TRANSMIT_FLUIDS = 6;
 	public static final int MAX_DAMAGE = MULTI_TRANSMIT_FLUIDS;
@@ -29,6 +27,7 @@ public class CJMachineTransferor implements CJIMachine {
 	private CJTileEntityMachineBase[] adjacentMachines = null;
 
 	public int[] linked = null;
+	// TODO: Remove this and iterate linked for round robin.
 	public int[] lastReceiver = null;
 
 	private void updateTransmit(CJTileEntityMachineBase machineEntity) {
@@ -139,7 +138,9 @@ public class CJMachineTransferor implements CJIMachine {
 				CJTankVolume adjacentVolume = adjacent.tanks.get(j);
 				CJTank adjacentTank = adjacent.machineBuilder.tanks.get(j);
 
-				if(!adjacentTank.output) continue;
+				if(!adjacentTank.output && !adjacentTank.bidirectional) {
+					continue;
+				}
 
 				// TODO: Hardcoded flow rate.
 				if(volume.transferFrom(adjacentVolume, 10)) return;
@@ -152,6 +153,8 @@ public class CJMachineTransferor implements CJIMachine {
 				machineEntity(
 						machineEntity.worldObj,
 						linked[0], linked[1], linked[2]);
+
+		if(linkedEntity == null) return;
 
 		CJMachineTransferor linkedTransferor =
 				(CJMachineTransferor) linkedEntity.impl;
@@ -177,7 +180,9 @@ public class CJMachineTransferor implements CJIMachine {
 				CJTankVolume adjacentVolume = adjacent.tanks.get(j);
 				CJTank adjacentTank = adjacent.machineBuilder.tanks.get(j);
 
-				if(adjacentTank.output) continue;
+				if(adjacentTank.output && !adjacentTank.bidirectional) {
+					continue;
+				}
 
 				if(adjacentVolume.transferFrom(volume, 10)) {
 					linkedTransferor.lastReceiver = new int[] {
@@ -271,6 +276,8 @@ public class CJMachineTransferor implements CJIMachine {
 							worldObj,
 							linkedHold[0], linkedHold[1], linkedHold[2]);
 
+			if(linkedEntity == null) return;
+
 			CJMachineTransferor other =
 					(CJMachineTransferor) linkedEntity.impl;
 
@@ -280,6 +287,7 @@ public class CJMachineTransferor implements CJIMachine {
 
 	@Override
 	public void onBreak(World world, int x, int y, int z) {
+		// TODO: Break multi links.
 		breakLink(world);
 	}
 
@@ -295,5 +303,11 @@ public class CJMachineTransferor implements CJIMachine {
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound) {
 		linked = tagCompound.getIntArray("link_position");
+
+		if(linked != null) {
+			if(linked.length == 0) {
+				linked = null;
+			}
+		}
 	}
 }

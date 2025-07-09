@@ -159,7 +159,9 @@ public class CJBlockMachineBase extends BlockContainer {
 
 		CJTileEntityMachineBase machine = machineEntity(world, x, y, z);
 
-		machine.impl.onNeighbourChange(world, x, y, z);
+		if(machine.impl != null) {
+			machine.impl.onNeighbourChange(world, x, y, z);
+		}
 
 		super.onNeighborBlockChange(world, x, y, z, ext);
 	}
