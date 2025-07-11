@@ -82,8 +82,8 @@ message.cj_tool_refined=§ERefined Jewel
 message.cj_tool_awakened=§BAwakened Jewel
 
 # Blocks.
-tile.chlorojoules.cj_machine_frame.name=Machine Frame
-tile.chlorojoules.cj_block_jewel_dust.name=Compacted Jewel Dust
+tile.cj_machine_frame.name=Machine Frame
+tile.cj_block_jewel_dust.name=Compacted Jewel Dust
 
 tile.cj_bugblock.name=BugBlock
 tile.cj_liquefier.name=Liquefier
