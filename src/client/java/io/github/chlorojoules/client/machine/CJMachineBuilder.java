@@ -5,6 +5,7 @@ import io.github.chlorojoules.client.gui.*;
 import io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase;
 import net.minecraft.src.client.gui.StringTranslate;
 import net.minecraft.src.game.item.ItemStack;
+import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
 
@@ -14,6 +15,8 @@ import static io.github.chlorojoules.client.gui.CJGuiMachineBaseLayout.FLUID_HEI
 import static io.github.chlorojoules.client.gui.CJGuiMachineBaseLayout.WORKING_HEIGHT;
 
 public class CJMachineBuilder {
+	// TODO: Ensure CJ can't be routed into non-fuel tanks.
+
 	public static final int FUEL_TANK_INSET = 10;
 	public static final int FUEL_TANK_SIZE = 4 * CJTank.BUCKET;
 
@@ -217,10 +220,24 @@ public class CJMachineBuilder {
 				CJGuiGravityInfo.getProgressBarAnchoredY(CENTER, 0));
 	}
 
-	// TODO: Make a recipe builder.
 	public CJMachineBuilder addRecipe(
 			int fuelVolume, CJMachineRecipeComponent in,
 			CJMachineRecipeComponent out, int ticks, boolean allowPassive,
+			int requiredButton) {
+
+		CJMachineRecipe recipe = new CJMachineRecipe(
+				this, fuelVolume, in, out, ticks, allowPassive);
+
+		recipe.requiredButton = requiredButton;
+
+		recipes.add(recipe);
+
+		return this;
+	}
+
+	public CJMachineBuilder addRecipe(
+			int fuelVolume, CJMachineRecipeComponent[] in,
+			CJMachineRecipeComponent[] out, int ticks, boolean allowPassive,
 			int requiredButton) {
 
 		CJMachineRecipe recipe = new CJMachineRecipe(
@@ -258,25 +275,9 @@ public class CJMachineBuilder {
 		return this;
 	}
 
-	public int getPrimaryInputTankIndex() {
-		for(int i = 0; i < tanks.size(); i++) {
-			if(!tanks.get(i).output) return i;
-		}
-
-		return -1;
-	}
-
 	public int getPrimaryOutputTankIndex() {
 		for(int i = 0; i < tanks.size(); i++) {
 			if(tanks.get(i).output) return i;
-		}
-
-		return -1;
-	}
-
-	public int getPrimaryInputSlotIndex() {
-		for(int i = 0; i < slots.size(); i++) {
-			if(!slots.get(i).output) return i;
 		}
 
 		return -1;
@@ -290,6 +291,7 @@ public class CJMachineBuilder {
 		return -1;
 	}
 
+	// TODO: Output components don't verify that there is space left.
 	private boolean componentMatch(
 			CJTileEntityMachineBase entity,
 			CJMachineRecipeComponent component, boolean input) {
@@ -315,6 +317,7 @@ public class CJMachineBuilder {
 		entity.isWarning = false;
 		entity.isPassive = false;
 
+		Mouse.setGrabbed(false);
 		StringTranslate translate = StringTranslate.getInstance();
 		CJMachineRecipe recipe = null;
 

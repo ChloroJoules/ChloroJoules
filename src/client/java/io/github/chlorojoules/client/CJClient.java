@@ -48,6 +48,7 @@ public class CJClient extends CJInstance implements ClientMod {
 	public static RegisteredBlock compactedJewelDust;
 
 	public static RegisteredBlock bugBlock;
+	public static RegisteredBlock cultivator;
 	public static RegisteredBlock liquefier;
 	public static RegisteredBlock solidifier;
 	public static RegisteredBlock refinery;
@@ -57,6 +58,7 @@ public class CJClient extends CJInstance implements ClientMod {
 	public static RegisteredBlock toolStation;
 	public static RegisteredBlock transferor;
 	public static RegisteredBlock tank;
+	public static RegisteredBlock mixer;
 
 	public static RegisteredItem paste;
 
@@ -71,6 +73,7 @@ public class CJClient extends CJInstance implements ClientMod {
 	public static RegisteredItem ironDust;
 	public static RegisteredItem goldDust;
 	public static RegisteredItem soulCore;
+	public static RegisteredItem moss;
 
 	public static RegisteredItem soulExtractor;
 	public static RegisteredItem soulSword;
@@ -79,6 +82,8 @@ public class CJClient extends CJInstance implements ClientMod {
 	public static RegisteredItem ironRod;
 
 	public static int fuelFluid;
+	public static int waterFluid;
+	public static int lavaFluid;
 
 	public RegisteredBlock registerNewMachine(
 			String name, CJMachineBuilder builder,
@@ -203,6 +208,8 @@ public class CJClient extends CJInstance implements ClientMod {
 					"cj_fluid_souls_bucket", fluidSouls);
 		}
 		fuelFluid = fluidChlorojoules.getRegisteredBlockId();
+		waterFluid = Block.waterMoving.getBlockID();
+		lavaFluid = Block.lavaMoving.getBlockID();
 
 		// Items.
 		{
@@ -300,6 +307,10 @@ public class CJClient extends CJInstance implements ClientMod {
 			ironRod = registerNewItem(
 					"cj_iron_rod", new ItemBuilder()
 							.setItemName("cj_iron_rod"));
+
+			moss = registerNewItem(
+					"cj_moss", new ItemBuilder()
+							.setItemName("cj_moss"));
 		}
 
 		// TODO: Feature request for registering ores.
@@ -345,6 +356,67 @@ public class CJClient extends CJInstance implements ClientMod {
 							.addSlot(50, 35, false)
 							.addSlot(75, 35, true)
 							.setImpl(CJMachineBugBlock.class), null, 0);
+
+			cultivator = registerNewMachine(
+					"cj_cultivator", new CJMachineBuilder()
+							.setRarity(CJRarity.MANUFACTURED)
+							.addFuelTank()
+							.addTankGravityVCenter(
+									CENTER, -25, false, false,
+									4 * CJTank.BUCKET,
+									waterFluid)
+							.addSlotGravity(CENTER, 0, 0, false)
+							.addSlotGravity(CENTER, 0, 24, false)
+							.addSlotGravity(
+									CENTER, SLOT_IN_WIDTH * 4, 0, true)
+							.addJewelSlot()
+							.addRecipe(
+									50,
+									new CJMachineRecipeComponent[] {
+											new CJMachineRecipeComponent(
+													0, Item.seeds, 0),
+											new CJMachineRecipeComponent(
+													1, waterFluid, 100)
+													.setTarget(TANK),
+											// TODO: Damage to bone meal.
+											// TODO: Bone meal should be a
+											//		 Catalyst -- recipe
+											//		 Components which are
+											//		 Optional?
+											new CJMachineRecipeComponent(
+													1, Item.dyePowder, 1),
+									},
+									new CJMachineRecipeComponent[] {
+											new CJMachineRecipeComponent(
+													2, Item.wheat, 1)
+									},
+									100, false, -1)
+							.addRecipe(
+									20,
+									new CJMachineRecipeComponent[] {
+											new CJMachineRecipeComponent(
+													0, Block.mossyCobblestone,
+													0, false),
+											new CJMachineRecipeComponent(
+													1, waterFluid, 50)
+													.setTarget(TANK),
+											// TODO: Damage to bone meal.
+											// TODO: Bone meal should be a
+											//		 Catalyst -- recipe
+											//		 Components which are
+											//		 Optional?
+											new CJMachineRecipeComponent(
+													1, Item.dyePowder, 1),
+									},
+									new CJMachineRecipeComponent[] {
+											new CJMachineRecipeComponent(
+													2, moss, 1)
+									},
+									100, false, -1)
+							.addProgressBarGravityVCenter(
+									CENTER, (SLOT_IN_WIDTH * 4) / 3)
+							.setImpl(CJMachineRecipeConsumer.class),
+					null, 0);
 
 			liquefier = registerNewMachine(
 					"cj_liquefier", new CJMachineBuilder()
@@ -465,14 +537,14 @@ public class CJClient extends CJInstance implements ClientMod {
 									new CJMachineRecipeComponent(
 											0, refinedJewel, 1),
 									new CJMachineRecipeComponent(
-											1, jewelDust, 16),
+											1, jewelDust, 8),
 									250, false, -1)
 							.addRecipe(
 									10,
 									new CJMachineRecipeComponent(
 											0, awakenedJewel, 1),
 									new CJMachineRecipeComponent(
-											1, jewelDust, 64),
+											1, jewelDust, 16),
 									350, false, -1)
 							.addRecipe(
 									30,
@@ -618,6 +690,61 @@ public class CJClient extends CJInstance implements ClientMod {
 									CENTER, 0, 0, false, true,
 									16 * CJTank.BUCKET, 0),
 					null, 0);
+
+			mixer = registerNewMachine(
+					"cj_mixer", new CJMachineBuilder()
+							.setRarity(CJRarity.REFINED)
+							.addFuelTank()
+							.addTankGravityVCenter(
+									TOP_LEFT,
+									JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
+									false, false, 8 * CJTank.BUCKET, 0)
+							.addTankGravityVCenter(
+									CENTER, SLOT_IN_WIDTH * 4, true, false,
+									8 * CJTank.BUCKET, 0)
+							.addSlotGravityVCenter(
+									CENTER, 0, false)
+							.addJewelSlot()
+							.addProgressBarGravityVCenter(
+									CENTER, SLOT_IN_WIDTH * 2)
+							.addButtonGravity(
+									BOTTOM_RIGHT, JEWEL_SLOT_INSET,
+									(WORKING_HEIGHT - FLUID_HEIGHT) / 2,
+									"message.cj_enable_refine_fuel",
+									CJGuiButton.JEWEL)
+							//.addRecipe(
+							//		150,
+							//		new CJMachineRecipeComponent[] {
+							//				new CJMachineRecipeComponent(
+							//						0, fluidChlorojoules, 250,
+							//						true)
+							//						.setTarget(TANK),
+							//				new CJMachineRecipeComponent(
+							//						0, soulDust, 1)
+							//		},
+							//		new CJMachineRecipeComponent[] {
+							//				new CJMachineRecipeComponent(
+							//						2, fluidSouls, 50, true)
+							//						.setTarget(TANK)
+							//		},
+							//		250, false, 0)
+							.addRecipe(
+									50,
+									new CJMachineRecipeComponent[] {
+											new CJMachineRecipeComponent(
+													1, waterFluid, 250)
+													.setTarget(TANK),
+											new CJMachineRecipeComponent(
+													0, moss, 1)
+									},
+									new CJMachineRecipeComponent[] {
+											new CJMachineRecipeComponent(
+													2, fluidChlorojoules,
+													700, true)
+													.setTarget(TANK)
+									},
+									300, false, -1)
+							.setImpl(CJMachineRecipeConsumer.class), null, 0);
 		}
 	}
 
@@ -682,6 +809,11 @@ public class CJClient extends CJInstance implements ClientMod {
 
 		RegisteredItemStack toolStationStack =
 				toolStation.newRegisteredItemStack();
+
+		RegisteredItemStack transferor8Stack =
+				transferor.newRegisteredItemStack();
+
+		transferor8Stack.setRegisteredStackSize(8);
 
 		//RegisteredItemStack flooper4Stack = flooper.newRegisteredItemStack();
 		//flooper4Stack.setRegisteredStackSize(4);
@@ -766,6 +898,10 @@ public class CJClient extends CJInstance implements ClientMod {
 
 		soulSwordStack.setRegisteredDamage(MAX_DAMAGE);
 
+		RegisteredItemStack mossStack = moss.newRegisteredItemStack();
+		RegisteredItemStack mossyCobblestoneStack =
+				Block.mossyCobblestone.newRegisteredItemStack();
+
 		RegisteredItemStack soulCoreStack = soulCore.newRegisteredItemStack();
 		RegisteredItemStack magmaStack = Block.magma.newRegisteredItemStack();
 
@@ -779,11 +915,13 @@ public class CJClient extends CJInstance implements ClientMod {
 				machineFrame4Stack,
 				"%~%",
 				"~|~",
-				"%#%",
+				"% %",
 				'%', cobblestoneStack,
-				'#', ironStack,
 				'~', pasteStack,
 				'|', cauldronStack);
+
+		registerShapelessRecipe(
+				mossyCobblestoneStack, cobblestoneStack, mossStack);
 
 		registerRecipe(
 				ironRodStack,
@@ -860,6 +998,7 @@ public class CJClient extends CJInstance implements ClientMod {
 				'%', furnaceStack,
 				'|', machineFrameStack);
 
+		// TODO: This is broken.
 		registerRecipe(
 				toolStationStack,
 				"&&&",
@@ -871,14 +1010,15 @@ public class CJClient extends CJInstance implements ClientMod {
 				'c', ironShovelStack,
 				'|', machineFrameStack);
 
-//		registerRecipe(
-//				flooper4Stack,
-//				" % ",
-//				" | ",
-//				" # ",
-//				'%', bucketStack,
-//				'#', ironStack,
-//				'|', machineFrameStack);
+		registerRecipe(
+				transferor8Stack,
+				"&%&",
+				"&|&",
+				"&@&",
+				'&', cobblestoneStack,
+				'%', bucketStack,
+				'@', chestStack,
+				'|', machineFrameStack);
 
 //		registerRecipe(
 //				whooper4Stack,

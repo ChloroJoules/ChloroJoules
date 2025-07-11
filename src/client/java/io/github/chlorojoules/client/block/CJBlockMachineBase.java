@@ -16,6 +16,7 @@ import net.minecraft.src.game.entity.player.EntityPlayer;
 import net.minecraft.src.game.entity.player.InventoryPlayer;
 import net.minecraft.src.game.item.*;
 import net.minecraft.src.game.level.World;
+import org.lwjgl.input.Mouse;
 
 import static io.github.chlorojoules.client.block.tileentity.CJTileEntityMachineBase.machineEntity;
 
@@ -98,27 +99,39 @@ public class CJBlockMachineBase extends BlockContainer {
 			if(bucket.itemID != heldID) continue;
 
 			fluidID = CJClient.bucketFluids.get(i);
+			break;
 		}
 
 		if(fluidID == -1) return false;
 
 		// TODO: Make this return different tanks depending on attempted fluid
 		//       Insertion.
-		int tankIndex = machineBuilder.getPrimaryInputTankIndex();
+		int tankIndex = -1;
+
+		for(int i = 0; i < machineBuilder.tanks.size(); ++i) {
+			CJTank tank = machineBuilder.tanks.get(i);
+			CJTankVolume volume = machineEntity.tanks.get(i);
+
+			if(tank.output && !tank.bidirectional) continue;
+			if(volume.fluidID != 0 && volume.fluidID != fluidID) continue;
+			if(volume.max - volume.current < CJTank.BUCKET) continue;
+
+			tankIndex = i;
+			break;
+		}
+
 		if(tankIndex == -1) return false;
 
 		CJTankVolume tankVolume = machineEntity.tanks.get(tankIndex);
 
-		if(tankVolume.fluidID == fluidID || tankVolume.fluidID == 0) {
-			int filled = tankVolume.addFluid(fluidID, CJTank.BUCKET, true);
-			if(filled == CJTank.BUCKET) {
-				InventoryPlayer inventory = player.inventory;
-				ItemStack stack =
-						inventory.mainInventory[inventory.currentItem];
+		int filled = tankVolume.addFluid(fluidID, CJTank.BUCKET, true);
+		if(filled == CJTank.BUCKET) {
+			InventoryPlayer inventory = player.inventory;
+			ItemStack stack =
+					inventory.mainInventory[inventory.currentItem];
 
-				stack.itemID = Item.bucketEmpty.itemID;
-				return true;
-			}
+			stack.itemID = Item.bucketEmpty.itemID;
+			return true;
 		}
 
 		return false;

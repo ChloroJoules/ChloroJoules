@@ -40,8 +40,12 @@ message.cj_bugblock.help=Adds all the bugs!
 message.cj_bugblock.flavor=Will never threaten to stab you and, in fact, cannot speak
 message.cj_liquefier.help=Turns items into fluids
 message.cj_liquefier.flavor=Conducting a Fluid-ic ritual
+message.cj_cultivator.help=Encourages plants to grow faster
+message.cj_cultivator.flavor=No more zombies on your lawn
 message.cj_refinery.help=Refines fluids into more pure fluids
 message.cj_refinery.flavor=For refined tastes
+message.cj_mixer.help=Mixes items into fluids
+message.cj_mixer.flavor=Will make you twitch
 message.cj_solidifier.help=Turns fluids into items
 message.cj_solidifier.flavor=In a relationship with the Liquefier
 message.cj_pulverizer.help=Grinds down items for better yield
@@ -83,7 +87,9 @@ tile.chlorojoules.cj_block_jewel_dust.name=Compacted Jewel Dust
 
 tile.cj_bugblock.name=BugBlock
 tile.cj_liquefier.name=Liquefier
+tile.cj_cultivator.name=Cultivator
 tile.cj_refinery.name=Refinery
+tile.cj_mixer.name=Mixer
 tile.cj_solidifier.name=Solidifier
 tile.cj_pulverizer.name=Pulverizer
 tile.cj_press.name=Press
@@ -107,6 +113,7 @@ tile.cj_fluid_souls.name=Fluid Souls
 # Inventories.
 inventory.cj_bugblock=BugBlock
 inventory.cj_liquefier=Liquefier
+inventory.cj_cultivator=Cultivator
 inventory.cj_refinery=Refinery
 inventory.cj_solidifier=Solidifier
 inventory.cj_pulverizer=Pulverizer
@@ -115,6 +122,7 @@ inventory.cj_furnace=Furnace
 inventory.cj_tool_station=Tool Station
 inventory.cj_transferor=Transferor
 inventory.cj_tank=Tank
+inventory.cj_mixer=Mixer
 
 # Items.
 item.cj_fluid_paste_bucket.name=Paste Bucket
@@ -133,6 +141,7 @@ item.cj_gold_dust.name=Gold Dust
 item.cj_jewel_dust.name=ChloroJewel Dust
 item.cj_paste.name=Plant Paste
 item.cj_iron_rod.name=Iron Rod
+item.cj_moss.name=Moss
 
 item.cj_jewel_primal.name=Primal ChloroJewel
 item.cj_jewel_manufactured.name=Manufactured ChloroJewel

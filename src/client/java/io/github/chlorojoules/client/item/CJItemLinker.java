@@ -14,8 +14,11 @@ import net.minecraft.src.game.entity.player.EntityPlayer;
 import net.minecraft.src.game.item.Item;
 import net.minecraft.src.game.item.ItemStack;
 import net.minecraft.src.game.level.World;
+import net.minecraft.src.game.nbt.NBTBase;
 import net.minecraft.src.game.nbt.NBTTagCompound;
 import org.lwjgl.input.Mouse;
+
+import java.util.logging.Logger;
 
 public class CJItemLinker extends Item {
 	public static final int ITEM_EMPTY = 0;

@@ -4,6 +4,7 @@ import io.github.chlorojoules.client.CJClient;
 import io.github.chlorojoules.client.CJRarity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class CJMachineRecipe {
 	public ArrayList<CJMachineRecipeComponent> inputs = new ArrayList<>();
@@ -41,6 +42,30 @@ public class CJMachineRecipe {
 		inputs.add(in);
 
 		outputs.add(out);
+	}
+
+	// Fuel + In[] -> Out[].
+	public CJMachineRecipe(
+			CJMachineBuilder builder, int fuelVolume,
+			CJMachineRecipeComponent[] in, CJMachineRecipeComponent[] out,
+			int ticks, boolean allowPassive) {
+
+		processTime = ticks;
+		this.allowPassive = allowPassive;
+
+		if(builder.fuelTankIndex == -1) {
+			throw new RuntimeException("No fuel tank in machine");
+		}
+
+		fuelIndex = 0;
+		CJMachineRecipeComponent fuelComponent = new CJMachineRecipeComponent(
+				builder.fuelTankIndex, CJClient.fuelFluid, fuelVolume)
+				.setTarget(CJMachineRecipeTarget.TANK);
+
+		inputs.add(fuelComponent);
+		inputs.addAll(Arrays.asList(in));
+
+		outputs.addAll(Arrays.asList(out));
 	}
 
 	// In + In -> Out.

@@ -16,6 +16,7 @@ public class CJGuiButton extends CJGuiElement {
 		this.label = label;
 	}
 
+	// TODO: Allow to label with arbitrary item icons instead.
 	public int[] getLabelCoords() {
 		switch(label) {
 			case JEWEL: return new int[] { LABEL_JEWEL_X, LABEL_JEWEL_Y };
