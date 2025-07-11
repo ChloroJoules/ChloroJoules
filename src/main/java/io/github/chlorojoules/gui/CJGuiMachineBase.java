@@ -1,11 +1,13 @@
 package io.github.chlorojoules.gui;
 
+import com.indigo3d.util.RenderSystem;
 import io.github.chlorojoules.CJTank;
 import io.github.chlorojoules.CJTankVolume;
 import io.github.chlorojoules.container.CJContainerMachineBase;
 import io.github.chlorojoules.machine.CJMachineBuilder;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import net.minecraft.client.gui.GuiContainer;
+import net.minecraft.client.renderer.world.RenderHelper;
 import net.minecraft.common.block.Block;
 import net.minecraft.common.block.Blocks;
 import net.minecraft.common.entity.player.InventoryPlayer;
@@ -83,6 +85,11 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 		int xSlot = x + 12;
 		int ySlot = y - 12;
 
+		RenderSystem.disableRescaleNormal();
+		RenderHelper.disableStandardItemLighting();
+		RenderSystem.disableLighting();
+		RenderSystem.disableDepthTest();
+
 		// TODO: Smaller when no description.
 		this.drawGradientRect(
 				xSlot - 3, ySlot - 3,
@@ -95,6 +102,9 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 		}
 
 		fontRenderer.drawStringWithShadow(name, xSlot, ySlot, titleColor);
+
+		RenderSystem.enableLighting();
+		RenderSystem.enableDepthTest();
 	}
 
 	@Override
@@ -106,8 +116,7 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 
 		StringTranslate translate = StringTranslate.getInstance();
 
-		CJContainerMachineBase machine =
-				(CJContainerMachineBase) inventorySlots;
+		CJContainerMachineBase machine = inventorySlots;
 
 		for(int i = 0; i < machine.tanks.size(); i++) {
 			CJTank tank = machine.tanks.get(i);

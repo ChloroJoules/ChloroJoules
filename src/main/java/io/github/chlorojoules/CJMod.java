@@ -132,6 +132,7 @@ public class CJMod extends Mod {
 	private Block registerNewFluid(String name) {
 		// TODO: Add tab for fluids.
 		return new BlockFluid(name, Materials.WATER, name, true)
+				.setBlockName(name)
 				.setCreativeTab(creativeTab);
 	}
 
