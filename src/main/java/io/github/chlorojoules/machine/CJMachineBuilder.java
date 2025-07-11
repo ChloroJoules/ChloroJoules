@@ -31,7 +31,7 @@ public class CJMachineBuilder {
 	public ArrayList<CJMachineSlotInfo> slots = new ArrayList<>();
 	public ArrayList<CJTank> tanks = new ArrayList<>();
 	public ArrayList<CJTankVolume> tankVolumes = new ArrayList<>();
-	public ArrayList<CJGuiElement> progressBars = new ArrayList<>();
+	public CJGuiElement progressBar = null;
 	public ArrayList<CJGuiButton> buttons = new ArrayList<>();
 	// TODO: This is kind of hardcoded -- is there a way we can make
 	//  	 `CJGuiElement` more generic/programmable?
@@ -198,7 +198,7 @@ public class CJMachineBuilder {
 	}
 
 	public CJMachineBuilder addProgressBar(int x, int y) {
-		progressBars.add(new CJGuiElement(x, y));
+		progressBar = new CJGuiElement(x, y);
 
 		return this;
 	}

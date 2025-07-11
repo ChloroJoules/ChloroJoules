@@ -262,15 +262,11 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 		}
 
 		// Draw tanks.
-		CJTank tank;
-		CJTankVolume tankVolume;
-		int tankX;
-		int tankY;
 		for(int i = 0; i < machine.tanks.size(); i++) {
-			tank = machine.tanks.get(i);
-			tankVolume = machineEntity.tanks.get(i);
-			tankX = baseX + tank.xDisplayPosition;
-			tankY = baseY + tank.yDisplayPosition;
+			CJTank tank = machine.tanks.get(i);
+			CJTankVolume tankVolume = machineEntity.tanks.get(i);
+			int tankX = baseX + tank.xDisplayPosition;
+			int tankY = baseY + tank.yDisplayPosition;
 
 			drawTexturedModalRect(
 					tankX, tankY,
@@ -313,13 +309,10 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 		}
 
 		// Draw coordinates.
-		CJGuiCoordinate coordinate;
-		int coordinateX;
-		int coordinateY;
 		for(int i = 0; i < machineBuilder.linkCoordinates.size(); i++) {
-			coordinate = machineBuilder.linkCoordinates.get(i);
-			coordinateX = baseX + coordinate.xDisplayPosition;
-			coordinateY = baseY + coordinate.yDisplayPosition;
+			CJGuiCoordinate coordinate = machineBuilder.linkCoordinates.get(i);
+			int x = baseX + coordinate.xDisplayPosition;
+			int y = baseY + coordinate.yDisplayPosition;
 
 			CJGuiCoordinateDisplay coordinateDisplay =
 					machineEntity.coordinateDisplays.get(i);
@@ -337,55 +330,49 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 						"message.cj_coordinate_unset");
 			}
 
-			drawCenteredString(
-					fontRenderer, string, coordinateX, coordinateY, 0);
+			drawCenteredString(fontRenderer, string, x, y, 0);
 		}
 
-		// Draw progress bars.
-		CJGuiElement element;
-		int elementX;
-		int elementY;
-		for(int i = 0; i < machineBuilder.progressBars.size(); i++) {
-			element = machineBuilder.progressBars.get(i);
-			elementX = baseX + element.xDisplayPosition;
-			elementY = baseY + element.yDisplayPosition;
+		// Draw progress bar.
+		if(machineBuilder.progressBar != null) {
+			int x = baseX + machineBuilder.progressBar.xDisplayPosition;
+			int y = baseY + machineBuilder.progressBar.yDisplayPosition;
 
 			drawTexturedModalRect(
-					elementX, elementY,
+					x, y,
 					PROGRESS_EMPTY_X, PROGRESS_EMPTY_Y,
 					PROGRESS_WIDTH, PROGRESS_HEIGHT);
 
 			int width = machineEntity.operationTicks * PROGRESS_WIDTH;
 			drawTexturedModalRect(
-					elementX, elementY,
+					x, y,
 					PROGRESS_FULL_X, PROGRESS_FULL_Y,
 					width / machineEntity.operationLength, PROGRESS_HEIGHT);
 		}
 
 		// Draw buttons.
-		CJGuiButton button;
 		for(int i = 0; i < machineBuilder.buttons.size(); ++i) {
-			button = machineBuilder.buttons.get(i);
-			elementX = baseX + button.xDisplayPosition;
-			elementY = baseY + button.yDisplayPosition;
+			CJGuiButton button = machineBuilder.buttons.get(i);
+			int x = baseX + button.xDisplayPosition;
+			int y = baseY + button.yDisplayPosition;
 
 			boolean state = machineEntity.buttonStates.get(i);
 			int srcX = state ? BUTTON_ACTIVE_X : BUTTON_INACTIVE_X;
 			int srcY = state ? BUTTON_ACTIVE_Y : BUTTON_INACTIVE_Y;
 
 			drawTexturedModalRect(
-					elementX, elementY,
+					x, y,
 					srcX, srcY,
 					BUTTON_WIDTH, BUTTON_HEIGHT);
 
-			elementX += BUTTON_LABEL_INSET;
-			elementY += BUTTON_LABEL_INSET;
+			x += BUTTON_LABEL_INSET;
+			y += BUTTON_LABEL_INSET;
 
 			int[] labelCoords = button.getLabelCoords();
 
 			if(labelCoords != null) {
 				drawTexturedModalRect(
-						elementX, elementY,
+						x, y,
 						labelCoords[0], labelCoords[1],
 						LABEL_WIDTH, LABEL_HEIGHT);
 			}

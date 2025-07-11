@@ -153,14 +153,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		tagCompound.setTag("tanks", tanksList);
 
 		// Serialize progress.
-		ListTag<Tag> progressBarList = new ListTag<>();
-		for(int i = 0; i < machineBuilder.progressBars.size(); i++) {
-			CompoundTag progressBarTag = new CompoundTag();
-			progressBarTag.setByte("progress", (byte) i);
-			progressBarTag.setShort("ticks", (short) operationTicks);
-			progressBarList.setTag(progressBarTag);
-		}
-		tagCompound.setTag("progresses", progressBarList);
+		tagCompound.setShort("operation_ticks", (short) operationTicks);
 
 		// Serialize buttons.
 		ListTag<Tag> buttonList = new ListTag<>();
@@ -216,13 +209,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		}
 
 		// Deserialize progress.
-		ListTag<Tag> progressBarList = tagCompound.getTagList("progresses");
-		for(int i = 0; i < progressBarList.size(); i++) {
-			CompoundTag progressBarTag =
-					(CompoundTag) progressBarList.get(i);
-
-			operationTicks = progressBarTag.getShort("ticks");
-		}
+		operationTicks = tagCompound.getShort("operation_ticks");
 
 		// Deserialize buttons.
 		ListTag<Tag> buttonsList = tagCompound.getTagList("buttons");
