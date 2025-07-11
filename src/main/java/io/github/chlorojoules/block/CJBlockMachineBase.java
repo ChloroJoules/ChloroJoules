@@ -68,8 +68,20 @@ public class CJBlockMachineBase extends BlockContainer {
 
 		// If the bucket is empty -- fill from an available output tank.
 		if(heldID == Items.EMPTY_BUCKET.itemID) {
-			int index = machineBuilder.getPrimaryOutputTankIndex();
+			int index = -1;
+			for(int i = 0; i < machineBuilder.tanks.size(); ++i) {
+				CJTank tank = machineBuilder.tanks.get(i);
 
+				if(!tank.output && !tank.bidirectional) continue;
+
+				CJTankVolume volume = machineEntity.tanks.get(i);
+				if(volume.fluidID == 0 || volume.current < CJTank.BUCKET) {
+					continue;
+				}
+
+				index = i;
+				break;
+			}
 			if(index == -1) return false;
 
 			CJTankVolume volume = machineEntity.tanks.get(index);

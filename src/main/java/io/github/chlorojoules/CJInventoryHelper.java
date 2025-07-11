@@ -1,6 +1,7 @@
 package io.github.chlorojoules;
 
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
+import io.github.chlorojoules.machine.CJMachineSlotInfo;
 import net.minecraft.common.block.tileentity.TileEntity;
 import net.minecraft.common.entity.inventory.IInventory;
 import net.minecraft.common.item.ItemStack;
@@ -58,8 +59,17 @@ public class CJInventoryHelper {
 			CJTileEntityMachineBase machine =
 					(CJTileEntityMachineBase) inventory;
 
-			// TODO: Get first non-null slot for multi-output machines.
-			return machine.machineBuilder.getPrimaryOutputSlotIndex();
+			for(int i = 0; i < machine.machineBuilder.slots.size(); ++i) {
+				CJMachineSlotInfo slot = machine.machineBuilder.slots.get(i);
+
+				if(!slot.output) continue;
+
+				if(machine.stacks.get(i) != null) {
+					return i;
+				}
+			}
+
+			return -1;
 		}
 
 		for(int i = 0; i < inventory.getSizeInventory(); i++) {

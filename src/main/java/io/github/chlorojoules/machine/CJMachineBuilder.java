@@ -274,22 +274,6 @@ public class CJMachineBuilder {
 		return this;
 	}
 
-	public int getPrimaryOutputTankIndex() {
-		for(int i = 0; i < tanks.size(); i++) {
-			if(tanks.get(i).output) return i;
-		}
-
-		return -1;
-	}
-
-	public int getPrimaryOutputSlotIndex() {
-		for(int i = 0; i < slots.size(); i++) {
-			if(slots.get(i).output) return i;
-		}
-
-		return -1;
-	}
-
 	// TODO: Output components don't verify that there is space left.
 	private boolean componentMatch(
 			CJTileEntityMachineBase entity,

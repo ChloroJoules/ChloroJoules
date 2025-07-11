@@ -20,10 +20,6 @@ import net.minecraft.common.world.World;
 import java.util.ArrayList;
 
 public class CJTileEntityMachineBase extends TileEntity implements IInventory {
-	// TODO: Make a tagging/name/enum system so we can keep track of slots
-	//		 In a machine without magic numbers.
-	//		 `CJContainerMachineBase` can contain this mapping which can then
-	//		 Be read here.
 	public ArrayList<ItemStack> stacks;
 	public ArrayList<CJTankVolume> tanks;
 	public ArrayList<Boolean> buttonStates;
@@ -43,7 +39,6 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	public static CJTileEntityMachineBase machineEntity(
 			World world, int x, int y, int z) {
 
-		// TODO: Should we cache this?
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
 		if(!(tileEntity instanceof CJTileEntityMachineBase)) return null;
@@ -66,7 +61,6 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		}
 
 		stacks = new ArrayList<>();
-		// TODO: There's probably a better way to do this.
 		for(int i = 0; i < builder.slots.size(); i++) stacks.add(null);
 
 		tanks = new ArrayList<>();
@@ -97,9 +91,6 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	}
 
 	public void onBreak(World world, int x, int y, int z) {
-		// TODO: Preserve fluid tanks etc. Should we make machines retain
-		//  	 Inventory on break?
-
 		for(ItemStack stack : stacks) {
 			if(stack == null) continue;
 			EntityItem entity = new EntityItem(world, x, y, z, stack);
@@ -205,9 +196,6 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 
 		// Deserialize slots.
 		ListTag<Tag> itemsList = tagCompound.getTagList("items");
-		// TODO: Are tag lists always unordered? Is there a way we can
-		//       Request they be ordered to remove the need for the extra
-		//       `Slot` byte?
 		for(int i = 0; i < itemsList.size(); i++) {
 			CompoundTag slotTag = (CompoundTag) itemsList.get(i);
 			byte slotIndex = slotTag.getByte("slot");
@@ -233,8 +221,6 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 			CompoundTag progressBarTag =
 					(CompoundTag) progressBarList.get(i);
 
-			// TODO: Does multiple progress bars even make sense?
-			//byte progressBarIndex = progressBarTag.getByte("progress");
 			operationTicks = progressBarTag.getShort("ticks");
 		}
 

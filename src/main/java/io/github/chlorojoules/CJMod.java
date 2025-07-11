@@ -124,13 +124,11 @@ public class CJMod extends Mod {
 
 	private void addItemDamagesToCreative(int item, int maxDamage) {
 		for(int i = 0; i <= maxDamage; ++i) {
-			ItemStack stack = new ItemStack(item, 1, i);
-			creativeTab.add(stack);
+			creativeTab.add(new ItemStack(item, 1, i));
 		}
 	}
 
 	private Block registerNewFluid(String name) {
-		// TODO: Add tab for fluids.
 		return new BlockFluid(name, Materials.WATER, name, true)
 				.setBlockName(name)
 				.setCreativeTab(creativeTab);
