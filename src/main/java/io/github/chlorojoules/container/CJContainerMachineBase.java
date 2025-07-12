@@ -65,7 +65,8 @@ public class CJContainerMachineBase extends Container {
 					new CJGuiMachineBaseSlot(
 							player, machineEntity, i,
 							info.xDisplayPosition, info.yDisplayPosition)
-					.setOutput(info.output);
+							.setOutput(info.output)
+							.setGem(info.isGem());
 
 			addSlot(slot);
 		}

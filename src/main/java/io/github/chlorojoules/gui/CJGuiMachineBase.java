@@ -257,9 +257,17 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 						SLOT_OUT_WIDTH, SLOT_OUT_HEIGHT);
 			}
 			else {
+				int inX = SLOT_IN_X;
+				int inY = SLOT_IN_Y;
+
+				if(slot.isGem() && machineEntity.stacks.get(i) == null) {
+					inX = SLOT_JEWEL_X;
+					inY = SLOT_JEWEL_Y;
+				}
+
 				drawTexturedModalRect(
 						slotX - SLOT_IN_OFFSET_X, slotY - SLOT_IN_OFFSET_Y,
-						SLOT_IN_X, SLOT_IN_Y,
+						inX, inY,
 						SLOT_IN_WIDTH, SLOT_IN_HEIGHT);
 			}
 		}

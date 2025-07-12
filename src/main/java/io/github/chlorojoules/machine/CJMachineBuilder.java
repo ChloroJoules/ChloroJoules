@@ -170,10 +170,14 @@ public class CJMachineBuilder {
 	public CJMachineBuilder addJewelSlot() {
 		jewelSlotIndex = slots.size();
 
-		return addSlotGravity(
+		addSlotGravity(
 				CJGuiGravity.BOTTOM_LEFT, JEWEL_SLOT_INSET,
 				/* Align bottom of Jewel slot with fuel tank. */
 				(WORKING_HEIGHT - FLUID_HEIGHT) / 2, false);
+
+		slots.getLast().setGem(true);
+
+		return this;
 	}
 
 	public CJMachineBuilder addTankGravity(

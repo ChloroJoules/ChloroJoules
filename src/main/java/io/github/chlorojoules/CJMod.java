@@ -114,6 +114,13 @@ public class CJMod extends Mod {
 		Minecraft.getInstance().ingameGUI.addChatMessage(message);
 	}
 
+	public static boolean isGemId(int id) {
+		return id == primalJewel.itemID ||
+				id == manufacturedJewel.itemID ||
+				id == refinedJewel.itemID ||
+				id == awakenedJewel.itemID;
+	}
+
 	private void addItemDamagesToCreative(int item, int maxDamage) {
 		for(int i = 0; i <= maxDamage; ++i) {
 			creativeTab.add(new ItemStack(item, 1, i));
@@ -427,7 +434,6 @@ public class CJMod extends Mod {
 								TOP_RIGHT, 10, true, false,
 								8 * CJTank.BUCKET, 0)
 						.addSlotGravity(CENTER, 0, 0, false)
-						/* TODO: Make Jewel slot maximum stack size 1. */
 						/*
 						 * TODO: Make Jewel slot visually distinct and
 						 *       Reject Non-Jewel 

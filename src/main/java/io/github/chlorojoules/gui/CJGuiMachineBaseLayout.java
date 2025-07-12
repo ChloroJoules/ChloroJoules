@@ -30,6 +30,9 @@ public class CJGuiMachineBaseLayout {
 	public static final int SLOT_IN_X = 176;
 	public static final int SLOT_IN_Y = 34;
 
+	public static final int SLOT_JEWEL_X = 202;
+	public static final int SLOT_JEWEL_Y = 52;
+
 	public static final int SLOT_IN_WIDTH = 18;
 	public static final int SLOT_IN_HEIGHT = 18;
 

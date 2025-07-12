@@ -18,12 +18,14 @@ import net.minecraft.common.block.sound.StepSound;
 import net.minecraft.common.block.sound.StepSounds;
 import net.minecraft.common.block.texture.Face;
 import net.minecraft.common.block.tileentity.TileEntity;
+import net.minecraft.common.entity.EntityLiving;
 import net.minecraft.common.entity.player.EntityPlayer;
 import net.minecraft.common.entity.player.InventoryPlayer;
 import net.minecraft.common.item.*;
 import net.minecraft.common.item.block.ItemBlock;
 import net.minecraft.common.item.children.ItemBucket;
 import net.minecraft.common.item.data.EnumTools;
+import net.minecraft.common.util.math.MathHelper;
 import net.minecraft.common.world.World;
 
 import static io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase.machineEntity;
@@ -216,12 +218,22 @@ public class CJBlockMachineBase extends BlockContainer {
 	@Override
 	protected void allocateTextures() {
 		if(iconNames == null) {
-			super.allocateTextures();
+			this.addTexture("cj_machine_side", Face.ALL, 0);
+			this.addTexture("cj_machine_top", Face.TOP, 0);
+			this.addTexture("cj_machine_base", Face.BOTTOM, 0);
+			// TODO: Need to use metadata for block facing -- switch machines
+			//		 To using NBT metadata.
+			this.addTexture(getMainTexture(), Face.EAST, 0);
 			return;
 		}
 
 		for(int i = 0; i <= maxMetadata; i++) {
-			this.addTexture(iconNames[i], Face.ALL, i);
+			this.addTexture("cj_machine_side", Face.WEST, i);
+			this.addTexture("cj_machine_side", Face.NORTH, i);
+			this.addTexture("cj_machine_side", Face.SOUTH, i);
+			this.addTexture("cj_machine_top", Face.TOP, i);
+			this.addTexture("cj_machine_base", Face.BOTTOM, i);
+			this.addTexture(iconNames[i], Face.EAST, i);
 		}
 	}
 

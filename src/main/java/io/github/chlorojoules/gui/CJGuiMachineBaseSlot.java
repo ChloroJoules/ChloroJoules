@@ -1,5 +1,6 @@
 package io.github.chlorojoules.gui;
 
+import io.github.chlorojoules.CJMod;
 import net.minecraft.common.block.container.Slot;
 import net.minecraft.common.entity.inventory.IInventory;
 import net.minecraft.common.entity.player.EntityPlayer;
@@ -9,6 +10,7 @@ public class CJGuiMachineBaseSlot extends Slot {
 	private final EntityPlayer entityPlayer;
 
 	private boolean output = false;
+	private boolean isGem = false;
 
 	public CJGuiMachineBaseSlot(
 			EntityPlayer entityPlayer, IInventory inventory,
@@ -21,6 +23,7 @@ public class CJGuiMachineBaseSlot extends Slot {
 
 	@Override
 	public boolean isItemValid(ItemStack item) {
+		if(isGem) return CJMod.isGemId(item.getItemID());
 		return !output;
 	}
 
@@ -38,5 +41,14 @@ public class CJGuiMachineBaseSlot extends Slot {
 
 	public boolean isOutput() {
 		return output;
+	}
+
+	public CJGuiMachineBaseSlot setGem(boolean value) {
+		isGem = value;
+		return this;
+	}
+
+	public boolean isGem() {
+		return isGem;
 	}
 }
