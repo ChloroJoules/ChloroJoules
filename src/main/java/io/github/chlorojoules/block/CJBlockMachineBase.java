@@ -31,20 +31,28 @@ import net.minecraft.common.world.World;
 import static io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase.machineEntity;
 
 public class CJBlockMachineBase extends BlockContainer {
+	public static final int FRONT_FACE = 0;
+	public static final int ALL_SIDES = 1;
+	public static final int ALL_FACES = 2;
+
 	private final String[] iconNames;
+	private final boolean iconDefault;
 	private final CJMachineBuilder machineBuilder;
-	private boolean allSides;
+	private final int sideMode;
 
 	public CJBlockMachineBase(
 			String id, CJMachineBuilder machineBuilder,
-			String[] iconNames, int maxDamage, boolean allSides) {
+			String[] iconNames, int maxDamage, int sideMode) {
 
 		super(id, Materials.ROCK);
 
 		this.machineBuilder = machineBuilder;
 		this.maxMetadata = maxDamage;
-		this.iconNames = iconNames;
-		this.allSides = allSides;
+		this.sideMode = sideMode;
+
+		this.iconDefault = (iconNames == null);
+		if(this.iconDefault) this.iconNames = new String[] { id };
+		else this.iconNames = iconNames;
 
 		// Machines have the same basic block properties by default.
 		super.setHardness(1.5F);
@@ -219,31 +227,20 @@ public class CJBlockMachineBase extends BlockContainer {
 
 	@Override
 	protected void allocateTextures() {
-		// TODO: Apply tank face to sides but not top.
-		Face applyFace = allSides ? Face.ALL : Face.WEST;
-
-		if(iconNames == null) {
-			if(!allSides) {
-				this.addTexture("cj_machine_side", Face.ALL, 0);
-				this.addTexture("cj_machine_top", Face.TOP, 0);
-				this.addTexture("cj_machine_base", Face.BOTTOM, 0);
-			}
-
-			// TODO: Need to use metadata for block facing -- switch machines
-			//		 To using NBT metadata.
-			this.addTexture(getMainTexture(), applyFace, 0);
-
-			return;
-		}
-
 		for(int i = 0; i <= maxMetadata; i++) {
-			if(!allSides) {
-				this.addTexture("cj_machine_side", Face.ALL, 0);
+			if(sideMode != ALL_FACES) {
+				this.addTexture(
+						sideMode == ALL_SIDES ?
+								iconNames[i] : "cj_machine_side",
+						Face.ALL, i);
+
 				this.addTexture("cj_machine_top", Face.TOP, i);
 				this.addTexture("cj_machine_base", Face.BOTTOM, i);
 			}
 
-			this.addTexture(iconNames[i], applyFace, i);
+			this.addTexture(
+					iconNames[i],
+					sideMode == ALL_FACES ? Face.ALL : Face.WEST, i);
 		}
 	}
 
@@ -253,7 +250,7 @@ public class CJBlockMachineBase extends BlockContainer {
 	}
 
 	public String getIconName(String itemName, int metadata) {
-		if(iconNames == null) return getBlockName();
-		return itemName + "." + iconNames[metadata];
+		if(this.iconDefault) return itemName;
+		else return itemName + "." + iconNames[metadata];
 	}
 }
