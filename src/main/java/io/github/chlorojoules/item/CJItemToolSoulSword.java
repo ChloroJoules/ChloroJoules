@@ -12,7 +12,7 @@ import net.minecraft.common.world.World;
 
 public class CJItemToolSoulSword extends ItemTool implements CJIItemSocket {
 	public CJItemToolSoulSword(String id) {
-		super(id, 0, ToolMaterials.DIAMOND, EnumTools.SWORD);
+		super(id, 0, ToolMaterials.OBSIDIAN, EnumTools.SWORD);
 
 		setMaxDamage(0);
 		addDescription(new CJItemDescriptionSocket());

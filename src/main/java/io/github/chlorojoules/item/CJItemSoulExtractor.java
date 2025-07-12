@@ -13,6 +13,7 @@ import net.minecraft.common.item.Item;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.world.World;
 
+// TODO: Add damage so texture can appear greyed when no jewel is inserted.
 public class CJItemSoulExtractor extends Item implements CJIItemSocket {
 	public CJItemSoulExtractor(String id) {
 		super(id);

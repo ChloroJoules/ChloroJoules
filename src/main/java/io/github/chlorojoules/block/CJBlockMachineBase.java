@@ -33,16 +33,18 @@ import static io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase.ma
 public class CJBlockMachineBase extends BlockContainer {
 	private final String[] iconNames;
 	private final CJMachineBuilder machineBuilder;
+	private boolean allSides;
 
 	public CJBlockMachineBase(
 			String id, CJMachineBuilder machineBuilder,
-			String[] iconNames, int maxDamage) {
+			String[] iconNames, int maxDamage, boolean allSides) {
 
 		super(id, Materials.ROCK);
 
 		this.machineBuilder = machineBuilder;
 		this.maxMetadata = maxDamage;
 		this.iconNames = iconNames;
+		this.allSides = allSides;
 
 		// Machines have the same basic block properties by default.
 		super.setHardness(1.5F);
@@ -217,23 +219,31 @@ public class CJBlockMachineBase extends BlockContainer {
 
 	@Override
 	protected void allocateTextures() {
+		// TODO: Apply tank face to sides but not top.
+		Face applyFace = allSides ? Face.ALL : Face.WEST;
+
 		if(iconNames == null) {
-			this.addTexture("cj_machine_side", Face.ALL, 0);
-			this.addTexture("cj_machine_top", Face.TOP, 0);
-			this.addTexture("cj_machine_base", Face.BOTTOM, 0);
+			if(!allSides) {
+				this.addTexture("cj_machine_side", Face.ALL, 0);
+				this.addTexture("cj_machine_top", Face.TOP, 0);
+				this.addTexture("cj_machine_base", Face.BOTTOM, 0);
+			}
+
 			// TODO: Need to use metadata for block facing -- switch machines
 			//		 To using NBT metadata.
-			this.addTexture(getMainTexture(), Face.EAST, 0);
+			this.addTexture(getMainTexture(), applyFace, 0);
+
 			return;
 		}
 
 		for(int i = 0; i <= maxMetadata; i++) {
-			this.addTexture("cj_machine_side", Face.WEST, i);
-			this.addTexture("cj_machine_side", Face.NORTH, i);
-			this.addTexture("cj_machine_side", Face.SOUTH, i);
-			this.addTexture("cj_machine_top", Face.TOP, i);
-			this.addTexture("cj_machine_base", Face.BOTTOM, i);
-			this.addTexture(iconNames[i], Face.EAST, i);
+			if(!allSides) {
+				this.addTexture("cj_machine_side", Face.ALL, 0);
+				this.addTexture("cj_machine_top", Face.TOP, i);
+				this.addTexture("cj_machine_base", Face.BOTTOM, i);
+			}
+
+			this.addTexture(iconNames[i], applyFace, i);
 		}
 	}
 

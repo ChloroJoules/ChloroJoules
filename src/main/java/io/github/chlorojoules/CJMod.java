@@ -129,13 +129,14 @@ public class CJMod extends Mod {
 
 	public Block registerMachine(
 			String name, CJMachineBuilder builder,
-			String[] iconNames, int maxMetadata) {
+			String[] iconNames, int maxMetadata, boolean allSides) {
 
 		builder.setMachineName(name);
 		machines.put(name, builder);
 
 		Block block =
-				new CJBlockMachineBase(name, builder, iconNames, maxMetadata)
+				new CJBlockMachineBase(
+						name, builder, iconNames, maxMetadata, allSides)
 						.setBlockName(name)
 						.setCreativeTab(creativeTab)
 						//.hideFromCreativeMenu()
@@ -367,7 +368,7 @@ public class CJMod extends Mod {
 								15, 15, false, false, 4 * CJTank.BUCKET, 0)
 						.addSlot(50, 35, false)
 						.addSlot(75, 35, true)
-						.setImpl(CJMachineBugBlock.class), null, 0);
+						.setImpl(CJMachineBugBlock.class), null, 0, true);
 
 		cultivator = registerMachine(
 				"cj_cultivator", new CJMachineBuilder()
@@ -424,7 +425,7 @@ public class CJMod extends Mod {
 						.addProgressBarGravityVCenter(
 								CENTER, (SLOT_IN_WIDTH * 4) / 3)
 						.setImpl(CJMachineRecipeConsumer.class),
-				null, 0);
+				null, 0, false);
 
 		liquefier = registerMachine(
 				"cj_liquefier", new CJMachineBuilder()
@@ -456,7 +457,8 @@ public class CJMod extends Mod {
 										1, fluidPaste, 50, true)
 										.setTarget(TANK),
 								50, true, -1)
-						.setImpl(CJMachineRecipeConsumer.class), null, 0);
+						.setImpl(CJMachineRecipeConsumer.class),
+				null, 0, false);
 
 		refinery = registerMachine(
 				"cj_refinery", new CJMachineBuilder()
@@ -480,7 +482,8 @@ public class CJMod extends Mod {
 										2, fluidChlorojoules, 25, true)
 										.setTarget(TANK),
 								10, true, -1)
-						.setImpl(CJMachineRecipeConsumer.class), null, 0);
+						.setImpl(CJMachineRecipeConsumer.class),
+				null, 0, false);
 
 		solidifier = registerMachine(
 				"cj_solidifier", new CJMachineBuilder()
@@ -514,7 +517,8 @@ public class CJMod extends Mod {
 								new CJMachineRecipeComponent(
 										0, manufacturedJewel, 1),
 								500, false, 0)
-						.setImpl(CJMachineRecipeConsumer.class), null, 0);
+						.setImpl(CJMachineRecipeConsumer.class),
+				null, 0, false);
 
 		// TODO: Secondary output.
 		pulverizer = registerMachine(
@@ -602,7 +606,8 @@ public class CJMod extends Mod {
 								new CJMachineRecipeComponent(
 										1, Item.dyePowder, 3),
 								150, false)*/
-						.setImpl(CJMachineRecipeConsumer.class), null, 0);
+						.setImpl(CJMachineRecipeConsumer.class),
+				null, 0, false);
 
 		press = registerMachine(
 				"cj_press", new CJMachineBuilder()
@@ -629,7 +634,8 @@ public class CJMod extends Mod {
 								new CJMachineRecipeComponent(
 										1, GEAR, 5, false),
 								75, false, -1)
-						.setImpl(CJMachineRecipeConsumer.class), null, 0);
+						.setImpl(CJMachineRecipeConsumer.class),
+				null, 0, false);
 
 		furnace = registerMachine(
 				"cj_furnace", new CJMachineBuilder()
@@ -649,7 +655,8 @@ public class CJMod extends Mod {
 								new CJMachineRecipeComponent(
 										1, refinedJewel, 1),
 								300, CJRarity.MANUFACTURED, -1)
-						.setImpl(CJMachineRecipeConsumer.class), null, 0);
+						.setImpl(CJMachineRecipeConsumer.class),
+				null, 0, false);
 
 		toolStation = registerMachine(
 				"cj_tool_station", new CJMachineBuilder()
@@ -664,7 +671,8 @@ public class CJMod extends Mod {
 								JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
 								false)
 						.addProgressBarGravityVCenter(CENTER, 0)
-						.setImpl(CJMachineToolStation.class), null, 0);
+						.setImpl(CJMachineToolStation.class),
+				null, 0, false);
 
 		// TODO: For `Soul Extractor` -- make base tool then socket a
 		//       `Refined ChloroJewel` to use; allows player to reclaim
@@ -695,14 +703,14 @@ public class CJMod extends Mod {
 						"cj_slooper",
 						"cj_multi_whooper",
 						"cj_multi_flooper" },
-				CJMachineTransferor.MAX_DAMAGE);
+				CJMachineTransferor.MAX_DAMAGE, true);
 
 		tank = registerMachine(
 				"cj_tank", new CJMachineBuilder()
 						.addTankGravity(
 								CENTER, 0, 0, false, true,
 								16 * CJTank.BUCKET, 0),
-				null, 0);
+				null, 0, false);
 
 		mixer = registerMachine(
 				"cj_mixer", new CJMachineBuilder()
@@ -757,7 +765,8 @@ public class CJMod extends Mod {
 												.setTarget(TANK)
 								},
 								300, false, -1)
-						.setImpl(CJMachineRecipeConsumer.class), null, 0);
+						.setImpl(CJMachineRecipeConsumer.class),
+				null, 0, false);
 	}
 
 	@Override
