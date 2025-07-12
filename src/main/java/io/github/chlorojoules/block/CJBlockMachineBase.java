@@ -12,6 +12,7 @@ import net.minecraft.common.block.Block;
 import net.minecraft.common.block.children.BlockContainer;
 import net.minecraft.common.block.data.Material;
 import net.minecraft.common.block.data.Materials;
+import net.minecraft.common.block.data.PickBlockHelper;
 import net.minecraft.common.block.fluid.Fluid;
 import net.minecraft.common.block.fluid.Fluids;
 import net.minecraft.common.block.sound.StepSound;
@@ -41,13 +42,12 @@ public class CJBlockMachineBase extends BlockContainer {
 	private final int sideMode;
 
 	public CJBlockMachineBase(
-			String id, CJMachineBuilder machineBuilder,
-			String[] iconNames, int maxDamage, int sideMode) {
+			String id, CJMachineBuilder machineBuilder, String[] iconNames,
+			int sideMode) {
 
 		super(id, Materials.ROCK);
 
 		this.machineBuilder = machineBuilder;
-		this.maxMetadata = maxDamage;
 		this.sideMode = sideMode;
 
 		this.iconDefault = (iconNames == null);
@@ -61,14 +61,31 @@ public class CJBlockMachineBase extends BlockContainer {
 		super.setEffectiveTool(EnumTools.PICKAXE);
 	}
 
-	// TODO: Override the following for rotation.
-	// TODO: `doWrenchRotation' should also allow to wrench machines to
-	// 		 Pick them up more easily.
-	/*
-	doWrenchRotation
-	onBlockPlacedBy
-	allocateTextures
-	 */
+	@Override
+	public void onBlockPlacedBy(
+			World world, int x, int y, int z, EntityLiving player) {
+
+		world.setBlockMetadataWithNotify(
+				x, y, z,
+				(MathHelper.floor_double(
+						player.rotationYaw * 4.0F / 360.0F + 0.5) + 2) & 3);
+	}
+
+	@Override
+	public boolean doWrenchRotation(
+			World world, int x, int y, int z, int metadata, int facing,
+			EntityLiving player) {
+
+		if(!iconDefault) return false;
+
+		if(metadata >= 3) { // SOUTH
+			world.setBlockMetadata(x, y, z, 0); // WEST
+			return true;
+		}
+
+		world.setBlockMetadata(x, y, z, metadata + 1);
+		return true;
+	}
 
 	private boolean tryFillBucket(
 			World world, int x, int y, int z, EntityPlayer player) {
@@ -176,7 +193,7 @@ public class CJBlockMachineBase extends BlockContainer {
 
 	@Override
 	protected ItemBlock initializeItemBlock() {
-		return new CJItemBlockMachineBase(this);
+		return new CJItemBlockMachineBase(this, !iconDefault);
 	}
 
 	@Override
@@ -189,7 +206,6 @@ public class CJBlockMachineBase extends BlockContainer {
 			return true;
 		}
 
-		// TODO: Allow tools to query device without opening GUI.
 		CJGuiMachineBase gui = new CJGuiMachineBase(
 				player.inventory, machineEntity, machineBuilder);
 
@@ -227,7 +243,20 @@ public class CJBlockMachineBase extends BlockContainer {
 
 	@Override
 	protected void allocateTextures() {
-		for(int i = 0; i <= maxMetadata; i++) {
+		if(this.iconDefault && sideMode == FRONT_FACE) {
+			this.addTexture("cj_machine_side", Face.ALL);
+			this.addTexture("cj_machine_top", Face.TOP);
+			this.addTexture("cj_machine_base", Face.BOTTOM);
+
+			this.addTexture(iconNames[0], Face.WEST, 0);
+			this.addTexture(iconNames[0], Face.NORTH, 1);
+			this.addTexture(iconNames[0], Face.EAST, 2);
+			this.addTexture(iconNames[0], Face.SOUTH, 3);
+
+			return;
+		}
+
+		for(int i = 0; i < iconNames.length; i++) {
 			if(sideMode != ALL_FACES) {
 				this.addTexture(
 						sideMode == ALL_SIDES ?

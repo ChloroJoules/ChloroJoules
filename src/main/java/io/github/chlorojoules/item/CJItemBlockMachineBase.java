@@ -8,11 +8,11 @@ import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.item.block.ItemBlock;
 
 public class CJItemBlockMachineBase extends ItemBlock {
-	public CJItemBlockMachineBase(Block block) {
+	public CJItemBlockMachineBase(Block block, boolean hasSubtypes) {
 		super(block);
 
 		this.setMaxDamage(0);
-		this.setHasSubtypes(true);
+		this.setHasSubtypes(hasSubtypes);
 	}
 
 	private Block getBlock() {
