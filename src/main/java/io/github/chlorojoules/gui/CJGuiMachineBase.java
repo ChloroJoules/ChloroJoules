@@ -155,6 +155,9 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 
 				if(Mouse.isButtonDown(0)) {
 					if(!wasMousePressed) {
+						this.mc.sndManager.playSoundFX(
+								"random.click", 1.0F, 1.0F);
+
 						machineEntity.buttonStates.set(
 								i, !machineEntity.buttonStates.get(i));
 					}

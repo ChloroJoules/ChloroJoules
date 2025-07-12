@@ -23,7 +23,7 @@ public class CJMachineBuilder {
 
 	public String name = null;
 	public CJRarity rarity = CJRarity.MANUFACTURED;
-	public Class<?> machineImpl = null;
+	public Class<? extends CJIMachine> machineImpl = null;
 	public boolean doDropMeta = true;
 
 	public int fuelTankIndex = -1;
@@ -51,7 +51,7 @@ public class CJMachineBuilder {
 		return this;
 	}
 
-	public CJMachineBuilder setImpl(Class<?> value) {
+	public CJMachineBuilder setImpl(Class<? extends CJIMachine> value) {
 		machineImpl = value;
 		return this;
 	}
