@@ -12,6 +12,8 @@ import net.minecraft.common.block.Block;
 import net.minecraft.common.block.children.BlockContainer;
 import net.minecraft.common.block.data.Material;
 import net.minecraft.common.block.data.Materials;
+import net.minecraft.common.block.fluid.Fluid;
+import net.minecraft.common.block.fluid.Fluids;
 import net.minecraft.common.block.sound.StepSound;
 import net.minecraft.common.block.sound.StepSounds;
 import net.minecraft.common.block.texture.Face;
@@ -87,11 +89,12 @@ public class CJBlockMachineBase extends BlockContainer {
 			CJTankVolume volume = machineEntity.tanks.get(index);
 
 			int bucketID = -1;
+			int fluidID = -1;
 
 			for(int i = 0; i < CJMod.bucketFluids.size(); i++) {
-				int fluid = CJMod.bucketFluids.get(i);
+				fluidID = CJMod.bucketFluids.get(i);
 
-				if(fluid != volume.fluidID) continue;
+				if(fluidID != volume.fluidID) continue;
 
 				bucketID = CJMod.buckets.get(i).itemID;
 			}
@@ -104,6 +107,10 @@ public class CJBlockMachineBase extends BlockContainer {
 						inventory.mainInventory[inventory.currentItem];
 
 				stack.setItemID(bucketID);
+
+				Fluid fluid = Fluids.getFluidFromBlock(fluidID);
+				fluid.playFluidPickUpSound(world, x, y, z);
+
 				return true;
 			}
 
@@ -119,13 +126,9 @@ public class CJBlockMachineBase extends BlockContainer {
 			fluidID = CJMod.bucketFluids.get(i);
 			break;
 		}
-
 		if(fluidID == -1) return false;
 
-		// TODO: Make this return different tanks depending on attempted fluid
-		//       Insertion.
 		int tankIndex = -1;
-
 		for(int i = 0; i < machineBuilder.tanks.size(); ++i) {
 			CJTank tank = machineBuilder.tanks.get(i);
 			CJTankVolume volume = machineEntity.tanks.get(i);
@@ -149,6 +152,10 @@ public class CJBlockMachineBase extends BlockContainer {
 					inventory.mainInventory[inventory.currentItem];
 
 			stack.setItemID(Items.EMPTY_BUCKET.itemID);
+
+			Fluid fluid = Fluids.getFluidFromBlock(fluidID);
+			fluid.playFluidDropOutSound(world, x, y, z);
+
 			return true;
 		}
 
@@ -167,7 +174,6 @@ public class CJBlockMachineBase extends BlockContainer {
 		CJTileEntityMachineBase machineEntity = machineEntity(world, x, y, z);
 
 		if(tryFillBucket(world, x, y, z, player)) {
-			// TODO: Sound effect.
 			return true;
 		}
 
@@ -221,8 +227,7 @@ public class CJBlockMachineBase extends BlockContainer {
 
 	@Override
 	protected int damageDropped(int metadata) {
-		// TODO: Let machine determine whether it wants to preserve DV.
-		return metadata;
+		return machineBuilder.doDropMeta ? metadata : 0;
 	}
 
 	public String getIconName(String itemName, int metadata) {

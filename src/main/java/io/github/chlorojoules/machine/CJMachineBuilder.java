@@ -24,6 +24,7 @@ public class CJMachineBuilder {
 	public String name = null;
 	public CJRarity rarity = CJRarity.MANUFACTURED;
 	public Class<?> machineImpl = null;
+	public boolean doDropMeta = true;
 
 	public int fuelTankIndex = -1;
 	public int jewelSlotIndex = -1;

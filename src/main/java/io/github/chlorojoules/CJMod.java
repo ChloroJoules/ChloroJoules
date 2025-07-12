@@ -767,6 +767,7 @@ public class CJMod extends Mod {
 		ItemStack transferor8Stack = new ItemStack(transferor);
 		transferor8Stack.stackSize = 8;
 
+		ItemStack linkerStack = new ItemStack(linker);
 		ItemStack ironRodStack = new ItemStack(ironRod);
 		ItemStack furnaceStack = new ItemStack(Blocks.FURNACE_IDLE);
 		ItemStack poweredFurnaceStack = new ItemStack(furnace);
@@ -947,6 +948,16 @@ public class CJMod extends Mod {
 				"@  ",
 				'%', pasteStack,
 				'#', ironStack,
+				'@', ironRodStack);
+
+		CraftingManager.getInstance().addRecipe(
+				linkerStack,
+				" %|",
+				" @#",
+				"@  ",
+				'%', chestStack,
+				'#', bucketStack,
+				'|', pasteStack,
 				'@', ironRodStack);
 
 		CraftingManager.getInstance().addShapelessRecipe(
