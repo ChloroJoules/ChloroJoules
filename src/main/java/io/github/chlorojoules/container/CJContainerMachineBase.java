@@ -13,9 +13,6 @@ import net.minecraft.common.item.ItemStack;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-// TODO: Mixin on `ItemBucket.onItemRightClick' to auto-register non-Vanilla
-//		 Fluids to bucket items.
-
 public class CJContainerMachineBase extends Container {
 	private final CJTileEntityMachineBase machineEntity;
 	private final CJMachineBuilder machineBuilder;
@@ -87,18 +84,6 @@ public class CJContainerMachineBase extends Container {
 		}
 
 		addPlayerInventory(inventoryPlayer);
-	}
-
-	// TODO: Update machine interface in these two (?).
-	@Override
-	public void updateInventory() {
-		super.updateInventory();
-	}
-
-	@Override
-	public void func_20112_a(int slot, int arg2) {
-		// This is for updating the progress bar (apparently)?
-		// arg2 might be the progress amount/delta, but it's unclear.
 	}
 
 	@Override

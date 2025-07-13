@@ -23,6 +23,7 @@ message.cj_coordinate_unset=§CCoordinates unset
 
 # Tool messages.
 message.cj_not_transferor=§CBlock is not a Transferor
+message.cj_same_transferor=§CCannot link Transferor to itself
 message.cj_not_extractor=§CBlock is not a Flooper or Whooper
 message.cj_not_slooper=§CBlock is not a Slooper
 message.cj_not_swooper=§CBlock is not a Swooper

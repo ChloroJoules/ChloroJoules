@@ -5,6 +5,7 @@ import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.gui.CJGuiCoordinateDisplay;
 import io.github.chlorojoules.machine.CJMachineTransferor;
+import net.minecraft.client.Minecraft;
 import net.minecraft.common.block.icon.Icon;
 import net.minecraft.common.block.icon.IconRegister;
 import net.minecraft.common.entity.player.EntityPlayer;
@@ -60,7 +61,7 @@ public class CJItemLinker extends Item {
 
 			CJMod.sendChat(ChatColors.RED + string);
 
-			return false;
+			return true;
 		}
 
 		boolean isMulti = itemstack.itemDamage > FLUID_FULL;
@@ -77,7 +78,10 @@ public class CJItemLinker extends Item {
 			String string = StringTranslate.getInstance().translateKeyFormat(
 					"message.cj_linked_position", blockX, blockY, blockZ);
 
-			CJMod.sendChat(					ChatColors.GREEN + string);
+			CJMod.sendChat(ChatColors.GREEN + string);
+
+			Minecraft.getInstance().sndManager.playSoundFX(
+					"random.click", 1.0F, 1.0F);
 
 			itemstack.itemDamage++;
 
@@ -94,6 +98,15 @@ public class CJItemLinker extends Item {
 		CJTileEntityMachineBase extractorMachine =
 				(CJTileEntityMachineBase) world.getBlockTileEntity(
 						position[0], position[1], position[2]);
+
+		if(inserterMachine == extractorMachine) {
+			String string = StringTranslate.getInstance().translateKey(
+					"message.cj_same_transferor");
+
+			CJMod.sendChat(ChatColors.RED + string);
+
+			return true;
+		}
 
 		String string = StringTranslate.getInstance().translateKeyFormat(
 				"message.cj_linked_pair",
@@ -152,6 +165,9 @@ public class CJItemLinker extends Item {
 					CJMachineTransferor.RECEIVE_FLUIDS);
 		}
 
+		Minecraft.getInstance().sndManager.playSoundFX(
+				"random.armor", 1.0F, 1.0F);
+
 		if(!isMulti) itemstack.itemDamage--;
 
 		return true;
@@ -173,7 +189,7 @@ public class CJItemLinker extends Item {
 					"message.cj_link_query",
 					position[0], position[1], position[2]);
 
-			CJMod.sendChat(					ChatColors.GREEN + string);
+			CJMod.sendChat(ChatColors.GREEN + string);
 
 			return itemstack;
 			*/
@@ -202,13 +218,15 @@ public class CJItemLinker extends Item {
 						"message.cj_link_switch_multi_fluid");
 			}
 			else {
-
 				itemstack.setItemDamage(ITEM_EMPTY);
 				string = StringTranslate.getInstance().translateKey(
 						"message.cj_link_switch_item");
 			}
 
-			CJMod.sendChat(					ChatColors.BLUE + string);
+			Minecraft.getInstance().sndManager.playSoundFX(
+					"random.ratchet", 1.0F, 1.0F);
+
+			CJMod.sendChat(ChatColors.BLUE + string);
 		}
 
 		if(itemstack.itemDamage != ITEM_FULL &&
@@ -219,7 +237,10 @@ public class CJItemLinker extends Item {
 		String string = StringTranslate.getInstance().translateKey(
 				"message.cj_link_clear");
 
-		CJMod.sendChat(				ChatColors.GREEN + string);
+		Minecraft.getInstance().sndManager.playSoundFX(
+				"random.break", 1.0F, 1.0F);
+
+		CJMod.sendChat(ChatColors.GREEN + string);
 
 		itemstack.itemDamage--;
 
