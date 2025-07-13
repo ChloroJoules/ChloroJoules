@@ -4,6 +4,7 @@ import io.github.chlorojoules.block.CJBlockMachineBase;
 import net.minecraft.common.block.Block;
 import net.minecraft.common.block.Blocks;
 import net.minecraft.common.block.icon.Icon;
+import net.minecraft.common.block.texture.Face;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.item.block.ItemBlock;
 
@@ -21,8 +22,7 @@ public class CJItemBlockMachineBase extends ItemBlock {
 
 	@Override
 	public Icon getIconFromDamage(int metadata) {
-		// TODO: Is this icon face correct?
-		return getBlock().getIcon(2, metadata);
+		return getBlock().getIcon(Face.EAST.direction(), metadata);
 	}
 
 	@Override

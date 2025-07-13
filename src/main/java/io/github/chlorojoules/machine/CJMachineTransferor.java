@@ -93,9 +93,6 @@ public class CJMachineTransferor implements CJIMachine {
 
 		int currentItemID = stack.getItemID();
 
-		// TODO: This should use `quickMove` so the tile can filter which slot
-		//       To insert into. This means we need to sort out machine
-		//       Inventory quick move.
 		for(IInventory inventory : adjacentInventories) {
 			if(inventory == null) continue;
 

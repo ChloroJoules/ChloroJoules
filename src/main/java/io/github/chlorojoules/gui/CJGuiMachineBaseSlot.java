@@ -29,8 +29,6 @@ public class CJGuiMachineBaseSlot extends Slot {
 
 	@Override
 	public void onPickupFromSlot(EntityPlayer player, ItemStack item) {
-		// TODO: This currently fires for inventory pickup aswell.
-		//item.onCrafting(entityPlayer.worldObj, entityPlayer);
 		super.onPickupFromSlot(player, item);
 	}
 

@@ -502,7 +502,7 @@ public class CJMod extends Mod {
 								BOTTOM_RIGHT, JEWEL_SLOT_INSET,
 								(WORKING_HEIGHT - FLUID_HEIGHT) / 2,
 								"message.cj_enable_refine_fuel",
-								CJGuiButton.JEWEL)
+								manufacturedJewel.itemID)
 						.addRecipe(
 								20,
 								new CJMachineRecipeComponent(
@@ -732,7 +732,7 @@ public class CJMod extends Mod {
 								BOTTOM_RIGHT, JEWEL_SLOT_INSET,
 								(WORKING_HEIGHT - FLUID_HEIGHT) / 2,
 								"message.cj_enable_refine_fuel",
-								CJGuiButton.JEWEL)
+								manufacturedJewel.itemID)
 						.addRecipe(
 								150,
 								new CJMachineRecipeComponent[] {

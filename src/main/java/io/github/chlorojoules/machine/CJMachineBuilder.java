@@ -36,8 +36,7 @@ public class CJMachineBuilder {
 	public ArrayList<CJGuiButton> buttons = new ArrayList<>();
 	// TODO: This is kind of hardcoded -- is there a way we can make
 	//  	 `CJGuiElement` more generic/programmable?
-	public ArrayList<CJGuiCoordinate> linkCoordinates =
-			new ArrayList<>();
+	public ArrayList<CJGuiCoordinate> linkCoordinates = new ArrayList<>();
 
 	public ArrayList<CJMachineRecipe> recipes = new ArrayList<>();
 

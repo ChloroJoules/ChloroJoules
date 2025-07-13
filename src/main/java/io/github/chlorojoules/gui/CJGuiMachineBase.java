@@ -1,6 +1,7 @@
 package io.github.chlorojoules.gui;
 
 import com.indigo3d.util.RenderSystem;
+import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.CJTank;
 import io.github.chlorojoules.CJTankVolume;
 import io.github.chlorojoules.container.CJContainerMachineBase;
@@ -8,10 +9,15 @@ import io.github.chlorojoules.machine.CJMachineBuilder;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import net.minecraft.client.gui.GuiContainer;
 import net.minecraft.client.renderer.world.RenderHelper;
+import net.minecraft.client.renderer.world.Tessellator;
 import net.minecraft.common.block.Block;
 import net.minecraft.common.block.Blocks;
+import net.minecraft.common.block.icon.Icon;
+import net.minecraft.common.block.texture.Face;
 import net.minecraft.common.entity.player.InventoryPlayer;
 
+import net.minecraft.common.item.ItemStack;
+import net.minecraft.common.item.Items;
 import net.minecraft.common.util.i18n.StringTranslate;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -65,8 +71,6 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 				FLUID_WIDTH - FLUID_OFFSET_X, FLUID_HEIGHT - FLUID_OFFSET_Y);
 	}
 
-	// TODO: This floats tooltips what appears to be in absolute rather than
-	//		 Relative space.
 	private void drawTooltip(
 			String name, String description, int x, int y, int titleColor) {
 
@@ -90,7 +94,6 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 		RenderSystem.disableLighting();
 		RenderSystem.disableDepthTest();
 
-		// TODO: Smaller when no description.
 		this.drawGradientRect(
 				xSlot - 3, ySlot - 3,
 				xSlot + textWidth + 3, ySlot + boxHeight,
@@ -210,7 +213,6 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 	protected void drawGuiContainerForegroundLayer() {
 		StringTranslate translate = StringTranslate.getInstance();
 
-		// TODO: Source name from container/block.
 		String name = translate.translateKey(machineEntity.getInvName());
 		String inventory = translate.translateKey("inventory.generic");
 
@@ -226,10 +228,34 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 				inventory, INVENTORY_LABEL_X, INVENTORY_LABEL_Y, MACHINE_TEXT);
 	}
 
+	public void renderIconClipped(
+			int x, int y, Icon icon, int width, int height) {
+
+		Tessellator t = Tessellator.instance;
+		Tessellator.instance.startDrawingQuads();
+
+		float w = icon.getMaxU() - icon.getMinU();
+		float h = icon.getMaxV() - icon.getMinV();
+		float maxU = icon.getMinU() + (w * (width / 16F));
+		float maxV = icon.getMinV() + (h * (height / 16F));
+
+		t.addVertexWithUV(
+				x, y + height, this.zLevel,
+				icon.getMinU(), maxV);
+
+		t.addVertexWithUV(x + width, y + height, this.zLevel, maxU, maxV);
+		t.addVertexWithUV(x + width, y, this.zLevel, maxU, icon.getMinV());
+
+		t.addVertexWithUV(
+				x, y, this.zLevel,
+				icon.getMinU(), icon.getMinV());
+
+		t.draw();
+	}
+
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float deltaTicks) {
-		CJContainerMachineBase machine =
-				(CJContainerMachineBase) inventorySlots;
+		CJContainerMachineBase machine = inventorySlots;
 
 		int texture = mc.renderEngine.getTexture("/gui/cj_machinebase.png");
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -284,30 +310,26 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 					FLUID_FULL_X, FLUID_FULL_Y,
 					FLUID_WIDTH, FLUID_HEIGHT);
 
-			// TODO: Fix this.
-			/*
-			if(tankVolume.fluidID != fuelFluid) {
-				Block fluid = Block.blocksList[tankVolume.fluidID];
-				TextureStitched fluidIcon =
-						(TextureStitched) fluid.getBlockTextureFromSide(0);
+			if(tankVolume.fluidID != CJMod.fuelFluid) {
+				Icon icon = Blocks.BLOCKS_LIST[tankVolume.fluidID].getIcon(
+						Face.TOP.direction(), 0);
 
-				int fluidTexture =
-						mc.renderEngine.getTexture("/terrain.png");
-
+				int fluidTexture = mc.renderEngine.getTexture("/terrain.png");
 				mc.renderEngine.bindTexture(fluidTexture);
 
-				drawTexturedModalRect(
-						tankX + FLUID_OFFSET_X, tankY + FLUID_OFFSET_Y,
-						fluidIcon.getOriginX(), fluidIcon.getOriginY(),
-						FLUID_WIDTH - (FLUID_OFFSET_X * 2),
-						FLUID_HEIGHT - (FLUID_OFFSET_Y * 2));
+				int j;
+				for(j = 0; j < FLUID_HEIGHT - 2; j += 16) {
+					renderIconClipped(
+							tankX + 1, tankY + 1 + j,
+							icon,
+							FLUID_WIDTH - 2,
+							Math.min(16, FLUID_HEIGHT - 2 - j));
+				}
 
 				mc.renderEngine.bindTexture(texture);
-			}*/
+			}
 
 			// Overlay the full tank graphic with an amount of the empty one.
-			// TODO: This doesn't account for the margins of the tank which it
-			//		 Probably should do.
 			int tankFill =
 					(tankVolume.current * FLUID_HEIGHT) / tankVolume.max;
 
@@ -379,14 +401,16 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 			x += BUTTON_LABEL_INSET;
 			y += BUTTON_LABEL_INSET;
 
-			int[] labelCoords = button.getLabelCoords();
+			ItemStack stack = new ItemStack(button.label, 1);
+			itemRenderer.renderItemIntoGUI(
+					this.fontRenderer, this.mc.renderEngine, stack, x, y);
 
-			if(labelCoords != null) {
-				drawTexturedModalRect(
-						x, y,
-						labelCoords[0], labelCoords[1],
-						LABEL_WIDTH, LABEL_HEIGHT);
-			}
+			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			mc.renderEngine.bindTexture(texture);
+			RenderSystem.disableRescaleNormal();
+			RenderHelper.disableStandardItemLighting();
+			RenderSystem.disableLighting();
+			RenderSystem.disableDepthTest();
 		}
 
 		// Draw status badge.

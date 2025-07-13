@@ -7,7 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.common.block.Blocks;
 import net.minecraft.common.util.ChatColors;
 import net.minecraft.common.util.i18n.StringTranslate;
-import net.minecraft.common.block.Block;
 import net.minecraft.common.entity.other.EntityItem;
 import net.minecraft.common.entity.player.EntityPlayer;
 import net.minecraft.common.item.Item;
@@ -29,8 +28,6 @@ public class CJItemSoulExtractor extends Item implements CJIItemSocket {
 			ItemStack itemstack, EntityPlayer player, World world,
 			int blockX, int blockY, int blockZ, int side,
 			float x, float y, float z) {
-
-		// TODO: Sound effects.
 
 		int rarityDamage = CJRarityInfo.getRarityDamage(CJRarity.REFINED);
 		if(itemstack.itemDamage > rarityDamage) {

@@ -28,7 +28,6 @@ public class CJItemLinker extends Item {
 	private final Icon[] linkerIcons;
 	private final String[] linkerIconNames;
 
-	// TODO: Merge full/empty and use dv instead of splitting for consistency.
 	public CJItemLinker(String id, String[] icons) {
 		super(id);
 
