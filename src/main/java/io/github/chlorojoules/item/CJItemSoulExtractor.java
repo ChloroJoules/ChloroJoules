@@ -3,6 +3,7 @@ package io.github.chlorojoules.item;
 import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.CJRarity;
 import io.github.chlorojoules.CJRarityInfo;
+import net.minecraft.client.Minecraft;
 import net.minecraft.common.block.Blocks;
 import net.minecraft.common.util.ChatColors;
 import net.minecraft.common.util.i18n.StringTranslate;
@@ -54,6 +55,9 @@ public class CJItemSoulExtractor extends Item implements CJIItemSocket {
 				new EntityItem(world, blockX, blockY, blockZ, soulStack);
 
 		world.entityJoinedWorld(item);
+
+		Minecraft.getInstance().sndManager.playSoundFX(
+				"random.glass", 1.0F, 1.0F);
 
 		return true;
 	}
