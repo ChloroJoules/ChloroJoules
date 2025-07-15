@@ -27,7 +27,6 @@ public class CJMachineTransferor implements CJIMachine {
 	public static final int RECEIVE_FLUIDS = 4;
 	public static final int MULTI_TRANSMIT_ITEMS = 5;
 	public static final int MULTI_TRANSMIT_FLUIDS = 6;
-	public static final int MAX_DAMAGE = MULTI_TRANSMIT_FLUIDS;
 
 	private IInventory[] adjacentInventories = null;
 

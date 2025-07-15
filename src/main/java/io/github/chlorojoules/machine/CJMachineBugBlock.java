@@ -21,7 +21,6 @@ public class CJMachineBugBlock implements CJIMachine {
 
 		CJTankVolume tank = machineEntity.tanks.get(INPUT_TANK);
 
-		// TODO: Helper for decreasing stack size in machine entity.
 		if(inputStack != null) {
 			if(inputStack.stackSize == 1) {
 				machineEntity.stacks.set(INPUT_SLOT, null);

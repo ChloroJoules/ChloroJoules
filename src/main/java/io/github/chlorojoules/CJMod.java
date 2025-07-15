@@ -3,6 +3,7 @@ package io.github.chlorojoules;
 import com.fox2code.foxloader.loader.Mod;
 import io.github.chlorojoules.block.CJBlockMachineBase;
 import io.github.chlorojoules.gui.CJGuiButton;
+import io.github.chlorojoules.item.CJItemDescriptionModTag;
 import io.github.chlorojoules.machine.*;
 
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
@@ -14,7 +15,9 @@ import net.minecraft.client.gui.creative.CreativeTab;
 import net.minecraft.client.gui.creative.CreativeTabs;
 import net.minecraft.common.block.*;
 import net.minecraft.common.block.children.BlockFluid;
+import net.minecraft.common.block.children.BlockLeavesBase;
 import net.minecraft.common.block.data.Material;
+import net.minecraft.common.block.data.MaterialLiquid;
 import net.minecraft.common.block.data.Materials;
 import net.minecraft.common.block.sound.StepSound;
 import net.minecraft.common.block.sound.StepSounds;
@@ -47,6 +50,8 @@ public class CJMod extends Mod {
 	public static List<ItemBucket> buckets = new ArrayList<>();
 	public static List<Integer> bucketFluids = new ArrayList<>();
 
+	public static HashMap<String, ArrayList<Item>> tagList = new HashMap<>();
+
 	public static Block fluidChlorojoules;
 	public static Item bucketFluidChlorojoules;
 	public static Block fluidPaste;
@@ -72,7 +77,6 @@ public class CJMod extends Mod {
 
 	public static Item paste;
 
-	// TODO: Can simplify jewel API by making this one item with DVs
 	public static Item primalJewel;
 	public static Item manufacturedJewel;
 	public static Item refinedJewel;
@@ -105,10 +109,39 @@ public class CJMod extends Mod {
 		Class<?>[] types = new Class<?>[objects.length];
 
 		for(int i = 0; i < objects.length; ++i) {
-			types[i] = objects[i].getClass();
+			Class<?> type = objects[i].getClass();
+
+			// Primitive handling.
+			if(type == Boolean.class) type = Boolean.TYPE;
+			if(type == Integer.class) type = Integer.TYPE;
+			// MC type handling.
+			else if(type == MaterialLiquid.class) type = Material.class;
+
+			types[i] = type;
 		}
 
 		return types;
+	}
+
+	public static void addTagItem(String tag, Item item) {
+		tagList.putIfAbsent(tag, new ArrayList<>());
+		tagList.get(tag).add(item);
+	}
+
+	public static void addTagItem(String tag, int itemID) {
+		addTagItem(tag, ITEMS_LIST[itemID]);
+	}
+
+	public static void addTagItem(String tag, Block block) {
+		addTagItem(tag, block.getItemID());
+	}
+
+	public static boolean matchesTagItem(String tag, Item item) {
+		return tagList.get(tag).contains(item);
+	}
+
+	public static boolean matchesTagItem(String tag, ItemStack stack) {
+		return matchesTagItem(tag, stack.getItem());
 	}
 
 	public static void sendChat(String message) {
@@ -122,12 +155,6 @@ public class CJMod extends Mod {
 				id == awakenedJewel.itemID;
 	}
 
-	private void addItemDamagesToCreative(int item, int maxDamage) {
-		for(int i = 0; i <= maxDamage; ++i) {
-			creativeTab.add(new ItemStack(item, 1, i));
-		}
-	}
-
 	public Block registerMachine(
 			String name, CJMachineBuilder builder, String[] iconNames,
 			int sideMode) {
@@ -135,39 +162,25 @@ public class CJMod extends Mod {
 		builder.setMachineName(name);
 		machines.put(name, builder);
 
-		Block block = new CJBlockMachineBase(
+		return new CJBlockMachineBase(
 				name, builder, iconNames, sideMode)
 				.setBlockName(name)
 				.setCreativeTab(creativeTab)
-				//.hideFromCreativeMenu()
+				.addDescription(new CJItemDescriptionModTag())
 				.setTooltipColor(getRarityColor(builder.rarity));
-
-		// TODO: For some reason this overrides the default tab contents?
-		//addItemDamagesToCreative(block.getItemID(), maxMetadata);
-
-		return block;
 	}
 
 	private Block registerFluid(String name) {
-		return new BlockFluid(name, Materials.WATER, name, true)
-				.setBlockName(name)
-				.setCreativeTab(creativeTab);
-
-		// TODO: Use this instead.
-		//return registerBlock(
-		//		100.0f, 0.0f, StepSounds.SOUND_UNUSED, EnumTools.PICKAXE,
-		//		BlockFluid.class, name, Materials.WATER, name, true)
-		//		.disableStats()
-		//		.setLightOpacity(1);
+		return registerBlock(
+				100.0f, 0.0f, StepSounds.SOUND_UNUSED, EnumTools.PICKAXE,
+				BlockFluid.class, name, Materials.WATER, name, true)
+				.disableStats()
+				.setLightOpacity(1);
 	}
 
-	private Item registerFluidBucket(String name, Block tile) {
-		// TODO: Use registerItem.
-		return new ItemBucket(name, tile.blockID)
-				.setItemName(name)
-				.setMaxStackSize(1)
-				.setContainerItem(EMPTY_BUCKET)
-				.setCreativeTab(creativeTab);
+	private Item registerFluidBucket(String name, int rarity, Block tile) {
+		return registerItem(rarity, 1, ItemBucket.class, name, tile.blockID)
+				.setContainerItem(EMPTY_BUCKET);
 	}
 
 	public void registerRecipe(ItemStack output, Object... params) {
@@ -204,6 +217,7 @@ public class CJMod extends Mod {
 					.setItemName(name)
 					.setMaxStackSize(maxStack)
 					.setTooltipColor(rarity)
+					.addDescription(new CJItemDescriptionModTag())
 					.setCreativeTab(creativeTab);
 		}
 		catch(Exception e) {
@@ -238,6 +252,7 @@ public class CJMod extends Mod {
 					.setResistance(resistance)
 					.setSound(sound)
 					.setEffectiveTool(tool)
+					.addDescription(new CJItemDescriptionModTag())
 					.setCreativeTab(creativeTab);
 		}
 		catch(Exception e) {
@@ -257,10 +272,6 @@ public class CJMod extends Mod {
 
 	@Override
 	public void onPreInit() {
-		// TODO: Allow all balancing to be controlled from config -- we may
-		//		 Need to request some upstream changes or provide our own
-		//		 Config UI.
-
 		boolean setTab = false;
 		// TODO: This doesn't work atm.
 //		for(int i = 0; i < CreativeTabs.TABS.length; ++i) {
@@ -280,22 +291,18 @@ public class CJMod extends Mod {
 		TileEntity.addMapping(
 				CJTileEntityMachineBase.class, "cj_machine_base");
 
-		// TODO: Hack in our own mod-wise tooltips to mark things as being from
-		//       Chlorojoules (Or just make a PR).
-
-		// TODO: Hide fluids from creative inventory.
-
 		fluidChlorojoules = registerFluid("cj_fluid_chlorojoules");
 		bucketFluidChlorojoules = registerFluidBucket(
-				"cj_fluid_chlorojoules_bucket", fluidChlorojoules);
+				"cj_fluid_chlorojoules_bucket", MANUFACTURED_COLOR,
+				fluidChlorojoules);
 
 		fluidPaste = registerFluid("cj_fluid_paste");
 		bucketFluidPaste = registerFluidBucket(
-				"cj_fluid_paste_bucket", fluidPaste);
+				"cj_fluid_paste_bucket", PRIMAL_COLOR, fluidPaste);
 
 		fluidSouls = registerFluid("cj_fluid_souls");
 		bucketFluidSouls = registerFluidBucket(
-				"cj_fluid_souls_bucket", fluidSouls);
+				"cj_fluid_souls_bucket", REFINED_COLOR, fluidSouls);
 
 		fuelFluid = fluidChlorojoules.blockID;
 		waterFluid = WATER_MOVING.blockID;
@@ -343,8 +350,6 @@ public class CJMod extends Mod {
 						"cj_multi_fluid_empty",
 						"cj_multi_fluid_full" });
 
-		// TODO: Feature request for registering ores.
-		// TODO: Feature request for registering loot table additions.
 		machineFrame = registerBlock(
 				"cj_machine_frame", Materials.ROCK, 1.5F, 10.0F,
 				StepSounds.SOUND_STONE, EnumTools.PICKAXE);
@@ -388,39 +393,37 @@ public class CJMod extends Mod {
 								50,
 								new CJMachineRecipeComponent[] {
 										new CJMachineRecipeComponent(
-												0, SEEDS, 0),
+												0, new ItemStack(SEEDS, 0)),
 										new CJMachineRecipeComponent(
-												1, waterFluid, 100)
-												.setTarget(TANK),
-										// TODO: Damage to bone meal.
-										// TODO: Bone meal should be a
-										//		 Catalyst -- recipe
-										//		 Components which are
-										//		 Optional?
+												1, new CJTankVolume(
+														WATER_MOVING, 100)),
 										new CJMachineRecipeComponent(
-												1, DYE_POWDER, 1),
+												1, new ItemStack(
+														DYE_POWDER, 1, 15))
+												.setOptional(true),
 								},
 								new CJMachineRecipeComponent[] {
 										new CJMachineRecipeComponent(
-												2, WHEAT, 1)
+												2, new ItemStack(WHEAT))
 								},
 								100, false, -1)
 						.addRecipe(
 								20,
 								new CJMachineRecipeComponent[] {
 										new CJMachineRecipeComponent(
-												0,
-												MOSSY_COBBLESTONE,
-												0, false),
+												0, new ItemStack(
+														MOSSY_COBBLESTONE, 0)),
 										new CJMachineRecipeComponent(
-												1, waterFluid, 50)
-												.setTarget(TANK),
+												1, new CJTankVolume(
+														WATER_MOVING, 100)),
 										new CJMachineRecipeComponent(
-												1, DYE_POWDER, 1),
+												1, new ItemStack(
+														DYE_POWDER, 1, 15))
+												.setOptional(true),
 								},
 								new CJMachineRecipeComponent[] {
 										new CJMachineRecipeComponent(
-												2, moss, 1)
+												2, new ItemStack(moss))
 								},
 								100, false, -1)
 						.addProgressBarGravityVCenter(
@@ -436,10 +439,6 @@ public class CJMod extends Mod {
 								TOP_RIGHT, 10, true, false,
 								8 * CJTank.BUCKET, 0)
 						.addSlotGravity(CENTER, 0, 0, false)
-						/*
-						 * TODO: Make Jewel slot visually distinct and
-						 *       Reject Non-Jewel 
-						 */
 						.addJewelSlot()
 						/*
 						 * TODO: Find a better way to center progress Bars
@@ -449,14 +448,10 @@ public class CJMod extends Mod {
 								CENTER, (SLOT_IN_WIDTH * 4) / 3)
 						.addRecipe(
 								10,
-								// TODO: Add recipes for all leaf types.
-								//		 Can we implement a proto-tagging
-								//		 System like modern MC's #leaves?
 								new CJMachineRecipeComponent(
-										0, OAK_LEAVES, 1, false),
+										SLOT, 0, "#leaves", 1),
 								new CJMachineRecipeComponent(
-										1, fluidPaste, 50, true)
-										.setTarget(TANK),
+										1, new CJTankVolume(fluidPaste, 50)),
 								50, true, -1)
 						.setImpl(CJMachineRecipeConsumer.class),
 				null, FRONT_FACE);
@@ -477,11 +472,10 @@ public class CJMod extends Mod {
 						.addRecipe(
 								1,
 								new CJMachineRecipeComponent(
-										1, fluidPaste, 20, true)
-										.setTarget(TANK),
+										1, new CJTankVolume(fluidPaste, 20)),
 								new CJMachineRecipeComponent(
-										2, fluidChlorojoules, 25, true)
-										.setTarget(TANK),
+										2, new CJTankVolume(
+												fluidChlorojoules, 25)),
 								10, true, -1)
 						.setImpl(CJMachineRecipeConsumer.class),
 				null, FRONT_FACE);
@@ -506,18 +500,18 @@ public class CJMod extends Mod {
 						.addRecipe(
 								20,
 								new CJMachineRecipeComponent(
-										1, fluidPaste, 30, true)
-										.setTarget(TANK),
-								new CJMachineRecipeComponent(0, paste, 2),
+										1, new CJTankVolume(fluidPaste, 30)),
+								new CJMachineRecipeComponent(
+										0, new ItemStack(paste, 2)),
 								150, true, -1)
 						.addRecipe(
 								100,
 								new CJMachineRecipeComponent(
-										0, fluidChlorojoules, 250, true)
-										.setTarget(TANK),
+										0, new CJTankVolume(
+												fluidChlorojoules, 900)),
 								new CJMachineRecipeComponent(
-										0, manufacturedJewel, 1),
-								500, false, 0)
+										0, new ItemStack(manufacturedJewel)),
+								650, false, 0)
 						.setImpl(CJMachineRecipeConsumer.class),
 				null, FRONT_FACE);
 
@@ -536,68 +530,52 @@ public class CJMod extends Mod {
 						.addRecipe(
 								10,
 								new CJMachineRecipeComponent(
-										0, primalJewel, 1),
+										0, new ItemStack(primalJewel)),
 								new CJMachineRecipeComponent(
-										1, jewelDust, 2),
+										1, new ItemStack(jewelDust, 2)),
 								100, false, -1)
 						.addRecipe(
 								10,
 								new CJMachineRecipeComponent(
-										0, manufacturedJewel, 1),
+										0, new ItemStack(manufacturedJewel)),
 								new CJMachineRecipeComponent(
-										1, jewelDust, 4),
+										1, new ItemStack(jewelDust, 4)),
 								200, false, -1)
 						.addRecipe(
 								10,
 								new CJMachineRecipeComponent(
-										0, refinedJewel, 1),
+										0, new ItemStack(refinedJewel)),
 								new CJMachineRecipeComponent(
-										1, jewelDust, 8),
+										1, new ItemStack(jewelDust, 8)),
 								250, false, -1)
 						.addRecipe(
 								10,
 								new CJMachineRecipeComponent(
-										0, awakenedJewel, 1),
+										0, new ItemStack(awakenedJewel)),
 								new CJMachineRecipeComponent(
-										1, jewelDust, 16),
+										1, new ItemStack(jewelDust, 16)),
 								350, false, -1)
 						// TODO: Need to handle more ore types.
 						.addRecipe(
 								30,
 								new CJMachineRecipeComponent(
-										0, IRON_ORE, 1, false),
+										SLOT, 0, "#iron_ore", 1),
 								new CJMachineRecipeComponent(
-										1, ironDust, 2),
+										1, new ItemStack(ironDust, 2)),
 								150, false, -1)
 						.addRecipe(
 								30,
 								new CJMachineRecipeComponent(
-										0, NETHER_IRON_ORE, 1,
-										false),
+										SLOT, 0, "#gold_ore", 1),
 								new CJMachineRecipeComponent(
-										1, ironDust, 3),
-								150, false, -1)
-						.addRecipe(
-								30,
-								new CJMachineRecipeComponent(
-										0, GOLD_ORE, 1, false),
-								new CJMachineRecipeComponent(
-										1, goldDust, 2),
-								150, false, -1)
-						.addRecipe(
-								30,
-								new CJMachineRecipeComponent(
-										0, NETHER_GOLD_ORE, 1,
-										false),
-								new CJMachineRecipeComponent(
-										1, goldDust, 3),
+										1, new ItemStack(goldDust, 2)),
 								150, false, -1)
 						.addRecipe(
 								10,
 								new CJMachineRecipeComponent(
-										0, Items.SUGAR_CANE, 1),
+										0, new ItemStack(Items.SUGAR_CANE)),
 								new CJMachineRecipeComponent(
-										1, SUGAR, 4),
+										1, new ItemStack(SUGAR, 4)),
 								150, false, -1)
 						// TODO: Add dyes when we have damage values.
 						/*.addRecipe(
@@ -622,18 +600,19 @@ public class CJMod extends Mod {
 						.addJewelSlot()
 						.addProgressBarGravityVCenter(CENTER, 0)
 						.addRecipe(
-								60,
+								160,
 								new CJMachineRecipeComponent(
-										0, jewelDust, 4),
+										0, new ItemStack(jewelDust, 4)),
 								new CJMachineRecipeComponent(
-										1, compactedJewelDust, 1, false),
+										1, new ItemStack(
+												compactedJewelDust)),
 								150, false, -1)
 						.addRecipe(
-								15,
+								65,
 								new CJMachineRecipeComponent(
-										0, IRON_INGOT, 1),
+										0, new ItemStack(IRON_INGOT)),
 								new CJMachineRecipeComponent(
-										1, GEAR, 5, false),
+										1, new ItemStack(GEAR, 5)),
 								75, false, -1)
 						.setImpl(CJMachineRecipeConsumer.class),
 				null, FRONT_FACE);
@@ -650,11 +629,11 @@ public class CJMod extends Mod {
 						.addJewelSlot()
 						.addProgressBarGravityVCenter(CENTER, 0)
 						.addRecipeRarity(
-								30,
+								500,
 								new CJMachineRecipeComponent(
-										0, compactedJewelDust, 1, false),
+										0, new ItemStack(compactedJewelDust)),
 								new CJMachineRecipeComponent(
-										1, refinedJewel, 1),
+										1, new ItemStack(refinedJewel)),
 								300, CJRarity.MANUFACTURED, -1)
 						.setImpl(CJMachineRecipeConsumer.class),
 				null, FRONT_FACE);
@@ -737,32 +716,32 @@ public class CJMod extends Mod {
 								150,
 								new CJMachineRecipeComponent[] {
 										new CJMachineRecipeComponent(
-												0, fluidChlorojoules, 250,
-												true)
-												.setTarget(TANK),
+												0, new CJTankVolume(
+														fluidChlorojoules,
+														250)),
 										new CJMachineRecipeComponent(
-												0, soulDust, 1)
+												0, new ItemStack(soulDust))
 								},
 								new CJMachineRecipeComponent[] {
 										new CJMachineRecipeComponent(
-												2, fluidSouls, 50, true)
-												.setTarget(TANK)
+												2, new CJTankVolume(
+														fluidSouls, 50))
 								},
 								250, false, 0)
 						.addRecipe(
 								50,
 								new CJMachineRecipeComponent[] {
 										new CJMachineRecipeComponent(
-												1, waterFluid, 250)
-												.setTarget(TANK),
+												1, new CJTankVolume(
+														WATER_MOVING, 250)),
 										new CJMachineRecipeComponent(
-												0, moss, 1)
+												0, new ItemStack(moss))
 								},
 								new CJMachineRecipeComponent[] {
 										new CJMachineRecipeComponent(
-												2, fluidChlorojoules,
-												700, true)
-												.setTarget(TANK)
+												2, new CJTankVolume(
+														fluidChlorojoules,
+														700))
 								},
 								300, false, -1)
 						.setImpl(CJMachineRecipeConsumer.class),
@@ -774,6 +753,18 @@ public class CJMod extends Mod {
 		if(creativeTab != fallbackTab) {
 			creativeTab.setTabIcon(new ItemStack(awakenedJewel));
 		}
+
+		for(Block block : BLOCKS_LIST) {
+			if(block instanceof BlockLeavesBase) {
+				addTagItem("#leaves", block);
+			}
+		}
+
+		addTagItem("#iron_ore", IRON_ORE);
+		addTagItem("#iron_ore", NETHER_IRON_ORE);
+
+		addTagItem("#gold_ore", GOLD_ORE);
+		addTagItem("#gold_ore", NETHER_GOLD_ORE);
 
 		// TODO: A two way mapping between bucket/fluid IDs would probably be
 		//       More efficient for lookup by `CJBlockMachineBase`.
@@ -1008,11 +999,9 @@ public class CJMod extends Mod {
 		for(Map.Entry<Integer, ItemStack> entry : furnaceEntries) {
 			furnaceMachine.addRecipe(
 					20,
-					new CJMachineRecipeComponent(0, entry.getKey(), 1),
-					// TODO: `ItemStack` constructor for
-					//       `CJMachineRecipeComponent`.
 					new CJMachineRecipeComponent(
-							1, entry.getValue().getItemID(), 1),
+							0, new ItemStack(entry.getKey(), 1)),
+					new CJMachineRecipeComponent(1, entry.getValue()),
 					200, false, -1); // Vanilla furnace ticks as base.
 		}
 	}

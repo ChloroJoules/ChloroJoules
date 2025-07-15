@@ -1,5 +1,7 @@
 package io.github.chlorojoules;
 
+import net.minecraft.common.block.Block;
+
 // This is to a fluid as an `ItemStack` is to an item.
 public class CJTankVolume {
 	// Maximum fluid volume.
@@ -13,6 +15,13 @@ public class CJTankVolume {
 	// Whether fluid type is fixed -- i.e. only `fluid` accepted, don't clear
 	// On empty.
 	public boolean lockFluid = false;
+
+	public CJTankVolume() {}
+
+	public CJTankVolume(Block fluid, int volume) {
+		this.fluidID = fluid.blockID;
+		this.current = volume;
+	}
 
 	public int addFluid(int blockFluid, int amount, boolean all) {
 		if(fluidID != 0 && fluidID != blockFluid) return 0;
@@ -31,6 +40,10 @@ public class CJTankVolume {
 		current += amount;
 
 		return amount;
+	}
+
+	public int addFluid(CJTankVolume volume, boolean all) {
+		return addFluid(volume.fluidID, volume.current, all);
 	}
 
 	public int removeFluid(int blockFluid, int amount, boolean all) {

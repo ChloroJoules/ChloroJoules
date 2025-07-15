@@ -5,6 +5,7 @@ import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.gui.*;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.util.i18n.StringTranslate;
+import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
 
@@ -55,8 +56,6 @@ public class CJMachineBuilder {
 		return this;
 	}
 
-	// TODO: Mechanism for anchoring/centering slots/tanks in builder
-	//       Interface.
 	public CJMachineBuilder addSlot(int x, int y, boolean output) {
 		slots.add(new CJMachineSlotInfo(x, y, output));
 
@@ -288,14 +287,18 @@ public class CJMachineBuilder {
 
 			if(volume.fluidID == 0) return !input;
 
-			return volume.fluidID == component.id;
+			return volume.fluidID == component.volume.fluidID;
 		}
 		else {
 			ItemStack stack = entity.stacks.get(component.index);
 
 			if(stack == null) return !input;
+			if(component.isTag) {
+				return CJMod.matchesTagItem(component.tag, stack);
+			}
 
-			return stack.getItemID() == component.id;
+			return stack.getItemID() == component.stack.getItemID() &&
+					stack.getItemDamage() == component.stack.getItemDamage();
 		}
 	}
 
@@ -370,7 +373,7 @@ public class CJMachineBuilder {
 					if(component.index == recipe.fuelIndex) {
 						if(recipe.allowPassive &&
 								isPrimal &&
-								volume.current < component.count) {
+								volume.current < component.volume.current) {
 
 							entity.isPassive = true;
 							entity.errorMessage = "message.cj_passive";
@@ -379,7 +382,7 @@ public class CJMachineBuilder {
 						}
 					}
 
-					if(volume.current < component.count) {
+					if(volume.current < component.volume.current) {
 						entity.errorMessage =
 								translate.translateKey("message.cj_resource");
 
@@ -389,7 +392,7 @@ public class CJMachineBuilder {
 				else {
 					ItemStack stack = entity.stacks.get(component.index);
 
-					if(stack.stackSize < component.count) {
+					if(stack.stackSize < component.getStackSize()) {
 						entity.errorMessage =
 								translate.translateKey("message.cj_resource");
 
@@ -450,7 +453,7 @@ public class CJMachineBuilder {
 		// Handle fuel separately from other fluid inputs.
 		int powerScale = CJRarityInfo.getRarityPowerScale(entity.jewelRarity);
 		CJMachineRecipeComponent fuelComponent = recipe.getFuelComponent();
-		int cost = fuelComponent.count / powerScale;
+		int cost = fuelComponent.volume.current / powerScale;
 
 		if(recipe.fuelIndex != -1) {
 			if(!entity.isPassive) {
@@ -466,15 +469,15 @@ public class CJMachineBuilder {
 
 			if(component.target == CJMachineRecipeTarget.TANK) {
 				CJTankVolume volume = entity.tanks.get(component.index);
-				volume.removeFluid(0, component.count, true);
+				volume.removeFluid(0, component.volume.current, true);
 			}
 			else {
 				ItemStack inputStack = entity.stacks.get(component.index);
 
-				if(inputStack.stackSize == component.count) {
+				if(inputStack.stackSize == component.getStackSize()) {
 					entity.stacks.set(component.index, null);
 				}
-				else inputStack.stackSize -= component.count;
+				else inputStack.stackSize -= component.getStackSize();
 			}
 		}
 
@@ -484,17 +487,16 @@ public class CJMachineBuilder {
 
 			if(component.target == CJMachineRecipeTarget.TANK) {
 				CJTankVolume volume = entity.tanks.get(component.index);
-				volume.addFluid(component.id, component.count, true);
+				volume.addFluid(component.volume, true);
 			}
 			else {
 				ItemStack inputStack = entity.stacks.get(component.index);
 
 				if(inputStack == null) {
 					entity.stacks.set(
-							component.index,
-							new ItemStack(component.id, component.count));
+							component.index, component.stack.copy());
 				}
-				else inputStack.stackSize += component.count;
+				else inputStack.stackSize += component.stack.stackSize;
 			}
 		}
 

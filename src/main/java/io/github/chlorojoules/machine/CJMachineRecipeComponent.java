@@ -1,44 +1,57 @@
 package io.github.chlorojoules.machine;
 
-import net.minecraft.common.block.Block;
-import net.minecraft.common.item.Item;
+import io.github.chlorojoules.CJTankVolume;
+import net.minecraft.common.item.ItemStack;
 
 public class CJMachineRecipeComponent {
-	public CJMachineRecipeTarget target = CJMachineRecipeTarget.SLOT;
+	public CJMachineRecipeTarget target;
 	public int index;
-	public int id;
-	public int count;
 
-	public CJMachineRecipeComponent(int index, int id, int count) {
+	public ItemStack stack;
+
+	public CJTankVolume volume;
+
+	public String tag;
+	public int tagCount;
+	public boolean isTag = false;
+
+	public float chance = 1.0f;
+	public boolean optional = false;
+
+	public CJMachineRecipeComponent(int index, ItemStack stack) {
+		this.target = CJMachineRecipeTarget.SLOT;
 		this.index = index;
-		this.id = id;
-		this.count = count;
+		this.stack = stack;
+	}
+
+	public CJMachineRecipeComponent(int index, CJTankVolume volume) {
+		this.target = CJMachineRecipeTarget.TANK;
+		this.index = index;
+		this.volume = volume;
 	}
 
 	public CJMachineRecipeComponent(
-			int index, Block block, int count, boolean as_block_id) {
+			CJMachineRecipeTarget target, int index, String tag, int count) {
 
+		this.target = target;
 		this.index = index;
-		if(!as_block_id) {
-			this.id = block.getItemID();
-		}
-		else {
-			this.id = block.blockID;
-		}
-
-		this.count = count;
+		this.tag = tag;
+		this.tagCount = count;
+		this.isTag = true;
 	}
 
-	public CJMachineRecipeComponent(
-			int index, Item item, int count) {
-
-		this.index = index;
-		this.id = item.itemID;
-		this.count = count;
-	}
-
-	public CJMachineRecipeComponent setTarget(CJMachineRecipeTarget value) {
-		target = value;
+	public CJMachineRecipeComponent setChance(float value) {
+		this.chance = value;
 		return this;
+	}
+
+	public CJMachineRecipeComponent setOptional(boolean value) {
+		this.optional = value;
+		return this;
+	}
+
+	public int getStackSize() {
+		if(isTag) return tagCount;
+		return stack.stackSize;
 	}
 }

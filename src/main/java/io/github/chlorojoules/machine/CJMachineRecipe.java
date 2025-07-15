@@ -2,6 +2,7 @@ package io.github.chlorojoules.machine;
 
 import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.CJRarity;
+import io.github.chlorojoules.CJTankVolume;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,8 +36,8 @@ public class CJMachineRecipe {
 
 		fuelIndex = 0;
 		CJMachineRecipeComponent fuelComponent = new CJMachineRecipeComponent(
-				builder.fuelTankIndex, CJMod.fuelFluid, fuelVolume)
-				.setTarget(CJMachineRecipeTarget.TANK);
+				builder.fuelTankIndex,
+				new CJTankVolume(CJMod.fluidChlorojoules, fuelVolume));
 
 		inputs.add(fuelComponent);
 		inputs.add(in);
@@ -59,8 +60,8 @@ public class CJMachineRecipe {
 
 		fuelIndex = 0;
 		CJMachineRecipeComponent fuelComponent = new CJMachineRecipeComponent(
-				builder.fuelTankIndex, CJMod.fuelFluid, fuelVolume)
-				.setTarget(CJMachineRecipeTarget.TANK);
+				builder.fuelTankIndex,
+				new CJTankVolume(CJMod.fluidChlorojoules, fuelVolume));
 
 		inputs.add(fuelComponent);
 		inputs.addAll(Arrays.asList(in));
