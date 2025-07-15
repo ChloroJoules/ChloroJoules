@@ -3,13 +3,10 @@ package io.github.chlorojoules;
 import com.fox2code.foxloader.loader.Mod;
 import io.github.chlorojoules.block.CJBlockMachineBase;
 import io.github.chlorojoules.gui.CJGuiButton;
-import io.github.chlorojoules.item.CJItemDescriptionModTag;
+import io.github.chlorojoules.item.*;
 import io.github.chlorojoules.machine.*;
 
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
-import io.github.chlorojoules.item.CJItemLinker;
-import io.github.chlorojoules.item.CJItemSoulExtractor;
-import io.github.chlorojoules.item.CJItemToolSoulSword;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.creative.CreativeTab;
 import net.minecraft.client.gui.creative.CreativeTabs;
@@ -47,6 +44,7 @@ import static io.github.chlorojoules.block.CJBlockMachineBase.*;
 public class CJMod extends Mod {
 	public static Map<String, CJMachineBuilder> machines = new HashMap<>();
 
+	// TODO: This can be removed in favour of `Fluid[s].java`.
 	public static List<ItemBucket> buckets = new ArrayList<>();
 	public static List<Integer> bucketFluids = new ArrayList<>();
 
@@ -59,6 +57,7 @@ public class CJMod extends Mod {
 	public static Block fluidSouls;
 	public static Item bucketFluidSouls;
 
+	public static Block primitiveMachineFrame;
 	public static Block machineFrame;
 	public static Block compactedJewelDust;
 
@@ -76,6 +75,7 @@ public class CJMod extends Mod {
 	public static Block mixer;
 
 	public static Item paste;
+	public static Item pasteBowl;
 
 	public static Item primalJewel;
 	public static Item manufacturedJewel;
@@ -85,6 +85,7 @@ public class CJMod extends Mod {
 	public static Item jewelDust;
 	public static Item soulDust;
 	public static Item soulEssence;
+	public static Item stoneDust;
 	public static Item ironDust;
 	public static Item goldDust;
 	public static Item soulCore;
@@ -93,6 +94,7 @@ public class CJMod extends Mod {
 	public static Item soulExtractor;
 	public static Item soulSword;
 	public static Item linker;
+	public static Item pruningShears;
 
 	public static Item ironRod;
 
@@ -171,11 +173,13 @@ public class CJMod extends Mod {
 	}
 
 	private Block registerFluid(String name) {
-		return registerBlock(
+		Block ret = registerBlock(
 				100.0f, 0.0f, StepSounds.SOUND_UNUSED, EnumTools.PICKAXE,
 				BlockFluid.class, name, Materials.WATER, name, true)
 				.disableStats()
 				.setLightOpacity(1);
+
+		return ret;
 	}
 
 	private Item registerFluidBucket(String name, int rarity, Block tile) {
@@ -308,8 +312,12 @@ public class CJMod extends Mod {
 		waterFluid = WATER_MOVING.blockID;
 		lavaFluid = LAVA_MOVING.blockID;
 
+		pasteBowl = registerItem(
+				PRIMAL_COLOR, 1, CJItemPasteBowl.class, "cj_paste_bowl");
+
 		paste = registerItem("cj_paste", PRIMAL_COLOR);
 		jewelDust = registerItem("cj_jewel_dust", MANUFACTURED_COLOR);
+		stoneDust = registerItem("cj_stone_dust", PRIMAL_COLOR);
 		ironDust = registerItem("cj_iron_dust", PRIMAL_COLOR);
 		goldDust = registerItem("cj_gold_dust", PRIMAL_COLOR);
 		ironRod = registerItem("cj_iron_rod", PRIMAL_COLOR);
@@ -350,9 +358,17 @@ public class CJMod extends Mod {
 						"cj_multi_fluid_empty",
 						"cj_multi_fluid_full" });
 
+		pruningShears = registerItem(
+				PRIMAL_COLOR, 1, CJItemToolPruningShears.class,
+				"cj_pruning_shears");
+
 		machineFrame = registerBlock(
 				"cj_machine_frame", Materials.ROCK, 1.5F, 10.0F,
 				StepSounds.SOUND_STONE, EnumTools.PICKAXE);
+
+		primitiveMachineFrame = registerBlock(
+				"cj_machine_frame_primitive", Materials.WOOD, 1.0F, 6.0F,
+				StepSounds.SOUND_WOOD, EnumTools.AXE);
 
 		compactedJewelDust = registerBlock(
 				"cj_block_jewel_dust", Materials.SAND, 1.5F, 0.0F,
@@ -754,9 +770,15 @@ public class CJMod extends Mod {
 			creativeTab.setTabIcon(new ItemStack(awakenedJewel));
 		}
 
+		ItemStack bowlStack = new ItemStack(BOWL);
+		ItemStack pasteBowlStack = new ItemStack(pasteBowl);
+
 		for(Block block : BLOCKS_LIST) {
 			if(block instanceof BlockLeavesBase) {
 				addTagItem("#leaves", block);
+
+				CraftingManager.getInstance().addShapelessRecipe(
+						pasteBowlStack, block, bowlStack);
 			}
 		}
 

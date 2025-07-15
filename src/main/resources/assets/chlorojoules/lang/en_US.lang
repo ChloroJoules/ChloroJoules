@@ -86,6 +86,7 @@ message.cj_tool_awakened=§BAwakened Jewel
 
 # Blocks.
 tile.cj_machine_frame.name=Machine Frame
+tile.cj_machine_frame_primitive.name=Primitive Machine Frame
 tile.cj_block_jewel_dust.name=Compacted Jewel Dust
 
 tile.cj_bugblock.name=BugBlock
@@ -132,16 +133,19 @@ item.cj_fluid_paste_bucket.name=Paste Bucket
 item.cj_fluid_chlorojoules_bucket.name=Bucket O' Joules
 item.cj_fluid_souls_bucket.name=Fluid Souls Bucket
 
+item.cj_stone_dust.name=Stone Dust
 item.cj_soul_dust.name=Soul Dust
 item.cj_soul_core.name=Soul Core
 item.cj_soul_extractor.name=Soul Extractor
 item.cj_soul_sword.name=Soul Slayer
+item.cj_pruning_shears.name=Pruning Shears
 item.cj_linker.name=Chloro Tool
 item.cj_soul_essence.name=Soul Essence
 item.cj_iron_dust.name=Iron Dust
 item.cj_gold_dust.name=Gold Dust
 item.cj_jewel_dust.name=ChloroJewel Dust
 item.cj_paste.name=Plant Paste
+item.cj_paste_bowl.name=Leafy Salad
 item.cj_iron_rod.name=Iron Rod
 item.cj_moss.name=Moss
 
