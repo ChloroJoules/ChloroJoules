@@ -36,29 +36,10 @@ public class CJInventoryHelper {
 		return adjacentInventories;
 	}
 
-	public static CJTileEntityMachineBase[] getAdjacentMachines(
-			World world, int x, int y, int z) {
-
-		CJTileEntityMachineBase[] adjacentMachines =
-				new CJTileEntityMachineBase[6];
-
-		adjacentMachines[0] = machineEntity(world, x + 1, y, z);
-		adjacentMachines[1] = machineEntity(world, x - 1, y, z);
-		adjacentMachines[2] = machineEntity(world, x, y + 1, z);
-		adjacentMachines[3] = machineEntity(world, x, y - 1, z);
-		adjacentMachines[4] = machineEntity(world, x, y, z + 1);
-		adjacentMachines[5] = machineEntity(world, x, y, z - 1);
-
-		return adjacentMachines;
-	}
-
 	public static int getMatchingOutputIndex(
 			IInventory inventory, int itemID) {
 
-		if(inventory instanceof CJTileEntityMachineBase) {
-			CJTileEntityMachineBase machine =
-					(CJTileEntityMachineBase) inventory;
-
+		if(inventory instanceof CJTileEntityMachineBase machine) {
 			for(int i = 0; i < machine.machineBuilder.slots.size(); ++i) {
 				CJMachineSlotInfo slot = machine.machineBuilder.slots.get(i);
 
@@ -89,10 +70,7 @@ public class CJInventoryHelper {
 	public static int getMatchingInputIndex(
 			IInventory inventory, int itemID) {
 
-		if(inventory instanceof CJTileEntityMachineBase) {
-			CJTileEntityMachineBase machine =
-					(CJTileEntityMachineBase) inventory;
-
+		if(inventory instanceof CJTileEntityMachineBase machine) {
 			for(int j = 0; j < machine.stacks.size(); j++) {
 				if(machine.machineBuilder.slots.get(j).output) {
 					continue;

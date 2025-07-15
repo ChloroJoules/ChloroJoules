@@ -9,7 +9,6 @@ import java.util.List;
 public class CJItemDescription implements ItemDesc {
 	public String description;
 
-	// TODO: Allow to take color as well -- translate to escape code.
 	public CJItemDescription(String value) {
 		description = value;
 	}

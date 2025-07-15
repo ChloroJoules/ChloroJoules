@@ -778,14 +778,11 @@ public class CJMod extends Mod {
 		// TODO: A two way mapping between bucket/fluid IDs would probably be
 		//       More efficient for lookup by `CJBlockMachineBase`.
 		// Register fluids/buckets.
-		for(int i = 0; i < ITEMS_LIST.length; i++) {
-			Item item = ITEMS_LIST[i];
-
+		for(Item item : ITEMS_LIST) {
 			if(item == null) continue;
-			if(!(item instanceof ItemBucket)) continue;
+			if(!(item instanceof ItemBucket bucket)) continue;
 			if(item == EMPTY_BUCKET) continue;
 
-			ItemBucket bucket = (ItemBucket) item;
 			buckets.add(bucket);
 
 			int fluidID = bucket.getHeldLiquid();

@@ -39,11 +39,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	public static CJTileEntityMachineBase machineEntity(
 			World world, int x, int y, int z) {
 
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-
-		if(!(tileEntity instanceof CJTileEntityMachineBase)) return null;
-
-		return (CJTileEntityMachineBase) tileEntity;
+		return (CJTileEntityMachineBase) world.getBlockTileEntity(x, y, z);
 	}
 
 	private void initFromBuilder(CJMachineBuilder builder) {

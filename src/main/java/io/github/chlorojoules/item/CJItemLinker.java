@@ -120,13 +120,18 @@ public class CJItemLinker extends Item {
 		CJMachineTransferor inserter =
 				(CJMachineTransferor) inserterMachine.impl;
 
-		if(extractor.linked != null && !isMulti) {
-			extractor.breakLink(world);
+		if(!isMulti) {
+			extractor.breakLink(world, extractorMachine);
+			inserter.breakLink(world, inserterMachine);
 		}
 
-		// TODO: Maintain list of linked in multi-mode.
-		extractor.linked = new int[] { blockX, blockY, blockZ };
-		inserter.linked = position;
+		if(isMulti || extractor.linked.isEmpty()) {
+			extractor.linked.add(new int[] { blockX, blockY, blockZ });
+		}
+		else extractor.linked.set(0, new int[] { blockX, blockY, blockZ });
+
+		if(inserter.linked.isEmpty()) inserter.linked.add(position);
+		else inserter.linked.set(0, position);
 
 		inserterMachine.coordinateDisplays.set(
 				0, new CJGuiCoordinateDisplay(position));

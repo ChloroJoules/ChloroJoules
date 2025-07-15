@@ -65,6 +65,11 @@ public class CJBlockMachineBase extends BlockContainer {
 	public void onBlockPlacedBy(
 			World world, int x, int y, int z, EntityLiving player) {
 
+		if(!iconDefault) {
+			super.onBlockPlacedBy(world, x, y, z, player);
+			return;
+		}
+
 		world.setBlockMetadataWithNotify(
 				x, y, z,
 				(MathHelper.floor_double(
