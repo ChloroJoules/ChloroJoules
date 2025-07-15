@@ -11,8 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.creative.CreativeTab;
 import net.minecraft.client.gui.creative.CreativeTabs;
 import net.minecraft.common.block.*;
-import net.minecraft.common.block.children.BlockFluid;
-import net.minecraft.common.block.children.BlockLeavesBase;
+import net.minecraft.common.block.children.*;
 import net.minecraft.common.block.data.Material;
 import net.minecraft.common.block.data.MaterialLiquid;
 import net.minecraft.common.block.data.Materials;
@@ -27,6 +26,7 @@ import net.minecraft.common.item.children.ItemBucket;
 import net.minecraft.common.item.data.EnumTools;
 import net.minecraft.common.recipe.CraftingManager;
 import net.minecraft.common.recipe.FurnaceRecipes;
+import net.minecraft.common.recipe.TaggedIngredients;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -73,6 +73,7 @@ public class CJMod extends Mod {
 	public static Block transferor;
 	public static Block tank;
 	public static Block mixer;
+	public static Block composter;
 
 	public static Item paste;
 	public static Item pasteBowl;
@@ -159,13 +160,13 @@ public class CJMod extends Mod {
 
 	public Block registerMachine(
 			String name, CJMachineBuilder builder, String[] iconNames,
-			int sideMode) {
+			int sideMode, int tier) {
 
 		builder.setMachineName(name);
 		machines.put(name, builder);
 
 		return new CJBlockMachineBase(
-				name, builder, iconNames, sideMode)
+				name, builder, iconNames, sideMode, tier)
 				.setBlockName(name)
 				.setCreativeTab(creativeTab)
 				.addDescription(new CJItemDescriptionModTag())
@@ -173,13 +174,11 @@ public class CJMod extends Mod {
 	}
 
 	private Block registerFluid(String name) {
-		Block ret = registerBlock(
+		return registerBlock(
 				100.0f, 0.0f, StepSounds.SOUND_UNUSED, EnumTools.PICKAXE,
 				BlockFluid.class, name, Materials.WATER, name, true)
 				.disableStats()
 				.setLightOpacity(1);
-
-		return ret;
 	}
 
 	private Item registerFluidBucket(String name, int rarity, Block tile) {
@@ -188,7 +187,27 @@ public class CJMod extends Mod {
 	}
 
 	public void registerRecipe(ItemStack output, Object... params) {
-		CraftingManager.getInstance(). addRecipe(output, params);
+		CraftingManager.getInstance().addRecipe(output, params);
+	}
+
+	public void registerRecipe(Item output, Object... params) {
+		registerRecipe(new ItemStack(output), params);
+	}
+
+	public void registerRecipe(Block output, Object... params) {
+		registerRecipe(new ItemStack(output), params);
+	}
+
+	public void registerShapelessRecipe(ItemStack output, Object... params) {
+		CraftingManager.getInstance().addShapelessRecipe(output, params);
+	}
+
+	public void registerShapelessRecipe(Item output, Object... params) {
+		registerShapelessRecipe(new ItemStack(output), params);
+	}
+
+	public void registerShapelessRecipe(Block output, Object... params) {
+		registerShapelessRecipe(new ItemStack(output), params);
 	}
 
 	public void registerFurnaceRecipe(int output, int input) {
@@ -390,7 +409,7 @@ public class CJMod extends Mod {
 						.addSlot(50, 35, false)
 						.addSlot(75, 35, true)
 						.setImpl(CJMachineBugBlock.class),
-				null, ALL_FACES);
+				null, ALL_FACES, INDUSTRIAL);
 
 		cultivator = registerMachine(
 				"cj_cultivator", new CJMachineBuilder()
@@ -445,7 +464,7 @@ public class CJMod extends Mod {
 						.addProgressBarGravityVCenter(
 								CENTER, (SLOT_IN_WIDTH * 4) / 3)
 						.setImpl(CJMachineRecipeConsumer.class),
-				null, FRONT_FACE);
+				null, FRONT_FACE, INDUSTRIAL);
 
 		liquefier = registerMachine(
 				"cj_liquefier", new CJMachineBuilder()
@@ -470,7 +489,7 @@ public class CJMod extends Mod {
 										1, new CJTankVolume(fluidPaste, 50)),
 								50, true, -1)
 						.setImpl(CJMachineRecipeConsumer.class),
-				null, FRONT_FACE);
+				null, FRONT_FACE, INDUSTRIAL);
 
 		refinery = registerMachine(
 				"cj_refinery", new CJMachineBuilder()
@@ -494,7 +513,7 @@ public class CJMod extends Mod {
 												fluidChlorojoules, 25)),
 								10, true, -1)
 						.setImpl(CJMachineRecipeConsumer.class),
-				null, FRONT_FACE);
+				null, FRONT_FACE, INDUSTRIAL);
 
 		solidifier = registerMachine(
 				"cj_solidifier", new CJMachineBuilder()
@@ -512,7 +531,7 @@ public class CJMod extends Mod {
 								BOTTOM_RIGHT, JEWEL_SLOT_INSET,
 								(WORKING_HEIGHT - FLUID_HEIGHT) / 2,
 								"message.cj_enable_refine_fuel",
-								manufacturedJewel.itemID)
+								new ItemStack(manufacturedJewel))
 						.addRecipe(
 								20,
 								new CJMachineRecipeComponent(
@@ -529,7 +548,7 @@ public class CJMod extends Mod {
 										0, new ItemStack(manufacturedJewel)),
 								650, false, 0)
 						.setImpl(CJMachineRecipeConsumer.class),
-				null, FRONT_FACE);
+				null, FRONT_FACE, INDUSTRIAL);
 
 		// TODO: Secondary output.
 		pulverizer = registerMachine(
@@ -602,7 +621,7 @@ public class CJMod extends Mod {
 										1, Item.dyePowder, 3),
 								150, false)*/
 						.setImpl(CJMachineRecipeConsumer.class),
-				null, FRONT_FACE);
+				null, FRONT_FACE, INDUSTRIAL);
 
 		press = registerMachine(
 				"cj_press", new CJMachineBuilder()
@@ -631,7 +650,7 @@ public class CJMod extends Mod {
 										1, new ItemStack(GEAR, 5)),
 								75, false, -1)
 						.setImpl(CJMachineRecipeConsumer.class),
-				null, FRONT_FACE);
+				null, FRONT_FACE, INDUSTRIAL);
 
 		furnace = registerMachine(
 				"cj_furnace", new CJMachineBuilder()
@@ -652,12 +671,10 @@ public class CJMod extends Mod {
 										1, new ItemStack(refinedJewel)),
 								300, CJRarity.MANUFACTURED, -1)
 						.setImpl(CJMachineRecipeConsumer.class),
-				null, FRONT_FACE);
+				null, FRONT_FACE, INDUSTRIAL);
 
 		toolStation = registerMachine(
 				"cj_tool_station", new CJMachineBuilder()
-						// TODO: These can just be centre-offset on either
-						//       Side.
 						.addSlotGravityVCenter(
 								TOP_LEFT,
 								JEWEL_SLOT_INSET,
@@ -668,7 +685,7 @@ public class CJMod extends Mod {
 								false)
 						.addProgressBarGravityVCenter(CENTER, 0)
 						.setImpl(CJMachineToolStation.class),
-				null, ALL_SIDES);
+				null, ALL_SIDES, INDUSTRIAL);
 
 		// TODO: For `Soul Extractor` -- make base tool then socket a
 		//       `Refined ChloroJewel` to use; allows player to reclaim
@@ -698,14 +715,53 @@ public class CJMod extends Mod {
 						"cj_flooper",
 						"cj_slooper",
 						"cj_multi_whooper",
-						"cj_multi_flooper" }, ALL_FACES);
+						"cj_multi_flooper" }, ALL_FACES, INDUSTRIAL);
 
 		tank = registerMachine(
 				"cj_tank", new CJMachineBuilder()
 						.addTankGravity(
 								CENTER, 0, 0, false, true,
 								16 * CJTank.BUCKET, 0),
-				null, ALL_SIDES);
+				null, ALL_SIDES, INDUSTRIAL);
+
+		composter = registerMachine(
+				"cj_composter", new CJMachineBuilder()
+						.addSlotGravityVCenter(
+								TOP_LEFT,
+								JEWEL_SLOT_INSET,
+								false)
+						.addSlotGravityVCenter(
+								CENTER,
+								JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
+								false)
+						.addProgressBarGravityVCenter(CENTER, 0)
+						.addButtonGravity(
+								BOTTOM_RIGHT, JEWEL_SLOT_INSET,
+								(WORKING_HEIGHT - FLUID_HEIGHT) / 2,
+								"message.cj_compost_bone_meal",
+								new ItemStack(DYE_POWDER, 1, 15))
+						.setImpl(CJMachineRecipeConsumer.class)
+						.addRecipe(
+								new CJMachineRecipe()
+										.addInput(new CJMachineRecipeComponent(
+												SLOT, 0, "#compostable", 1))
+										.addOutput(
+												new CJMachineRecipeComponent(
+														1, new ItemStack(
+														DYE_POWDER,
+														1, 15)))
+										.setProcessTime(1000)
+										.setRequiredButton(0))
+						.addRecipe(
+								new CJMachineRecipe()
+										.addInput(new CJMachineRecipeComponent(
+												SLOT, 0, "#compostable", 1))
+										.addOutput(
+												new CJMachineRecipeComponent(
+														1, new ItemStack(
+																DIRT)))
+										.setProcessTime(1000)),
+				null, FRONT_FACE, PRIMITIVE);
 
 		mixer = registerMachine(
 				"cj_mixer", new CJMachineBuilder()
@@ -727,7 +783,7 @@ public class CJMod extends Mod {
 								BOTTOM_RIGHT, JEWEL_SLOT_INSET,
 								(WORKING_HEIGHT - FLUID_HEIGHT) / 2,
 								"message.cj_enable_refine_fuel",
-								manufacturedJewel.itemID)
+								new ItemStack(manufacturedJewel))
 						.addRecipe(
 								150,
 								new CJMachineRecipeComponent[] {
@@ -761,7 +817,7 @@ public class CJMod extends Mod {
 								},
 								300, false, -1)
 						.setImpl(CJMachineRecipeConsumer.class),
-				null, FRONT_FACE);
+				null, FRONT_FACE, INDUSTRIAL);
 	}
 
 	@Override
@@ -770,16 +826,16 @@ public class CJMod extends Mod {
 			creativeTab.setTabIcon(new ItemStack(awakenedJewel));
 		}
 
-		ItemStack bowlStack = new ItemStack(BOWL);
-		ItemStack pasteBowlStack = new ItemStack(pasteBowl);
-
 		for(Block block : BLOCKS_LIST) {
 			if(block instanceof BlockLeavesBase) {
 				addTagItem("#leaves", block);
-
-				CraftingManager.getInstance().addShapelessRecipe(
-						pasteBowlStack, block, bowlStack);
+				addTagItem("#compostable", block);
 			}
+			else if(block instanceof BlockBasicPlant) {
+				addTagItem("#compostable", block);
+			}
+			else if(block instanceof BlockLog) addTagItem("#log", block);
+			else if(block instanceof BlockPlanks) addTagItem("#planks", block);
 		}
 
 		addTagItem("#iron_ore", IRON_ORE);
@@ -808,205 +864,191 @@ public class CJMod extends Mod {
 		}
 
 		// Recipe item stacks.
-		ItemStack pasteStack = new ItemStack(paste);
-		ItemStack primalJewelStack = new ItemStack(primalJewel);
-		ItemStack machineFrameStack = new ItemStack(machineFrame);
 		ItemStack machineFrame4Stack = new ItemStack(machineFrame, 4);
-		ItemStack liquefierStack = new ItemStack(liquefier);
-		ItemStack solidifierStack = new ItemStack(solidifier);
-		ItemStack refineryStack = new ItemStack(refinery);
-		ItemStack pulverizerStack = new ItemStack(pulverizer);
-		ItemStack pressStack = new ItemStack(press);
-		ItemStack toolStationStack = new ItemStack(toolStation);
 		ItemStack transferor8Stack = new ItemStack(transferor, 8);
-		ItemStack linkerStack = new ItemStack(linker);
-		ItemStack ironRodStack = new ItemStack(ironRod);
-		ItemStack furnaceStack = new ItemStack(FURNACE_IDLE);
-		ItemStack poweredFurnaceStack = new ItemStack(furnace);
-		ItemStack cobblestoneStack = new ItemStack(COBBLESTONE);
-		ItemStack ironAxeStack = new ItemStack(IRON_AXE);
-		ItemStack ironPickaxeStack = new ItemStack(IRON_PICKAXE);
-		ItemStack ironShovelStack = new ItemStack(IRON_SHOVEL);
-		ItemStack bucketStack = new ItemStack(EMPTY_BUCKET);
-		ItemStack brickStack = new ItemStack(Items.BRICK);
-		ItemStack ironBlockStack = new ItemStack(IRON_BLOCK);
-		ItemStack diamondStack = new ItemStack(DIAMOND);
-		ItemStack ironStack = new ItemStack(IRON_INGOT);
-		ItemStack goldStack = new ItemStack(GOLD_INGOT);
-		ItemStack flintStack = new ItemStack(FLINT);
-		ItemStack gunpowderStack = new ItemStack(GUNPOWDER);
-		ItemStack cauldronStack = new ItemStack(CAULDRON);
-		ItemStack chestStack = new ItemStack(CHEST);
-		ItemStack glassStack = new ItemStack(GLASS);
-		ItemStack ashStack = new ItemStack(ASH);
-		ItemStack coalStack = new ItemStack(COAL);
-		ItemStack jewelDustStack = new ItemStack(jewelDust);
 		ItemStack soulDust2Stack = new ItemStack(soulDust, 2);
-		ItemStack soulEssenceStack = new ItemStack(soulEssence);
-		ItemStack soulExtractorStack = new ItemStack(soulExtractor, 1, MAX_DAMAGE);
 		ItemStack soulSwordStack = new ItemStack(soulSword, 1, MAX_DAMAGE);
-		ItemStack mossStack = new ItemStack(moss);
-		ItemStack soulCoreStack = new ItemStack(soulCore);
-		ItemStack magmaStack = new ItemStack(MAGMA);
-		ItemStack mossyCobblestoneStack =
-				new ItemStack(MOSSY_COBBLESTONE);
+		ItemStack soulExtractorStack = new ItemStack(
+				soulExtractor, 1, MAX_DAMAGE);
 
 		// Vanilla machine recipes.
-		registerFurnaceRecipe(OAK_LEAVES, paste);
 		registerFurnaceRecipe(goldDust, GOLD_INGOT);
 		registerFurnaceRecipe(ironDust, IRON_INGOT);
 
+		for(Item item : tagList.get("#leaves")) {
+			registerFurnaceRecipe(item, paste);
+			registerShapelessRecipe(pasteBowl, item, BOWL);
+		}
+
+		for(Item log : tagList.get("#log")) {
+			for(Item plank : tagList.get("#planks")) {
+				registerRecipe(
+						primitiveMachineFrame,
+						"%|%",
+						"%~%",
+						"%#%",
+						'%', plank,
+						'~', paste,
+						'|', STICK,
+						'#', log);
+			}
+		}
+
 		// Crafting recipes.
+		registerShapelessRecipe(MOSSY_COBBLESTONE, COBBLESTONE, moss);
+		registerShapelessRecipe(soulDust2Stack, jewelDust, soulEssence);
+
 		registerRecipe(
 				machineFrame4Stack,
 				"%~%",
 				"~|~",
 				"% %",
-				'%', cobblestoneStack,
-				'~', pasteStack,
-				'|', cauldronStack);
-
-		CraftingManager.getInstance().addShapelessRecipe(
-				mossyCobblestoneStack, cobblestoneStack, mossStack);
+				'%', COBBLESTONE,
+				'~', paste,
+				'|', EMPTY_BUCKET);
 
 		registerRecipe(
-				ironRodStack,
+				ironRod,
 				"  #",
 				" # ",
 				"#  ",
-				'#', ironStack);
+				'#', IRON_INGOT);
 
 		registerRecipe(
-				primalJewelStack,
+				primalJewel,
 				" ~ ",
 				"~@~",
 				" ~ ",
-				'~', pasteStack,
-				'@', diamondStack);
+				'~', paste,
+				'@', DIAMOND);
 
 		registerRecipe(
-				liquefierStack,
+				liquefier,
 				"@@@",
 				"&|&",
 				"&%&",
-				'&', cobblestoneStack,
-				'%', furnaceStack,
-				'@', flintStack,
-				'|', machineFrameStack);
+				'&', COBBLESTONE,
+				'%', FURNACE_IDLE,
+				'@', FLINT,
+				'|', machineFrame);
 
 		registerRecipe(
-				solidifierStack,
+				solidifier,
 				"&@&",
 				"@|@",
 				"&%&",
-				'&', cobblestoneStack,
-				'@', ashStack,
-				'%', coalStack,
-				'|', machineFrameStack);
+				'&', COBBLESTONE,
+				'@', ASH,
+				'%', COAL,
+				'|', machineFrame);
 
 		registerRecipe(
-				refineryStack,
+				refinery,
 				"&%&",
 				"@|@",
 				"&&&",
-				'&', cobblestoneStack,
-				'@', glassStack,
-				'%', bucketStack,
-				'|', machineFrameStack);
+				'&', COBBLESTONE,
+				'@', GLASS,
+				'%', EMPTY_BUCKET,
+				'|', machineFrame);
 
 		registerRecipe(
-				pulverizerStack,
+				pulverizer,
 				"&@&",
 				"@|@",
 				"&%&",
-				'&', cobblestoneStack,
-				'@', flintStack,
-				'%', gunpowderStack,
-				'|', machineFrameStack);
+				'&', COBBLESTONE,
+				'@', FLINT,
+				'%', GUNPOWDER,
+				'|', machineFrame);
 
 		registerRecipe(
-				pressStack,
+				press,
 				"&@&",
 				"%|%",
 				"&%&",
-				'&', cobblestoneStack,
-				'@', ironBlockStack,
-				'%', brickStack,
-				'|', machineFrameStack);
+				'&', COBBLESTONE,
+				'@', IRON_BLOCK,
+				'%', Items.BRICK,
+				'|', machineFrame);
 
 		registerRecipe(
-				poweredFurnaceStack,
+				furnace,
 				"&&&",
 				"@|@",
 				"%&%",
-				'&', cobblestoneStack,
-				'@', coalStack,
-				'%', furnaceStack,
-				'|', machineFrameStack);
+				'&', COBBLESTONE,
+				'@', COAL,
+				'%', FURNACE_IDLE,
+				'|', machineFrame);
 
-		// TODO: This is broken.
 		registerRecipe(
-				toolStationStack,
+				toolStation,
 				"&&&",
 				"a|c",
 				"%b%",
-				'&', cobblestoneStack,
-				'a', ironAxeStack,
-				'b', ironPickaxeStack,
-				'c', ironShovelStack,
-				'|', machineFrameStack);
+				'&', COBBLESTONE,
+				'a', IRON_AXE,
+				'b', IRON_PICKAXE,
+				'c', IRON_SHOVEL,
+				'|', machineFrame);
 
 		registerRecipe(
 				transferor8Stack,
 				"&%&",
 				"&|&",
 				"&@&",
-				'&', cobblestoneStack,
-				'%', bucketStack,
-				'@', chestStack,
-				'|', machineFrameStack);
+				'&', COBBLESTONE,
+				'%', EMPTY_BUCKET,
+				'@', CHEST,
+				'|', machineFrame);
 
-//		registerRecipe(
-//				whooper4Stack,
-//				" % ",
-//				" | ",
-//				" # ",
-//				'%', chestStack,
-//				'#', ironStack,
-//				'|', machineFrameStack);
+		registerRecipe(
+				mixer,
+				"&#&",
+				"&|&",
+				"&@&",
+				'&', COBBLESTONE,
+				'@', BOWL,
+				'#', WOOD_SHOVEL,
+				'|', machineFrame);
+
+		registerRecipe(
+				tank,
+				"#&#",
+				"#|#",
+				"#&#",
+				'&', COBBLESTONE,
+				'#', GLASS,
+				'|', machineFrame);
 
 		registerRecipe(
 				soulSwordStack,
 				"  #",
 				" % ",
 				"@  ",
-				'%', soulCoreStack,
-				'#', magmaStack,
-				'@', ironRodStack);
+				'%', soulCore,
+				'#', MAGMA,
+				'@', ironRod);
 
 		registerRecipe(
 				soulExtractorStack,
 				" %#",
 				" @%",
 				"@  ",
-				'%', pasteStack,
-				'#', ironStack,
-				'@', ironRodStack);
+				'%', paste,
+				'#', IRON_INGOT,
+				'@', ironRod);
 
 		registerRecipe(
-				linkerStack,
+				linker,
 				" %|",
 				" @#",
 				"@  ",
-				'%', chestStack,
-				'#', bucketStack,
-				'|', pasteStack,
-				'@', ironRodStack);
-
-		CraftingManager.getInstance().addShapelessRecipe(
-				soulDust2Stack, jewelDustStack, soulEssenceStack);
-
-		// TODO: Add an auto-crafter.
+				'%', CHEST,
+				'#', EMPTY_BUCKET,
+				'|', paste,
+				'@', ironRod);
 
 		// Consume furnace recipes.
 		FurnaceRecipes furnaceRecipes = FurnaceRecipes.instance;

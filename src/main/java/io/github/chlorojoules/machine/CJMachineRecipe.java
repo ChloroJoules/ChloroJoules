@@ -11,14 +11,11 @@ public class CJMachineRecipe {
 	public ArrayList<CJMachineRecipeComponent> inputs = new ArrayList<>();
 	public ArrayList<CJMachineRecipeComponent> outputs = new ArrayList<>();
 
-	public CJRarity requiredRarity = CJRarity.PRIMAL;
-
 	public int processTime = 20;
-
 	public int fuelIndex = -1;
 
+	public CJRarity requiredRarity = CJRarity.PRIMAL;
 	boolean allowPassive = true;
-
 	public int requiredButton = -1;
 
 	// Fuel + In -> Out.
@@ -78,6 +75,38 @@ public class CJMachineRecipe {
 
 		inputs.add(in);
 		outputs.add(out);
+	}
+
+	public CJMachineRecipe() {}
+
+	public CJMachineRecipe addInput(CJMachineRecipeComponent component) {
+		inputs.add(component);
+		return this;
+	}
+
+	public CJMachineRecipe addOutput(CJMachineRecipeComponent component) {
+		outputs.add(component);
+		return this;
+	}
+
+	public CJMachineRecipe setProcessTime(int value) {
+		processTime = value;
+		return this;
+	}
+
+	public CJMachineRecipe setRequiredRarity(CJRarity value) {
+		requiredRarity = value;
+		return this;
+	}
+
+	public CJMachineRecipe setAllowPassive(boolean value) {
+		allowPassive = value;
+		return this;
+	}
+
+	public CJMachineRecipe setRequiredButton(int value) {
+		requiredButton = value;
+		return this;
 	}
 
 	public CJMachineRecipeComponent getFuelComponent() {

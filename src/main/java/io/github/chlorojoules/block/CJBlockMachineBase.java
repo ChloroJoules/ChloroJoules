@@ -36,19 +36,24 @@ public class CJBlockMachineBase extends BlockContainer {
 	public static final int ALL_SIDES = 1;
 	public static final int ALL_FACES = 2;
 
+	public static final int PRIMITIVE = 0;
+	public static final int INDUSTRIAL = 1;
+
 	private final String[] iconNames;
 	private final boolean iconDefault;
 	private final CJMachineBuilder machineBuilder;
 	private final int sideMode;
+	private final int tier;
 
 	public CJBlockMachineBase(
 			String id, CJMachineBuilder machineBuilder, String[] iconNames,
-			int sideMode) {
+			int sideMode, int tier) {
 
 		super(id, Materials.ROCK);
 
 		this.machineBuilder = machineBuilder;
 		this.sideMode = sideMode;
+		this.tier = tier;
 
 		this.iconDefault = (iconNames == null);
 		if(this.iconDefault) this.iconNames = new String[] { id };
@@ -248,10 +253,20 @@ public class CJBlockMachineBase extends BlockContainer {
 
 	@Override
 	protected void allocateTextures() {
+		String side = "cj_machine_side";
+		String top = "cj_machine_top";
+		String base = "cj_machine_base";
+
+		if(tier == PRIMITIVE) {
+			side += "_primitive";
+			top += "_primitive";
+			base += "_primitive";
+		}
+
 		if(this.iconDefault && sideMode == FRONT_FACE) {
-			this.addTexture("cj_machine_side", Face.ALL);
-			this.addTexture("cj_machine_top", Face.TOP);
-			this.addTexture("cj_machine_base", Face.BOTTOM);
+			this.addTexture(side, Face.ALL);
+			this.addTexture(top, Face.TOP);
+			this.addTexture(base, Face.BOTTOM);
 
 			this.addTexture(iconNames[0], Face.WEST, 0);
 			this.addTexture(iconNames[0], Face.NORTH, 1);
@@ -264,12 +279,11 @@ public class CJBlockMachineBase extends BlockContainer {
 		for(int i = 0; i < iconNames.length; i++) {
 			if(sideMode != ALL_FACES) {
 				this.addTexture(
-						sideMode == ALL_SIDES ?
-								iconNames[i] : "cj_machine_side",
+						sideMode == ALL_SIDES ? iconNames[i] : side,
 						Face.ALL, i);
 
-				this.addTexture("cj_machine_top", Face.TOP, i);
-				this.addTexture("cj_machine_base", Face.BOTTOM, i);
+				this.addTexture(top, Face.TOP, i);
+				this.addTexture(base, Face.BOTTOM, i);
 			}
 
 			this.addTexture(

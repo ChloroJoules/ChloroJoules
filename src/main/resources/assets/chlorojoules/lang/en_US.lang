@@ -61,8 +61,11 @@ message.cj_tool_station.help=Manipulate tools' ChloroJewels
 message.cj_tool_station.flavor=Jewels for your Joule powered Tools
 message.cj_tank.help=Stores fluid
 message.cj_tank.flavor=Has a pocket healer
+message.cj_composter.help=Converts biological material to dirt or bone meal
+message.cj_composter.flavor=What's a villager workstation?
 
 message.cj_enable_refine_fuel=Allow processing of fuel tank
+message.cj_compost_bone_meal=Compost to bone meal
 
 message.cj_transferor.help=Transfers items or fluids through the air
 message.cj_transferor.flavor=Quagsire the floppy disk basketball broth enjoyer
@@ -100,6 +103,7 @@ tile.cj_press.name=Press
 tile.cj_furnace.name=Furnace
 tile.cj_tool_station.name=Tool Station
 tile.cj_tank.name=Tank
+tile.cj_composter.name=Composter
 
 tile.cj_transferor.cj_inactive.name=Transferor
 tile.cj_transferor.cj_flooper.name=Transferor [Transmit Fluid]
@@ -126,6 +130,7 @@ inventory.cj_furnace=Furnace
 inventory.cj_tool_station=Tool Station
 inventory.cj_transferor=Transferor
 inventory.cj_tank=Tank
+inventory.cj_composter=Composter
 inventory.cj_mixer=Mixer
 
 # Items.

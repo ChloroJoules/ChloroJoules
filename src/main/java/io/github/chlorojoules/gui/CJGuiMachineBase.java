@@ -401,9 +401,9 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 			x += BUTTON_LABEL_INSET;
 			y += BUTTON_LABEL_INSET;
 
-			ItemStack stack = new ItemStack(button.label, 1);
 			itemRenderer.renderItemIntoGUI(
-					this.fontRenderer, this.mc.renderEngine, stack, x, y);
+					this.fontRenderer, this.mc.renderEngine, button.label,
+					x, y);
 
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			mc.renderEngine.bindTexture(texture);

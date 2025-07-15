@@ -97,7 +97,7 @@ public class CJMachineBuilder {
 	}
 
 	public CJMachineBuilder addButton(
-			int x, int y, String tooltip, int label) {
+			int x, int y, String tooltip, ItemStack label) {
 
 		buttons.add(new CJGuiButton(x, y, tooltip, label));
 
@@ -105,7 +105,8 @@ public class CJMachineBuilder {
 	}
 
 	public CJMachineBuilder addButtonGravity(
-			CJGuiGravity anchor, int x, int y, String tooltip, int label) {
+			CJGuiGravity anchor, int x, int y, String tooltip,
+			ItemStack label) {
 
 		return addButton(
 				CJGuiGravityInfo.getButtonAnchoredX(anchor, x),
@@ -258,6 +259,11 @@ public class CJMachineBuilder {
 
 		recipes.add(new CJMachineRecipe(in, out, ticks));
 
+		return this;
+	}
+
+	public CJMachineBuilder addRecipe(CJMachineRecipe recipe) {
+		recipes.add(recipe);
 		return this;
 	}
 
@@ -453,13 +459,16 @@ public class CJMachineBuilder {
 		// Handle fuel separately from other fluid inputs.
 		int powerScale = CJRarityInfo.getRarityPowerScale(entity.jewelRarity);
 		CJMachineRecipeComponent fuelComponent = recipe.getFuelComponent();
-		int cost = fuelComponent.volume.current / powerScale;
+		if(fuelComponent != null) {
+			int cost = fuelComponent.volume.current / powerScale;
 
-		if(recipe.fuelIndex != -1) {
-			if(!entity.isPassive) {
-				CJTankVolume volume = entity.tanks.get(fuelComponent.index);
+			if(recipe.fuelIndex != -1) {
+				if(!entity.isPassive) {
+					CJTankVolume volume =
+							entity.tanks.get(fuelComponent.index);
 
-				volume.removeFluid(0, cost, true);
+					volume.removeFluid(0, cost, true);
+				}
 			}
 		}
 
