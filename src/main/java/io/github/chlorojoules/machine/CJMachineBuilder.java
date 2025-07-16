@@ -110,7 +110,9 @@ public class CJMachineBuilder {
 
 				fuelTankIndex = tanks.size();
 
-				tanks.add(new CJTank(LEFT, FUEL_TANK_INSET, 0));
+				tanks.add((CJTank) new CJTank(LEFT, FUEL_TANK_INSET, 0)
+						.setID("fuel"));
+
 				tankVolumes.add(new CJTankVolume()
 						.setMax(FUEL_TANK_SIZE)
 						.setLockFluid(CJMod.fuelFluid));
@@ -137,7 +139,7 @@ public class CJMachineBuilder {
 
 				jewelSlotIndex = slots.size();
 
-				slots.add(new CJMachineSlotInfo(
+				slots.add((CJMachineSlotInfo) new CJMachineSlotInfo(
 						JEWEL_SLOT_INSET_X, JEWEL_SLOT_INSET_Y)
 						.setGravity(BOTTOM_LEFT)
 						.setRenderType(CJMachineSlotRenderType.JEWEL)
@@ -147,7 +149,8 @@ public class CJMachineBuilder {
 								new ItemStack(CJMod.manufacturedJewel),
 								new ItemStack(CJMod.refinedJewel),
 								new ItemStack(CJMod.awakenedJewel)
-						}));
+						})
+						.setID("jewel"));
 			}
 			else {
 				Logger.getLogger("Chlorojoules").warning(

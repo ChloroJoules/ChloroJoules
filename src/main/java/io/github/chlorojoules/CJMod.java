@@ -185,10 +185,17 @@ public class CJMod extends Mod {
 	public static ItemStack stackFromJson(JsonObject jsonObject) {
 		String key = JsonUtils.getString(jsonObject, "item");
 
-		Item item = GameRegistry.getRegisteredItem(key);
-		if(item == null) item = earlyItemMap.get("item." + key);
+		ItemStack result = null;
 
-		ItemStack result = new ItemStack(item);
+		Item item = GameRegistry.getRegisteredItem(key);
+		if(item == null) {
+			Block block = GameRegistry.getRegisteredBlock(key);
+			if(block == null) {
+				result = new ItemStack(earlyItemMap.get("item." + key));
+			}
+			else result = new ItemStack(block);
+		}
+		else result = new ItemStack(item);
 
 		if(jsonObject.has("amount")) {
 			result.stackSize = JsonUtils.getInt(jsonObject, "amount");
@@ -451,9 +458,6 @@ public class CJMod extends Mod {
 				"cj_block_jewel_dust", Materials.SAND, 1.5F, 0.0F,
 				StepSounds.SOUND_SAND, EnumTools.SHOVEL);
 
-		// TODO: Feels like machines could be declared in JSON or smth (so too
-		//       For all our registry here -- make our lives easier?)
-
 		// TODO: Need a big machine UI fixup to make them more distinct and
 		//       Improve alignment.
 
@@ -469,151 +473,13 @@ public class CJMod extends Mod {
 				new CJMachineBuilder("/machines/cj_refinery.json"));
 
 		solidifier = registerMachine(
-				new CJMachineBuilder()
-						.setName("cj_solidifier")
-						.setRarity(CJRarity.PRIMAL)
-						.addFuelTank()
-						.addTankGravityVCenter(
-								TOP_LEFT,
-								JEWEL_SLOT_INSET_X + SLOT_OUT_WIDTH,
-								false, false, 8 * CJTank.BUCKET, 0)
-						.addSlotGravityVCenter(
-								CENTER, SLOT_IN_WIDTH * 4, true)
-						.addJewelSlot()
-						.addProgressBarGravityVCenter(CENTER, 0)
-						.addButtonGravity(
-								BOTTOM_RIGHT, JEWEL_SLOT_INSET_X,
-								(WORKING_HEIGHT - FLUID_HEIGHT) / 2,
-								"message.cj_enable_refine_fuel",
-								new ItemStack(manufacturedJewel))
-						.addRecipe(
-								20,
-								new CJMachineRecipeComponent(
-										1, new CJTankVolume(fluidPaste, 30)),
-								new CJMachineRecipeComponent(
-										0, new ItemStack(paste, 2)),
-								150, true, -1)
-						.addRecipe(
-								100,
-								new CJMachineRecipeComponent(
-										0, new CJTankVolume(
-												fluidChlorojoules, 900)),
-								new CJMachineRecipeComponent(
-										0, new ItemStack(manufacturedJewel)),
-								650, false, 0));
+				new CJMachineBuilder("/machines/cj_solidifier.json"));
 
 		pulverizer = registerMachine(
-				new CJMachineBuilder()
-						.setName("cj_pulverizer")
-						.addFuelTank()
-						.addSlotGravityVCenter(
-								TOP_LEFT,
-								JEWEL_SLOT_INSET_X + SLOT_OUT_WIDTH,
-								false)
-						.addSlotGravityVCenter(
-								CENTER, SLOT_IN_WIDTH * 4, true)
-						.addJewelSlot()
-						.addProgressBarGravityVCenter(CENTER, 0)
-						.addRecipe(
-								10,
-								new CJMachineRecipeComponent(
-										0, new ItemStack(fauxJewel)),
-								new CJMachineRecipeComponent(
-										1, new ItemStack(jewelDust, 1)),
-								100, false, -1)
-						.addRecipe(
-								10,
-								new CJMachineRecipeComponent(
-										0, new ItemStack(primalJewel)),
-								new CJMachineRecipeComponent(
-										1, new ItemStack(jewelDust, 2)),
-								100, false, -1)
-						.addRecipe(
-								10,
-								new CJMachineRecipeComponent(
-										0, new ItemStack(manufacturedJewel)),
-								new CJMachineRecipeComponent(
-										1, new ItemStack(jewelDust, 4)),
-								200, false, -1)
-						.addRecipe(
-								10,
-								new CJMachineRecipeComponent(
-										0, new ItemStack(refinedJewel)),
-								new CJMachineRecipeComponent(
-										1, new ItemStack(jewelDust, 8)),
-								250, false, -1)
-						.addRecipe(
-								10,
-								new CJMachineRecipeComponent(
-										0, new ItemStack(awakenedJewel)),
-								new CJMachineRecipeComponent(
-										1, new ItemStack(jewelDust, 16)),
-								350, false, -1)
-						// TODO: Need to handle more ore types.
-						.addRecipe(
-								30,
-								new CJMachineRecipeComponent(
-										SLOT, 0, "#iron_ore", 1),
-								new CJMachineRecipeComponent(
-										1, new ItemStack(ironDust, 2)),
-								150, false, -1)
-						.addRecipe(
-								30,
-								new CJMachineRecipeComponent(
-										SLOT, 0, "#gold_ore", 1),
-								new CJMachineRecipeComponent(
-										1, new ItemStack(goldDust, 2)),
-								150, false, -1)
-						.addRecipe(
-								10,
-								new CJMachineRecipeComponent(
-										0, new ItemStack(Items.SUGAR_CANE)),
-								new CJMachineRecipeComponent(
-										1, new ItemStack(SUGAR, 4)),
-								150, false, -1)
-						.addRecipe(
-								10,
-								new CJMachineRecipeComponent(
-										0, new ItemStack(GRAVEL)),
-								new CJMachineRecipeComponent(
-										1, new ItemStack(SAND)),
-								200, true, -1)
-						// TODO: Add dyes when we have damage values.
-						/*.addRecipe(
-								10,
-								new CJMachineRecipeComponent(
-										0, Item.bone, 1),
-								new CJMachineRecipeComponent(
-										1, Item.dyePowder, 3),
-								150, false)*/);
+				new CJMachineBuilder("/machines/cj_pulverizer.json"));
 
 		press = registerMachine(
-				new CJMachineBuilder()
-						.setName("cj_press")
-						.addFuelTank()
-						.addSlotGravityVCenter(
-								TOP_LEFT,
-								JEWEL_SLOT_INSET_X + SLOT_OUT_WIDTH,
-								false)
-						.addSlotGravityVCenter(
-								CENTER, SLOT_IN_WIDTH * 4, true)
-						.addJewelSlot()
-						.addProgressBarGravityVCenter(CENTER, 0)
-						.addRecipe(
-								160,
-								new CJMachineRecipeComponent(
-										0, new ItemStack(jewelDust, 4)),
-								new CJMachineRecipeComponent(
-										1, new ItemStack(
-												compactedJewelDust)),
-								150, false, -1)
-						.addRecipe(
-								65,
-								new CJMachineRecipeComponent(
-										0, new ItemStack(IRON_INGOT)),
-								new CJMachineRecipeComponent(
-										1, new ItemStack(GEAR, 5)),
-								75, false, -1));
+				new CJMachineBuilder("/machines/cj_press.json"));
 
 		furnace = registerMachine(
 				new CJMachineBuilder()

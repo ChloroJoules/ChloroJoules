@@ -1,0 +1,62 @@
+{
+  "name": "cj_press",
+  "rarity": "manufactured",
+  "tanks": [
+    "fuel"
+  ],
+  "slots": [
+    "jewel",
+    {
+      "name": "input",
+      "anchor": "center",
+      "x": -24
+    },
+    {
+      "name": "output",
+      "anchor": "center",
+      "x": 35,
+      "y": 4,
+
+      "output": true
+    }
+  ],
+  "progress": {
+    "anchor": "center"
+  },
+  "recipes": [
+    {
+      "ticks": 350,
+      "fuel": 260,
+      "inputs": [
+        {
+          "target": "input",
+          "item": "chlorojoules:cj_jewel_dust",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "item": "chlorojoules:cj_block_jewel_dust"
+        }
+      ]
+    },
+    {
+      "ticks": 100,
+      "fuel": 125,
+      "inputs": [
+        {
+          "target": "input",
+          "item": "iron_ingot",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "item": "gear"
+        }
+      ]
+    }
+  ]
+}

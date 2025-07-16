@@ -59,6 +59,11 @@ public class CJGuiElement {
 		return this;
 	}
 
+	public CJGuiElement setID(String value) {
+		this.id = value;
+		return this;
+	}
+
 	public CJGuiElement setDamageExclusive(int[] damageExclusive) {
 		this.damageExclusive = damageExclusive;
 		return this;
