@@ -40,8 +40,6 @@ message.cj_link_switch_multi_fluid=§9Switched to multi-fluid mode
 message.cj_link_switch_multi_item=§6Switched to multi-item mode
 
 # Help messages.
-message.cj_bugblock.help=Adds all the bugs!
-message.cj_bugblock.flavor=Will never threaten to stab you and, in fact, cannot speak
 message.cj_liquefier.help=Turns items into fluids
 message.cj_liquefier.flavor=Conducting a Fluid-ic ritual
 message.cj_cultivator.help=Encourages plants to grow faster
@@ -71,17 +69,7 @@ message.cj_enable_refine_fuel=Allow processing of fuel tank
 message.cj_compost_bone_meal=Compost to bone meal
 
 message.cj_transferor.help=Transfers items or fluids through the air
-message.cj_transferor.flavor=Quagsire the floppy disk basketball broth enjoyer
-
-message.cj_flooper.help=Extracts fluids from adjacent inventories
-message.cj_flooper.flavor=Can't read floppy disks
-message.cj_slooper.help=Inserts fluids into adjacent inventories from linked flooper
-message.cj_slooper.flavor=Drinks broth loudly
-
-message.cj_whooper.help=Extracts items from adjacent inventories
-message.cj_whooper.flavor=Not Quagsire
-message.cj_swooper.help=Inserts items into adjacent inventories from linked whooper
-message.cj_swooper.flavor=An adequate basketball player
+message.cj_transferor.flavor=Has a 5G cell connection
 
 ## NOTE: See `ChatColors.java`.
 message.cj_tool_none=§CNo Jewel
@@ -95,7 +83,6 @@ tile.cj_machine_frame.name=Machine Frame
 tile.cj_machine_frame_primitive.name=Primitive Machine Frame
 tile.cj_block_jewel_dust.name=Compacted Jewel Dust
 
-tile.cj_bugblock.name=BugBlock
 tile.cj_liquefier.name=Liquefier
 tile.cj_cultivator.name=Cultivator
 tile.cj_refinery.name=Refinery

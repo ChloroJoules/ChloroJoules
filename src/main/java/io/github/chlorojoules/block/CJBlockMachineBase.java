@@ -6,16 +6,15 @@ import io.github.chlorojoules.CJTankVolume;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.gui.CJGuiMachineBase;
 import io.github.chlorojoules.item.CJItemBlockMachineBase;
+import io.github.chlorojoules.item.CJItemDescriptionModTag;
+import io.github.chlorojoules.machine.CJMachineBlockSideMode;
+import io.github.chlorojoules.machine.CJMachineTier;
 import io.github.chlorojoules.machine.CJMachineBuilder;
 import net.minecraft.client.Minecraft;
-import net.minecraft.common.block.Block;
 import net.minecraft.common.block.children.BlockContainer;
-import net.minecraft.common.block.data.Material;
 import net.minecraft.common.block.data.Materials;
-import net.minecraft.common.block.data.PickBlockHelper;
 import net.minecraft.common.block.fluid.Fluid;
 import net.minecraft.common.block.fluid.Fluids;
-import net.minecraft.common.block.sound.StepSound;
 import net.minecraft.common.block.sound.StepSounds;
 import net.minecraft.common.block.texture.Face;
 import net.minecraft.common.block.tileentity.TileEntity;
@@ -29,35 +28,20 @@ import net.minecraft.common.item.data.EnumTools;
 import net.minecraft.common.util.math.MathHelper;
 import net.minecraft.common.world.World;
 
+import static io.github.chlorojoules.CJRarityInfo.getRarityColor;
 import static io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase.machineEntity;
 
 public class CJBlockMachineBase extends BlockContainer {
-	public static final int FRONT_FACE = 0;
-	public static final int ALL_SIDES = 1;
-	public static final int ALL_FACES = 2;
-
-	public static final int PRIMITIVE = 0;
-	public static final int INDUSTRIAL = 1;
-
-	private final String[] iconNames;
-	private final boolean iconDefault;
 	public CJMachineBuilder machineBuilder;
-	private final int sideMode;
-	private final int tier;
 
-	public CJBlockMachineBase(
-			String id, CJMachineBuilder machineBuilder, String[] iconNames,
-			int sideMode, int tier) {
-
-		super(id, Materials.ROCK);
+	public CJBlockMachineBase(CJMachineBuilder machineBuilder) {
+		super(machineBuilder.name, Materials.ROCK);
 
 		this.machineBuilder = machineBuilder;
-		this.sideMode = sideMode;
-		this.tier = tier;
 
-		this.iconDefault = (iconNames == null);
-		if(this.iconDefault) this.iconNames = new String[] { id };
-		else this.iconNames = iconNames;
+		super.setBlockName(machineBuilder.name);
+		super.addDescription(new CJItemDescriptionModTag());
+		super.setTooltipColor(getRarityColor(machineBuilder.rarity));
 
 		// Machines have the same basic block properties by default.
 		super.setHardness(1.5F);
@@ -70,7 +54,7 @@ public class CJBlockMachineBase extends BlockContainer {
 	public void onBlockPlacedBy(
 			World world, int x, int y, int z, EntityLiving player) {
 
-		if(!iconDefault) {
+		if(!machineBuilder.iconDefault) {
 			super.onBlockPlacedBy(world, x, y, z, player);
 			return;
 		}
@@ -86,7 +70,7 @@ public class CJBlockMachineBase extends BlockContainer {
 			World world, int x, int y, int z, int metadata, int facing,
 			EntityLiving player) {
 
-		if(!iconDefault) return false;
+		if(!machineBuilder.iconDefault) return false;
 
 		if(metadata >= 3) { // SOUTH
 			world.setBlockMetadata(x, y, z, 0); // WEST
@@ -203,7 +187,7 @@ public class CJBlockMachineBase extends BlockContainer {
 
 	@Override
 	protected ItemBlock initializeItemBlock() {
-		return new CJItemBlockMachineBase(this, !iconDefault);
+		return new CJItemBlockMachineBase(this, !machineBuilder.iconDefault);
 	}
 
 	@Override
@@ -257,29 +241,33 @@ public class CJBlockMachineBase extends BlockContainer {
 		String top = "cj_machine_top";
 		String base = "cj_machine_base";
 
-		if(tier == PRIMITIVE) {
+		if(machineBuilder.tier == CJMachineTier.PRIMITIVE) {
 			side += "_primitive";
 			top += "_primitive";
 			base += "_primitive";
 		}
 
-		if(this.iconDefault && sideMode == FRONT_FACE) {
+		if(machineBuilder.iconDefault &&
+				machineBuilder.sideMode == CJMachineBlockSideMode.FRONT_FACE) {
+
 			this.addTexture(side, Face.ALL);
 			this.addTexture(top, Face.TOP);
 			this.addTexture(base, Face.BOTTOM);
 
-			this.addTexture(iconNames[0], Face.WEST, 0);
-			this.addTexture(iconNames[0], Face.NORTH, 1);
-			this.addTexture(iconNames[0], Face.EAST, 2);
-			this.addTexture(iconNames[0], Face.SOUTH, 3);
+			this.addTexture(machineBuilder.iconNames[0], Face.WEST, 0);
+			this.addTexture(machineBuilder.iconNames[0], Face.NORTH, 1);
+			this.addTexture(machineBuilder.iconNames[0], Face.EAST, 2);
+			this.addTexture(machineBuilder.iconNames[0], Face.SOUTH, 3);
 
 			return;
 		}
 
-		for(int i = 0; i < iconNames.length; i++) {
-			if(sideMode != ALL_FACES) {
+		for(int i = 0; i < machineBuilder.iconNames.length; i++) {
+			if(machineBuilder.sideMode != CJMachineBlockSideMode.ALL_FACES) {
 				this.addTexture(
-						sideMode == ALL_SIDES ? iconNames[i] : side,
+						machineBuilder.sideMode ==
+								CJMachineBlockSideMode.ALL_SIDES ?
+								machineBuilder.iconNames[i] : side,
 						Face.ALL, i);
 
 				this.addTexture(top, Face.TOP, i);
@@ -287,8 +275,10 @@ public class CJBlockMachineBase extends BlockContainer {
 			}
 
 			this.addTexture(
-					iconNames[i],
-					sideMode == ALL_FACES ? Face.ALL : Face.WEST, i);
+					machineBuilder.iconNames[i],
+					machineBuilder.sideMode ==
+							CJMachineBlockSideMode.ALL_FACES ?
+							Face.ALL : Face.WEST, i);
 		}
 	}
 
@@ -298,7 +288,7 @@ public class CJBlockMachineBase extends BlockContainer {
 	}
 
 	public String getIconName(String itemName, int metadata) {
-		if(this.iconDefault) return itemName;
-		else return itemName + "." + iconNames[metadata];
+		if(machineBuilder.iconDefault) return itemName;
+		else return itemName + "." + machineBuilder.iconNames[metadata];
 	}
 }

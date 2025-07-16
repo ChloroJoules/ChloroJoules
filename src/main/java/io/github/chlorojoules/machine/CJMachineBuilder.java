@@ -1,5 +1,6 @@
 package io.github.chlorojoules.machine;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -9,7 +10,6 @@ import io.github.chlorojoules.gui.*;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.util.JsonUtils;
 import net.minecraft.common.util.i18n.StringTranslate;
-import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +28,9 @@ public class CJMachineBuilder {
 
 	public String name = null;
 	public CJRarity rarity = CJRarity.MANUFACTURED;
-	public Class<? extends CJIMachine> machineImpl = null;
+	public Class<? extends CJIMachine> machineImpl =
+			CJMachineRecipeConsumer.class;
+
 	public boolean doDropMeta = true;
 
 	public int fuelTankIndex = -1;
@@ -44,6 +46,11 @@ public class CJMachineBuilder {
 	public ArrayList<CJGuiCoordinate> linkCoordinates = new ArrayList<>();
 
 	public ArrayList<CJMachineRecipe> recipes = new ArrayList<>();
+
+	public String[] iconNames = null;
+	public boolean iconDefault = true;
+	public CJMachineBlockSideMode sideMode = CJMachineBlockSideMode.FRONT_FACE;
+	public CJMachineTier tier = CJMachineTier.INDUSTRIAL;
 
 	public CJMachineBuilder() {}
 
@@ -69,6 +76,22 @@ public class CJMachineBuilder {
 		name = JsonUtils.getString(root, "name");
 		rarity = CJRarityInfo.getNamedRarity(
 				JsonUtils.getString(root, "rarity"));
+
+		if(root.has("tier")) {
+			tier = CJMachineTier.fromString(
+					JsonUtils.getString(root, "tier"));
+		}
+
+		if(root.has("icons")) {
+			JsonArray icons = JsonUtils.getJsonArray(root, "icons");
+			iconDefault = false;
+			iconNames = new String[icons.size()];
+
+			for(int i = 0; i < icons.size(); ++i) {
+				iconNames[i] = icons.get(i).getAsString();
+			}
+		}
+		else iconNames = new String[] { name };
 
 		for(JsonElement tank : JsonUtils.getJsonArray(root, "tanks")) {
 			if(tank.isJsonObject()) {
@@ -162,7 +185,8 @@ public class CJMachineBuilder {
 		return -1;
 	}
 
-	public CJMachineBuilder setMachineName(String value) {
+	public CJMachineBuilder setName(String value) {
+		iconNames = new String[] { value };
 		name = value;
 		return this;
 	}
@@ -363,6 +387,21 @@ public class CJMachineBuilder {
 		return addProgressBar(
 				CJGuiGravityInfo.getProgressBarAnchoredX(anchor, x),
 				CJGuiGravityInfo.getProgressBarAnchoredY(CENTER, 0));
+	}
+
+	public CJMachineBuilder setTier(CJMachineTier value) {
+		tier = value;
+		return this;
+	}
+
+	public CJMachineBuilder setSideMode(CJMachineBlockSideMode value) {
+		sideMode = value;
+		return this;
+	}
+
+	public CJMachineBuilder setIconNames(String[] value) {
+		iconNames = value;
+		return this;
 	}
 
 	public CJMachineBuilder addRecipe(

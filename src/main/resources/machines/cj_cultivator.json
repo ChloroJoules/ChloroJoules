@@ -1,0 +1,100 @@
+{
+  "name": "cj_cultivator",
+  "rarity": "primal",
+  "tanks": [
+    "fuel",
+    {
+      "name": "water",
+      "anchor": "left",
+      "x": 58,
+
+      "volume": 4000,
+      "fluid": "water"
+    }
+  ],
+  "slots": [
+    "jewel",
+    {
+      "name": "seed",
+      "anchor": "center",
+      "x": -10,
+      "y": -3
+    },
+    {
+      "name": "fertilizer",
+      "anchor": "bottom",
+      "x": -10,
+      "y": 24,
+      "render": "fertilizer"
+    },
+    {
+      "name": "output",
+      "anchor": "center",
+      "x": 56,
+      "output": true
+    }
+  ],
+  "progress": {
+    "anchor": "center",
+    "x": 18,
+    "y": -3
+  },
+  "recipes": [
+    {
+      "ticks": 100,
+      "fuel": 50,
+      "inputs": [
+        {
+          "target": "seed",
+          "item": "seeds",
+          "amount": 0
+        },
+        {
+          "target": "water",
+          "fluid": "water",
+          "amount": 100
+        },
+        {
+          "target": "fertilizer",
+          "item": "dye",
+          "damage": 15,
+          "optional": true
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "item": "wheat"
+        }
+      ]
+    },
+    {
+      "ticks": 100,
+      "fuel": 50,
+      "inputs": [
+        {
+          "target": "seed",
+          "item": "mossy_cobblestone",
+          "amount": 0
+        },
+        {
+          "target": "water",
+          "fluid": "water",
+          "amount": 100
+        },
+        {
+          "target": "fertilizer",
+          "item": "dye",
+          "damage": 15,
+          "optional": true
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "item": "chlorojoules:cj_moss"
+        }
+      ]
+    }
+  ]
+}

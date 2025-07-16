@@ -37,10 +37,10 @@ public enum CJGuiGravity {
 
 	public int alignX(int x) {
 		return switch(this) {
-			case TOP, TOP_LEFT, BOTTOM, BOTTOM_LEFT, LEFT -> x;
+			case TOP_LEFT, BOTTOM_LEFT, LEFT -> x;
 			case TOP_RIGHT, BOTTOM_RIGHT, RIGHT -> WORKING_WIDTH - x;
 
-			case CENTER -> (WORKING_WIDTH / 2) + x;
+			case TOP, BOTTOM, CENTER -> (WORKING_WIDTH / 2) + x;
 		};
 	}
 

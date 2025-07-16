@@ -1,10 +1,13 @@
 package io.github.chlorojoules;
 
 import com.fox2code.foxloader.loader.Mod;
+import com.fox2code.foxloader.loader.ModLoader;
+import com.fox2code.foxloader.registry.CommandRegistry;
 import com.fox2code.foxloader.registry.GameRegistry;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.chlorojoules.block.CJBlockMachineBase;
+import io.github.chlorojoules.command.CommandCJ;
 import io.github.chlorojoules.gui.CJMachineSlotRenderType;
 import io.github.chlorojoules.item.*;
 import io.github.chlorojoules.machine.*;
@@ -18,6 +21,8 @@ import net.minecraft.common.block.children.*;
 import net.minecraft.common.block.data.Material;
 import net.minecraft.common.block.data.MaterialLiquid;
 import net.minecraft.common.block.data.Materials;
+import net.minecraft.common.block.fluid.Fluid;
+import net.minecraft.common.block.fluid.Fluids;
 import net.minecraft.common.block.sound.StepSound;
 import net.minecraft.common.block.sound.StepSounds;
 import net.minecraft.common.block.tileentity.TileEntity;
@@ -25,6 +30,7 @@ import net.minecraft.common.item.Item;
 
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.item.*;
+import net.minecraft.common.item.block.ItemBlock;
 import net.minecraft.common.item.children.ItemBucket;
 import net.minecraft.common.item.data.EnumTools;
 import net.minecraft.common.recipe.CraftingManager;
@@ -50,6 +56,13 @@ public class CJMod extends Mod {
 	public static List<ItemBucket> buckets = new ArrayList<>();
 	public static List<Integer> bucketFluids = new ArrayList<>();
 
+	// TODO: This is turbo stupid but there doesn't seem to be a way
+	//		 To iterate *just* the Vanilla mod container.
+	//		 This is not guaranteed to be full -- and honestly we don't want
+	//		 It to be -- but should contain all Vanilla items mapped from their
+	//		 Display name translation key to their implementation.
+	public static HashMap<String, Item> earlyItemMap = new HashMap<>();
+
 	public static HashMap<String, ArrayList<Item>> tagList = new HashMap<>();
 
 	public static Block fluidChlorojoules;
@@ -63,7 +76,6 @@ public class CJMod extends Mod {
 	public static Block machineFrame;
 	public static Block compactedJewelDust;
 
-	public static Block bugBlock;
 	public static Block cultivator;
 	public static Block liquefier;
 	public static Block solidifier;
@@ -134,6 +146,17 @@ public class CJMod extends Mod {
 		return types;
 	}
 
+	public static Block fluidFromName(String name) {
+		Block block = GameRegistry.getRegisteredBlock(name);
+		if(block != null) return block;
+
+		for(Fluid fluid : Fluids.getFluids()) {
+			if(fluid.getName().equals(name)) return fluid.getMoving();
+		}
+
+		throw new RuntimeException();
+	}
+
 	public static void addTagItem(String tag, Item item) {
 		tagList.putIfAbsent(tag, new ArrayList<>());
 		tagList.get(tag).add(item);
@@ -160,15 +183,10 @@ public class CJMod extends Mod {
 	}
 
 	public static ItemStack stackFromJson(JsonObject jsonObject) {
-		Item item;
+		String key = JsonUtils.getString(jsonObject, "item");
 
-		JsonElement idElement = jsonObject.get("item");
-		if(JsonUtils.isString(idElement)) {
-			item = GameRegistry.getRegisteredItem(idElement.getAsString());
-		}
-		else {
-			item = ITEMS_LIST[idElement.getAsInt()];
-		}
+		Item item = GameRegistry.getRegisteredItem(key);
+		if(item == null) item = earlyItemMap.get("item." + key);
 
 		ItemStack result = new ItemStack(item);
 
@@ -183,20 +201,11 @@ public class CJMod extends Mod {
 		return result;
 	}
 
-	public Block registerMachine(
-			String name, CJMachineBuilder builder, String[] iconNames,
-			int sideMode, int tier) {
+	public Block registerMachine(CJMachineBuilder builder) {
+		Block result = new CJBlockMachineBase(builder)
+				.setCreativeTab(creativeTab);
 
-		builder.setMachineName(name);
-
-		Block result = new CJBlockMachineBase(
-				name, builder, iconNames, sideMode, tier)
-				.setBlockName(name)
-				.setCreativeTab(creativeTab)
-				.addDescription(new CJItemDescriptionModTag())
-				.setTooltipColor(getRarityColor(builder.rarity));
-
-		machines.put(name, (CJBlockMachineBase) result);
+		machines.put(builder.name, (CJBlockMachineBase) result);
 
 		return result;
 	}
@@ -321,6 +330,15 @@ public class CJMod extends Mod {
 
 	@Override
 	public void onPreInit() {
+		for(Item item : ITEMS_LIST) {
+			if(item == null) continue;
+
+			String name = item.getItemName();
+			if(name == null) continue;
+
+			earlyItemMap.putIfAbsent(name.replace("tile.", "item."), item);
+		}
+
 		boolean setTab = false;
 		// TODO: This doesn't work atm.
 //		for(int i = 0; i < CreativeTabs.TABS.length; ++i) {
@@ -339,6 +357,8 @@ public class CJMod extends Mod {
 
 		TileEntity.addMapping(
 				CJTileEntityMachineBase.class, "cj_machine_base");
+
+		CommandRegistry.registerCommand(new CommandCJ());
 
 		fluidChlorojoules = registerFluid("cj_fluid_chlorojoules");
 		bucketFluidChlorojoules = registerFluidBucket(
@@ -439,84 +459,15 @@ public class CJMod extends Mod {
 
 		// TODO: Make achievements to get ready for when they start working!
 
-		bugBlock = registerMachine(
-				"cj_bugblock", new CJMachineBuilder()
-						.setRarity(CJRarity.AWAKENED)
-						.addTank(
-								15, 15, false, false, 4 * CJTank.BUCKET, 0)
-						.addSlot(50, 35, false)
-						.addSlot(75, 35, true)
-						.setImpl(CJMachineBugBlock.class),
-				null, ALL_FACES, INDUSTRIAL);
-
 		cultivator = registerMachine(
-				"cj_cultivator", new CJMachineBuilder()
-						.setRarity(CJRarity.MANUFACTURED)
-						.addFuelTank()
-						.addTankGravityVCenter(
-								CENTER, -25, false, false,
-								4 * CJTank.BUCKET,
-								waterFluid)
-						.addSlotGravity(CENTER, 0, 0, false)
-						.addSlotGravity(CENTER, 0, 24, false)
-						.setSlotRenderType(
-								1, CJMachineSlotRenderType.FERTILIZER)
-						.setSlotAllowedItems(
-								1, new ItemStack[] {
-										new ItemStack(DYE_POWDER, 1, 15) })
-						.addSlotGravity(
-								CENTER, SLOT_IN_WIDTH * 4, 0, true)
-						.addJewelSlot()
-						.addRecipe(
-								50,
-								new CJMachineRecipeComponent[] {
-										new CJMachineRecipeComponent(
-												0, new ItemStack(SEEDS, 0)),
-										new CJMachineRecipeComponent(
-												1, new CJTankVolume(
-														WATER_MOVING, 100)),
-										new CJMachineRecipeComponent(
-												1, new ItemStack(
-														DYE_POWDER, 1, 15))
-												.setOptional(true),
-								},
-								new CJMachineRecipeComponent[] {
-										new CJMachineRecipeComponent(
-												2, new ItemStack(WHEAT))
-								},
-								100, false, -1)
-						.addRecipe(
-								20,
-								new CJMachineRecipeComponent[] {
-										new CJMachineRecipeComponent(
-												0, new ItemStack(
-														MOSSY_COBBLESTONE, 0)),
-										new CJMachineRecipeComponent(
-												1, new CJTankVolume(
-														WATER_MOVING, 100)),
-										new CJMachineRecipeComponent(
-												1, new ItemStack(
-														DYE_POWDER, 1, 15))
-												.setOptional(true),
-								},
-								new CJMachineRecipeComponent[] {
-										new CJMachineRecipeComponent(
-												2, new ItemStack(moss))
-								},
-								100, false, -1)
-						.addProgressBarGravityVCenter(
-								CENTER, (SLOT_IN_WIDTH * 4) / 3)
-						.setImpl(CJMachineRecipeConsumer.class),
-				null, FRONT_FACE, INDUSTRIAL);
+				new CJMachineBuilder("/machines/cj_cultivator.json"));
 
 		liquefier = registerMachine(
-				"cj_liquefier",
-				new CJMachineBuilder("/machines/liquefier.json")
-						.setImpl(CJMachineRecipeConsumer.class),
-				null, FRONT_FACE, INDUSTRIAL);
+				new CJMachineBuilder("/machines/cj_liquefier.json"));
 
 		refinery = registerMachine(
-				"cj_refinery", new CJMachineBuilder()
+				new CJMachineBuilder()
+						.setName("cj_refinery")
 						.setRarity(CJRarity.PRIMAL)
 						.addFuelTank()
 						.addTankGravityVCenter(
@@ -535,12 +486,11 @@ public class CJMod extends Mod {
 								new CJMachineRecipeComponent(
 										2, new CJTankVolume(
 												fluidChlorojoules, 25)),
-								10, true, -1)
-						.setImpl(CJMachineRecipeConsumer.class),
-				null, FRONT_FACE, INDUSTRIAL);
+								10, true, -1));
 
 		solidifier = registerMachine(
-				"cj_solidifier", new CJMachineBuilder()
+				new CJMachineBuilder()
+						.setName("cj_solidifier")
 						.setRarity(CJRarity.PRIMAL)
 						.addFuelTank()
 						.addTankGravityVCenter(
@@ -570,13 +520,11 @@ public class CJMod extends Mod {
 												fluidChlorojoules, 900)),
 								new CJMachineRecipeComponent(
 										0, new ItemStack(manufacturedJewel)),
-								650, false, 0)
-						.setImpl(CJMachineRecipeConsumer.class),
-				null, FRONT_FACE, INDUSTRIAL);
+								650, false, 0));
 
-		// TODO: Secondary output.
 		pulverizer = registerMachine(
-				"cj_pulverizer", new CJMachineBuilder()
+				new CJMachineBuilder()
+						.setName("cj_pulverizer")
 						.addFuelTank()
 						.addSlotGravityVCenter(
 								TOP_LEFT,
@@ -657,12 +605,11 @@ public class CJMod extends Mod {
 										0, Item.bone, 1),
 								new CJMachineRecipeComponent(
 										1, Item.dyePowder, 3),
-								150, false)*/
-						.setImpl(CJMachineRecipeConsumer.class),
-				null, FRONT_FACE, INDUSTRIAL);
+								150, false)*/);
 
 		press = registerMachine(
-				"cj_press", new CJMachineBuilder()
+				new CJMachineBuilder()
+						.setName("cj_press")
 						.addFuelTank()
 						.addSlotGravityVCenter(
 								TOP_LEFT,
@@ -686,12 +633,11 @@ public class CJMod extends Mod {
 										0, new ItemStack(IRON_INGOT)),
 								new CJMachineRecipeComponent(
 										1, new ItemStack(GEAR, 5)),
-								75, false, -1)
-						.setImpl(CJMachineRecipeConsumer.class),
-				null, FRONT_FACE, INDUSTRIAL);
+								75, false, -1));
 
 		furnace = registerMachine(
-				"cj_furnace", new CJMachineBuilder()
+				new CJMachineBuilder()
+						.setName("cj_furnace")
 						.addFuelTank()
 						.addSlotGravityVCenter(
 								TOP_LEFT,
@@ -707,12 +653,11 @@ public class CJMod extends Mod {
 										0, new ItemStack(compactedJewelDust)),
 								new CJMachineRecipeComponent(
 										1, new ItemStack(refinedJewel)),
-								300, CJRarity.MANUFACTURED, -1)
-						.setImpl(CJMachineRecipeConsumer.class),
-				null, FRONT_FACE, INDUSTRIAL);
+								300, CJRarity.MANUFACTURED, -1));
 
 		toolStation = registerMachine(
-				"cj_tool_station", new CJMachineBuilder()
+				new CJMachineBuilder()
+						.setName("cj_tool_station")
 						.addSlotGravityVCenter(
 								TOP_LEFT,
 								JEWEL_SLOT_INSET_X,
@@ -722,8 +667,8 @@ public class CJMod extends Mod {
 								JEWEL_SLOT_INSET_X + SLOT_OUT_WIDTH,
 								false)
 						.addProgressBarGravityVCenter(CENTER, 0)
-						.setImpl(CJMachineToolStation.class),
-				null, ALL_SIDES, INDUSTRIAL);
+						.setSideMode(CJMachineBlockSideMode.ALL_SIDES)
+						.setImpl(CJMachineToolStation.class));
 
 		// TODO: For `Soul Extractor` -- make base tool then socket a
 		//       `Refined ChloroJewel` to use; allows player to reclaim
@@ -732,7 +677,8 @@ public class CJMod extends Mod {
 		// TODO: Figure out how to make Gear controls.
 		// TODO: UI to allow floopers to be filtered on one fluid kind.
 		transferor = registerMachine(
-				"cj_transferor", new CJMachineBuilder()
+				new CJMachineBuilder()
+						.setName("cj_transferor")
 						.addCoordinateGravityHCenter(
 								CENTER, 12, "message.cj_link_coordinate")
 						.addTankGravity(
@@ -745,25 +691,29 @@ public class CJMod extends Mod {
 						.setTankDamageExclusive(0, new int[] {
 								CJMachineTransferor.TRANSMIT_FLUIDS,
 								CJMachineTransferor.MULTI_TRANSMIT_FLUIDS })
-						.setImpl(CJMachineTransferor.class),
-				new String[] {
-						"cj_inactive",
-						"cj_whooper",
-						"cj_swooper",
-						"cj_flooper",
-						"cj_slooper",
-						"cj_multi_whooper",
-						"cj_multi_flooper" }, ALL_FACES, INDUSTRIAL);
+						.setSideMode(CJMachineBlockSideMode.ALL_FACES)
+						.setIconNames(new String[] {
+								"cj_inactive",
+								"cj_whooper",
+								"cj_swooper",
+								"cj_flooper",
+								"cj_slooper",
+								"cj_multi_whooper",
+								"cj_multi_flooper"
+						})
+						.setImpl(CJMachineTransferor.class));
 
 		tank = registerMachine(
-				"cj_tank", new CJMachineBuilder()
+				new CJMachineBuilder()
+						.setName("cj_tank")
 						.addTankGravity(
 								CENTER, 0, 0, false, true,
-								16 * CJTank.BUCKET, 0),
-				null, ALL_SIDES, INDUSTRIAL);
+								16 * CJTank.BUCKET, 0)
+						.setImpl(null));
 
 		composter = registerMachine(
-				"cj_composter", new CJMachineBuilder()
+				new CJMachineBuilder()
+						.setName("cj_composter")
 						.addSlotGravityVCenter(
 								TOP_LEFT,
 								JEWEL_SLOT_INSET_X,
@@ -778,7 +728,6 @@ public class CJMod extends Mod {
 								(WORKING_HEIGHT - FLUID_HEIGHT) / 2,
 								"message.cj_compost_bone_meal",
 								new ItemStack(DYE_POWDER, 1, 15))
-						.setImpl(CJMachineRecipeConsumer.class)
 						.addRecipe(
 								new CJMachineRecipe()
 										.addInput(new CJMachineRecipeComponent(
@@ -798,11 +747,12 @@ public class CJMod extends Mod {
 												new CJMachineRecipeComponent(
 														1, new ItemStack(
 														DIRT)))
-										.setProcessTime(1000)),
-				null, FRONT_FACE, PRIMITIVE);
+										.setProcessTime(1000))
+						.setTier(CJMachineTier.PRIMITIVE));
 
 		primitiveCentrifuge = registerMachine(
-				"cj_primitive_centrifuge", new CJMachineBuilder()
+				new CJMachineBuilder()
+						.setName("cj_primitive_centrifuge")
 						.addSlotGravityVCenter(TOP_LEFT, 32, false)
 						.addSlotGravity(BOTTOM_LEFT, 10, 16, false)
 						.setSlotRenderType(1, CJMachineSlotRenderType.PASTE)
@@ -878,11 +828,11 @@ public class CJMod extends Mod {
 														stoneDust))
 														.setChance(0.85F))
 										.setProcessTime(100))
-						.setImpl(CJMachineRecipeConsumer.class),
-				null, FRONT_FACE, PRIMITIVE);
+						.setTier(CJMachineTier.PRIMITIVE));
 
 		mixer = registerMachine(
-				"cj_mixer", new CJMachineBuilder()
+				new CJMachineBuilder()
+						.setName("cj_mixer")
 						.setRarity(CJRarity.REFINED)
 						.addFuelTank()
 						.addTankGravityVCenter(
@@ -933,9 +883,7 @@ public class CJMod extends Mod {
 														fluidChlorojoules,
 														700))
 								},
-								300, false, -1)
-						.setImpl(CJMachineRecipeConsumer.class),
-				null, FRONT_FACE, INDUSTRIAL);
+								300, false, -1));
 	}
 
 	@Override

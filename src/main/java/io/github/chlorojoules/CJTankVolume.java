@@ -1,6 +1,7 @@
 package io.github.chlorojoules;
 
 import com.fox2code.foxloader.registry.GameRegistry;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.common.block.Block;
 import net.minecraft.common.util.JsonUtils;
@@ -36,8 +37,8 @@ public class CJTankVolume {
 		}
 
 		if(jsonObject.has("fluid")) {
-			String fluid = JsonUtils.getString(jsonObject, "fluid");
-			fluidID = GameRegistry.getRegisteredBlock(fluid).blockID;
+			fluidID = CJMod.fluidFromName(
+					JsonUtils.getString(jsonObject, "fluid")).blockID;
 		}
 	}
 
