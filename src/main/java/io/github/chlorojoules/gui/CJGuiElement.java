@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.common.util.JsonUtils;
 
 public class CJGuiElement {
+	public String id;
 	public CJGuiGravity gravity = CJGuiGravity.TOP_LEFT;
 	public int xDisplayPosition = 0;
 	public int yDisplayPosition = 0;
@@ -20,6 +21,10 @@ public class CJGuiElement {
 	}
 
 	public CJGuiElement(JsonObject jsonObject) {
+		if(jsonObject.has("name")) {
+			id = JsonUtils.getString(jsonObject, "name");
+		}
+
 		if(jsonObject.has("anchor")) {
 			gravity = CJGuiGravity.fromString(
 					JsonUtils.getString(jsonObject, "anchor"));

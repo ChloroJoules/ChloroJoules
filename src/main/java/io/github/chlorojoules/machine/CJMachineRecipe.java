@@ -101,6 +101,11 @@ public class CJMachineRecipe {
 							JsonUtils.getInt(jsonObject, "fuel"))));
 		}
 
+		if(jsonObject.has("button")) {
+			requiredButton = builder.getButtonIndex(
+					JsonUtils.getString(jsonObject, "button"));
+		}
+
 		for(JsonElement input : JsonUtils.getJsonArray(jsonObject, "inputs")) {
 			inputs.add(new CJMachineRecipeComponent(
 					builder, input.getAsJsonObject()));

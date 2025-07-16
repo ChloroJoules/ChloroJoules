@@ -466,27 +466,7 @@ public class CJMod extends Mod {
 				new CJMachineBuilder("/machines/cj_liquefier.json"));
 
 		refinery = registerMachine(
-				new CJMachineBuilder()
-						.setName("cj_refinery")
-						.setRarity(CJRarity.PRIMAL)
-						.addFuelTank()
-						.addTankGravityVCenter(
-								TOP_LEFT,
-								JEWEL_SLOT_INSET_X + SLOT_OUT_WIDTH,
-								false, false, 8 * CJTank.BUCKET, 0)
-						.addTankGravityVCenter(
-								CENTER, SLOT_IN_WIDTH * 4, true, false,
-								8 * CJTank.BUCKET, 0)
-						.addJewelSlot()
-						.addProgressBarGravityVCenter(CENTER, 0)
-						.addRecipe(
-								1,
-								new CJMachineRecipeComponent(
-										1, new CJTankVolume(fluidPaste, 20)),
-								new CJMachineRecipeComponent(
-										2, new CJTankVolume(
-												fluidChlorojoules, 25)),
-								10, true, -1));
+				new CJMachineBuilder("/machines/cj_refinery.json"));
 
 		solidifier = registerMachine(
 				new CJMachineBuilder()

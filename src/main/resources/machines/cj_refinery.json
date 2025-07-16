@@ -1,0 +1,49 @@
+{
+  "name": "cj_refinery",
+  "rarity": "primal",
+  "tanks": [
+    "fuel",
+    {
+      "name": "input",
+      "anchor": "left",
+      "x": 58,
+
+      "volume": 8000
+    },
+    {
+      "name": "output",
+      "anchor": "center",
+      "x": 30,
+
+      "volume": 8000,
+      "output": true
+    }
+  ],
+  "slots": [
+    "jewel"
+  ],
+  "progress": {
+    "anchor": "center"
+  },
+  "recipes": [
+    {
+      "passive": true,
+      "ticks": 10,
+      "fuel": 1,
+      "inputs": [
+        {
+          "target": "input",
+          "fluid": "chlorojoules:cj_fluid_paste",
+          "amount": 20
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "fluid": "chlorojoules:cj_fluid_chlorojoules",
+          "amount": 25
+        }
+      ]
+    }
+  ]
+}

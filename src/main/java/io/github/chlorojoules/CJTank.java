@@ -14,7 +14,6 @@ public class CJTank extends CJGuiElement {
 	// Millibuckets per bucket.
 	public static final int BUCKET = 1000;
 
-	public String id;
 	public boolean output = false;
 	public boolean bidirectional = false;
 
@@ -36,8 +35,6 @@ public class CJTank extends CJGuiElement {
 		super(jsonObject);
 
 		setSize(FLUID_WIDTH, FLUID_HEIGHT);
-
-		id = JsonUtils.getString(jsonObject, "name");
 
 		if(jsonObject.has("output")) {
 			output = JsonUtils.getBoolean(jsonObject, "output");

@@ -155,6 +155,12 @@ public class CJMachineBuilder {
 			}
 		}
 
+		if(root.has("buttons")) {
+			for(JsonElement button : JsonUtils.getJsonArray(root, "buttons")) {
+				buttons.add(new CJGuiButton(button.getAsJsonObject()));
+			}
+		}
+
 		JsonObject progressObject = JsonUtils.getJsonObject(root, "progress");
 		progressBar = new CJGuiElement(progressObject)
 				.setSize(PROGRESS_WIDTH, PROGRESS_HEIGHT);
@@ -170,6 +176,16 @@ public class CJMachineBuilder {
 			CJMachineSlotInfo slot = slots.get(i);
 			if(slot.id == null) continue;
 			if(slot.id.equals(id)) return i;
+		}
+
+		return -1;
+	}
+
+	public int getButtonIndex(String id) {
+		for(int i = 0; i < buttons.size(); i++) {
+			CJGuiButton button = buttons.get(i);
+			if(button.id == null) continue;
+			if(button.id.equals(id)) return i;
 		}
 
 		return -1;
