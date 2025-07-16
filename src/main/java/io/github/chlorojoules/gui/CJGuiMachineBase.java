@@ -7,6 +7,7 @@ import io.github.chlorojoules.CJTankVolume;
 import io.github.chlorojoules.container.CJContainerMachineBase;
 import io.github.chlorojoules.machine.CJMachineBuilder;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
+import io.github.chlorojoules.machine.CJMachineSlotInfo;
 import net.minecraft.client.gui.GuiContainer;
 import net.minecraft.client.renderer.world.RenderHelper;
 import net.minecraft.client.renderer.world.Tessellator;
@@ -276,7 +277,7 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 			slotX = baseX + slot.xDisplayPosition;
 			slotY = baseY + slot.yDisplayPosition;
 
-			if(slot.isOutput()) {
+			if(slot.info != null && slot.info.output) {
 				drawTexturedModalRect(
 						slotX - SLOT_OUT_OFFSET_X, slotY - SLOT_OUT_OFFSET_Y,
 						SLOT_OUT_X, SLOT_OUT_Y,
@@ -286,9 +287,20 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 				int inX = SLOT_IN_X;
 				int inY = SLOT_IN_Y;
 
-				if(slot.isGem() && machineEntity.stacks.get(i) == null) {
-					inX = SLOT_JEWEL_X;
-					inY = SLOT_JEWEL_Y;
+				if(slot.info != null &&
+						slot.info.renderType != CJMachineSlotInfo.DEFAULT &&
+						machineEntity.stacks.get(i) == null) {
+
+					if(slot.info.renderType == CJMachineSlotInfo.GEM) {
+						inX = SLOT_JEWEL_X;
+						inY = SLOT_JEWEL_Y;
+					}
+					else if(slot.info.renderType ==
+							CJMachineSlotInfo.FERTILIZER) {
+
+						inX = SLOT_FERTILIZER_X;
+						inY = SLOT_FERTILIZER_Y;
+					}
 				}
 
 				drawTexturedModalRect(

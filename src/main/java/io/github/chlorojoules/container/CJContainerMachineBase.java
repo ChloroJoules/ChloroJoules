@@ -31,13 +31,13 @@ public class CJContainerMachineBase extends Container {
 			for(int column = 0; column < 9; column++) {
 				addSlot(new CJGuiMachineBaseSlot(
 						player, inventory, column + (row * 9) + 9,
-						8 + (column * 18), 84 + (row * 18)));
+						8 + (column * 18), 84 + (row * 18), null));
 			}
 		}
 
 		for(int i = 0; i < 9; i++) {
 			addSlot(new CJGuiMachineBaseSlot(
-					player, inventory, i, 8 + i * 18, 142));
+					player, inventory, i, 8 + i * 18, 142, null));
 		}
 	}
 
@@ -65,9 +65,8 @@ public class CJContainerMachineBase extends Container {
 			CJGuiMachineBaseSlot slot =
 					new CJGuiMachineBaseSlot(
 							player, machineEntity, i,
-							info.xDisplayPosition, info.yDisplayPosition)
-							.setOutput(info.output)
-							.setGem(info.isGem());
+							info.xDisplayPosition, info.yDisplayPosition,
+							info);
 
 			addSlot(slot);
 		}

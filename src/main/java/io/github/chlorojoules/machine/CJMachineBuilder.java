@@ -3,11 +3,13 @@ package io.github.chlorojoules.machine;
 import io.github.chlorojoules.*;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.gui.*;
+import net.minecraft.common.item.Item;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.util.i18n.StringTranslate;
 import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static io.github.chlorojoules.CJRarityInfo.raritySufficient;
 import static io.github.chlorojoules.gui.CJGuiGravity.*;
@@ -66,6 +68,14 @@ public class CJMachineBuilder {
 			int slot, int[] damageExclusive) {
 
 		slots.get(slot).setDamageExclusive(damageExclusive);
+
+		return this;
+	}
+
+	public CJMachineBuilder setSlotRenderType(
+			int slot, int renderType) {
+
+		slots.get(slot).setRenderType(renderType);
 
 		return this;
 	}
@@ -174,7 +184,14 @@ public class CJMachineBuilder {
 				/* Align bottom of Jewel slot with fuel tank. */
 				(WORKING_HEIGHT - FLUID_HEIGHT) / 2, false);
 
-		slots.getLast().setGem(true);
+		slots.getLast().setAllowedItems(
+				new ItemStack[] {
+						new ItemStack(CJMod.primalJewel),
+						new ItemStack(CJMod.manufacturedJewel),
+						new ItemStack(CJMod.refinedJewel),
+						new ItemStack(CJMod.awakenedJewel)
+				})
+				.setRenderType(CJMachineSlotInfo.GEM);
 
 		return this;
 	}
@@ -288,6 +305,8 @@ public class CJMachineBuilder {
 			CJTileEntityMachineBase entity,
 			CJMachineRecipeComponent component, boolean input) {
 
+		if(component.optional) return true;
+
 		if(component.target == CJMachineRecipeTarget.TANK) {
 			CJTankVolume volume = entity.tanks.get(component.index);
 
@@ -299,6 +318,7 @@ public class CJMachineBuilder {
 			ItemStack stack = entity.stacks.get(component.index);
 
 			if(stack == null) return !input;
+
 			if(component.isTag) {
 				return CJMod.matchesTagItem(component.tag, stack);
 			}
@@ -389,6 +409,13 @@ public class CJMachineBuilder {
 					}
 
 					if(volume.current < component.volume.current) {
+						if(component.optional) {
+							entity.isPassive = true;
+							entity.errorMessage = "message.cj_no_optional";
+							entity.isWarning = true;
+							continue;
+						}
+
 						entity.errorMessage =
 								translate.translateKey("message.cj_resource");
 
@@ -398,7 +425,21 @@ public class CJMachineBuilder {
 				else {
 					ItemStack stack = entity.stacks.get(component.index);
 
+					if(component.optional && stack == null) {
+						entity.isPassive = true;
+						entity.errorMessage = "message.cj_no_optional";
+						entity.isWarning = true;
+						continue;
+					}
+
 					if(stack.stackSize < component.getStackSize()) {
+						if(component.optional) {
+							entity.isPassive = true;
+							entity.errorMessage = "message.cj_no_optional";
+							entity.isWarning = true;
+							continue;
+						}
+
 						entity.errorMessage =
 								translate.translateKey("message.cj_resource");
 
@@ -454,6 +495,7 @@ public class CJMachineBuilder {
 		// Timescale and ticking.
 		int timeScale = CJRarityInfo.getRarityTimeScale(entity.jewelRarity);
 		entity.operationLength = recipe.processTime / timeScale;
+		if(entity.isPassive) entity.operationLength *= 2;
 		if(entity.operationTicks++ < entity.operationLength) return false;
 
 		// Handle fuel separately from other fluid inputs.
@@ -476,12 +518,18 @@ public class CJMachineBuilder {
 		for(int i = 0; i < recipe.inputs.size(); i++) {
 			CJMachineRecipeComponent component = recipe.inputs.get(i);
 
+			if(ThreadLocalRandom.current().nextFloat() > component.chance) {
+				continue;
+			}
+
 			if(component.target == CJMachineRecipeTarget.TANK) {
 				CJTankVolume volume = entity.tanks.get(component.index);
 				volume.removeFluid(0, component.volume.current, true);
 			}
 			else {
 				ItemStack inputStack = entity.stacks.get(component.index);
+
+				if(component.optional && inputStack == null) continue;
 
 				if(inputStack.stackSize == component.getStackSize()) {
 					entity.stacks.set(component.index, null);
@@ -493,6 +541,10 @@ public class CJMachineBuilder {
 		// Generic outputs.
 		for(int i = 0; i < recipe.outputs.size(); i++) {
 			CJMachineRecipeComponent component = recipe.outputs.get(i);
+
+			if(ThreadLocalRandom.current().nextFloat() > component.chance) {
+				continue;
+			}
 
 			if(component.target == CJMachineRecipeTarget.TANK) {
 				CJTankVolume volume = entity.tanks.get(component.index);

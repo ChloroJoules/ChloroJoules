@@ -12,6 +12,7 @@ message.cj_full_tool=Tool already has jewel
 message.cj_poor_jewel=Low-tier jewel inserted
 message.cj_bad_recipe=No matching recipe
 message.cj_resource=Insufficient resources
+message.cj_no_optional=Missing catalyst
 message.cj_empty_fluid=Nothing
 message.cj_passive=Operating without CJ
 message.cj_warning=Machine Efficiency Reduced
@@ -151,6 +152,7 @@ item.cj_gold_dust.name=Gold Dust
 item.cj_jewel_dust.name=ChloroJewel Dust
 item.cj_paste.name=Plant Paste
 item.cj_paste_bowl.name=Leafy Salad
+item.cj_dirt_bowl.name=Gritty Salad
 item.cj_iron_rod.name=Iron Rod
 item.cj_moss.name=Moss
 

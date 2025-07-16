@@ -2,7 +2,6 @@ package io.github.chlorojoules;
 
 import com.fox2code.foxloader.loader.Mod;
 import io.github.chlorojoules.block.CJBlockMachineBase;
-import io.github.chlorojoules.gui.CJGuiButton;
 import io.github.chlorojoules.item.*;
 import io.github.chlorojoules.machine.*;
 
@@ -26,7 +25,6 @@ import net.minecraft.common.item.children.ItemBucket;
 import net.minecraft.common.item.data.EnumTools;
 import net.minecraft.common.recipe.CraftingManager;
 import net.minecraft.common.recipe.FurnaceRecipes;
-import net.minecraft.common.recipe.TaggedIngredients;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -77,6 +75,7 @@ public class CJMod extends Mod {
 
 	public static Item paste;
 	public static Item pasteBowl;
+	public static Item dirtBowl;
 
 	public static Item primalJewel;
 	public static Item manufacturedJewel;
@@ -331,12 +330,9 @@ public class CJMod extends Mod {
 		waterFluid = WATER_MOVING.blockID;
 		lavaFluid = LAVA_MOVING.blockID;
 
-		pasteBowl = registerItem(
-				PRIMAL_COLOR, 1, CJItemPasteBowl.class, "cj_paste_bowl");
-
 		paste = registerItem("cj_paste", PRIMAL_COLOR);
-		jewelDust = registerItem("cj_jewel_dust", MANUFACTURED_COLOR);
 		stoneDust = registerItem("cj_stone_dust", PRIMAL_COLOR);
+		jewelDust = registerItem("cj_jewel_dust", MANUFACTURED_COLOR);
 		ironDust = registerItem("cj_iron_dust", PRIMAL_COLOR);
 		goldDust = registerItem("cj_gold_dust", PRIMAL_COLOR);
 		ironRod = registerItem("cj_iron_rod", PRIMAL_COLOR);
@@ -344,6 +340,14 @@ public class CJMod extends Mod {
 		soulDust = registerItem("cj_soul_dust", REFINED_COLOR);
 		soulEssence = registerItem("cj_soul_essence", REFINED_COLOR);
 		soulCore = registerItem("cj_soul_core", REFINED_COLOR, 1);
+
+		pasteBowl = registerItem(
+				PRIMAL_COLOR, 1, CJItemConvertBowl.class, "cj_paste_bowl",
+				new ItemStack(paste));
+
+		dirtBowl = registerItem(
+				PRIMAL_COLOR, 1, CJItemConvertBowl.class, "cj_dirt_bowl",
+				new ItemStack(stoneDust));
 
 		primalJewel = registerItem(
 				"cj_jewel_primal", PRIMAL_COLOR, 1);
@@ -421,6 +425,7 @@ public class CJMod extends Mod {
 								waterFluid)
 						.addSlotGravity(CENTER, 0, 0, false)
 						.addSlotGravity(CENTER, 0, 24, false)
+						.setSlotRenderType(1, CJMachineSlotInfo.FERTILIZER)
 						.addSlotGravity(
 								CENTER, SLOT_IN_WIDTH * 4, 0, true)
 						.addJewelSlot()
@@ -733,7 +738,7 @@ public class CJMod extends Mod {
 						.addSlotGravityVCenter(
 								CENTER,
 								JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
-								false)
+								true)
 						.addProgressBarGravityVCenter(CENTER, 0)
 						.addButtonGravity(
 								BOTTOM_RIGHT, JEWEL_SLOT_INSET,
@@ -875,19 +880,39 @@ public class CJMod extends Mod {
 		registerFurnaceRecipe(goldDust, GOLD_INGOT);
 		registerFurnaceRecipe(ironDust, IRON_INGOT);
 
-		for(Item item : tagList.get("#leaves")) {
-			registerFurnaceRecipe(item, paste);
-			registerShapelessRecipe(pasteBowl, item, BOWL);
+		for(Item leaves : tagList.get("#leaves")) {
+			registerFurnaceRecipe(leaves, paste);
+			registerShapelessRecipe(pasteBowl, leaves, BOWL);
+
+			for(Item planks : tagList.get("#planks")) {
+				registerRecipe(
+						composter,
+						"%%%",
+						"#|#",
+						"%%%",
+						'%', planks,
+						'|', primitiveMachineFrame,
+						'#', leaves);
+			}
 		}
 
-		for(Item log : tagList.get("#log")) {
-			for(Item plank : tagList.get("#planks")) {
+
+		for(Item planks : tagList.get("#planks")) {
+			registerRecipe(
+					pruningShears,
+					"# #",
+					" # ",
+					"/ /",
+					'/', STICK,
+					'#', planks);
+
+			for(Item log : tagList.get("#log")) {
 				registerRecipe(
 						primitiveMachineFrame,
 						"%|%",
 						"%~%",
 						"%#%",
-						'%', plank,
+						'%', planks,
 						'~', paste,
 						'|', STICK,
 						'#', log);
@@ -897,6 +922,13 @@ public class CJMod extends Mod {
 		// Crafting recipes.
 		registerShapelessRecipe(MOSSY_COBBLESTONE, COBBLESTONE, moss);
 		registerShapelessRecipe(soulDust2Stack, jewelDust, soulEssence);
+		registerShapelessRecipe(dirtBowl, DIRT, BOWL);
+
+		registerRecipe(
+				GRAVEL,
+				"%%",
+				"%%",
+				'%', stoneDust);
 
 		registerRecipe(
 				machineFrame4Stack,
