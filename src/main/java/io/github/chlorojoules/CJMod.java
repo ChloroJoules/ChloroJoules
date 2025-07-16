@@ -72,6 +72,7 @@ public class CJMod extends Mod {
 	public static Block tank;
 	public static Block mixer;
 	public static Block composter;
+	public static Block primitiveCentrifuge;
 
 	public static Item paste;
 	public static Item pasteBowl;
@@ -88,6 +89,9 @@ public class CJMod extends Mod {
 	public static Item stoneDust;
 	public static Item ironDust;
 	public static Item goldDust;
+	public static Item tinyStoneDust;
+	public static Item tinyIronDust;
+	public static Item tinyGoldDust;
 	public static Item soulCore;
 	public static Item moss;
 
@@ -331,10 +335,13 @@ public class CJMod extends Mod {
 		lavaFluid = LAVA_MOVING.blockID;
 
 		paste = registerItem("cj_paste", PRIMAL_COLOR);
-		stoneDust = registerItem("cj_stone_dust", PRIMAL_COLOR);
 		jewelDust = registerItem("cj_jewel_dust", MANUFACTURED_COLOR);
+		stoneDust = registerItem("cj_stone_dust", PRIMAL_COLOR);
 		ironDust = registerItem("cj_iron_dust", PRIMAL_COLOR);
 		goldDust = registerItem("cj_gold_dust", PRIMAL_COLOR);
+		tinyStoneDust = registerItem("cj_tiny_stone_dust", PRIMAL_COLOR);
+		tinyIronDust = registerItem("cj_tiny_iron_dust", PRIMAL_COLOR);
+		tinyGoldDust = registerItem("cj_tiny_gold_dust", PRIMAL_COLOR);
 		ironRod = registerItem("cj_iron_rod", PRIMAL_COLOR);
 		moss = registerItem("cj_moss", PRIMAL_COLOR);
 		soulDust = registerItem("cj_soul_dust", REFINED_COLOR);
@@ -426,6 +433,9 @@ public class CJMod extends Mod {
 						.addSlotGravity(CENTER, 0, 0, false)
 						.addSlotGravity(CENTER, 0, 24, false)
 						.setSlotRenderType(1, CJMachineSlotInfo.FERTILIZER)
+						.setSlotAllowedItems(
+								1, new ItemStack[] {
+										new ItemStack(DYE_POWDER, 1, 15) })
 						.addSlotGravity(
 								CENTER, SLOT_IN_WIDTH * 4, 0, true)
 						.addJewelSlot()
@@ -764,8 +774,67 @@ public class CJMod extends Mod {
 										.addOutput(
 												new CJMachineRecipeComponent(
 														1, new ItemStack(
-																DIRT)))
+														DIRT)))
 										.setProcessTime(1000)),
+				null, FRONT_FACE, PRIMITIVE);
+
+		primitiveCentrifuge = registerMachine(
+				"cj_primitive_centrifuge", new CJMachineBuilder()
+						.addSlotGravityVCenter(TOP_LEFT, 32, false)
+						.addSlotGravity(BOTTOM_LEFT, 10, 16, false)
+						.setSlotRenderType(1, CJMachineSlotInfo.PASTE)
+						.setSlotAllowedItems(
+								1, new ItemStack[] { new ItemStack(paste) })
+						.addSlotGravity(
+								CENTER, SLOT_OUT_WIDTH + SLOT_IN_WIDTH, -8,
+								true)
+						.addSlotGravity(
+								CENTER, SLOT_OUT_WIDTH + SLOT_IN_WIDTH, 20,
+								true)
+						.addProgressBarGravityVCenter(CENTER, 0)
+						.addRecipe(
+								new CJMachineRecipe()
+										.addInput(
+												new CJMachineRecipeComponent(
+														1, new ItemStack(
+														paste)))
+										.addInput(
+												new CJMachineRecipeComponent(
+														0, new ItemStack(
+														stoneDust)))
+										.addOutput(
+												new CJMachineRecipeComponent(
+														3, new ItemStack(
+														tinyStoneDust))
+														.setChance(0.25F))
+										.addOutput(
+												new CJMachineRecipeComponent(
+														2, new ItemStack(
+														tinyIronDust))
+														.setChance(0.55F))
+										.setProcessTime(100))
+						.addRecipe(
+								new CJMachineRecipe()
+										.addInput(
+												new CJMachineRecipeComponent(
+														1, new ItemStack(
+														paste)))
+										.addInput(
+												new CJMachineRecipeComponent(
+														0, new ItemStack(
+														DIRT)))
+										.addOutput(
+												new CJMachineRecipeComponent(
+														2, new ItemStack(
+														stoneDust))
+														.setChance(0.5F))
+										.addOutput(
+												new CJMachineRecipeComponent(
+														3, new ItemStack(
+														SEEDS))
+														.setChance(0.15F))
+										.setProcessTime(100))
+						.setImpl(CJMachineRecipeConsumer.class),
 				null, FRONT_FACE, PRIMITIVE);
 
 		mixer = registerMachine(
@@ -906,6 +975,16 @@ public class CJMod extends Mod {
 					'/', STICK,
 					'#', planks);
 
+			registerRecipe(
+					primitiveCentrifuge,
+					"###",
+					"/|/",
+					"#^#",
+					'/', STICK,
+					'#', planks,
+					'|', primitiveMachineFrame,
+					'^', FLINT);
+
 			for(Item log : tagList.get("#log")) {
 				registerRecipe(
 						primitiveMachineFrame,
@@ -923,12 +1002,31 @@ public class CJMod extends Mod {
 		registerShapelessRecipe(MOSSY_COBBLESTONE, COBBLESTONE, moss);
 		registerShapelessRecipe(soulDust2Stack, jewelDust, soulEssence);
 		registerShapelessRecipe(dirtBowl, DIRT, BOWL);
+		registerShapelessRecipe(COBBLESTONE, DIRT, stoneDust);
 
 		registerRecipe(
 				GRAVEL,
 				"%%",
 				"%%",
 				'%', stoneDust);
+
+		registerRecipe(
+				stoneDust,
+				"%%",
+				"%%",
+				'%', tinyStoneDust);
+
+		registerRecipe(
+				ironDust,
+				"%%",
+				"%%",
+				'%', tinyIronDust);
+
+		registerRecipe(
+				goldDust,
+				"%%",
+				"%%",
+				'%', tinyGoldDust);
 
 		registerRecipe(
 				machineFrame4Stack,

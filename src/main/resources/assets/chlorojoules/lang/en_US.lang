@@ -59,11 +59,13 @@ message.cj_press.flavor=Pushing down on me, pushing down on you...
 message.cj_furnace.help=Smelts items using ChloroJoules
 message.cj_furnace.flavor=Now that's what I call efficiency
 message.cj_tool_station.help=Manipulate tools' ChloroJewels
-message.cj_tool_station.flavor=Jewels for your Joule powered Tools
+message.cj_tool_station.flavor=Jewels for your Joule powered tools
 message.cj_tank.help=Stores fluid
 message.cj_tank.flavor=Has a pocket healer
 message.cj_composter.help=Converts biological material to dirt or bone meal
 message.cj_composter.flavor=What's a villager workstation?
+message.cj_primitive_centrifuge.help=Separates items into constituent parts
+message.cj_primitive_centrifuge.flavor=A bit of a narcissist
 
 message.cj_enable_refine_fuel=Allow processing of fuel tank
 message.cj_compost_bone_meal=Compost to bone meal
@@ -105,6 +107,7 @@ tile.cj_furnace.name=Furnace
 tile.cj_tool_station.name=Tool Station
 tile.cj_tank.name=Tank
 tile.cj_composter.name=Composter
+tile.cj_primitive_centrifuge.name=Primitive Centrifuge
 
 tile.cj_transferor.cj_inactive.name=Transferor
 tile.cj_transferor.cj_flooper.name=Transferor [Transmit Fluid]
@@ -133,6 +136,7 @@ inventory.cj_transferor=Transferor
 inventory.cj_tank=Tank
 inventory.cj_composter=Composter
 inventory.cj_mixer=Mixer
+inventory.cj_primitive_centrifuge=Primitive Centrifuge
 
 # Items.
 item.cj_fluid_paste_bucket.name=Paste Bucket
@@ -140,6 +144,11 @@ item.cj_fluid_chlorojoules_bucket.name=Bucket O' Joules
 item.cj_fluid_souls_bucket.name=Fluid Souls Bucket
 
 item.cj_stone_dust.name=Stone Dust
+item.cj_iron_dust.name=Iron Dust
+item.cj_gold_dust.name=Gold Dust
+item.cj_tiny_stone_dust.name=Tiny Stone Dust
+item.cj_tiny_iron_dust.name=Tiny Iron Dust
+item.cj_tiny_gold_dust.name=Tiny Gold Dust
 item.cj_soul_dust.name=Soul Dust
 item.cj_soul_core.name=Soul Core
 item.cj_soul_extractor.name=Soul Extractor
@@ -147,8 +156,6 @@ item.cj_soul_sword.name=Soul Slayer
 item.cj_pruning_shears.name=Pruning Shears
 item.cj_linker.name=Chloro Tool
 item.cj_soul_essence.name=Soul Essence
-item.cj_iron_dust.name=Iron Dust
-item.cj_gold_dust.name=Gold Dust
 item.cj_jewel_dust.name=ChloroJewel Dust
 item.cj_paste.name=Plant Paste
 item.cj_paste_bowl.name=Leafy Salad

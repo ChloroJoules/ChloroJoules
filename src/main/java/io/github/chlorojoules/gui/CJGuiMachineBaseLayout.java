@@ -36,6 +36,9 @@ public class CJGuiMachineBaseLayout {
 	public static final int SLOT_FERTILIZER_X = 202;
 	public static final int SLOT_FERTILIZER_Y = 70;
 
+	public static final int SLOT_PASTE_X = 202;
+	public static final int SLOT_PASTE_Y = 88;
+
 	public static final int SLOT_IN_WIDTH = 18;
 	public static final int SLOT_IN_HEIGHT = 18;
 

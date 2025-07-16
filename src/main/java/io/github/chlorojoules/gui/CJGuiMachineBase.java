@@ -301,6 +301,10 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 						inX = SLOT_FERTILIZER_X;
 						inY = SLOT_FERTILIZER_Y;
 					}
+					else if(slot.info.renderType == CJMachineSlotInfo.PASTE) {
+						inX = SLOT_PASTE_X;
+						inY = SLOT_PASTE_Y;
+					}
 				}
 
 				drawTexturedModalRect(

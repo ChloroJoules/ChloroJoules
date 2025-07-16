@@ -80,6 +80,14 @@ public class CJMachineBuilder {
 		return this;
 	}
 
+	public CJMachineBuilder setSlotAllowedItems(
+			int slot, ItemStack[] allowedItems) {
+
+		slots.get(slot).setAllowedItems(allowedItems);
+
+		return this;
+	}
+
 	public CJMachineBuilder setTankDamageExclusive(
 			int tank, int[] damageExclusive) {
 

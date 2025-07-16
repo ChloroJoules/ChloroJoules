@@ -8,6 +8,7 @@ public class CJMachineSlotInfo extends CJGuiElement {
 	public static final int DEFAULT = 0;
 	public static final int GEM = 1;
 	public static final int FERTILIZER = 2;
+	public static final int PASTE = 3;
 
 	public boolean output;
 	public ItemStack[] allowedItems = null;
