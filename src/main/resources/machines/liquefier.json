@@ -1,0 +1,47 @@
+{
+  "name": "cj_liquefier",
+  "rarity": "primal",
+  "tanks": [
+    "fuel",
+    {
+      "name": "output",
+      "anchor": "center",
+      "x": 24,
+
+      "volume": 8000,
+      "output": true
+    }
+  ],
+  "slots": [
+    "jewel",
+    {
+      "name": "input",
+      "anchor": "center",
+      "x": -24
+    }
+  ],
+  "progress": {
+    "anchor": "center"
+  },
+  "recipes": [
+    {
+      "passive": true,
+      "ticks": 50,
+      "fuel": 10,
+      "inputs": [
+        {
+          "kind": "item",
+          "target": "input",
+          "tag": "#leaves"
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "fluid": "chlorojoules:cj_fluid_paste",
+          "amount": 50
+        }
+      ]
+    }
+  ]
+}

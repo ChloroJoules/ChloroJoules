@@ -1,28 +1,30 @@
 package io.github.chlorojoules.machine;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.github.chlorojoules.*;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.gui.*;
-import net.minecraft.client.Minecraft;
-import net.minecraft.common.item.Item;
 import net.minecraft.common.item.ItemStack;
+import net.minecraft.common.util.JsonUtils;
 import net.minecraft.common.util.i18n.StringTranslate;
 import org.lwjgl.input.Mouse;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import static io.github.chlorojoules.CJRarityInfo.raritySufficient;
 import static io.github.chlorojoules.gui.CJGuiGravity.*;
-import static io.github.chlorojoules.gui.CJGuiMachineBaseLayout.FLUID_HEIGHT;
-import static io.github.chlorojoules.gui.CJGuiMachineBaseLayout.WORKING_HEIGHT;
+import static io.github.chlorojoules.gui.CJGuiMachineBaseLayout.*;
 
 public class CJMachineBuilder {
 	// TODO: Ensure CJ can't be routed into non-fuel tanks.
-
-	public static final int FUEL_TANK_INSET = 10;
 	public static final int FUEL_TANK_SIZE = 4 * CJTank.BUCKET;
-
-	public static final int JEWEL_SLOT_INSET = 35;
 
 	public String name = null;
 	public CJRarity rarity = CJRarity.MANUFACTURED;
@@ -42,6 +44,123 @@ public class CJMachineBuilder {
 	public ArrayList<CJGuiCoordinate> linkCoordinates = new ArrayList<>();
 
 	public ArrayList<CJMachineRecipe> recipes = new ArrayList<>();
+
+	public CJMachineBuilder() {}
+
+	public CJMachineBuilder(String jsonPath) {
+		String source;
+		try {
+			InputStream stream = getClass().getResourceAsStream(jsonPath);
+			if(stream == null) {
+				throw new RuntimeException(
+						"Failed to open resource stream for '" +
+						jsonPath + "'");
+			}
+			ByteBuffer bytes = ByteBuffer.wrap(stream.readAllBytes());
+			source = StandardCharsets.UTF_8.decode(bytes).toString();
+			stream.close();
+		}
+		catch(IOException e) {
+			throw new RuntimeException();
+		}
+
+		JsonObject root = JsonParser.parseString(source).getAsJsonObject();
+
+		name = JsonUtils.getString(root, "name");
+		rarity = CJRarityInfo.getNamedRarity(
+				JsonUtils.getString(root, "rarity"));
+
+		for(JsonElement tank : JsonUtils.getJsonArray(root, "tanks")) {
+			if(tank.isJsonObject()) {
+				JsonObject tankObject = tank.getAsJsonObject();
+				tanks.add(new CJTank(tankObject));
+				tankVolumes.add(new CJTankVolume(tankObject));
+				continue;
+			}
+
+			String special = tank.getAsString();
+			if(special.equals("fuel")) {
+				if(fuelTankIndex != -1) {
+					throw new RuntimeException(
+							"Cannot specify multiple fuel tanks");
+				}
+
+				fuelTankIndex = tanks.size();
+
+				tanks.add(new CJTank(LEFT, FUEL_TANK_INSET, 0));
+				tankVolumes.add(new CJTankVolume()
+						.setMax(FUEL_TANK_SIZE)
+						.setLockFluid(CJMod.fuelFluid));
+			}
+			else {
+				Logger.getLogger("Chlorojoules").warning(
+						"Unknown tank constant '`'" + special + "'");
+			}
+		}
+
+		for(JsonElement slot : JsonUtils.getJsonArray(root, "slots")) {
+			if(slot.isJsonObject()) {
+				JsonObject slotObject = slot.getAsJsonObject();
+				slots.add(new CJMachineSlotInfo(slotObject));
+				continue;
+			}
+
+			String special = slot.getAsString();
+			if(special.equals("jewel")) {
+				if(jewelSlotIndex != -1) {
+					throw new RuntimeException(
+							"Cannot specify multiple jewel slots");
+				}
+
+				jewelSlotIndex = slots.size();
+
+				slots.add(new CJMachineSlotInfo(
+						JEWEL_SLOT_INSET_X, JEWEL_SLOT_INSET_Y)
+						.setGravity(BOTTOM_LEFT)
+						.setRenderType(CJMachineSlotRenderType.JEWEL)
+						.setAllowedItems(new ItemStack[] {
+								new ItemStack(CJMod.fauxJewel),
+								new ItemStack(CJMod.primalJewel),
+								new ItemStack(CJMod.manufacturedJewel),
+								new ItemStack(CJMod.refinedJewel),
+								new ItemStack(CJMod.awakenedJewel)
+						}));
+			}
+			else {
+				Logger.getLogger("Chlorojoules").warning(
+						"Unknown slot constant '`'" + special + "'");
+			}
+		}
+
+		JsonObject progressObject = JsonUtils.getJsonObject(root, "progress");
+		progressBar = new CJGuiElement(progressObject)
+				.setSize(PROGRESS_WIDTH, PROGRESS_HEIGHT);
+
+		for(JsonElement recipe : JsonUtils.getJsonArray(root, "recipes")) {
+			recipes.add(new CJMachineRecipe(
+					this, recipe.getAsJsonObject()));
+		}
+	}
+
+	public int getSlotIndex(String id) {
+		for(int i = 0; i < slots.size(); i++) {
+			CJMachineSlotInfo slot = slots.get(i);
+			if(slot.id == null) continue;
+			if(slot.id.equals(id)) return i;
+		}
+
+		return -1;
+	}
+
+	public int getTankIndex(String id) {
+		for(int i = 0; i < tanks.size(); i++) {
+			CJTank tank = tanks.get(i);
+			if(tank.id == null) continue;
+			if(tank.id.equals(id)) return i;
+		}
+
+		return -1;
+	}
 
 	public CJMachineBuilder setMachineName(String value) {
 		name = value;
@@ -73,10 +192,9 @@ public class CJMachineBuilder {
 	}
 
 	public CJMachineBuilder setSlotRenderType(
-			int slot, int renderType) {
+			int slot, CJMachineSlotRenderType renderType) {
 
 		slots.get(slot).setRenderType(renderType);
-
 		return this;
 	}
 
@@ -84,7 +202,6 @@ public class CJMachineBuilder {
 			int slot, ItemStack[] allowedItems) {
 
 		slots.get(slot).setAllowedItems(allowedItems);
-
 		return this;
 	}
 
@@ -92,7 +209,6 @@ public class CJMachineBuilder {
 			int tank, int[] damageExclusive) {
 
 		tanks.get(tank).setDamageExclusive(damageExclusive);
-
 		return this;
 	}
 
@@ -188,7 +304,7 @@ public class CJMachineBuilder {
 		jewelSlotIndex = slots.size();
 
 		addSlotGravity(
-				CJGuiGravity.BOTTOM_LEFT, JEWEL_SLOT_INSET,
+				CJGuiGravity.BOTTOM_LEFT, JEWEL_SLOT_INSET_X,
 				/* Align bottom of Jewel slot with fuel tank. */
 				(WORKING_HEIGHT - FLUID_HEIGHT) / 2, false);
 
@@ -200,7 +316,7 @@ public class CJMachineBuilder {
 						new ItemStack(CJMod.refinedJewel),
 						new ItemStack(CJMod.awakenedJewel)
 				})
-				.setRenderType(CJMachineSlotInfo.GEM);
+				.setRenderType(CJMachineSlotRenderType.JEWEL);
 
 		return this;
 	}
@@ -325,7 +441,6 @@ public class CJMachineBuilder {
 		}
 		else {
 			ItemStack stack = entity.stacks.get(component.index);
-
 			if(stack == null) return !input;
 
 			if(component.isTag) {
@@ -368,9 +483,9 @@ public class CJMachineBuilder {
 		}
 
 		boolean matchedRecipe = false;
-		for(int i = 0; i < entity.machineBuilder.recipes.size(); i++) {
+		for(int i = 0; i < recipes.size(); i++) {
 			matchedRecipe = true;
-			recipe = entity.machineBuilder.recipes.get(i);
+			recipe = recipes.get(i);
 
 			if(recipe.requiredButton != -1) {
 				if(!entity.buttonStates.get(recipe.requiredButton)) {

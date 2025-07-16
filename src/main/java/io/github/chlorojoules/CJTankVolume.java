@@ -1,6 +1,9 @@
 package io.github.chlorojoules;
 
+import com.fox2code.foxloader.registry.GameRegistry;
+import com.google.gson.JsonObject;
 import net.minecraft.common.block.Block;
+import net.minecraft.common.util.JsonUtils;
 
 // This is to a fluid as an `ItemStack` is to an item.
 public class CJTankVolume {
@@ -21,6 +24,32 @@ public class CJTankVolume {
 	public CJTankVolume(Block fluid, int volume) {
 		this.fluidID = fluid.blockID;
 		this.current = volume;
+	}
+
+	public CJTankVolume(JsonObject jsonObject) {
+		if(jsonObject.has("volume")) {
+			max = JsonUtils.getInt(jsonObject, "volume");
+		}
+
+		if(jsonObject.has("amount")) {
+			current = JsonUtils.getInt(jsonObject, "amount");
+		}
+
+		if(jsonObject.has("fluid")) {
+			String fluid = JsonUtils.getString(jsonObject, "fluid");
+			fluidID = GameRegistry.getRegisteredBlock(fluid).blockID;
+		}
+	}
+
+	public CJTankVolume setMax(int value) {
+		max = value;
+		return this;
+	}
+
+	public CJTankVolume setLockFluid(int value) {
+		fluidID = value;
+		lockFluid = true;
+		return this;
 	}
 
 	public int addFluid(int blockFluid, int amount, boolean all) {

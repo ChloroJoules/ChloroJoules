@@ -60,6 +60,10 @@ public class CJGuiMachineBaseLayout {
 	public static final int SLOT_OUT_OFFSET_Y =
 			(SLOT_OUT_HEIGHT - SLOT_HEIGHT) / 2;
 
+	public static final int FUEL_TANK_INSET = 18;
+	public static final int JEWEL_SLOT_INSET_X = 30;
+	public static final int JEWEL_SLOT_INSET_Y = 33;
+
 	public static final int FLUID_FULL_X = 176;
 	public static final int FLUID_FULL_Y = 78;
 
@@ -97,12 +101,6 @@ public class CJGuiMachineBaseLayout {
 	public static final int BUTTON_HEIGHT = 20;
 
 	public static final int BUTTON_LABEL_INSET = 2;
-
-	public static final int LABEL_JEWEL_X = 178;
-	public static final int LABEL_JEWEL_Y = 153;
-
-	public static final int LABEL_WIDTH = 16;
-	public static final int LABEL_HEIGHT = 16;
 
 	public static final int INFO_X = INVENTORY_LABEL_X;
 	public static final int INFO_Y = 5;

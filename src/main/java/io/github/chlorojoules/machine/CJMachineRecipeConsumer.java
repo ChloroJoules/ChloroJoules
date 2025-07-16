@@ -5,7 +5,7 @@ import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 public class CJMachineRecipeConsumer implements CJIMachine {
 	@Override
 	public void updateMachine(CJTileEntityMachineBase machineEntity) {
-		CJMachineBuilder builder = machineEntity.machineBuilder;
+		CJMachineBuilder builder = machineEntity.machine.machineBuilder;
 		CJMachineRecipe recipe = builder.getMatchingRecipe(machineEntity);
 
 		if(recipe == null) return;

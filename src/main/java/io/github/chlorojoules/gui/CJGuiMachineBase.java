@@ -17,8 +17,6 @@ import net.minecraft.common.block.icon.Icon;
 import net.minecraft.common.block.texture.Face;
 import net.minecraft.common.entity.player.InventoryPlayer;
 
-import net.minecraft.common.item.ItemStack;
-import net.minecraft.common.item.Items;
 import net.minecraft.common.util.i18n.StringTranslate;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -36,17 +34,14 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 	public static final int TOOLTIP_BACKGROUND = -1073741824;
 
 	private final CJTileEntityMachineBase machineEntity;
-	private final CJMachineBuilder machineBuilder;
 
 	private boolean wasMousePressed = false;
 
 	public CJGuiMachineBase(
-			InventoryPlayer inventoryPlayer, CJTileEntityMachineBase entity,
-			CJMachineBuilder builder) {
+			InventoryPlayer inventoryPlayer, CJTileEntityMachineBase entity) {
 
-		super(new CJContainerMachineBase(inventoryPlayer, entity, builder));
+		super(new CJContainerMachineBase(inventoryPlayer, entity));
 
-		machineBuilder = builder;
 		machineEntity = entity;
 	}
 
@@ -68,7 +63,7 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 	private boolean getIsMouseOverTank(CJTank tank, int x, int y) {
 		return getIsMouseOverRect(
 				x + FLUID_OFFSET_X, y + FLUID_OFFSET_Y,
-				tank.xDisplayPosition, tank.yDisplayPosition,
+				tank.getXPlacement(), tank.getYPlacement(),
 				FLUID_WIDTH - FLUID_OFFSET_X, FLUID_HEIGHT - FLUID_OFFSET_Y);
 	}
 
@@ -143,12 +138,13 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 			}
 		}
 
+		CJMachineBuilder machineBuilder = machineEntity.machine.machineBuilder;
 		for(int i = 0; i < machineBuilder.buttons.size(); ++i) {
 			CJGuiButton button = machineBuilder.buttons.get(i);
 
 			if(getIsMouseOverRect(
 					mouseX, mouseY,
-					button.xDisplayPosition, button.yDisplayPosition,
+					button.getXPlacement(), button.getYPlacement(),
 					BUTTON_WIDTH, BUTTON_HEIGHT)) {
 
 				drawTooltip(
@@ -274,6 +270,7 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 		int slotY;
 		for(int i = 0; i < machine.slots.size(); i++) {
 			slot = (CJGuiMachineBaseSlot) machine.slots.get(i);
+			// Placement is pre-applied to slots during container population.
 			slotX = baseX + slot.xDisplayPosition;
 			slotY = baseY + slot.yDisplayPosition;
 
@@ -288,20 +285,23 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 				int inY = SLOT_IN_Y;
 
 				if(slot.info != null &&
-						slot.info.renderType != CJMachineSlotInfo.DEFAULT &&
+						slot.info.renderType !=
+								CJMachineSlotRenderType.DEFAULT &&
 						machineEntity.stacks.get(i) == null) {
 
-					if(slot.info.renderType == CJMachineSlotInfo.GEM) {
+					if(slot.info.renderType == CJMachineSlotRenderType.JEWEL) {
 						inX = SLOT_JEWEL_X;
 						inY = SLOT_JEWEL_Y;
 					}
 					else if(slot.info.renderType ==
-							CJMachineSlotInfo.FERTILIZER) {
+							CJMachineSlotRenderType.FERTILIZER) {
 
 						inX = SLOT_FERTILIZER_X;
 						inY = SLOT_FERTILIZER_Y;
 					}
-					else if(slot.info.renderType == CJMachineSlotInfo.PASTE) {
+					else if(slot.info.renderType ==
+							CJMachineSlotRenderType.PASTE) {
+
 						inX = SLOT_PASTE_X;
 						inY = SLOT_PASTE_Y;
 					}
@@ -318,8 +318,8 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 		for(int i = 0; i < machine.tanks.size(); i++) {
 			CJTank tank = machine.tanks.get(i);
 			CJTankVolume tankVolume = machineEntity.tanks.get(i);
-			int tankX = baseX + tank.xDisplayPosition;
-			int tankY = baseY + tank.yDisplayPosition;
+			int tankX = baseX + tank.getXPlacement();
+			int tankY = baseY + tank.getYPlacement();
 
 			drawTexturedModalRect(
 					tankX, tankY,
@@ -358,10 +358,11 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 		}
 
 		// Draw coordinates.
+		CJMachineBuilder machineBuilder = machineEntity.machine.machineBuilder;
 		for(int i = 0; i < machineBuilder.linkCoordinates.size(); i++) {
 			CJGuiCoordinate coordinate = machineBuilder.linkCoordinates.get(i);
-			int x = baseX + coordinate.xDisplayPosition;
-			int y = baseY + coordinate.yDisplayPosition;
+			int x = baseX + coordinate.getXPlacement();
+			int y = baseY + coordinate.getYPlacement();
 
 			CJGuiCoordinateDisplay coordinateDisplay =
 					machineEntity.coordinateDisplays.get(i);
@@ -384,8 +385,8 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 
 		// Draw progress bar.
 		if(machineBuilder.progressBar != null) {
-			int x = baseX + machineBuilder.progressBar.xDisplayPosition;
-			int y = baseY + machineBuilder.progressBar.yDisplayPosition;
+			int x = baseX + machineBuilder.progressBar.getXPlacement();
+			int y = baseY + machineBuilder.progressBar.getYPlacement();
 
 			drawTexturedModalRect(
 					x, y,
@@ -402,8 +403,8 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 		// Draw buttons.
 		for(int i = 0; i < machineBuilder.buttons.size(); ++i) {
 			CJGuiButton button = machineBuilder.buttons.get(i);
-			int x = baseX + button.xDisplayPosition;
-			int y = baseY + button.yDisplayPosition;
+			int x = baseX + button.getXPlacement();
+			int y = baseY + button.getYPlacement();
 
 			boolean state = machineEntity.buttonStates.get(i);
 			int srcX = state ? BUTTON_ACTIVE_X : BUTTON_INACTIVE_X;

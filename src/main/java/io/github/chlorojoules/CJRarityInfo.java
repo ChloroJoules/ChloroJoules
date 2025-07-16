@@ -31,47 +31,55 @@ public class CJRarityInfo {
 			new CJItemDescription("message.cj_tool_awakened");
 
 	public static int getRarityColor(CJRarity rarity) {
-		switch(rarity) {
-			case PRIMAL: return PRIMAL_COLOR;
-			case MANUFACTURED: return MANUFACTURED_COLOR;
-			case REFINED: return REFINED_COLOR;
-			case AWAKENED: return AWAKENED_COLOR;
-		}
-
-		return -1;
+		return switch(rarity) {
+			case PRIMAL -> PRIMAL_COLOR;
+			case MANUFACTURED -> MANUFACTURED_COLOR;
+			case REFINED -> REFINED_COLOR;
+			case AWAKENED -> AWAKENED_COLOR;
+			default -> -1;
+		};
 	}
 
 	public static int getRarityDamage(CJRarity rarity) {
-		switch(rarity) {
-			case PRIMAL: return 3;
-			case MANUFACTURED: return 2;
-			case REFINED: return 1;
-			case AWAKENED: return 0;
-		}
-
-		return MAX_DAMAGE;
+		return switch(rarity) {
+			case PRIMAL -> 3;
+			case MANUFACTURED -> 2;
+			case REFINED -> 1;
+			case AWAKENED -> 0;
+			default -> MAX_DAMAGE;
+		};
 	}
 
 	public static CJRarity getDamageRarity(int damage) {
-		switch(damage) {
-			case 3: return PRIMAL;
-			case 2: return MANUFACTURED;
-			case 1: return REFINED;
-			case 0: return AWAKENED;
-		}
-
-		return INVALID;
+		return switch(damage) {
+			case 3 -> PRIMAL;
+			case 2 -> MANUFACTURED;
+			case 1 -> REFINED;
+			case 0 -> AWAKENED;
+			default -> INVALID;
+		};
 	}
 
 	public static CJItemDescription getRarityDescription(CJRarity rarity) {
-		switch(rarity) {
-			case PRIMAL: return primalDescription;
-			case MANUFACTURED: return manufacturedDescription;
-			case REFINED: return refinedDescription;
-			case AWAKENED: return awakenedDescription;
-		}
+		return switch(rarity) {
+			case PRIMAL -> primalDescription;
+			case MANUFACTURED -> manufacturedDescription;
+			case REFINED -> refinedDescription;
+			case AWAKENED -> awakenedDescription;
+			default -> noneDescription;
+		};
+	}
 
-		return noneDescription;
+	public static CJRarity getNamedRarity(String value) {
+		String rarity = value.toLowerCase();
+
+		return switch(rarity) {
+			case "primal" -> PRIMAL;
+			case "manufactured" -> MANUFACTURED;
+			case "refined" -> REFINED;
+			case "awakened" -> AWAKENED;
+			default -> INVALID;
+		};
 	}
 
 	public static CJRarity getJewelRarity(int itemID) {

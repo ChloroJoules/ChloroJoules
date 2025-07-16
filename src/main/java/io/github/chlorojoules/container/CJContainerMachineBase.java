@@ -2,6 +2,7 @@ package io.github.chlorojoules.container;
 
 import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.CJTank;
+import io.github.chlorojoules.block.CJBlockMachineBase;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.gui.CJGuiMachineBaseSlot;
 import io.github.chlorojoules.machine.CJMachineBuilder;
@@ -19,7 +20,6 @@ import java.util.Arrays;
 // TODO: Machines need to `Slot.putStack` rather than directly modifying slots.
 public class CJContainerMachineBase extends Container {
 	private final CJTileEntityMachineBase machineEntity;
-	private final CJMachineBuilder machineBuilder;
 
 	public ArrayList<CJTank> tanks = new ArrayList<>();
 
@@ -42,14 +42,13 @@ public class CJContainerMachineBase extends Container {
 	}
 
 	public CJContainerMachineBase(
-			InventoryPlayer inventoryPlayer, CJTileEntityMachineBase entity,
-			CJMachineBuilder builder) {
+			InventoryPlayer inventoryPlayer, CJTileEntityMachineBase entity) {
 
 		machineEntity = entity;
-		machineBuilder = builder;
 
 		EntityPlayer player = inventoryPlayer.player;
 
+		CJMachineBuilder machineBuilder = entity.machine.machineBuilder;
 		for(int i = 0; i < machineBuilder.slots.size(); i++) {
 			CJMachineSlotInfo info = machineBuilder.slots.get(i);
 
@@ -65,7 +64,7 @@ public class CJContainerMachineBase extends Container {
 			CJGuiMachineBaseSlot slot =
 					new CJGuiMachineBaseSlot(
 							player, machineEntity, i,
-							info.xDisplayPosition, info.yDisplayPosition,
+							info.getXPlacement(), info.getYPlacement(),
 							info);
 
 			addSlot(slot);
@@ -101,6 +100,8 @@ public class CJContainerMachineBase extends Container {
 
 		ItemStack stack = slot.getStack();
 		ItemStack returnStack = stack.copy();
+
+		CJMachineBuilder machineBuilder = machineEntity.machine.machineBuilder;
 
 		// Machine inventory to player.
 		if(index < machineBuilder.slots.size()) {

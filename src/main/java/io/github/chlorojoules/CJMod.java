@@ -1,7 +1,11 @@
 package io.github.chlorojoules;
 
 import com.fox2code.foxloader.loader.Mod;
+import com.fox2code.foxloader.registry.GameRegistry;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import io.github.chlorojoules.block.CJBlockMachineBase;
+import io.github.chlorojoules.gui.CJMachineSlotRenderType;
 import io.github.chlorojoules.item.*;
 import io.github.chlorojoules.machine.*;
 
@@ -25,6 +29,7 @@ import net.minecraft.common.item.children.ItemBucket;
 import net.minecraft.common.item.data.EnumTools;
 import net.minecraft.common.recipe.CraftingManager;
 import net.minecraft.common.recipe.FurnaceRecipes;
+import net.minecraft.common.util.JsonUtils;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -35,12 +40,11 @@ import static net.minecraft.common.item.Items.*;
 import static io.github.chlorojoules.gui.CJGuiGravity.*;
 import static io.github.chlorojoules.gui.CJGuiMachineBaseLayout.*;
 import static io.github.chlorojoules.CJRarityInfo.*;
-import static io.github.chlorojoules.machine.CJMachineBuilder.*;
 import static io.github.chlorojoules.machine.CJMachineRecipeTarget.*;
 import static io.github.chlorojoules.block.CJBlockMachineBase.*;
 
 public class CJMod extends Mod {
-	public static Map<String, CJMachineBuilder> machines = new HashMap<>();
+	public static Map<String, CJBlockMachineBase> machines = new HashMap<>();
 
 	// TODO: This can be removed in favour of `Fluid[s].java`.
 	public static List<ItemBucket> buckets = new ArrayList<>();
@@ -155,12 +159,28 @@ public class CJMod extends Mod {
 		Minecraft.getInstance().ingameGUI.addChatMessage(message);
 	}
 
-	public static boolean isGemId(int id) {
-		return id == fauxJewel.itemID ||
-				id == primalJewel.itemID ||
-				id == manufacturedJewel.itemID ||
-				id == refinedJewel.itemID ||
-				id == awakenedJewel.itemID;
+	public static ItemStack stackFromJson(JsonObject jsonObject) {
+		Item item;
+
+		JsonElement idElement = jsonObject.get("item");
+		if(JsonUtils.isString(idElement)) {
+			item = GameRegistry.getRegisteredItem(idElement.getAsString());
+		}
+		else {
+			item = ITEMS_LIST[idElement.getAsInt()];
+		}
+
+		ItemStack result = new ItemStack(item);
+
+		if(jsonObject.has("amount")) {
+			result.stackSize = JsonUtils.getInt(jsonObject, "amount");
+		}
+
+		if(jsonObject.has("damage")) {
+			result.setItemDamage(JsonUtils.getInt(jsonObject, "damage"));
+		}
+
+		return result;
 	}
 
 	public Block registerMachine(
@@ -168,14 +188,17 @@ public class CJMod extends Mod {
 			int sideMode, int tier) {
 
 		builder.setMachineName(name);
-		machines.put(name, builder);
 
-		return new CJBlockMachineBase(
+		Block result = new CJBlockMachineBase(
 				name, builder, iconNames, sideMode, tier)
 				.setBlockName(name)
 				.setCreativeTab(creativeTab)
 				.addDescription(new CJItemDescriptionModTag())
 				.setTooltipColor(getRarityColor(builder.rarity));
+
+		machines.put(name, (CJBlockMachineBase) result);
+
+		return result;
 	}
 
 	private Block registerFluid(String name) {
@@ -249,8 +272,7 @@ public class CJMod extends Mod {
 					.setCreativeTab(creativeTab);
 		}
 		catch(Exception e) {
-			e.printStackTrace();
-			return null;
+			throw new RuntimeException();
 		}
 	}
 
@@ -284,8 +306,7 @@ public class CJMod extends Mod {
 					.setCreativeTab(creativeTab);
 		}
 		catch(Exception e) {
-			e.printStackTrace();
-			return null;
+			throw new RuntimeException();
 		}
 	}
 
@@ -438,7 +459,8 @@ public class CJMod extends Mod {
 								waterFluid)
 						.addSlotGravity(CENTER, 0, 0, false)
 						.addSlotGravity(CENTER, 0, 24, false)
-						.setSlotRenderType(1, CJMachineSlotInfo.FERTILIZER)
+						.setSlotRenderType(
+								1, CJMachineSlotRenderType.FERTILIZER)
 						.setSlotAllowedItems(
 								1, new ItemStack[] {
 										new ItemStack(DYE_POWDER, 1, 15) })
@@ -488,27 +510,8 @@ public class CJMod extends Mod {
 				null, FRONT_FACE, INDUSTRIAL);
 
 		liquefier = registerMachine(
-				"cj_liquefier", new CJMachineBuilder()
-						.setRarity(CJRarity.PRIMAL)
-						.addFuelTank()
-						.addTankGravityVCenter(
-								TOP_RIGHT, 10, true, false,
-								8 * CJTank.BUCKET, 0)
-						.addSlotGravity(CENTER, 0, 0, false)
-						.addJewelSlot()
-						/*
-						 * TODO: Find a better way to center progress Bars
-						 *       Between two elements.
-						 */
-						.addProgressBarGravityVCenter(
-								CENTER, (SLOT_IN_WIDTH * 4) / 3)
-						.addRecipe(
-								10,
-								new CJMachineRecipeComponent(
-										SLOT, 0, "#leaves", 1),
-								new CJMachineRecipeComponent(
-										1, new CJTankVolume(fluidPaste, 50)),
-								50, true, -1)
+				"cj_liquefier",
+				new CJMachineBuilder("/machines/liquefier.json")
 						.setImpl(CJMachineRecipeConsumer.class),
 				null, FRONT_FACE, INDUSTRIAL);
 
@@ -518,7 +521,7 @@ public class CJMod extends Mod {
 						.addFuelTank()
 						.addTankGravityVCenter(
 								TOP_LEFT,
-								JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
+								JEWEL_SLOT_INSET_X + SLOT_OUT_WIDTH,
 								false, false, 8 * CJTank.BUCKET, 0)
 						.addTankGravityVCenter(
 								CENTER, SLOT_IN_WIDTH * 4, true, false,
@@ -542,14 +545,14 @@ public class CJMod extends Mod {
 						.addFuelTank()
 						.addTankGravityVCenter(
 								TOP_LEFT,
-								JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
+								JEWEL_SLOT_INSET_X + SLOT_OUT_WIDTH,
 								false, false, 8 * CJTank.BUCKET, 0)
 						.addSlotGravityVCenter(
 								CENTER, SLOT_IN_WIDTH * 4, true)
 						.addJewelSlot()
 						.addProgressBarGravityVCenter(CENTER, 0)
 						.addButtonGravity(
-								BOTTOM_RIGHT, JEWEL_SLOT_INSET,
+								BOTTOM_RIGHT, JEWEL_SLOT_INSET_X,
 								(WORKING_HEIGHT - FLUID_HEIGHT) / 2,
 								"message.cj_enable_refine_fuel",
 								new ItemStack(manufacturedJewel))
@@ -577,7 +580,7 @@ public class CJMod extends Mod {
 						.addFuelTank()
 						.addSlotGravityVCenter(
 								TOP_LEFT,
-								JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
+								JEWEL_SLOT_INSET_X + SLOT_OUT_WIDTH,
 								false)
 						.addSlotGravityVCenter(
 								CENTER, SLOT_IN_WIDTH * 4, true)
@@ -663,7 +666,7 @@ public class CJMod extends Mod {
 						.addFuelTank()
 						.addSlotGravityVCenter(
 								TOP_LEFT,
-								JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
+								JEWEL_SLOT_INSET_X + SLOT_OUT_WIDTH,
 								false)
 						.addSlotGravityVCenter(
 								CENTER, SLOT_IN_WIDTH * 4, true)
@@ -692,7 +695,7 @@ public class CJMod extends Mod {
 						.addFuelTank()
 						.addSlotGravityVCenter(
 								TOP_LEFT,
-								JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
+								JEWEL_SLOT_INSET_X + SLOT_OUT_WIDTH,
 								false)
 						.addSlotGravityVCenter(
 								CENTER, SLOT_IN_WIDTH * 4, true)
@@ -712,11 +715,11 @@ public class CJMod extends Mod {
 				"cj_tool_station", new CJMachineBuilder()
 						.addSlotGravityVCenter(
 								TOP_LEFT,
-								JEWEL_SLOT_INSET,
+								JEWEL_SLOT_INSET_X,
 								false)
 						.addSlotGravityVCenter(
 								CENTER,
-								JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
+								JEWEL_SLOT_INSET_X + SLOT_OUT_WIDTH,
 								false)
 						.addProgressBarGravityVCenter(CENTER, 0)
 						.setImpl(CJMachineToolStation.class),
@@ -763,15 +766,15 @@ public class CJMod extends Mod {
 				"cj_composter", new CJMachineBuilder()
 						.addSlotGravityVCenter(
 								TOP_LEFT,
-								JEWEL_SLOT_INSET,
+								JEWEL_SLOT_INSET_X,
 								false)
 						.addSlotGravityVCenter(
 								CENTER,
-								JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
+								JEWEL_SLOT_INSET_X + SLOT_OUT_WIDTH,
 								true)
 						.addProgressBarGravityVCenter(CENTER, 0)
 						.addButtonGravity(
-								BOTTOM_RIGHT, JEWEL_SLOT_INSET,
+								BOTTOM_RIGHT, JEWEL_SLOT_INSET_X,
 								(WORKING_HEIGHT - FLUID_HEIGHT) / 2,
 								"message.cj_compost_bone_meal",
 								new ItemStack(DYE_POWDER, 1, 15))
@@ -802,7 +805,7 @@ public class CJMod extends Mod {
 				"cj_primitive_centrifuge", new CJMachineBuilder()
 						.addSlotGravityVCenter(TOP_LEFT, 32, false)
 						.addSlotGravity(BOTTOM_LEFT, 10, 16, false)
-						.setSlotRenderType(1, CJMachineSlotInfo.PASTE)
+						.setSlotRenderType(1, CJMachineSlotRenderType.PASTE)
 						.setSlotAllowedItems(
 								1, new ItemStack[] { new ItemStack(paste) })
 						.addSlotGravity(
@@ -884,7 +887,7 @@ public class CJMod extends Mod {
 						.addFuelTank()
 						.addTankGravityVCenter(
 								TOP_LEFT,
-								JEWEL_SLOT_INSET + SLOT_OUT_WIDTH,
+								JEWEL_SLOT_INSET_X + SLOT_OUT_WIDTH,
 								false, false, 8 * CJTank.BUCKET, 0)
 						.addTankGravityVCenter(
 								CENTER, SLOT_IN_WIDTH * 4, true, false,
@@ -895,7 +898,7 @@ public class CJMod extends Mod {
 						.addProgressBarGravityVCenter(
 								CENTER, SLOT_IN_WIDTH * 2)
 						.addButtonGravity(
-								BOTTOM_RIGHT, JEWEL_SLOT_INSET,
+								BOTTOM_RIGHT, JEWEL_SLOT_INSET_X,
 								(WORKING_HEIGHT - FLUID_HEIGHT) / 2,
 								"message.cj_enable_refine_fuel",
 								new ItemStack(manufacturedJewel))
@@ -1238,10 +1241,10 @@ public class CJMod extends Mod {
 		Set<Map.Entry<Integer, ItemStack>> furnaceEntries =
 				furnaceMap.entrySet();
 
-		CJMachineBuilder furnaceMachine = machines.get("cj_furnace");
+		CJBlockMachineBase furnaceMachine = machines.get("cj_furnace");
 
 		for(Map.Entry<Integer, ItemStack> entry : furnaceEntries) {
-			furnaceMachine.addRecipe(
+			furnaceMachine.machineBuilder.addRecipe(
 					20,
 					new CJMachineRecipeComponent(
 							0, new ItemStack(entry.getKey(), 1)),

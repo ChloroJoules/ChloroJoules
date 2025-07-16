@@ -122,22 +122,6 @@ tile.cj_fluid_paste.name=Paste
 tile.cj_fluid_chlorojoules.name=ChloroJoules
 tile.cj_fluid_souls.name=Fluid Souls
 
-# Inventories.
-inventory.cj_bugblock=BugBlock
-inventory.cj_liquefier=Liquefier
-inventory.cj_cultivator=Cultivator
-inventory.cj_refinery=Refinery
-inventory.cj_solidifier=Solidifier
-inventory.cj_pulverizer=Pulverizer
-inventory.cj_press=Press
-inventory.cj_furnace=Furnace
-inventory.cj_tool_station=Tool Station
-inventory.cj_transferor=Transferor
-inventory.cj_tank=Tank
-inventory.cj_composter=Composter
-inventory.cj_mixer=Mixer
-inventory.cj_primitive_centrifuge=Primitive Centrifuge
-
 # Items.
 item.cj_fluid_paste_bucket.name=Paste Bucket
 item.cj_fluid_chlorojoules_bucket.name=Bucket O' Joules

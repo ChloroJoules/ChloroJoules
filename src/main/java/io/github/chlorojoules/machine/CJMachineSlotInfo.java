@@ -1,26 +1,68 @@
 package io.github.chlorojoules.machine;
 
+import com.fox2code.foxloader.registry.GameRegistry;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.gui.CJGuiElement;
-import io.github.chlorojoules.gui.CJGuiMachineBaseSlot;
+import io.github.chlorojoules.gui.CJGuiGravity;
+import io.github.chlorojoules.gui.CJMachineSlotRenderType;
 import net.minecraft.common.item.ItemStack;
+import net.minecraft.common.util.JsonUtils;
+
+import static io.github.chlorojoules.gui.CJGuiMachineBaseLayout.*;
 
 public class CJMachineSlotInfo extends CJGuiElement {
-	public static final int DEFAULT = 0;
-	public static final int GEM = 1;
-	public static final int FERTILIZER = 2;
-	public static final int PASTE = 3;
-
-	public boolean output;
+	public String id;
+	public boolean output = false;
 	public ItemStack[] allowedItems = null;
-	public int renderType = DEFAULT;
+	public CJMachineSlotRenderType renderType =
+			CJMachineSlotRenderType.DEFAULT;
+
+	public CJMachineSlotInfo(int x, int y) {
+		super(x, y);
+	}
 
 	public CJMachineSlotInfo(int x, int y, boolean output) {
 		super(x, y);
-
 		this.output = output;
 	}
 
-	public CJMachineSlotInfo setRenderType(int value) {
+	public CJMachineSlotInfo(JsonObject jsonObject) {
+		super(jsonObject);
+
+		if(jsonObject.has("output")) {
+			output = JsonUtils.getBoolean(jsonObject, "output");
+		}
+
+		if(output) setSize(SLOT_OUT_WIDTH, SLOT_OUT_HEIGHT);
+		else setSize(SLOT_IN_WIDTH, SLOT_IN_HEIGHT);
+
+		id = JsonUtils.getString(jsonObject, "name");
+
+		if(jsonObject.has("allowed")) {
+			JsonArray allowed = JsonUtils.getJsonArray(jsonObject, "allowed");
+
+			allowedItems = new ItemStack[allowed.size()];
+			for(int i = 0; i < allowed.size(); ++i) {
+				allowedItems[i] =
+						CJMod.stackFromJson(allowed.get(i).getAsJsonObject());
+			}
+		}
+
+		if(jsonObject.has("render")) {
+			String render = JsonUtils.getString(jsonObject, "render");
+			renderType = CJMachineSlotRenderType.fromString(render);
+		}
+	}
+
+	public CJMachineSlotInfo setGravity(CJGuiGravity value) {
+		super.setGravity(value);
+		return this;
+	}
+
+	public CJMachineSlotInfo setRenderType(CJMachineSlotRenderType value) {
 		renderType = value;
 		return this;
 	}
@@ -35,7 +77,8 @@ public class CJMachineSlotInfo extends CJGuiElement {
 
 		for(ItemStack allowed : allowedItems) {
 			if(stack.getItemID() == allowed.getItemID() &&
-					stack.getItemDamage() == allowed.getItemDamage()) {
+					(stack.getItemDamage() == allowed.getItemDamage() ||
+							stack.isItemStackDamageable())) {
 
 				return true;
 			}

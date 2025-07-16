@@ -41,7 +41,7 @@ public class CJBlockMachineBase extends BlockContainer {
 
 	private final String[] iconNames;
 	private final boolean iconDefault;
-	private final CJMachineBuilder machineBuilder;
+	public CJMachineBuilder machineBuilder;
 	private final int sideMode;
 	private final int tier;
 
@@ -217,7 +217,7 @@ public class CJBlockMachineBase extends BlockContainer {
 		}
 
 		CJGuiMachineBase gui = new CJGuiMachineBase(
-				player.inventory, machineEntity, machineBuilder);
+				player.inventory, machineEntity);
 
 		Minecraft.theMinecraft.displayGuiScreen(gui);
 
@@ -248,7 +248,7 @@ public class CJBlockMachineBase extends BlockContainer {
 
 	@Override
 	public TileEntity getBlockEntity() {
-		return new CJTileEntityMachineBase(machineBuilder);
+		return new CJTileEntityMachineBase(this);
 	}
 
 	@Override

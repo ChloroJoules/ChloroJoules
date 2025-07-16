@@ -6,6 +6,7 @@ import com.mojang.nbt.Tag;
 import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.CJRarity;
 import io.github.chlorojoules.CJTankVolume;
+import io.github.chlorojoules.block.CJBlockMachineBase;
 import io.github.chlorojoules.gui.CJGuiCoordinateDisplay;
 import io.github.chlorojoules.machine.CJIMachine;
 import io.github.chlorojoules.machine.CJMachineBuilder;
@@ -33,7 +34,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	public int operationLength = 1;
 	public CJRarity jewelRarity = CJRarity.MANUFACTURED;
 
-	public CJMachineBuilder machineBuilder;
+	public CJBlockMachineBase machine;
 	public CJIMachine impl;
 
 	public static CJTileEntityMachineBase machineEntity(
@@ -42,12 +43,13 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		return (CJTileEntityMachineBase) world.getBlockTileEntity(x, y, z);
 	}
 
-	private void initFromBuilder(CJMachineBuilder builder) {
-		machineBuilder = builder;
+	private void initFromBuilder(CJBlockMachineBase machine) {
+		this.machine = machine;
 
+		CJMachineBuilder builder = machine.machineBuilder;
 		if(builder.machineImpl != null) {
 			try {
-				impl = (CJIMachine) builder.machineImpl
+				impl = builder.machineImpl
 						.getDeclaredConstructor()
 						.newInstance();
 			}
@@ -82,8 +84,8 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 
 	public CJTileEntityMachineBase() {}
 
-	public CJTileEntityMachineBase(CJMachineBuilder builder) {
-		initFromBuilder(builder);
+	public CJTileEntityMachineBase(CJBlockMachineBase machine) {
+		initFromBuilder(machine);
 	}
 
 	public void onBreak(World world, int x, int y, int z) {
@@ -113,7 +115,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	public void writeToNBT(CompoundTag tagCompound) {
 		super.writeToNBT(tagCompound);
 
-		tagCompound.setString("cj_machine", machineBuilder.name);
+		tagCompound.setString("cj_machine", machine.machineBuilder.name);
 
 		if(impl != null) impl.writeToNBT(tagCompound);
 
@@ -153,7 +155,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 
 		// Serialize buttons.
 		ListTag<Tag> buttonList = new ListTag<>();
-		for(int i = 0; i < machineBuilder.buttons.size(); i++) {
+		for(int i = 0; i < machine.machineBuilder.buttons.size(); i++) {
 			CompoundTag buttonTag = new CompoundTag();
 			buttonTag.setBoolean("state", buttonStates.get(i));
 			buttonList.setTag(buttonTag);
@@ -178,8 +180,8 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	public void readFromNBT(CompoundTag tagCompound) {
 		super.readFromNBT(tagCompound);
 
-		initFromBuilder(
-				CJMod.machines.get(tagCompound.getString("cj_machine")));
+		initFromBuilder(CJMod.machines.get(
+				tagCompound.getString("cj_machine")));
 
 		if(impl != null) impl.readFromNBT(tagCompound);
 
@@ -263,7 +265,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 
 	@Override
 	public String getInvName() {
-		return "inventory." + machineBuilder.name;
+		return "tile." + machine.machineBuilder.name + ".name";
 	}
 
 	@Override

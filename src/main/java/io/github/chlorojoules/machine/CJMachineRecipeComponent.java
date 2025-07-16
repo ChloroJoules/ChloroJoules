@@ -1,7 +1,12 @@
 package io.github.chlorojoules.machine;
 
+import com.fox2code.foxloader.registry.GameRegistry;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.CJTankVolume;
 import net.minecraft.common.item.ItemStack;
+import net.minecraft.common.util.JsonUtils;
 
 public class CJMachineRecipeComponent {
 	public CJMachineRecipeTarget target;
@@ -38,6 +43,48 @@ public class CJMachineRecipeComponent {
 		this.tag = tag;
 		this.tagCount = count;
 		this.isTag = true;
+	}
+
+	// TODO: Remove builder param and use string slot IDs.
+	public CJMachineRecipeComponent(
+			CJMachineBuilder builder, JsonObject jsonObject) {
+
+		if(jsonObject.has("kind")) {
+			target = CJMachineRecipeTarget.fromString(
+					JsonUtils.getString(jsonObject, "kind"));
+		}
+
+		if(jsonObject.has("fluid")) {
+			target = CJMachineRecipeTarget.TANK;
+			volume = new CJTankVolume(jsonObject);
+		}
+		else if(jsonObject.has("item")) {
+			target = CJMachineRecipeTarget.SLOT;
+			stack = CJMod.stackFromJson(jsonObject);
+		}
+		else {
+			isTag = true;
+			tag = JsonUtils.getString(jsonObject, "tag");
+
+			if(jsonObject.has("amount")) {
+				tagCount = JsonUtils.getInt(jsonObject, "amount");
+			}
+			else tagCount = 1;
+		}
+
+		String id = JsonUtils.getString(jsonObject, "target");
+		if(target == CJMachineRecipeTarget.SLOT) {
+			index = builder.getSlotIndex(id);
+		}
+		else index = builder.getTankIndex(id);
+
+		if(jsonObject.has("chance")) {
+			chance = JsonUtils.getFloat(jsonObject, "chance");
+		}
+
+		if(jsonObject.has("optional")) {
+			optional = JsonUtils.getBoolean(jsonObject, "optional");
+		}
 	}
 
 	public CJMachineRecipeComponent setChance(float value) {

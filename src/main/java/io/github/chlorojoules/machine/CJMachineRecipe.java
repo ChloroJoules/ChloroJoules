@@ -1,8 +1,11 @@
 package io.github.chlorojoules.machine;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.CJRarity;
 import io.github.chlorojoules.CJTankVolume;
+import net.minecraft.common.util.JsonUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +18,7 @@ public class CJMachineRecipe {
 	public int fuelIndex = -1;
 
 	public CJRarity requiredRarity = CJRarity.PRIMAL;
-	boolean allowPassive = true;
+	boolean allowPassive = false;
 	public int requiredButton = -1;
 
 	// Fuel + In -> Out.
@@ -71,6 +74,7 @@ public class CJMachineRecipe {
 			CJMachineRecipeComponent in, CJMachineRecipeComponent out,
 			int ticks) {
 
+		allowPassive = true;
 		processTime = ticks;
 
 		inputs.add(in);
@@ -78,6 +82,37 @@ public class CJMachineRecipe {
 	}
 
 	public CJMachineRecipe() {}
+
+	// TODO: Remove builder from here and use string IDs.
+	public CJMachineRecipe(CJMachineBuilder builder, JsonObject jsonObject) {
+		if(jsonObject.has("passive")) {
+			allowPassive = JsonUtils.getBoolean(jsonObject, "passive");
+		}
+
+		processTime = JsonUtils.getInt(jsonObject, "ticks");
+
+		if(jsonObject.has("fuel")) {
+			fuelIndex = inputs.size();
+
+			inputs.add(new CJMachineRecipeComponent(
+					builder.fuelTankIndex,
+					new CJTankVolume(
+							CJMod.fluidChlorojoules,
+							JsonUtils.getInt(jsonObject, "fuel"))));
+		}
+
+		for(JsonElement input : JsonUtils.getJsonArray(jsonObject, "inputs")) {
+			inputs.add(new CJMachineRecipeComponent(
+					builder, input.getAsJsonObject()));
+		}
+
+		for(JsonElement output :
+				JsonUtils.getJsonArray(jsonObject, "outputs")) {
+
+			outputs.add(new CJMachineRecipeComponent(
+					builder, output.getAsJsonObject()));
+		}
+	}
 
 	public CJMachineRecipe addInput(CJMachineRecipeComponent component) {
 		inputs.add(component);
