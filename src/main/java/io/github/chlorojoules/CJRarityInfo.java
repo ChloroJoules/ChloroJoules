@@ -75,7 +75,10 @@ public class CJRarityInfo {
 	}
 
 	public static CJRarity getJewelRarity(int itemID) {
-		if(itemID == CJMod.primalJewel.itemID) {
+		if(itemID == CJMod.fauxJewel.itemID) {
+			return PRIMAL;
+		}
+		else if(itemID == CJMod.primalJewel.itemID) {
 			return PRIMAL;
 		}
 		else if(itemID == CJMod.manufacturedJewel.itemID) {

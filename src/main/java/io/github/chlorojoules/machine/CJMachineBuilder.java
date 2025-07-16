@@ -3,13 +3,13 @@ package io.github.chlorojoules.machine;
 import io.github.chlorojoules.*;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.gui.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.common.item.Item;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.util.i18n.StringTranslate;
 import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static io.github.chlorojoules.CJRarityInfo.raritySufficient;
 import static io.github.chlorojoules.gui.CJGuiGravity.*;
@@ -194,6 +194,7 @@ public class CJMachineBuilder {
 
 		slots.getLast().setAllowedItems(
 				new ItemStack[] {
+						new ItemStack(CJMod.fauxJewel),
 						new ItemStack(CJMod.primalJewel),
 						new ItemStack(CJMod.manufacturedJewel),
 						new ItemStack(CJMod.refinedJewel),
@@ -526,7 +527,7 @@ public class CJMachineBuilder {
 		for(int i = 0; i < recipe.inputs.size(); i++) {
 			CJMachineRecipeComponent component = recipe.inputs.get(i);
 
-			if(ThreadLocalRandom.current().nextFloat() > component.chance) {
+			if(entity.worldObj.rand.nextFloat() > component.chance) {
 				continue;
 			}
 
@@ -550,7 +551,7 @@ public class CJMachineBuilder {
 		for(int i = 0; i < recipe.outputs.size(); i++) {
 			CJMachineRecipeComponent component = recipe.outputs.get(i);
 
-			if(ThreadLocalRandom.current().nextFloat() > component.chance) {
+			if(entity.worldObj.rand.nextFloat() > component.chance) {
 				continue;
 			}
 
@@ -567,6 +568,10 @@ public class CJMachineBuilder {
 				}
 				else inputStack.stackSize += component.stack.stackSize;
 			}
+		}
+
+		if(jewelSlotIndex != -1) {
+			entity.stacks.get(jewelSlotIndex).damageItem(1, null, true);
 		}
 
 		entity.operationTicks = 0;

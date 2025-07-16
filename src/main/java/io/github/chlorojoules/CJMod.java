@@ -78,6 +78,7 @@ public class CJMod extends Mod {
 	public static Item pasteBowl;
 	public static Item dirtBowl;
 
+	public static Item fauxJewel;
 	public static Item primalJewel;
 	public static Item manufacturedJewel;
 	public static Item refinedJewel;
@@ -155,7 +156,8 @@ public class CJMod extends Mod {
 	}
 
 	public static boolean isGemId(int id) {
-		return id == primalJewel.itemID ||
+		return id == fauxJewel.itemID ||
+				id == primalJewel.itemID ||
 				id == manufacturedJewel.itemID ||
 				id == refinedJewel.itemID ||
 				id == awakenedJewel.itemID;
@@ -355,6 +357,10 @@ public class CJMod extends Mod {
 		dirtBowl = registerItem(
 				PRIMAL_COLOR, 1, CJItemConvertBowl.class, "cj_dirt_bowl",
 				new ItemStack(stoneDust));
+
+		fauxJewel = registerItem(
+				"cj_jewel_faux", PRIMAL_COLOR, 1)
+				.setMaxDamage(100);
 
 		primalJewel = registerItem(
 				"cj_jewel_primal", PRIMAL_COLOR, 1);
@@ -580,6 +586,13 @@ public class CJMod extends Mod {
 						.addRecipe(
 								10,
 								new CJMachineRecipeComponent(
+										0, new ItemStack(fauxJewel)),
+								new CJMachineRecipeComponent(
+										1, new ItemStack(jewelDust, 1)),
+								100, false, -1)
+						.addRecipe(
+								10,
+								new CJMachineRecipeComponent(
 										0, new ItemStack(primalJewel)),
 								new CJMachineRecipeComponent(
 										1, new ItemStack(jewelDust, 2)),
@@ -627,6 +640,13 @@ public class CJMod extends Mod {
 								new CJMachineRecipeComponent(
 										1, new ItemStack(SUGAR, 4)),
 								150, false, -1)
+						.addRecipe(
+								10,
+								new CJMachineRecipeComponent(
+										0, new ItemStack(GRAVEL)),
+								new CJMachineRecipeComponent(
+										1, new ItemStack(SAND)),
+								200, true, -1)
 						// TODO: Add dyes when we have damage values.
 						/*.addRecipe(
 								10,
@@ -827,12 +847,33 @@ public class CJMod extends Mod {
 												new CJMachineRecipeComponent(
 														2, new ItemStack(
 														stoneDust))
-														.setChance(0.5F))
+														.setChance(0.85F))
 										.addOutput(
 												new CJMachineRecipeComponent(
 														3, new ItemStack(
 														SEEDS))
 														.setChance(0.15F))
+										.setProcessTime(100))
+						.addRecipe(
+								new CJMachineRecipe()
+										.addInput(
+												new CJMachineRecipeComponent(
+														1, new ItemStack(
+														paste)))
+										.addInput(
+												new CJMachineRecipeComponent(
+														0, new ItemStack(
+														GRAVEL)))
+										.addOutput(
+												new CJMachineRecipeComponent(
+														2, new ItemStack(
+														FLINT))
+														.setChance(0.65F))
+										.addOutput(
+												new CJMachineRecipeComponent(
+														3, new ItemStack(
+														stoneDust))
+														.setChance(0.85F))
 										.setProcessTime(100))
 						.setImpl(CJMachineRecipeConsumer.class),
 				null, FRONT_FACE, PRIMITIVE);
@@ -1051,6 +1092,15 @@ public class CJMod extends Mod {
 				" ~ ",
 				'~', paste,
 				'@', DIAMOND);
+
+		registerRecipe(
+				fauxJewel,
+				"#~#",
+				"~@~",
+				"#~#",
+				'#', ASH,
+				'~', paste,
+				'@', IRON_INGOT);
 
 		registerRecipe(
 				liquefier,

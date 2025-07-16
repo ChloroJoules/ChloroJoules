@@ -1,5 +1,6 @@
 package io.github.chlorojoules.machine;
 
+import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.CJRarity;
 import io.github.chlorojoules.CJRarityInfo;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
@@ -77,7 +78,9 @@ public class CJMachineToolStation implements CJIMachine {
 		CJRarity rarity = CJRarityInfo.getJewelRarity(
 				inputStack.getItem().itemID);
 
-		if(rarity == CJRarity.INVALID) {
+		if(rarity == CJRarity.INVALID ||
+				inputStack.getItem() == CJMod.fauxJewel) {
+
 			machineEntity.errorMessage =
 					translate.translateKey("message.cj_bad_jewel");
 
