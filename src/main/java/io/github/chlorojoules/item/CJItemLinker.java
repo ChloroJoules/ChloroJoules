@@ -38,12 +38,8 @@ public class CJItemLinker extends Item {
 	}
 
 	private void setItemTagIntArray(ItemStack stack, String key, int[] value) {
-		CompoundTag tag;
-		if(stack.hasTagCompound()) tag = stack.getTagCompound();
-		else tag = new CompoundTag();
-
+		CompoundTag tag = stack.getTagCompoundNonNull();
 		tag.setIntArray(key, value);
-		stack.setTagCompound(tag);
 	}
 
 	@Override
@@ -89,7 +85,7 @@ public class CJItemLinker extends Item {
 			return true;
 		}
 
-		CompoundTag tag = itemstack.getTagCompound();
+		CompoundTag tag = itemstack.getTagCompoundNonNull();
 		int[] position = tag.getIntArray("linked_position");
 
 		CJTileEntityMachineBase inserterMachine =
@@ -199,7 +195,7 @@ public class CJItemLinker extends Item {
 			// TODO: Figure out mixin on player swing item for mode switching
 			//		 So we can turn this back on.
 			/*
-			CompoundTag tag = itemstack.getTagCompound();
+			CompoundTag tag = itemstack.getTagCompoundNonNull();
 			int[] position = tag.getIntArray("linked_position");
 
 			StringTranslate translate = StringTranslate.getInstance();

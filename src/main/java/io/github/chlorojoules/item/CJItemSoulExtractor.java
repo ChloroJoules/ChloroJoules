@@ -29,7 +29,7 @@ public class CJItemSoulExtractor extends Item implements CJIItemSocket {
 			int blockX, int blockY, int blockZ, int side,
 			float x, float y, float z) {
 
-		int rarityDamage = CJRarityInfo.getRarityDamage(CJRarity.REFINED);
+		int rarityDamage = CJRarityInfo.getRarityDamage(CJRarity.MANUFACTURED);
 		if(itemstack.itemDamage > rarityDamage) {
 			String string = StringTranslate.getInstance().translateKey(
 					"message.cj_poor_jewel");

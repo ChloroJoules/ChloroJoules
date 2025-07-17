@@ -1,3 +1,5 @@
 package io.github.chlorojoules.item;
 
-public interface CJIItemSocket {}
+import io.github.chlorojoules.CJRarity;
+
+public interface CJIItemSocket { }

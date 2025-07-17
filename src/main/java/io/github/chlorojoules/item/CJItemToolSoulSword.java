@@ -1,8 +1,12 @@
 package io.github.chlorojoules.item;
 
 import io.github.chlorojoules.CJMod;
+import io.github.chlorojoules.CJRarity;
 import io.github.chlorojoules.CJRarityInfo;
+import net.minecraft.common.entity.Entity;
 import net.minecraft.common.entity.EntityLiving;
+import net.minecraft.common.entity.data.DamageType;
+import net.minecraft.common.entity.data.DamageTypes;
 import net.minecraft.common.entity.other.EntityItem;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.item.children.ItemTool;
@@ -18,13 +22,26 @@ public class CJItemToolSoulSword extends ItemTool implements CJIItemSocket {
 		addDescription(new CJItemDescriptionSocket());
 		setHasSubtypes(true);
 
-		// TODO: Adjust by Jewel value.
-		weaponDamage = 8;
+		weaponDamage = 1;
+	}
+
+	private static int getStackDamage(ItemStack stack) {
+		return switch(CJRarityInfo.getDamageRarity(stack.getItemDamage())) {
+			case PRIMAL -> 3;
+			case MANUFACTURED -> 5;
+			case REFINED -> 7;
+			case AWAKENED -> 9;
+			default -> 0;
+		};
 	}
 
 	@Override
 	public boolean hitEntity(
 			ItemStack itemstack, EntityLiving target, EntityLiving attacker) {
+
+		target.beenAttacked = false;
+		target.attackEntityFrom(
+				attacker, getStackDamage(itemstack), DamageTypes.PLAYER);
 
 		if(target.health <= 0) {
 			World world = target.worldObj;

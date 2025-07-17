@@ -27,7 +27,6 @@
     {
       "ticks": 300,
       "fuel": 500,
-      "rarity": "manufactured",
       "inputs": [
         {
           "target": "input",
@@ -37,7 +36,7 @@
       "outputs": [
         {
           "target": "output",
-          "item": "chlorojoules:cj_jewel_refined"
+          "item": "chlorojoules:cj_jewel_manufactured"
         }
       ]
     }

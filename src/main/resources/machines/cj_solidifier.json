@@ -71,7 +71,7 @@
       "outputs": [
         {
           "target": "output",
-          "item": "chlorojoules:cj_jewel_manufactured"
+          "item": "chlorojoules:cj_jewel_faux"
         }
       ]
     }
