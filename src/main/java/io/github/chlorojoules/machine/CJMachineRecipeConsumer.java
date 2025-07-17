@@ -8,7 +8,10 @@ public class CJMachineRecipeConsumer implements CJIMachine {
 		CJMachineBuilder builder = machineEntity.machine.machineBuilder;
 		CJMachineRecipe recipe = builder.getMatchingRecipe(machineEntity);
 
-		if(recipe == null) return;
+		if(recipe == null) {
+			machineEntity.operationTicks = 0;
+			return;
+		}
 
 		builder.runRecipe(recipe, machineEntity);
 	}

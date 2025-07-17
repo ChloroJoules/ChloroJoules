@@ -1,0 +1,71 @@
+{
+  "name": "cj_mixer",
+  "rarity": "refined",
+  "tanks": [
+    "fuel",
+    {
+      "name": "input",
+      "anchor": "left",
+      "x": 58,
+
+      "volume": 8000
+    },
+    {
+      "name": "output",
+      "anchor": "center",
+      "x": 45,
+
+      "volume": 8000,
+      "output": true
+    }
+  ],
+  "slots": [
+    "jewel",
+    {
+      "name": "additive",
+      "anchor": "left",
+      "x": 80
+    }
+  ],
+  "buttons": [
+    {
+      "name": "refine_fuel",
+      "tooltip": "message.cj_enable_refine_fuel",
+      "label": {
+        "item": "chlorojoules:cj_jewel_manufactured"
+      },
+      "anchor": "bottom right",
+      "x": 22,
+      "y": 26
+    }
+  ],
+  "progress": {
+    "anchor": "center",
+    "x": 20
+  },
+  "recipes": [
+    {
+      "ticks": 250,
+      "fuel": 150,
+      "button": "refine_fuel",
+      "inputs": [
+        {
+          "target": "fuel",
+          "fluid": "chlorojoules:cj_fluid_chlorojoules",
+          "amount": 250
+        },
+        {
+          "target": "additive",
+          "item": "chlorojoules:cj_soul_dust"
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "fluid": "chlorojoules:cj_fluid_souls",
+          "amount": 50
+        }
+      ]
+    }
+  ]
+}

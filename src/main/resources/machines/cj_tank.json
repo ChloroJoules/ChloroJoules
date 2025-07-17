@@ -1,0 +1,13 @@
+{
+  "name": "cj_tank",
+  "implementation": null,
+  "rarity": "manufactured",
+  "face": "sides",
+  "tanks": [
+    {
+      "anchor": "center",
+      "volume": 16000,
+      "bidirectional": true
+    }
+  ]
+}

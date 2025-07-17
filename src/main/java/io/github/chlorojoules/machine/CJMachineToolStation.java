@@ -25,6 +25,7 @@ public class CJMachineToolStation implements CJIMachine {
 		machineEntity.operationLength = 100;
 
 		if(inputStack == null) {
+			machineEntity.operationTicks = 0;
 			machineEntity.errorMessage =
 					translate.translateKey("message.cj_bad_recipe");
 
@@ -33,6 +34,7 @@ public class CJMachineToolStation implements CJIMachine {
 
 		if(toolStack == null) {
 			if(!(inputStack.getItem() instanceof CJIItemSocket)) {
+				machineEntity.operationTicks = 0;
 				machineEntity.errorMessage =
 						translate.translateKey("message.cj_bad_recipe");
 
@@ -41,6 +43,7 @@ public class CJMachineToolStation implements CJIMachine {
 
 			int damage = inputStack.itemDamage;
 			if(damage == CJRarityInfo.MAX_DAMAGE) {
+				machineEntity.operationTicks = 0;
 				machineEntity.errorMessage =
 						translate.translateKey("message.cj_no_jewel");
 
@@ -62,6 +65,7 @@ public class CJMachineToolStation implements CJIMachine {
 		}
 
 		if(!(toolStack.getItem() instanceof CJIItemSocket)) {
+			machineEntity.operationTicks = 0;
 			machineEntity.errorMessage =
 					translate.translateKey("message.cj_bad_tool");
 
@@ -69,6 +73,7 @@ public class CJMachineToolStation implements CJIMachine {
 		}
 
 		if(toolStack.itemDamage != CJRarityInfo.MAX_DAMAGE) {
+			machineEntity.operationTicks = 0;
 			machineEntity.errorMessage =
 					translate.translateKey("message.cj_full_tool");
 
@@ -81,6 +86,7 @@ public class CJMachineToolStation implements CJIMachine {
 		if(rarity == CJRarity.INVALID ||
 				inputStack.getItem() == CJMod.fauxJewel) {
 
+			machineEntity.operationTicks = 0;
 			machineEntity.errorMessage =
 					translate.translateKey("message.cj_bad_jewel");
 

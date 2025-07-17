@@ -158,6 +158,7 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 						this.mc.sndManager.playSoundFX(
 								"random.click", 1.0F, 1.0F);
 
+						machineEntity.operationTicks = 0;
 						machineEntity.buttonStates.set(
 								i, !machineEntity.buttonStates.get(i));
 					}

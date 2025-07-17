@@ -1,0 +1,72 @@
+{
+  "name": "cj_composter",
+  "rarity": "primal",
+  "tier": "primitive",
+  "slots": [
+    {
+      "name": "input",
+      "anchor": "center",
+      "x": -24
+    },
+    {
+      "name": "output",
+      "anchor": "center",
+      "x": 35,
+      "y": 4,
+
+      "output": true
+    }
+  ],
+  "buttons": [
+    {
+      "name": "bone_meal",
+      "tooltip": "message.cj_compost_bone_meal",
+      "label": {
+        "item": "dye",
+        "damage": 15
+      },
+      "anchor": "bottom right",
+      "x": 22,
+      "y": 26
+    }
+  ],
+  "progress": {
+    "anchor": "center"
+  },
+  "recipes": [
+    {
+      "ticks": 500,
+      "button": "bone_meal",
+      "inputs": [
+        {
+          "kind": "item",
+          "target": "input",
+          "tag": "#compostable"
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "item": "dye",
+          "damage": 15
+        }
+      ]
+    },
+    {
+      "ticks": 1000,
+      "inputs": [
+        {
+          "kind": "item",
+          "target": "input",
+          "tag": "#compostable"
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "item": "dirt"
+        }
+      ]
+    }
+  ]
+}

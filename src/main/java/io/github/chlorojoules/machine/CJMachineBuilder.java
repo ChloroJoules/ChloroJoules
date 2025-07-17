@@ -89,19 +89,23 @@ public class CJMachineBuilder {
 		}
 
 		if(root.has("implementation")) {
-			String implName = JsonUtils.getString(root, "implementation");
-			try {
-				Class<?> implClass = Class.forName(implName);
-				if(!CJIMachine.class.isAssignableFrom(implClass)) {
-					throw new RuntimeException(
-							"Implementation class '" + implName +
-							"' does not implement 'CJIMachine'");
-				}
+			JsonElement implElement = root.get("implementation");
+			if(implElement.isJsonNull()) machineImpl = null;
+			else {
+				String implName = JsonUtils.getString(root, "implementation");
+				try {
+					Class<?> implClass = Class.forName(implName);
+					if(!CJIMachine.class.isAssignableFrom(implClass)) {
+						throw new RuntimeException(
+								"Implementation class '" + implName +
+								"' does not implement 'CJIMachine'");
+					}
 
-				machineImpl = (Class<? extends CJIMachine>) implClass;
-			}
-			catch(ClassNotFoundException e) {
-				throw new RuntimeException(e);
+					machineImpl = (Class<? extends CJIMachine>) implClass;
+				}
+				catch(ClassNotFoundException e) {
+					throw new RuntimeException(e);
+				}
 			}
 		}
 
