@@ -264,6 +264,8 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 		// Draw UI base.
 		drawTexturedModalRect(baseX, baseY, 0, 0, xSize, ySize);
 
+		CJMachineBuilder machineBuilder = machineEntity.machine.machineBuilder;
+
 		// Draw slots.
 		CJGuiMachineBaseSlot slot;
 		int slotX;
@@ -357,34 +359,6 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 					FLUID_WIDTH, tankEmptyDrawHeight);
 		}
 
-		// Draw coordinates.
-		CJMachineBuilder machineBuilder = machineEntity.machine.machineBuilder;
-		for(int i = 0; i < machineBuilder.linkCoordinates.size(); i++) {
-			CJGuiCoordinate coordinate = machineBuilder.linkCoordinates.get(i);
-			if(!coordinate.matchesDamageExclusive(machineEntity)) continue;
-
-			int x = baseX + coordinate.getXPlacement();
-			int y = baseY + coordinate.getYPlacement();
-
-			CJGuiCoordinateDisplay coordinateDisplay =
-					machineEntity.coordinateDisplays.get(i);
-
-			String string;
-			if(coordinateDisplay != null) {
-				string = StringTranslate.getInstance().translateKeyFormat(
-						coordinate.label,
-						coordinateDisplay.value[0],
-						coordinateDisplay.value[1],
-						coordinateDisplay.value[2]);
-			}
-			else {
-				string = StringTranslate.getInstance().translateKey(
-						"message.cj_coordinate_unset");
-			}
-
-			drawCenteredString(fontRenderer, string, x, y, 0);
-		}
-
 		// Draw progress bar.
 		if(machineBuilder.progressBar != null) {
 			int x = baseX + machineBuilder.progressBar.getXPlacement();
@@ -459,5 +433,32 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 				INFO_X + baseX, INFO_Y + baseY,
 				STATUS_INFO_X, STATUS_INFO_Y,
 				STATUS_WIDTH, STATUS_HEIGHT);
+
+		// Draw coordinates.
+		for(int i = 0; i < machineBuilder.linkCoordinates.size(); i++) {
+			CJGuiCoordinate coordinate = machineBuilder.linkCoordinates.get(i);
+			if(!coordinate.matchesDamageExclusive(machineEntity)) continue;
+
+			int x = baseX + coordinate.getXPlacement();
+			int y = baseY + coordinate.getYPlacement();
+
+			CJGuiCoordinateDisplay coordinateDisplay =
+					machineEntity.coordinateDisplays.get(i);
+
+			String string;
+			if(coordinateDisplay != null) {
+				string = StringTranslate.getInstance().translateKeyFormat(
+						coordinate.label,
+						coordinateDisplay.value[0],
+						coordinateDisplay.value[1],
+						coordinateDisplay.value[2]);
+			}
+			else {
+				string = StringTranslate.getInstance().translateKey(
+						"message.cj_coordinate_unset");
+			}
+
+			drawCenteredString(fontRenderer, string, x, y, 0);
+		}
 	}
 }

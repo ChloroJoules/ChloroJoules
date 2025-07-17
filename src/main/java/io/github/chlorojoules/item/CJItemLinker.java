@@ -60,7 +60,7 @@ public class CJItemLinker extends Item {
 			String string = StringTranslate.getInstance().translateKey(
 					"message.cj_not_transferor");
 
-			CJMod.sendChat(ChatColors.RED + string);
+			CJMod.sendChat(string);
 
 			return true;
 		}
@@ -79,7 +79,7 @@ public class CJItemLinker extends Item {
 			String string = StringTranslate.getInstance().translateKeyFormat(
 					"message.cj_linked_position", blockX, blockY, blockZ);
 
-			CJMod.sendChat(ChatColors.GREEN + string);
+			CJMod.sendChat(string);
 
 			Minecraft.getInstance().sndManager.playSoundFX(
 					"random.click", 1.0F, 1.0F);
@@ -104,7 +104,7 @@ public class CJItemLinker extends Item {
 			String string = StringTranslate.getInstance().translateKey(
 					"message.cj_same_transferor");
 
-			CJMod.sendChat(ChatColors.RED + string);
+			CJMod.sendChat(string);
 
 			return true;
 		}
@@ -116,7 +116,7 @@ public class CJItemLinker extends Item {
 			String string = StringTranslate.getInstance().translateKeyFormat(
 					"message.cj_too_far", MAX_LINK);
 
-			CJMod.sendChat(ChatColors.RED + string);
+			CJMod.sendChat(string);
 
 			return true;
 		}
@@ -126,7 +126,7 @@ public class CJItemLinker extends Item {
 				blockX, blockY, blockZ,
 				position[0], position[1], position[2]);
 
-		CJMod.sendChat(ChatColors.GREEN + string);
+		CJMod.sendChat(string);
 
 		CJMachineTransferor extractor =
 				(CJMachineTransferor) extractorMachine.impl;
@@ -207,7 +207,7 @@ public class CJItemLinker extends Item {
 					"message.cj_link_query",
 					position[0], position[1], position[2]);
 
-			CJMod.sendChat(ChatColors.GREEN + string);
+			CJMod.sendChat(string);
 
 			return itemstack;
 			*/
@@ -244,7 +244,7 @@ public class CJItemLinker extends Item {
 			Minecraft.getInstance().sndManager.playSoundFX(
 					"random.ratchet", 1.0F, 1.0F);
 
-			CJMod.sendChat(ChatColors.BLUE + string);
+			CJMod.sendChat(string);
 		}
 
 		if(itemstack.itemDamage != ITEM_FULL &&
@@ -258,7 +258,7 @@ public class CJItemLinker extends Item {
 		Minecraft.getInstance().sndManager.playSoundFX(
 				"random.break", 1.0F, 1.0F);
 
-		CJMod.sendChat(ChatColors.GREEN + string);
+		CJMod.sendChat(string);
 
 		itemstack.itemDamage--;
 
