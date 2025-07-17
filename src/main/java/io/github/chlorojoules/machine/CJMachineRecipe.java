@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.CJRarity;
+import io.github.chlorojoules.CJRarityInfo;
 import io.github.chlorojoules.CJTankVolume;
 import net.minecraft.common.util.JsonUtils;
 
@@ -87,6 +88,11 @@ public class CJMachineRecipe {
 	public CJMachineRecipe(CJMachineBuilder builder, JsonObject jsonObject) {
 		if(jsonObject.has("passive")) {
 			allowPassive = JsonUtils.getBoolean(jsonObject, "passive");
+		}
+
+		if(jsonObject.has("rarity")) {
+			requiredRarity = CJRarityInfo.fromString(
+					JsonUtils.getString(jsonObject, "rarity"));
 		}
 
 		processTime = JsonUtils.getInt(jsonObject, "ticks");

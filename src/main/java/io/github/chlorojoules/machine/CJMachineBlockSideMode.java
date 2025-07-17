@@ -8,8 +8,8 @@ public enum CJMachineBlockSideMode {
 	public static CJMachineBlockSideMode fromString(String id) {
 		return switch(id.toLowerCase()) {
 			case "front" -> FRONT_FACE;
-			case "all" -> ALL_SIDES;
-			case "faces" -> ALL_FACES;
+			case "sides" -> ALL_SIDES;
+			case "all" -> ALL_FACES;
 
 			default -> FRONT_FACE;
 		};

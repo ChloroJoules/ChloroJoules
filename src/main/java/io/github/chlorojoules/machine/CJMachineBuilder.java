@@ -31,7 +31,7 @@ public class CJMachineBuilder {
 	public Class<? extends CJIMachine> machineImpl =
 			CJMachineRecipeConsumer.class;
 
-	public boolean doDropMeta = true;
+	public boolean doDropMeta = false;
 
 	public int fuelTankIndex = -1;
 	public int jewelSlotIndex = -1;
@@ -54,6 +54,7 @@ public class CJMachineBuilder {
 
 	public CJMachineBuilder() {}
 
+	@SuppressWarnings("unchecked")
 	public CJMachineBuilder(String jsonPath) {
 		String source;
 		try {
@@ -68,18 +69,40 @@ public class CJMachineBuilder {
 			stream.close();
 		}
 		catch(IOException e) {
-			throw new RuntimeException();
+			throw new RuntimeException(e);
 		}
 
 		JsonObject root = JsonParser.parseString(source).getAsJsonObject();
 
 		name = JsonUtils.getString(root, "name");
-		rarity = CJRarityInfo.getNamedRarity(
+		rarity = CJRarityInfo.fromString(
 				JsonUtils.getString(root, "rarity"));
 
 		if(root.has("tier")) {
 			tier = CJMachineTier.fromString(
 					JsonUtils.getString(root, "tier"));
+		}
+
+		if(root.has("face")) {
+			sideMode = CJMachineBlockSideMode.fromString(
+					JsonUtils.getString(root, "face"));
+		}
+
+		if(root.has("implementation")) {
+			String implName = JsonUtils.getString(root, "implementation");
+			try {
+				Class<?> implClass = Class.forName(implName);
+				if(!CJIMachine.class.isAssignableFrom(implClass)) {
+					throw new RuntimeException(
+							"Implementation class '" + implName +
+							"' does not implement 'CJIMachine'");
+				}
+
+				machineImpl = (Class<? extends CJIMachine>) implClass;
+			}
+			catch(ClassNotFoundException e) {
+				throw new RuntimeException(e);
+			}
 		}
 
 		if(root.has("icons")) {
@@ -93,68 +116,72 @@ public class CJMachineBuilder {
 		}
 		else iconNames = new String[] { name };
 
-		for(JsonElement tank : JsonUtils.getJsonArray(root, "tanks")) {
-			if(tank.isJsonObject()) {
-				JsonObject tankObject = tank.getAsJsonObject();
-				tanks.add(new CJTank(tankObject));
-				tankVolumes.add(new CJTankVolume(tankObject));
-				continue;
-			}
-
-			String special = tank.getAsString();
-			if(special.equals("fuel")) {
-				if(fuelTankIndex != -1) {
-					throw new RuntimeException(
-							"Cannot specify multiple fuel tanks");
+		if(root.has("tanks")) {
+			for(JsonElement tank : JsonUtils.getJsonArray(root, "tanks")) {
+				if(tank.isJsonObject()) {
+					JsonObject tankObject = tank.getAsJsonObject();
+					tanks.add(new CJTank(tankObject));
+					tankVolumes.add(new CJTankVolume(tankObject));
+					continue;
 				}
 
-				fuelTankIndex = tanks.size();
+				String special = tank.getAsString();
+				if(special.equals("fuel")) {
+					if(fuelTankIndex != -1) {
+						throw new RuntimeException(
+								"Cannot specify multiple fuel tanks");
+					}
 
-				tanks.add((CJTank) new CJTank(LEFT, FUEL_TANK_INSET, 0)
-						.setID("fuel"));
+					fuelTankIndex = tanks.size();
 
-				tankVolumes.add(new CJTankVolume()
-						.setMax(FUEL_TANK_SIZE)
-						.setLockFluid(CJMod.fuelFluid));
-			}
-			else {
-				Logger.getLogger("Chlorojoules").warning(
-						"Unknown tank constant '`'" + special + "'");
+					tanks.add((CJTank) new CJTank(LEFT, FUEL_TANK_INSET, 0)
+							.setID("fuel"));
+
+					tankVolumes.add(new CJTankVolume()
+							.setMax(FUEL_TANK_SIZE)
+							.setLockFluid(CJMod.fuelFluid));
+				}
+				else {
+					Logger.getLogger("Chlorojoules").warning(
+							"Unknown tank constant '`'" + special + "'");
+				}
 			}
 		}
 
-		for(JsonElement slot : JsonUtils.getJsonArray(root, "slots")) {
-			if(slot.isJsonObject()) {
-				JsonObject slotObject = slot.getAsJsonObject();
-				slots.add(new CJMachineSlotInfo(slotObject));
-				continue;
-			}
-
-			String special = slot.getAsString();
-			if(special.equals("jewel")) {
-				if(jewelSlotIndex != -1) {
-					throw new RuntimeException(
-							"Cannot specify multiple jewel slots");
+		if(root.has("slots")) {
+			for(JsonElement slot : JsonUtils.getJsonArray(root, "slots")) {
+				if(slot.isJsonObject()) {
+					JsonObject slotObject = slot.getAsJsonObject();
+					slots.add(new CJMachineSlotInfo(slotObject));
+					continue;
 				}
 
-				jewelSlotIndex = slots.size();
+				String special = slot.getAsString();
+				if(special.equals("jewel")) {
+					if(jewelSlotIndex != -1) {
+						throw new RuntimeException(
+								"Cannot specify multiple jewel slots");
+					}
 
-				slots.add((CJMachineSlotInfo) new CJMachineSlotInfo(
-						JEWEL_SLOT_INSET_X, JEWEL_SLOT_INSET_Y)
-						.setGravity(BOTTOM_LEFT)
-						.setRenderType(CJMachineSlotRenderType.JEWEL)
-						.setAllowedItems(new ItemStack[] {
-								new ItemStack(CJMod.fauxJewel),
-								new ItemStack(CJMod.primalJewel),
-								new ItemStack(CJMod.manufacturedJewel),
-								new ItemStack(CJMod.refinedJewel),
-								new ItemStack(CJMod.awakenedJewel)
-						})
-						.setID("jewel"));
-			}
-			else {
-				Logger.getLogger("Chlorojoules").warning(
-						"Unknown slot constant '`'" + special + "'");
+					jewelSlotIndex = slots.size();
+
+					slots.add((CJMachineSlotInfo) new CJMachineSlotInfo(
+							JEWEL_SLOT_INSET_X, JEWEL_SLOT_INSET_Y)
+							.setGravity(BOTTOM_LEFT)
+							.setRenderType(CJMachineSlotRenderType.JEWEL)
+							.setAllowedItems(new ItemStack[] {
+									new ItemStack(CJMod.fauxJewel),
+									new ItemStack(CJMod.primalJewel),
+									new ItemStack(CJMod.manufacturedJewel),
+									new ItemStack(CJMod.refinedJewel),
+									new ItemStack(CJMod.awakenedJewel)
+							})
+							.setID("jewel"));
+				}
+				else {
+					Logger.getLogger("Chlorojoules").warning(
+							"Unknown slot constant '`'" + special + "'");
+				}
 			}
 		}
 
@@ -168,9 +195,11 @@ public class CJMachineBuilder {
 		progressBar = new CJGuiElement(progressObject)
 				.setSize(PROGRESS_WIDTH, PROGRESS_HEIGHT);
 
-		for(JsonElement recipe : JsonUtils.getJsonArray(root, "recipes")) {
-			recipes.add(new CJMachineRecipe(
-					this, recipe.getAsJsonObject()));
+		if(root.has("recipes")) {
+			for(JsonElement recipe : JsonUtils.getJsonArray(root, "recipes")) {
+				recipes.add(new CJMachineRecipe(
+						this, recipe.getAsJsonObject()));
+			}
 		}
 	}
 
@@ -182,6 +211,16 @@ public class CJMachineBuilder {
 		}
 
 		return -1;
+	}
+
+	public int getNamedDamage(String id) {
+		if(iconDefault) return 0;
+
+		for(int i = 0; i < iconNames.length; i++) {
+			if(iconNames[i].equals(id)) return i;
+		}
+
+		return 0;
 	}
 
 	public int getButtonIndex(String id) {
@@ -227,7 +266,7 @@ public class CJMachineBuilder {
 	}
 
 	public CJMachineBuilder setSlotDamageExclusive(
-			int slot, int[] damageExclusive) {
+			int slot, String[] damageExclusive) {
 
 		slots.get(slot).setDamageExclusive(damageExclusive);
 
@@ -249,7 +288,7 @@ public class CJMachineBuilder {
 	}
 
 	public CJMachineBuilder setTankDamageExclusive(
-			int tank, int[] damageExclusive) {
+			int tank, String[] damageExclusive) {
 
 		tanks.get(tank).setDamageExclusive(damageExclusive);
 		return this;
@@ -420,6 +459,7 @@ public class CJMachineBuilder {
 
 	public CJMachineBuilder setIconNames(String[] value) {
 		iconNames = value;
+		iconDefault = false;
 		return this;
 	}
 

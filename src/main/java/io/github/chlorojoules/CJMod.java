@@ -288,7 +288,7 @@ public class CJMod extends Mod {
 					.setCreativeTab(creativeTab);
 		}
 		catch(Exception e) {
-			throw new RuntimeException();
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -322,7 +322,7 @@ public class CJMod extends Mod {
 					.setCreativeTab(creativeTab);
 		}
 		catch(Exception e) {
-			throw new RuntimeException();
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -482,39 +482,10 @@ public class CJMod extends Mod {
 				new CJMachineBuilder("/machines/cj_press.json"));
 
 		furnace = registerMachine(
-				new CJMachineBuilder()
-						.setName("cj_furnace")
-						.addFuelTank()
-						.addSlotGravityVCenter(
-								TOP_LEFT,
-								JEWEL_SLOT_INSET_X + SLOT_OUT_WIDTH,
-								false)
-						.addSlotGravityVCenter(
-								CENTER, SLOT_IN_WIDTH * 4, true)
-						.addJewelSlot()
-						.addProgressBarGravityVCenter(CENTER, 0)
-						.addRecipeRarity(
-								500,
-								new CJMachineRecipeComponent(
-										0, new ItemStack(compactedJewelDust)),
-								new CJMachineRecipeComponent(
-										1, new ItemStack(refinedJewel)),
-								300, CJRarity.MANUFACTURED, -1));
+				new CJMachineBuilder("/machines/cj_furnace.json"));
 
 		toolStation = registerMachine(
-				new CJMachineBuilder()
-						.setName("cj_tool_station")
-						.addSlotGravityVCenter(
-								TOP_LEFT,
-								JEWEL_SLOT_INSET_X,
-								false)
-						.addSlotGravityVCenter(
-								CENTER,
-								JEWEL_SLOT_INSET_X + SLOT_OUT_WIDTH,
-								false)
-						.addProgressBarGravityVCenter(CENTER, 0)
-						.setSideMode(CJMachineBlockSideMode.ALL_SIDES)
-						.setImpl(CJMachineToolStation.class));
+				new CJMachineBuilder("/machines/cj_tool_station.json"));
 
 		// TODO: For `Soul Extractor` -- make base tool then socket a
 		//       `Refined ChloroJewel` to use; allows player to reclaim
@@ -531,12 +502,10 @@ public class CJMod extends Mod {
 								CENTER, 0, 0, false, false,
 								2 * CJTank.BUCKET, 0)
 						.addSlotGravity(CENTER, 0, 0, false)
-						.setSlotDamageExclusive(0, new int[] {
-								CJMachineTransferor.TRANSMIT_ITEMS,
-								CJMachineTransferor.MULTI_TRANSMIT_ITEMS })
-						.setTankDamageExclusive(0, new int[] {
-								CJMachineTransferor.TRANSMIT_FLUIDS,
-								CJMachineTransferor.MULTI_TRANSMIT_FLUIDS })
+						.setSlotDamageExclusive(0, new String[] {
+								"cj_whooper", "cj_multi_whooper" })
+						.setTankDamageExclusive(0, new String[] {
+								"cj_flooper", "cj_multi_flooper" })
 						.setSideMode(CJMachineBlockSideMode.ALL_FACES)
 						.setIconNames(new String[] {
 								"cj_inactive",
@@ -1041,8 +1010,12 @@ public class CJMod extends Mod {
 			furnaceMachine.machineBuilder.addRecipe(
 					20,
 					new CJMachineRecipeComponent(
-							0, new ItemStack(entry.getKey(), 1)),
-					new CJMachineRecipeComponent(1, entry.getValue()),
+							furnaceMachine.machineBuilder.getSlotIndex(
+									"input"),
+							new ItemStack(entry.getKey(), 1)),
+					new CJMachineRecipeComponent(
+							furnaceMachine.machineBuilder.getSlotIndex(
+									"output"), entry.getValue()),
 					200, false, -1); // Vanilla furnace ticks as base.
 		}
 	}

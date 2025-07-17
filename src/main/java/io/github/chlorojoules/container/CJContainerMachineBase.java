@@ -52,14 +52,7 @@ public class CJContainerMachineBase extends Container {
 		for(int i = 0; i < machineBuilder.slots.size(); i++) {
 			CJMachineSlotInfo info = machineBuilder.slots.get(i);
 
-			if(info.damageExclusive != null) {
-				int meta = machineEntity.getWorldBlockMetadata();
-				boolean matchesExclusiveMetadata =
-						Arrays.stream(info.damageExclusive).anyMatch(
-								x -> x == meta);
-
-				if(!matchesExclusiveMetadata) continue;
-			}
+			if(!info.matchesDamageExclusive(machineEntity)) continue;
 
 			CJGuiMachineBaseSlot slot =
 					new CJGuiMachineBaseSlot(
@@ -73,14 +66,7 @@ public class CJContainerMachineBase extends Container {
 		for(int i = 0; i < machineBuilder.tanks.size(); ++i) {
 			CJTank tank = machineBuilder.tanks.get(i);
 
-			if(tank.damageExclusive != null) {
-				int meta = machineEntity.getWorldBlockMetadata();
-				boolean matchesExclusiveMetadata =
-						Arrays.stream(tank.damageExclusive).anyMatch(
-								x -> x == meta);
-
-				if(!matchesExclusiveMetadata) continue;
-			}
+			if(!tank.matchesDamageExclusive(machineEntity)) continue;
 
 			tanks.add(tank);
 		}

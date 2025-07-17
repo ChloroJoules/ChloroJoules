@@ -1,6 +1,7 @@
 package io.github.chlorojoules;
 
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
+import io.github.chlorojoules.gui.CJGuiMachineBaseSlot;
 import io.github.chlorojoules.machine.CJMachineBuilder;
 import io.github.chlorojoules.machine.CJMachineSlotInfo;
 import net.minecraft.common.block.tileentity.TileEntity;
@@ -73,8 +74,12 @@ public class CJInventoryHelper {
 			IInventory inventory, int itemID) {
 
 		if(inventory instanceof CJTileEntityMachineBase machine) {
+			CJMachineBuilder machineBuilder =
+					machine.machine.machineBuilder;
+
 			for(int j = 0; j < machine.stacks.size(); j++) {
-				if(machine.machine.machineBuilder.slots.get(j).output) {
+				CJMachineSlotInfo slot = machineBuilder.slots.get(j);
+				if(slot.output || !slot.matchesDamageExclusive(machine)) {
 					continue;
 				}
 

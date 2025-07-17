@@ -95,14 +95,7 @@ tile.cj_tool_station.name=Tool Station
 tile.cj_tank.name=Tank
 tile.cj_composter.name=Composter
 tile.cj_primitive_centrifuge.name=Primitive Centrifuge
-
-tile.cj_transferor.cj_inactive.name=Transferor
-tile.cj_transferor.cj_flooper.name=Transferor [Transmit Fluid]
-tile.cj_transferor.cj_slooper.name=Transferor [Receive Fluid]
-tile.cj_transferor.cj_whooper.name=Transferor [Transmit Item]
-tile.cj_transferor.cj_swooper.name=Transferor [Receive Item]
-tile.cj_transferor.cj_multi_flooper.name=Transferor [Multi-Transmit Fluid]
-tile.cj_transferor.cj_multi_whooper.name=Transferor [Multi-Transmit Item]
+tile.cj_transferor.name=Transferor
 
 # Fluids.
 tile.cj_fluid_paste.name=Paste

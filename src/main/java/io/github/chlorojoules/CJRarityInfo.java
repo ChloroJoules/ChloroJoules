@@ -1,7 +1,6 @@
 package io.github.chlorojoules;
 
 import io.github.chlorojoules.item.CJItemDescription;
-import net.minecraft.common.block.Block;
 
 import java.awt.*;
 
@@ -70,10 +69,8 @@ public class CJRarityInfo {
 		};
 	}
 
-	public static CJRarity getNamedRarity(String value) {
-		String rarity = value.toLowerCase();
-
-		return switch(rarity) {
+	public static CJRarity fromString(String value) {
+		return switch(value.toLowerCase()) {
 			case "primal" -> PRIMAL;
 			case "manufactured" -> MANUFACTURED;
 			case "refined" -> REFINED;

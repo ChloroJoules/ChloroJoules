@@ -15,6 +15,7 @@ import net.minecraft.common.world.World;
 import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase.machineEntity;
 
@@ -34,7 +35,7 @@ public class CJMachineTransferor implements CJIMachine {
 	public int lastReceiver = 0;
 	public boolean breakingLink = false;
 
-	private boolean isMulti(int meta) {
+	private static boolean isMulti(int meta) {
 		return meta > RECEIVE_FLUIDS;
 	}
 
@@ -43,7 +44,7 @@ public class CJMachineTransferor implements CJIMachine {
 			CJTileEntityMachineBase linkedEntity) {
 
 		CJMachineTransferor linkedTransferor =
-				(CJMachineTransferor) linkedEntity.impl;
+					(CJMachineTransferor) linkedEntity.impl;
 
 		if(isMulti(linkedEntity.getWorldBlockMetadata())) {
 			int[] last =
@@ -162,6 +163,7 @@ public class CJMachineTransferor implements CJIMachine {
 				CJTank adjacentTank =
 						machine.machine.machineBuilder.tanks.get(j);
 
+				if(!adjacentTank.matchesDamageExclusive(machine)) continue;
 				if(!adjacentTank.output && !adjacentTank.bidirectional) {
 					continue;
 				}
@@ -195,6 +197,7 @@ public class CJMachineTransferor implements CJIMachine {
 				CJTank adjacentTank =
 						machine.machine.machineBuilder.tanks.get(j);
 
+				if(!adjacentTank.matchesDamageExclusive(machine)) continue;
 				if(adjacentTank.output && !adjacentTank.bidirectional) {
 					continue;
 				}
@@ -275,14 +278,21 @@ public class CJMachineTransferor implements CJIMachine {
 		if(breakingLink) return;
 		breakingLink = true;
 
-		for(int[] link : linked) {
+		ArrayList<int[]> linkedCopy = new ArrayList<>();
+		for(int[] link : linked) linkedCopy.add(link.clone());
+
+		for(int[] link : linkedCopy) {
 			CJTileEntityMachineBase linkedEntity =
 					machineEntity(worldObj, link[0], link[1], link[2]);
 
 			CJMachineTransferor other =
 					(CJMachineTransferor) linkedEntity.impl;
 
-			other.breakLink(worldObj, linkedEntity);
+			if(isMulti(linkedEntity.getWorldBlockMetadata())) {
+				other.linked.removeIf(value -> Arrays.equals(
+						value, machineEntity.getWorldPosition()));
+			}
+			else other.breakLink(worldObj, linkedEntity);
 		}
 
 		linked.clear();

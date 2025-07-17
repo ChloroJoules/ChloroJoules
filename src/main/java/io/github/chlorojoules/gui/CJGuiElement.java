@@ -3,8 +3,14 @@ package io.github.chlorojoules.gui;
 // Just used for progress bar arrows right now. Can be used for any element
 // Which doesn't have any real metadata associated with it.
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
+import io.github.chlorojoules.machine.CJMachineBuilder;
 import net.minecraft.common.util.JsonUtils;
+
+import java.util.Arrays;
 
 public class CJGuiElement {
 	public String id;
@@ -13,7 +19,7 @@ public class CJGuiElement {
 	public int yDisplayPosition = 0;
 	public int width = 0;
 	public int height = 0;
-	public int[] damageExclusive = null;
+	public String[] damageExclusive = null;
 
 	public CJGuiElement(int x, int y) {
 		xDisplayPosition = x;
@@ -36,6 +42,26 @@ public class CJGuiElement {
 		if(jsonObject.has("y")) {
 			yDisplayPosition = JsonUtils.getInt(jsonObject, "y");
 		}
+
+		if(jsonObject.has("damages")) {
+			JsonArray damages = JsonUtils.getJsonArray(jsonObject, "damages");
+			damageExclusive = new String[damages.size()];
+			for(int i = 0; i < damages.size(); ++i) {
+				damageExclusive[i] = damages.get(i).getAsString();
+			}
+		}
+	}
+
+	public boolean matchesDamageExclusive(
+			CJTileEntityMachineBase machineEntity) {
+
+		if(damageExclusive == null) return true;
+
+		int meta = machineEntity.getWorldBlockMetadata();
+		CJMachineBuilder machineBuilder = machineEntity.machine.machineBuilder;
+
+		return Arrays.stream(damageExclusive).anyMatch(
+						x -> machineBuilder.getNamedDamage(x) == meta);
 	}
 
 	public int getXPlacement() {
@@ -64,7 +90,7 @@ public class CJGuiElement {
 		return this;
 	}
 
-	public CJGuiElement setDamageExclusive(int[] damageExclusive) {
+	public CJGuiElement setDamageExclusive(String[] damageExclusive) {
 		this.damageExclusive = damageExclusive;
 		return this;
 	}

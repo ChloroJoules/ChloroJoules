@@ -167,6 +167,10 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		return worldObj.getBlockId(xCoord, yCoord, zCoord);
 	}
 
+	public int[] getWorldPosition() {
+		return new int[] { xCoord, yCoord, zCoord };
+	}
+
 	public int getWorldBlockMetadata() {
 		return worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 	}

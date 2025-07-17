@@ -51,6 +51,11 @@ public class CJBlockMachineBase extends BlockContainer {
 	}
 
 	@Override
+	public int idPicked(World world, int x, int y, int z) {
+		return super.idPicked(world, x, y, z);
+	}
+
+	@Override
 	public void onBlockPlacedBy(
 			World world, int x, int y, int z, EntityLiving player) {
 
@@ -97,6 +102,7 @@ public class CJBlockMachineBase extends BlockContainer {
 			for(int i = 0; i < machineBuilder.tanks.size(); ++i) {
 				CJTank tank = machineBuilder.tanks.get(i);
 
+				if(!tank.matchesDamageExclusive(machineEntity)) continue;
 				if(!tank.output && !tank.bidirectional) continue;
 
 				CJTankVolume volume = machineEntity.tanks.get(i);
@@ -156,6 +162,7 @@ public class CJBlockMachineBase extends BlockContainer {
 			CJTank tank = machineBuilder.tanks.get(i);
 			CJTankVolume volume = machineEntity.tanks.get(i);
 
+			if(!tank.matchesDamageExclusive(machineEntity)) continue;
 			if(tank.output && !tank.bidirectional) continue;
 			if(volume.fluidID != 0 && volume.fluidID != fluidID) continue;
 			if(volume.max - volume.current < CJTank.BUCKET) continue;
@@ -288,7 +295,6 @@ public class CJBlockMachineBase extends BlockContainer {
 	}
 
 	public String getIconName(String itemName, int metadata) {
-		if(machineBuilder.iconDefault) return itemName;
-		else return itemName + "." + machineBuilder.iconNames[metadata];
+		return itemName;
 	}
 }
