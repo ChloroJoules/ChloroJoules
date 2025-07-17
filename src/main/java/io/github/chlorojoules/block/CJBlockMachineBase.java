@@ -86,6 +86,27 @@ public class CJBlockMachineBase extends BlockContainer {
 		return true;
 	}
 
+	private int getEmptyBucketTank(CJTileEntityMachineBase machineEntity) {
+		int size = machineBuilder.tanks.size();
+		for(int i = 0; i < size * 2; ++i) {
+			int tankIndex = i % size;
+			CJTank tank = machineBuilder.tanks.get(tankIndex);
+
+			if(!tank.matchesDamageExclusive(machineEntity)) continue;
+			if(machineBuilder.fuelTankIndex == tankIndex) continue;
+			if(i < size && !tank.output && !tank.bidirectional) continue;
+
+			CJTankVolume volume = machineEntity.tanks.get(tankIndex);
+			if(volume.fluidID == 0 || volume.current < CJTank.BUCKET) {
+				continue;
+			}
+
+			return tankIndex;
+		}
+
+		return -1;
+	}
+
 	private boolean tryFillBucket(
 			World world, int x, int y, int z, EntityPlayer player) {
 
@@ -98,21 +119,7 @@ public class CJBlockMachineBase extends BlockContainer {
 
 		// If the bucket is empty -- fill from an available output tank.
 		if(heldID == Items.EMPTY_BUCKET.itemID) {
-			int index = -1;
-			for(int i = 0; i < machineBuilder.tanks.size(); ++i) {
-				CJTank tank = machineBuilder.tanks.get(i);
-
-				if(!tank.matchesDamageExclusive(machineEntity)) continue;
-				if(!tank.output && !tank.bidirectional) continue;
-
-				CJTankVolume volume = machineEntity.tanks.get(i);
-				if(volume.fluidID == 0 || volume.current < CJTank.BUCKET) {
-					continue;
-				}
-
-				index = i;
-				break;
-			}
+			int index = getEmptyBucketTank(machineEntity);
 			if(index == -1) return false;
 
 			CJTankVolume volume = machineEntity.tanks.get(index);
