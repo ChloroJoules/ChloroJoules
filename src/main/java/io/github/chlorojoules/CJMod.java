@@ -226,7 +226,7 @@ public class CJMod extends Mod {
 	}
 
 	private Item registerFluidBucket(String name, int rarity, Block tile) {
-		return registerItem(rarity, 1, ItemBucket.class, name, tile.blockID)
+		return registerItem(rarity, 1, CJItemBucket.class, name, tile.blockID)
 				.setContainerItem(EMPTY_BUCKET);
 	}
 
