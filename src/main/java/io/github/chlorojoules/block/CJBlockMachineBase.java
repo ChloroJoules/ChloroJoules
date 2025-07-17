@@ -173,6 +173,12 @@ public class CJBlockMachineBase extends BlockContainer {
 			if(tank.output && !tank.bidirectional) continue;
 			if(volume.fluidID != 0 && volume.fluidID != fluidID) continue;
 			if(volume.max - volume.current < CJTank.BUCKET) continue;
+			if(i != machineBuilder.fuelTankIndex &&
+					machineBuilder.fuelTankIndex != -1 &&
+					fluidID == CJMod.fuelFluid) {
+
+				continue;
+			}
 
 			tankIndex = i;
 			break;

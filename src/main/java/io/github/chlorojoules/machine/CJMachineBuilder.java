@@ -23,7 +23,6 @@ import static io.github.chlorojoules.gui.CJGuiGravity.*;
 import static io.github.chlorojoules.gui.CJGuiMachineBaseLayout.*;
 
 public class CJMachineBuilder {
-	// TODO: Ensure CJ can't be routed into non-fuel tanks.
 	public static final int FUEL_TANK_SIZE = 4 * CJTank.BUCKET;
 
 	public String name = null;

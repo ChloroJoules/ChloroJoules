@@ -5,6 +5,7 @@ import com.mojang.nbt.IntArrayTag;
 import com.mojang.nbt.ListTag;
 import com.mojang.nbt.Tag;
 import io.github.chlorojoules.CJInventoryHelper;
+import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.CJTank;
 import io.github.chlorojoules.CJTankVolume;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
@@ -192,15 +193,20 @@ public class CJMachineTransferor implements CJIMachine {
 				continue;
 			}
 
+			CJMachineBuilder adjacentMachineBuilder =
+					machine.machine.machineBuilder;
+
 			for(int j = 0; j < machine.tanks.size(); j++) {
 				CJTankVolume adjacentVolume = machine.tanks.get(j);
-				CJTank adjacentTank =
-						machine.machine.machineBuilder.tanks.get(j);
+				CJTank adjacentTank = adjacentMachineBuilder.tanks.get(j);
 
 				if(!adjacentTank.matchesDamageExclusive(machine)) continue;
 				if(adjacentTank.output && !adjacentTank.bidirectional) {
 					continue;
 				}
+				if(volume.fluidID == CJMod.fuelFluid &&
+						adjacentMachineBuilder.fuelTankIndex != -1 &&
+						j != adjacentMachineBuilder.fuelTankIndex) continue;
 
 				if(adjacentVolume.transferFrom(volume, 10)) {
 					didMultiReceive(linkedEntity);
