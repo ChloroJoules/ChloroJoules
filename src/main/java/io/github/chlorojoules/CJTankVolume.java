@@ -93,6 +93,7 @@ public class CJTankVolume {
 		}
 
 		current -= amount;
+		if(!lockFluid && current == 0) fluidID = 0;
 
 		return amount;
 	}

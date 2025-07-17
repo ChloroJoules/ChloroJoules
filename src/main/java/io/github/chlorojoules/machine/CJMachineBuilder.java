@@ -191,9 +191,22 @@ public class CJMachineBuilder {
 			}
 		}
 
-		JsonObject progressObject = JsonUtils.getJsonObject(root, "progress");
-		progressBar = new CJGuiElement(progressObject)
-				.setSize(PROGRESS_WIDTH, PROGRESS_HEIGHT);
+		if(root.has("coordinates")) {
+			for(JsonElement coordinate :
+					JsonUtils.getJsonArray(root, "coordinates")) {
+
+				linkCoordinates.add(new CJGuiCoordinate(
+						coordinate.getAsJsonObject()));
+			}
+		}
+
+		if(root.has("progress")) {
+			JsonObject progressObject =
+					JsonUtils.getJsonObject(root, "progress");
+
+			progressBar = new CJGuiElement(progressObject)
+					.setSize(PROGRESS_WIDTH, PROGRESS_HEIGHT);
+		}
 
 		if(root.has("recipes")) {
 			for(JsonElement recipe : JsonUtils.getJsonArray(root, "recipes")) {

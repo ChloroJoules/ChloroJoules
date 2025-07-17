@@ -494,29 +494,7 @@ public class CJMod extends Mod {
 		// TODO: Figure out how to make Gear controls.
 		// TODO: UI to allow floopers to be filtered on one fluid kind.
 		transferor = registerMachine(
-				new CJMachineBuilder()
-						.setName("cj_transferor")
-						.addCoordinateGravityHCenter(
-								CENTER, 12, "message.cj_link_coordinate")
-						.addTankGravity(
-								CENTER, 0, 0, false, false,
-								2 * CJTank.BUCKET, 0)
-						.addSlotGravity(CENTER, 0, 0, false)
-						.setSlotDamageExclusive(0, new String[] {
-								"cj_whooper", "cj_multi_whooper" })
-						.setTankDamageExclusive(0, new String[] {
-								"cj_flooper", "cj_multi_flooper" })
-						.setSideMode(CJMachineBlockSideMode.ALL_FACES)
-						.setIconNames(new String[] {
-								"cj_inactive",
-								"cj_whooper",
-								"cj_swooper",
-								"cj_flooper",
-								"cj_slooper",
-								"cj_multi_whooper",
-								"cj_multi_flooper"
-						})
-						.setImpl(CJMachineTransferor.class));
+				new CJMachineBuilder("/machines/cj_transferor.json"));
 
 		tank = registerMachine(
 				new CJMachineBuilder()

@@ -361,6 +361,8 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 		CJMachineBuilder machineBuilder = machineEntity.machine.machineBuilder;
 		for(int i = 0; i < machineBuilder.linkCoordinates.size(); i++) {
 			CJGuiCoordinate coordinate = machineBuilder.linkCoordinates.get(i);
+			if(!coordinate.matchesDamageExclusive(machineEntity)) continue;
+
 			int x = baseX + coordinate.getXPlacement();
 			int y = baseY + coordinate.getYPlacement();
 

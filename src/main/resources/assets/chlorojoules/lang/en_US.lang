@@ -20,8 +20,6 @@ message.cj_stopped=Machine Stopped
 message.cj_working=Machine Working
 message.cj_ok=All okay!
 message.cj_link_coordinate=§7Linked to §LX: %d Y: %d Z: %d
-message.cj_unlinked_hint=§CUse a Chloro Tool to link
-message.cj_unlinked=Not linked
 message.cj_coordinate_unset=§CCoordinates unset
 
 # Tool messages.
