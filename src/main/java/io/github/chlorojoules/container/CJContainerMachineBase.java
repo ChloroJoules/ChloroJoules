@@ -1,12 +1,11 @@
 package io.github.chlorojoules.container;
 
-import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.CJTank;
-import io.github.chlorojoules.block.CJBlockMachineBase;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.gui.CJGuiMachineBaseSlot;
 import io.github.chlorojoules.machine.CJMachineBuilder;
 import io.github.chlorojoules.machine.CJMachineSlotInfo;
+
 import net.minecraft.common.block.container.Container;
 import net.minecraft.common.block.container.Slot;
 import net.minecraft.common.entity.player.EntityPlayer;
@@ -14,7 +13,6 @@ import net.minecraft.common.entity.player.InventoryPlayer;
 import net.minecraft.common.item.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 // TODO: Machines need to notify `onSlotChanged`.
 // TODO: Machines need to `Slot.putStack` rather than directly modifying slots.

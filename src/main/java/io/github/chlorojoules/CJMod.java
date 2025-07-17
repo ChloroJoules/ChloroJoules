@@ -1,21 +1,19 @@
 package io.github.chlorojoules;
 
 import com.fox2code.foxloader.loader.Mod;
-import com.fox2code.foxloader.loader.ModLoader;
-import com.fox2code.foxloader.registry.CommandRegistry;
 import com.fox2code.foxloader.registry.GameRegistry;
-import com.google.gson.JsonElement;
+
 import com.google.gson.JsonObject;
+
 import io.github.chlorojoules.block.CJBlockMachineBase;
-import io.github.chlorojoules.command.CommandCJ;
-import io.github.chlorojoules.gui.CJMachineSlotRenderType;
+import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.item.*;
 import io.github.chlorojoules.machine.*;
 
-import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.creative.CreativeTab;
 import net.minecraft.client.gui.creative.CreativeTabs;
+
 import net.minecraft.common.block.*;
 import net.minecraft.common.block.children.*;
 import net.minecraft.common.block.data.Material;
@@ -26,11 +24,7 @@ import net.minecraft.common.block.fluid.Fluids;
 import net.minecraft.common.block.sound.StepSound;
 import net.minecraft.common.block.sound.StepSounds;
 import net.minecraft.common.block.tileentity.TileEntity;
-import net.minecraft.common.item.Item;
-
-import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.item.*;
-import net.minecraft.common.item.block.ItemBlock;
 import net.minecraft.common.item.children.ItemBucket;
 import net.minecraft.common.item.data.EnumTools;
 import net.minecraft.common.recipe.CraftingManager;
@@ -43,11 +37,7 @@ import java.util.logging.Logger;
 import static net.minecraft.common.block.Blocks.*;
 import static net.minecraft.common.item.Items.*;
 
-import static io.github.chlorojoules.gui.CJGuiGravity.*;
-import static io.github.chlorojoules.gui.CJGuiMachineBaseLayout.*;
 import static io.github.chlorojoules.CJRarityInfo.*;
-import static io.github.chlorojoules.machine.CJMachineRecipeTarget.*;
-import static io.github.chlorojoules.block.CJBlockMachineBase.*;
 
 public class CJMod extends Mod {
 	public static Map<String, CJBlockMachineBase> machines = new HashMap<>();
@@ -56,7 +46,7 @@ public class CJMod extends Mod {
 	public static List<ItemBucket> buckets = new ArrayList<>();
 	public static List<Integer> bucketFluids = new ArrayList<>();
 
-	// TODO: This is turbo stupid but there doesn't seem to be a way
+	// NOTE: This is turbo stupid but there doesn't seem to be a way
 	//		 To iterate *just* the Vanilla mod container.
 	//		 This is not guaranteed to be full -- and honestly we don't want
 	//		 It to be -- but should contain all Vanilla items mapped from their
@@ -123,10 +113,7 @@ public class CJMod extends Mod {
 	public static int waterFluid;
 	public static int lavaFluid;
 
-	private static final CreativeTab fallbackTab =
-			CreativeTabs.MECHANICAL_BLOCKS;
-
-	public static CreativeTab creativeTab = fallbackTab;
+	public static CreativeTab creativeTab = CreativeTabs.MECHANICAL_BLOCKS;
 
 	public static Class<?>[] objectArrayToTypes(Object[] objects) {
 		Class<?>[] types = new Class<?>[objects.length];
@@ -185,7 +172,7 @@ public class CJMod extends Mod {
 	public static ItemStack stackFromJson(JsonObject jsonObject) {
 		String key = JsonUtils.getString(jsonObject, "item");
 
-		ItemStack result = null;
+		ItemStack result;
 
 		Item item = GameRegistry.getRegisteredItem(key);
 		if(item == null) {
@@ -346,26 +333,8 @@ public class CJMod extends Mod {
 			earlyItemMap.putIfAbsent(name.replace("tile.", "item."), item);
 		}
 
-		boolean setTab = false;
-		// TODO: This doesn't work atm.
-//		for(int i = 0; i < CreativeTabs.TABS.length; ++i) {
-//			if(CreativeTabs.TABS[i] == null) {
-//				creativeTab = new CJCreativeTabChlorojoules(i);
-//				setTab = true;
-//				break;
-//			}
-//		}
-
-		if(!setTab) {
-			Logger.getLogger("ChloroJoules").warning(
-					"Failed to add Creative tab -- using Mechanical Blocks " +
-					"as fallback");
-		}
-
 		TileEntity.addMapping(
 				CJTileEntityMachineBase.class, "cj_machine_base");
-
-		CommandRegistry.registerCommand(new CommandCJ());
 
 		fluidChlorojoules = registerFluid("cj_fluid_chlorojoules");
 		bucketFluidChlorojoules = registerFluidBucket(
@@ -458,9 +427,6 @@ public class CJMod extends Mod {
 				"cj_block_jewel_dust", Materials.SAND, 1.5F, 0.0F,
 				StepSounds.SOUND_SAND, EnumTools.SHOVEL);
 
-		// TODO: Need a big machine UI fixup to make them more distinct and
-		//       Improve alignment.
-
 		// TODO: Make achievements to get ready for when they start working!
 
 		cultivator = registerMachine(
@@ -487,12 +453,8 @@ public class CJMod extends Mod {
 		toolStation = registerMachine(
 				new CJMachineBuilder("/machines/cj_tool_station.json"));
 
-		// TODO: For `Soul Extractor` -- make base tool then socket a
-		//       `Refined ChloroJewel` to use; allows player to reclaim
-		//       The jewel once they don't need the tool anymore.
-
 		// TODO: Figure out how to make Gear controls.
-		// TODO: UI to allow floopers to be filtered on one fluid kind.
+		// TODO: Filtered transferors.
 		transferor = registerMachine(
 				new CJMachineBuilder("/machines/cj_transferor.json"));
 
@@ -512,10 +474,6 @@ public class CJMod extends Mod {
 
 	@Override
 	public void onPostInit() {
-		if(creativeTab != fallbackTab) {
-			creativeTab.setTabIcon(new ItemStack(awakenedJewel));
-		}
-
 		for(Block block : BLOCKS_LIST) {
 			if(block instanceof BlockLeavesBase) {
 				addTagItem("#leaves", block);

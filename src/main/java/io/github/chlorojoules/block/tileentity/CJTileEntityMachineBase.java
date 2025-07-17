@@ -3,6 +3,7 @@ package io.github.chlorojoules.block.tileentity;
 import com.mojang.nbt.CompoundTag;
 import com.mojang.nbt.ListTag;
 import com.mojang.nbt.Tag;
+
 import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.CJRarity;
 import io.github.chlorojoules.CJTankVolume;
@@ -10,11 +11,11 @@ import io.github.chlorojoules.block.CJBlockMachineBase;
 import io.github.chlorojoules.gui.CJGuiCoordinateDisplay;
 import io.github.chlorojoules.machine.CJIMachine;
 import io.github.chlorojoules.machine.CJMachineBuilder;
+
 import net.minecraft.common.entity.inventory.IInventory;
 import net.minecraft.common.entity.player.EntityPlayer;
-import net.minecraft.common.block.tileentity.TileEntity;
 import net.minecraft.common.entity.other.EntityItem;
-import net.minecraft.common.entity.player.EntityPlayer;
+import net.minecraft.common.block.tileentity.TileEntity;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.world.World;
 

@@ -10,12 +10,12 @@ import io.github.chlorojoules.item.CJItemDescriptionModTag;
 import io.github.chlorojoules.machine.CJMachineBlockSideMode;
 import io.github.chlorojoules.machine.CJMachineTier;
 import io.github.chlorojoules.machine.CJMachineBuilder;
+
 import net.minecraft.client.Minecraft;
+
 import net.minecraft.common.block.children.BlockContainer;
-import net.minecraft.common.block.data.Materials;
 import net.minecraft.common.block.fluid.Fluid;
 import net.minecraft.common.block.fluid.Fluids;
-import net.minecraft.common.block.sound.StepSounds;
 import net.minecraft.common.block.texture.Face;
 import net.minecraft.common.block.tileentity.TileEntity;
 import net.minecraft.common.entity.EntityLiving;
@@ -24,7 +24,6 @@ import net.minecraft.common.entity.player.InventoryPlayer;
 import net.minecraft.common.item.*;
 import net.minecraft.common.item.block.ItemBlock;
 import net.minecraft.common.item.children.ItemBucket;
-import net.minecraft.common.item.data.EnumTools;
 import net.minecraft.common.util.math.MathHelper;
 import net.minecraft.common.world.World;
 
@@ -35,7 +34,7 @@ public class CJBlockMachineBase extends BlockContainer {
 	public CJMachineBuilder machineBuilder;
 
 	public CJBlockMachineBase(CJMachineBuilder machineBuilder) {
-		super(machineBuilder.name, Materials.ROCK);
+		super(machineBuilder.name, machineBuilder.tier.getMaterial());
 
 		this.machineBuilder = machineBuilder;
 
@@ -43,11 +42,10 @@ public class CJBlockMachineBase extends BlockContainer {
 		super.addDescription(new CJItemDescriptionModTag());
 		super.setTooltipColor(getRarityColor(machineBuilder.rarity));
 
-		// Machines have the same basic block properties by default.
-		super.setHardness(1.5F);
-		super.setResistance(10.0F);
-		super.setSound(StepSounds.SOUND_STONE);
-		super.setEffectiveTool(EnumTools.PICKAXE);
+		super.setHardness(machineBuilder.tier.getHardness());
+		super.setResistance(machineBuilder.tier.getResistance());
+		super.setSound(machineBuilder.tier.getStepSound());
+		super.setEffectiveTool(machineBuilder.tier.getEffectiveTool());
 	}
 
 	@Override

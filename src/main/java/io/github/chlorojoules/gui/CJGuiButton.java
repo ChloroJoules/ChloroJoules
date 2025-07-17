@@ -1,7 +1,9 @@
 package io.github.chlorojoules.gui;
 
 import com.google.gson.JsonObject;
+
 import io.github.chlorojoules.CJMod;
+
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.util.JsonUtils;
 
