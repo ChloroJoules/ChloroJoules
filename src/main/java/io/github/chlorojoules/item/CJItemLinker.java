@@ -16,6 +16,8 @@ import net.minecraft.common.util.i18n.StringTranslate;
 import net.minecraft.common.world.World;
 
 public class CJItemLinker extends Item {
+	public static final int MAX_LINK = 16;
+
 	public static final int ITEM_EMPTY = 0;
 	public static final int ITEM_FULL = 1;
 	public static final int FLUID_EMPTY = 2;
@@ -101,6 +103,18 @@ public class CJItemLinker extends Item {
 		if(inserterMachine == extractorMachine) {
 			String string = StringTranslate.getInstance().translateKey(
 					"message.cj_same_transferor");
+
+			CJMod.sendChat(ChatColors.RED + string);
+
+			return true;
+		}
+
+		if(Math.abs(blockX - position[0]) > MAX_LINK ||
+				Math.abs(blockY - position[1]) > MAX_LINK ||
+				Math.abs(blockZ - position[2]) > MAX_LINK) {
+
+			String string = StringTranslate.getInstance().translateKeyFormat(
+					"message.cj_too_far", MAX_LINK);
 
 			CJMod.sendChat(ChatColors.RED + string);
 

@@ -27,9 +27,7 @@ message.cj_coordinate_unset=§CCoordinates unset
 # Tool messages.
 message.cj_not_transferor=§CBlock is not a Transferor
 message.cj_same_transferor=§CCannot link Transferor to itself
-message.cj_not_extractor=§CBlock is not a Flooper or Whooper
-message.cj_not_slooper=§CBlock is not a Slooper
-message.cj_not_swooper=§CBlock is not a Swooper
+message.cj_too_far=§CCannot link to Transferor over %s blocks away
 message.cj_linked_position=§ABlock stored §L[ %d, %d, %d ]
 message.cj_link_query=§AStored position §L[ %d, %d, %d ]
 message.cj_link_clear=§ACleared linked position
@@ -64,14 +62,12 @@ message.cj_composter.help=Converts biological material to dirt or bone meal
 message.cj_composter.flavor=What's a villager workstation?
 message.cj_primitive_centrifuge.help=Separates items into constituent parts
 message.cj_primitive_centrifuge.flavor=A bit of a narcissist
+message.cj_transferor.help=Transfers items or fluids through the air
+message.cj_transferor.flavor=Has a 5G cell connection
 
 message.cj_enable_refine_fuel=Allow processing of fuel tank
 message.cj_compost_bone_meal=Compost to bone meal
 
-message.cj_transferor.help=Transfers items or fluids through the air
-message.cj_transferor.flavor=Has a 5G cell connection
-
-## NOTE: See `ChatColors.java`.
 message.cj_tool_none=§CNo Jewel
 message.cj_tool_primal=§7Primal Jewel
 message.cj_tool_manufactured=§AManufactured Jewel
