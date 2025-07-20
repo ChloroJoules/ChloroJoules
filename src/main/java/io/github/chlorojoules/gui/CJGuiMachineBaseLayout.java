@@ -8,6 +8,12 @@ public class CJGuiMachineBaseLayout {
 	//public static final int BASE_WIDTH = 176;
 	public static final int BASE_HEIGHT = 166;
 
+	public static final int PLAYER_INVENTORY_ROWS = 3;
+	public static final int PLAYER_INVENTORY_COLUMNS = 9;
+	public static final int PLAYER_INVENTORY_X = 8;
+	public static final int PLAYER_INVENTORY_Y = 84;
+	public static final int PLAYER_INVENTORY_HOTBAR_Y = 142;
+
 	public static final int TOOLTIP_OFFSET_X = 12;
 	public static final int TOOLTIP_OFFSET_Y = -12;
 

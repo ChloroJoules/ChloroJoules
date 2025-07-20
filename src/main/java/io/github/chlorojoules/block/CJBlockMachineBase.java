@@ -304,8 +304,4 @@ public class CJBlockMachineBase extends BlockContainer {
 	protected int damageDropped(int metadata) {
 		return machineBuilder.doDropMeta ? metadata : 0;
 	}
-
-	public String getIconName(String itemName, int metadata) {
-		return itemName;
-	}
 }

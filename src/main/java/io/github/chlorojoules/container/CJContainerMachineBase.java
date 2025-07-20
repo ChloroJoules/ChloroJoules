@@ -14,26 +14,30 @@ import net.minecraft.common.item.ItemStack;
 
 import java.util.ArrayList;
 
+import static io.github.chlorojoules.gui.CJGuiMachineBaseLayout.*;
+
 public class CJContainerMachineBase extends Container {
 	private final CJTileEntityMachineBase machineEntity;
 
 	public ArrayList<CJTank> tanks = new ArrayList<>();
 
 	void addPlayerInventory(InventoryPlayer inventory) {
-		EntityPlayer player = inventory.player;
-
-		// TODO: Can we de-magic this a little bit?
-		for(int row = 0; row < 3; row++) {
-			for(int column = 0; column < 9; column++) {
+		for(int row = 0; row < PLAYER_INVENTORY_ROWS; row++) {
+			for(int column = 0; column < PLAYER_INVENTORY_COLUMNS; column++) {
 				addSlot(new CJGuiMachineBaseSlot(
-						inventory, column + (row * 9) + 9,
-						8 + (column * 18), 84 + (row * 18), null));
+						inventory,
+						column +
+								(row * PLAYER_INVENTORY_COLUMNS) +
+								PLAYER_INVENTORY_COLUMNS,
+						PLAYER_INVENTORY_X + (column * SLOT_IN_WIDTH),
+						PLAYER_INVENTORY_Y + (row * SLOT_IN_WIDTH), null));
 			}
 		}
 
-		for(int i = 0; i < 9; i++) {
+		for(int i = 0; i < PLAYER_INVENTORY_COLUMNS; i++) {
 			addSlot(new CJGuiMachineBaseSlot(
-					inventory, i, 8 + i * 18, 142, null));
+					inventory, i, PLAYER_INVENTORY_X + i * SLOT_IN_WIDTH,
+					PLAYER_INVENTORY_HOTBAR_Y, null));
 		}
 	}
 
@@ -41,8 +45,6 @@ public class CJContainerMachineBase extends Container {
 			InventoryPlayer inventoryPlayer, CJTileEntityMachineBase entity) {
 
 		machineEntity = entity;
-
-		EntityPlayer player = inventoryPlayer.player;
 
 		CJMachineBuilder machineBuilder = entity.machine.machineBuilder;
 		for(int i = 0; i < machineBuilder.slots.size(); i++) {

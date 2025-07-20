@@ -32,9 +32,6 @@ public class CJItemBlockMachineBase extends ItemBlock {
 
 	@Override
 	public String getItemNameIS(ItemStack itemstack) {
-		CJBlockMachineBase machine = (CJBlockMachineBase) getBlock();
-
-		return machine.getIconName(
-				super.getItemName(), itemstack.getItemDamage());
+		return super.getItemName();
 	}
 }
