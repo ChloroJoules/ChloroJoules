@@ -8,6 +8,14 @@ public class CJGuiMachineBaseLayout {
 	public static final int BASE_WIDTH = 176;
 	public static final int BASE_HEIGHT = 166;
 
+	public static final int TOOLTIP_OFFSET_X = 12;
+	public static final int TOOLTIP_OFFSET_Y = -12;
+
+	public static final int TOOLTIP_BORDER = 3;
+	public static final int TOOLTIP_HEIGHT = 12;
+	public static final int TOOLTIP_DESCRIPTION_HEIGHT = 14;
+	public static final int TOOLTIP_DESCRIPTION_OFFSET = 15;
+
 	public static final int INVENTORY_LABEL_X = 8;
 	public static final int INVENTORY_LABEL_Y = BASE_HEIGHT - 96 + 2;
 

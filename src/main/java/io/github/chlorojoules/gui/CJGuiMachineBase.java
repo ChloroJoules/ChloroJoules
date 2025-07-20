@@ -70,20 +70,19 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 	private void drawTooltip(
 			String name, String description, int x, int y, int titleColor) {
 
-		// TODO: Loads of magic numbers in here.
 		int nameWidth = fontRenderer.getStringWidth(name);
-		int boxHeight = 12;
+		int boxHeight = TOOLTIP_HEIGHT;
 
 		int descriptionWidth = 0;
 		if(description != null) {
 			descriptionWidth = fontRenderer.getStringWidth(description);
-			boxHeight += 14;
+			boxHeight += TOOLTIP_DESCRIPTION_HEIGHT;
 		}
 
 		int textWidth = Math.max(nameWidth, descriptionWidth);
 
-		int xSlot = x + 12;
-		int ySlot = y - 12;
+		int xSlot = x + TOOLTIP_OFFSET_X;
+		int ySlot = y - TOOLTIP_OFFSET_Y;
 
 		RenderSystem.disableRescaleNormal();
 		RenderHelper.disableStandardItemLighting();
@@ -91,13 +90,14 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 		RenderSystem.disableDepthTest();
 
 		this.drawGradientRect(
-				xSlot - 3, ySlot - 3,
-				xSlot + textWidth + 3, ySlot + boxHeight,
+				xSlot - TOOLTIP_BORDER, ySlot - TOOLTIP_BORDER,
+				xSlot + textWidth + TOOLTIP_BORDER, ySlot + boxHeight,
 				TOOLTIP_BACKGROUND, TOOLTIP_BACKGROUND);
 
 		if(description != null) {
 			fontRenderer.drawStringWithShadow(
-					description, xSlot, ySlot + 15, Color.GRAY.getRGB());
+					description, xSlot, ySlot + TOOLTIP_DESCRIPTION_OFFSET,
+					Color.GRAY.getRGB());
 		}
 
 		fontRenderer.drawStringWithShadow(name, xSlot, ySlot, titleColor);
@@ -214,7 +214,6 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 		String name = translate.translateKey(machineEntity.getInvName());
 		String inventory = translate.translateKey("inventory.generic");
 
-		// TODO: De-magic these placements.
 		// Machine label.
 		fontRenderer.drawString(
 				name,
