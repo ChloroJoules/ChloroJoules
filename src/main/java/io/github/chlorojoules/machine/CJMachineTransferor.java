@@ -3,7 +3,6 @@ package io.github.chlorojoules.machine;
 import com.mojang.nbt.CompoundTag;
 import com.mojang.nbt.IntArrayTag;
 import com.mojang.nbt.ListTag;
-import com.mojang.nbt.Tag;
 import io.github.chlorojoules.CJInventoryHelper;
 import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.CJTank;
@@ -13,7 +12,6 @@ import io.github.chlorojoules.gui.CJGuiCoordinateDisplay;
 import net.minecraft.common.entity.inventory.IInventory;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.world.World;
-import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,7 +69,7 @@ public class CJMachineTransferor implements CJIMachine {
 	}
 
 	private void updateTransmit(CJTileEntityMachineBase machineEntity) {
-		ItemStack stack = machineEntity.stacks.getFirst();
+		ItemStack stack = machineEntity.getStackInSlot(0);
 		int currentItemID = -1;
 
 		if(stack != null) {
@@ -93,7 +91,7 @@ public class CJMachineTransferor implements CJIMachine {
 
 			// TODO: This is currently hardcoded to 1 item per tick.
 			if(stack == null) {
-				machineEntity.stacks.set(0, new ItemStack(
+				machineEntity.setInventorySlotContents(0, new ItemStack(
 						inStack.getItemID(), 1, inStack.itemDamage));
 			}
 			else stack.stackSize++;
@@ -117,7 +115,7 @@ public class CJMachineTransferor implements CJIMachine {
 
 		if(tryMultiReceive(machineEntity, linkedEntity)) return;
 
-		ItemStack stack = linkedEntity.stacks.getFirst();
+		ItemStack stack = linkedEntity.getStackInSlot(0);
 		if(stack == null) return;
 
 		int currentItemID = stack.getItemID();
@@ -142,7 +140,7 @@ public class CJMachineTransferor implements CJIMachine {
 			else outStack.stackSize++;
 
 			if(stack.stackSize == 1) {
-				linkedEntity.stacks.set(0, null);
+				linkedEntity.setInventorySlotContents(0, null);
 			}
 			else stack.stackSize--;
 

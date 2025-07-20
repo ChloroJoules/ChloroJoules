@@ -16,8 +16,8 @@ public class CJMachineToolStation implements CJIMachine {
 	public void updateMachine(CJTileEntityMachineBase machineEntity) {
 		StringTranslate translate = StringTranslate.getInstance();
 
-		ItemStack inputStack = machineEntity.stacks.get(INPUT_SLOT);
-		ItemStack toolStack = machineEntity.stacks.get(TOOL_SLOT);
+		ItemStack inputStack = machineEntity.getStackInSlot(INPUT_SLOT);
+		ItemStack toolStack = machineEntity.getStackInSlot(TOOL_SLOT);
 
 		machineEntity.errorMessage = null;
 		machineEntity.isWarning = false;
@@ -58,7 +58,8 @@ public class CJMachineToolStation implements CJIMachine {
 
 				CJRarity rarity = CJRarityInfo.getDamageRarity(damage);
 				int id = CJRarityInfo.getRarityJewel(rarity);
-				machineEntity.stacks.set(TOOL_SLOT, new ItemStack(id, 1));
+				machineEntity.setInventorySlotContents(
+						TOOL_SLOT, new ItemStack(id, 1));
 			}
 
 			return;
@@ -97,7 +98,7 @@ public class CJMachineToolStation implements CJIMachine {
 			machineEntity.operationTicks = 0;
 
 			toolStack.setItemDamage(CJRarityInfo.getRarityDamage(rarity));
-			machineEntity.stacks.set(INPUT_SLOT, null);
+			machineEntity.setInventorySlotContents(INPUT_SLOT, null);
 		}
 	}
 }

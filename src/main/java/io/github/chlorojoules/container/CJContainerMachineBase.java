@@ -14,8 +14,6 @@ import net.minecraft.common.item.ItemStack;
 
 import java.util.ArrayList;
 
-// TODO: Machines need to notify `onSlotChanged`.
-// TODO: Machines need to `Slot.putStack` rather than directly modifying slots.
 public class CJContainerMachineBase extends Container {
 	private final CJTileEntityMachineBase machineEntity;
 

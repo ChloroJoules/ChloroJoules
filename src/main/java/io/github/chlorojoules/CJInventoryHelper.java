@@ -48,7 +48,7 @@ public class CJInventoryHelper {
 
 				if(!slot.output) continue;
 
-				if(machine.stacks.get(i) != null) {
+				if(machine.getStackInSlot(i) != null) {
 					return i;
 				}
 			}
@@ -77,13 +77,13 @@ public class CJInventoryHelper {
 			CJMachineBuilder machineBuilder =
 					machine.machine.machineBuilder;
 
-			for(int j = 0; j < machine.stacks.size(); j++) {
+			for(int j = 0; j < machine.getSizeInventory(); j++) {
 				CJMachineSlotInfo slot = machineBuilder.slots.get(j);
 				if(slot.output || !slot.matchesDamageExclusive(machine)) {
 					continue;
 				}
 
-				ItemStack outStack = machine.stacks.get(j);
+				ItemStack outStack = machine.getStackInSlot(j);
 
 				if(outStack == null) return j;
 

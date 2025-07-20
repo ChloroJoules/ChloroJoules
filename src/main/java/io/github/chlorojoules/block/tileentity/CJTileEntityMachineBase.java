@@ -22,7 +22,7 @@ import net.minecraft.common.world.World;
 import java.util.ArrayList;
 
 public class CJTileEntityMachineBase extends TileEntity implements IInventory {
-	public ArrayList<ItemStack> stacks;
+	private ArrayList<ItemStack> stacks;
 	public ArrayList<CJTankVolume> tanks;
 	public ArrayList<Boolean> buttonStates;
 	public ArrayList<CJGuiCoordinateDisplay> coordinateDisplays;

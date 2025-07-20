@@ -554,7 +554,7 @@ public class CJMachineBuilder {
 			return volume.fluidID == component.volume.fluidID;
 		}
 		else {
-			ItemStack stack = entity.stacks.get(component.index);
+			ItemStack stack = entity.getStackInSlot(component.index);
 			if(stack == null) return !input;
 
 			if(component.isTag) {
@@ -576,7 +576,7 @@ public class CJMachineBuilder {
 
 		entity.jewelRarity = CJRarity.MANUFACTURED;
 		if(jewelSlotIndex != -1) {
-			ItemStack jewel = entity.stacks.get(jewelSlotIndex);
+			ItemStack jewel = entity.getStackInSlot(jewelSlotIndex);
 
 			if(jewel == null) {
 				entity.errorMessage =
@@ -661,7 +661,7 @@ public class CJMachineBuilder {
 					}
 				}
 				else {
-					ItemStack stack = entity.stacks.get(component.index);
+					ItemStack stack = entity.getStackInSlot(component.index);
 
 					if(component.optional && stack == null) {
 						entity.isPassive = true;
@@ -720,7 +720,7 @@ public class CJMachineBuilder {
 			}
 			else {
 				ItemStack outputStack =
-						entity.stacks.get(component.index);
+						entity.getStackInSlot(component.index);
 
 				if(outputStack == null) continue;
 
@@ -765,12 +765,12 @@ public class CJMachineBuilder {
 				volume.removeFluid(0, component.volume.current, true);
 			}
 			else {
-				ItemStack inputStack = entity.stacks.get(component.index);
+				ItemStack inputStack = entity.getStackInSlot(component.index);
 
 				if(component.optional && inputStack == null) continue;
 
 				if(inputStack.stackSize == component.getStackSize()) {
-					entity.stacks.set(component.index, null);
+					entity.setInventorySlotContents(component.index, null);
 				}
 				else inputStack.stackSize -= component.getStackSize();
 			}
@@ -789,10 +789,10 @@ public class CJMachineBuilder {
 				volume.addFluid(component.volume, true);
 			}
 			else {
-				ItemStack inputStack = entity.stacks.get(component.index);
+				ItemStack inputStack = entity.getStackInSlot(component.index);
 
 				if(inputStack == null) {
-					entity.stacks.set(
+					entity.setInventorySlotContents(
 							component.index, component.stack.copy());
 				}
 				else inputStack.stackSize += component.stack.stackSize;
@@ -800,7 +800,7 @@ public class CJMachineBuilder {
 		}
 
 		if(jewelSlotIndex != -1) {
-			entity.stacks.get(jewelSlotIndex).damageItem(1, null, true);
+			entity.getStackInSlot(jewelSlotIndex).damageItem(1, null, true);
 		}
 
 		entity.operationTicks = 0;

@@ -289,7 +289,7 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 				if(slot.info != null &&
 						slot.info.renderType !=
 								CJMachineSlotRenderType.DEFAULT &&
-						machineEntity.stacks.get(i) == null) {
+						machineEntity.getStackInSlot(i) == null) {
 
 					if(slot.info.renderType == CJMachineSlotRenderType.JEWEL) {
 						inX = SLOT_JEWEL_X;
