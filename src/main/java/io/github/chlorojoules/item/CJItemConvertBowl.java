@@ -1,6 +1,5 @@
 package io.github.chlorojoules.item;
 
-import io.github.chlorojoules.CJMod;
 import net.minecraft.common.effect.Effects;
 import net.minecraft.common.entity.player.EntityPlayer;
 import net.minecraft.common.item.ItemStack;

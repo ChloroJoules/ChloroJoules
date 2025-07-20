@@ -26,14 +26,14 @@ public class CJContainerMachineBase extends Container {
 		for(int row = 0; row < 3; row++) {
 			for(int column = 0; column < 9; column++) {
 				addSlot(new CJGuiMachineBaseSlot(
-						player, inventory, column + (row * 9) + 9,
+						inventory, column + (row * 9) + 9,
 						8 + (column * 18), 84 + (row * 18), null));
 			}
 		}
 
 		for(int i = 0; i < 9; i++) {
 			addSlot(new CJGuiMachineBaseSlot(
-					player, inventory, i, 8 + i * 18, 142, null));
+					inventory, i, 8 + i * 18, 142, null));
 		}
 	}
 
@@ -48,11 +48,11 @@ public class CJContainerMachineBase extends Container {
 		for(int i = 0; i < machineBuilder.slots.size(); i++) {
 			CJMachineSlotInfo info = machineBuilder.slots.get(i);
 
-			if(!info.matchesDamageExclusive(machineEntity)) continue;
+			if(info.checkDamageExclusive(machineEntity)) continue;
 
 			CJGuiMachineBaseSlot slot =
 					new CJGuiMachineBaseSlot(
-							player, machineEntity, i,
+							machineEntity, i,
 							info.getXPlacement(), info.getYPlacement(),
 							info);
 
@@ -62,7 +62,7 @@ public class CJContainerMachineBase extends Container {
 		for(int i = 0; i < machineBuilder.tanks.size(); ++i) {
 			CJTank tank = machineBuilder.tanks.get(i);
 
-			if(!tank.matchesDamageExclusive(machineEntity)) continue;
+			if(tank.checkDamageExclusive(machineEntity)) continue;
 
 			tanks.add(tank);
 		}

@@ -1,7 +1,5 @@
 package io.github.chlorojoules.machine;
 
-import com.fox2code.foxloader.registry.GameRegistry;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.CJTankVolume;
@@ -33,16 +31,6 @@ public class CJMachineRecipeComponent {
 		this.target = CJMachineRecipeTarget.TANK;
 		this.index = index;
 		this.volume = volume;
-	}
-
-	public CJMachineRecipeComponent(
-			CJMachineRecipeTarget target, int index, String tag, int count) {
-
-		this.target = target;
-		this.index = index;
-		this.tag = tag;
-		this.tagCount = count;
-		this.isTag = true;
 	}
 
 	// TODO: Remove builder param and use string slot IDs.
@@ -85,16 +73,6 @@ public class CJMachineRecipeComponent {
 		if(jsonObject.has("optional")) {
 			optional = JsonUtils.getBoolean(jsonObject, "optional");
 		}
-	}
-
-	public CJMachineRecipeComponent setChance(float value) {
-		this.chance = value;
-		return this;
-	}
-
-	public CJMachineRecipeComponent setOptional(boolean value) {
-		this.optional = value;
-		return this;
 	}
 
 	public int getStackSize() {

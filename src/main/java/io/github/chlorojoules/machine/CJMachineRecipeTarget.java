@@ -5,10 +5,8 @@ public enum CJMachineRecipeTarget {
 	TANK;
 
 	public static CJMachineRecipeTarget fromString(String id) {
-		return switch(id.toLowerCase()) {
-			case "item" -> SLOT;
-			case "tank" -> TANK;
-			default -> SLOT;
-		};
+		if(id.equalsIgnoreCase("tank")) return TANK;
+
+		return SLOT;
 	}
 }

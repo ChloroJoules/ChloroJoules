@@ -245,14 +245,6 @@ public class CJMod extends Mod {
 		FurnaceRecipes.instance. addSmelting(output, new ItemStack(input, 1));
 	}
 
-	public void registerFurnaceRecipe(Block output, Item input) {
-		registerFurnaceRecipe(output.getItemID(), input.itemID);
-	}
-
-	public void registerFurnaceRecipe(Item output, Block input) {
-		registerFurnaceRecipe(output.itemID, input.getItemID());
-	}
-
 	public void registerFurnaceRecipe(Item output, Item input) {
 		registerFurnaceRecipe(output.itemID, input.itemID);
 	}
@@ -262,7 +254,7 @@ public class CJMod extends Mod {
 			Class<? extends Item> itemType, Object... args) {
 
 		String name = (String) args[0];
-		String desc = "message." + name + ".description";
+		//String desc = "message." + name + ".description";
 
 		try {
 			return itemType
@@ -293,8 +285,7 @@ public class CJMod extends Mod {
 			Object... args) {
 
 		String name = (String) args[0];
-		Material material = (Material) args[1];
-		String desc = "message." + name + ".description";
+		//String desc = "message." + name + ".description";
 
 		try {
 			return blockType
@@ -772,18 +763,20 @@ public class CJMod extends Mod {
 				furnaceMap.entrySet();
 
 		CJBlockMachineBase furnaceMachine = machines.get("cj_furnace");
+		CJMachineBuilder furnaceMachineBuilder = furnaceMachine.machineBuilder;
 
 		for(Map.Entry<Integer, ItemStack> entry : furnaceEntries) {
-			furnaceMachine.machineBuilder.addRecipe(
-					20,
-					new CJMachineRecipeComponent(
-							furnaceMachine.machineBuilder.getSlotIndex(
-									"input"),
-							new ItemStack(entry.getKey(), 1)),
-					new CJMachineRecipeComponent(
-							furnaceMachine.machineBuilder.getSlotIndex(
-									"output"), entry.getValue()),
-					200, false, -1); // Vanilla furnace ticks as base.
+			furnaceMachineBuilder.recipes.add(new CJMachineRecipe()
+					.addInput(new CJMachineRecipeComponent(
+							furnaceMachineBuilder.getTankIndex("fuel"),
+							new CJTankVolume(fluidChlorojoules, 70)))
+					.addInput(new CJMachineRecipeComponent(
+							furnaceMachineBuilder.getSlotIndex("input"),
+							new ItemStack(entry.getKey(), 1)))
+					.addOutput(new CJMachineRecipeComponent(
+							furnaceMachineBuilder.getSlotIndex("output"),
+							entry.getValue()))
+					.setProcessTime(200));
 		}
 	}
 }

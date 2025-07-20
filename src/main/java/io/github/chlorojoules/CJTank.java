@@ -17,12 +17,6 @@ public class CJTank extends CJGuiElement {
 	public boolean output = false;
 	public boolean bidirectional = false;
 
-	public CJTank(int x, int y) {
-		super(x, y);
-
-		setSize(FLUID_WIDTH, FLUID_HEIGHT);
-	}
-
 	public CJTank(CJGuiGravity gravity, int x, int y) {
 		super(x, y);
 
@@ -43,15 +37,5 @@ public class CJTank extends CJGuiElement {
 		if(jsonObject.has("bidirectional")) {
 			bidirectional = JsonUtils.getBoolean(jsonObject, "bidirectional");
 		}
-	}
-
-	public CJTank setOutput(boolean value) {
-		output = value;
-		return this;
-	}
-
-	public CJTank setBidirectional(boolean value) {
-		bidirectional = value;
-		return this;
 	}
 }

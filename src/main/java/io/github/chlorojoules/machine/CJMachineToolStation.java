@@ -8,6 +8,7 @@ import io.github.chlorojoules.item.CJIItemSocket;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.util.i18n.StringTranslate;
 
+@SuppressWarnings("unused")
 public class CJMachineToolStation implements CJIMachine {
 	public static final int INPUT_SLOT = 0;
 	public static final int TOOL_SLOT = 1;

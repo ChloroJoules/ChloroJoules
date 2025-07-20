@@ -1,8 +1,6 @@
 package io.github.chlorojoules.machine;
 
-import com.fox2code.foxloader.registry.GameRegistry;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.gui.CJGuiElement;
@@ -22,11 +20,6 @@ public class CJMachineSlotInfo extends CJGuiElement {
 
 	public CJMachineSlotInfo(int x, int y) {
 		super(x, y);
-	}
-
-	public CJMachineSlotInfo(int x, int y, boolean output) {
-		super(x, y);
-		this.output = output;
 	}
 
 	public CJMachineSlotInfo(JsonObject jsonObject) {

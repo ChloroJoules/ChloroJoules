@@ -5,7 +5,7 @@ public class CJGuiMachineBaseLayout {
 	private static final int SLOT_WIDTH = 16;
 	private static final int SLOT_HEIGHT = 16;
 
-	public static final int BASE_WIDTH = 176;
+	//public static final int BASE_WIDTH = 176;
 	public static final int BASE_HEIGHT = 166;
 
 	public static final int TOOLTIP_OFFSET_X = 12;

@@ -11,7 +11,6 @@ import net.minecraft.common.block.icon.IconRegister;
 import net.minecraft.common.entity.player.EntityPlayer;
 import net.minecraft.common.item.Item;
 import net.minecraft.common.item.ItemStack;
-import net.minecraft.common.util.ChatColors;
 import net.minecraft.common.util.i18n.StringTranslate;
 import net.minecraft.common.world.World;
 
@@ -37,14 +36,9 @@ public class CJItemLinker extends Item {
 		linkerIcons = new Icon[icons.length];
 	}
 
-	private void setItemTagIntArray(ItemStack stack, String key, int[] value) {
-		CompoundTag tag = stack.getTagCompoundNonNull();
-		tag.setIntArray(key, value);
-	}
-
 	@Override
 	public boolean onItemUse(
-			ItemStack itemstack, EntityPlayer player, World world,
+			ItemStack stack, EntityPlayer player, World world,
 			int blockX, int blockY, int blockZ, int side,
 			float x, float y, float z) {
 
@@ -61,16 +55,16 @@ public class CJItemLinker extends Item {
 			return true;
 		}
 
-		boolean isMulti = itemstack.itemDamage > FLUID_FULL;
+		boolean isMulti = stack.itemDamage > FLUID_FULL;
 
-		if(itemstack.itemDamage == ITEM_EMPTY ||
-				itemstack.itemDamage == FLUID_EMPTY ||
-				itemstack.itemDamage == MULTI_ITEM_EMPTY ||
-				itemstack.itemDamage == MULTI_FLUID_EMPTY) {
+		if(stack.itemDamage == ITEM_EMPTY ||
+				stack.itemDamage == FLUID_EMPTY ||
+				stack.itemDamage == MULTI_ITEM_EMPTY ||
+				stack.itemDamage == MULTI_FLUID_EMPTY) {
 
-			setItemTagIntArray(
-					itemstack, "linked_position",
-					new int[] { blockX, blockY, blockZ });
+			CompoundTag tag = stack.getTagCompoundNonNull();
+			tag.setIntArray(
+					"linked_position", new int[] { blockX, blockY, blockZ });
 
 			String string = StringTranslate.getInstance().translateKeyFormat(
 					"message.cj_linked_position", blockX, blockY, blockZ);
@@ -80,12 +74,12 @@ public class CJItemLinker extends Item {
 			Minecraft.getInstance().sndManager.playSoundFX(
 					"random.click", 1.0F, 1.0F);
 
-			itemstack.itemDamage++;
+			stack.itemDamage++;
 
 			return true;
 		}
 
-		CompoundTag tag = itemstack.getTagCompoundNonNull();
+		CompoundTag tag = stack.getTagCompoundNonNull();
 		int[] position = tag.getIntArray("linked_position");
 
 		CJTileEntityMachineBase inserterMachine =
@@ -150,28 +144,28 @@ public class CJItemLinker extends Item {
 				0, new CJGuiCoordinateDisplay(
 						new int[] { blockX, blockY, blockZ }));
 
-		if(itemstack.itemDamage == ITEM_FULL) {
+		if(stack.itemDamage == ITEM_FULL) {
 			extractorMachine.setWorldBlockMetadata(
 					CJMachineTransferor.TRANSMIT_ITEMS);
 
 			inserterMachine.setWorldBlockMetadata(
 					CJMachineTransferor.RECEIVE_ITEMS);
 		}
-		else if(itemstack.itemDamage == FLUID_FULL) {
+		else if(stack.itemDamage == FLUID_FULL) {
 			extractorMachine.setWorldBlockMetadata(
 					CJMachineTransferor.TRANSMIT_FLUIDS);
 
 			inserterMachine.setWorldBlockMetadata(
 					CJMachineTransferor.RECEIVE_FLUIDS);
 		}
-		else if(itemstack.itemDamage == MULTI_ITEM_FULL) {
+		else if(stack.itemDamage == MULTI_ITEM_FULL) {
 			extractorMachine.setWorldBlockMetadata(
 					CJMachineTransferor.MULTI_TRANSMIT_ITEMS);
 
 			inserterMachine.setWorldBlockMetadata(
 					CJMachineTransferor.RECEIVE_ITEMS);
 		}
-		else if(itemstack.itemDamage == MULTI_FLUID_FULL) {
+		else if(stack.itemDamage == MULTI_FLUID_FULL) {
 			extractorMachine.setWorldBlockMetadata(
 					CJMachineTransferor.MULTI_TRANSMIT_FLUIDS);
 
@@ -182,57 +176,41 @@ public class CJItemLinker extends Item {
 		Minecraft.getInstance().sndManager.playSoundFX(
 				"random.armor", 1.0F, 1.0F);
 
-		if(!isMulti) itemstack.itemDamage--;
+		if(!isMulti) stack.itemDamage--;
 
 		return true;
 	}
 
 	@Override
 	public ItemStack onItemRightClick(
-			ItemStack itemstack, World world, EntityPlayer player) {
+			ItemStack stack, World world, EntityPlayer player) {
 
 		if(!player.isSneaking()) {
-			// TODO: Figure out mixin on player swing item for mode switching
-			//		 So we can turn this back on.
-			/*
-			CompoundTag tag = itemstack.getTagCompoundNonNull();
-			int[] position = tag.getIntArray("linked_position");
-
-			StringTranslate translate = StringTranslate.getInstance();
-			String string = translate.translateKeyFormat(
-					"message.cj_link_query",
-					position[0], position[1], position[2]);
-
-			CJMod.sendChat(string);
-
-			return itemstack;
-			*/
-
 			String string;
 
-			if(itemstack.itemDamage == ITEM_EMPTY ||
-					itemstack.itemDamage == ITEM_FULL) {
+			if(stack.itemDamage == ITEM_EMPTY ||
+					stack.itemDamage == ITEM_FULL) {
 
-				itemstack.setItemDamage(FLUID_EMPTY);
+				stack.setItemDamage(FLUID_EMPTY);
 				string = StringTranslate.getInstance().translateKey(
 						"message.cj_link_switch_fluid");
 			}
-			else if(itemstack.itemDamage == FLUID_EMPTY ||
-					itemstack.itemDamage == FLUID_FULL) {
+			else if(stack.itemDamage == FLUID_EMPTY ||
+					stack.itemDamage == FLUID_FULL) {
 
-				itemstack.setItemDamage(MULTI_ITEM_EMPTY);
+				stack.setItemDamage(MULTI_ITEM_EMPTY);
 				string = StringTranslate.getInstance().translateKey(
 						"message.cj_link_switch_multi_item");
 			}
-			else if(itemstack.itemDamage == MULTI_ITEM_EMPTY ||
-					itemstack.itemDamage == MULTI_ITEM_FULL) {
+			else if(stack.itemDamage == MULTI_ITEM_EMPTY ||
+					stack.itemDamage == MULTI_ITEM_FULL) {
 
-				itemstack.setItemDamage(MULTI_FLUID_EMPTY);
+				stack.setItemDamage(MULTI_FLUID_EMPTY);
 				string = StringTranslate.getInstance().translateKey(
 						"message.cj_link_switch_multi_fluid");
 			}
 			else {
-				itemstack.setItemDamage(ITEM_EMPTY);
+				stack.setItemDamage(ITEM_EMPTY);
 				string = StringTranslate.getInstance().translateKey(
 						"message.cj_link_switch_item");
 			}
@@ -243,10 +221,10 @@ public class CJItemLinker extends Item {
 			CJMod.sendChat(string);
 		}
 
-		if(itemstack.itemDamage != ITEM_FULL &&
-				itemstack.itemDamage != FLUID_FULL &&
-				itemstack.itemDamage != MULTI_ITEM_FULL &&
-				itemstack.itemDamage != MULTI_FLUID_FULL) return itemstack;
+		if(stack.itemDamage != ITEM_FULL &&
+				stack.itemDamage != FLUID_FULL &&
+				stack.itemDamage != MULTI_ITEM_FULL &&
+				stack.itemDamage != MULTI_FLUID_FULL) return stack;
 
 		String string = StringTranslate.getInstance().translateKey(
 				"message.cj_link_clear");
@@ -256,9 +234,9 @@ public class CJItemLinker extends Item {
 
 		CJMod.sendChat(string);
 
-		itemstack.itemDamage--;
+		stack.itemDamage--;
 
-		return itemstack;
+		return stack;
 	}
 
 	@Override

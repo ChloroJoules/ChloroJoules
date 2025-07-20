@@ -270,299 +270,30 @@ public class CJMachineBuilder {
 		return this;
 	}
 
-	public CJMachineBuilder setImpl(Class<? extends CJIMachine> value) {
-		machineImpl = value;
-		return this;
-	}
-
-	public CJMachineBuilder addSlot(int x, int y, boolean output) {
-		slots.add(new CJMachineSlotInfo(x, y, output));
-
-		return this;
-	}
-
-	public CJMachineBuilder setSlotDamageExclusive(
-			int slot, String[] damageExclusive) {
-
-		slots.get(slot).setDamageExclusive(damageExclusive);
-
-		return this;
-	}
-
-	public CJMachineBuilder setSlotRenderType(
-			int slot, CJMachineSlotRenderType renderType) {
-
-		slots.get(slot).setRenderType(renderType);
-		return this;
-	}
-
-	public CJMachineBuilder setSlotAllowedItems(
-			int slot, ItemStack[] allowedItems) {
-
-		slots.get(slot).setAllowedItems(allowedItems);
-		return this;
-	}
-
-	public CJMachineBuilder setTankDamageExclusive(
-			int tank, String[] damageExclusive) {
-
-		tanks.get(tank).setDamageExclusive(damageExclusive);
-		return this;
-	}
-
-	public CJMachineBuilder addSlotGravity(
-			CJGuiGravity anchor, int x, int y, boolean output) {
-
-		return addSlot(
-				CJGuiGravityInfo.getSlotAnchoredX(anchor, x, output),
-				CJGuiGravityInfo.getSlotAnchoredY(anchor, y, output),
-				output);
-	}
-
-	public CJMachineBuilder addSlotGravityVCenter(
-			CJGuiGravity anchor, int x, boolean output) {
-
-		return addSlot(
-				CJGuiGravityInfo.getSlotAnchoredX(anchor, x, output),
-				CJGuiGravityInfo.getSlotAnchoredY(CENTER, 0, output),
-				output);
-	}
-
-	public CJMachineBuilder addButton(
-			int x, int y, String tooltip, ItemStack label) {
-
-		buttons.add(new CJGuiButton(x, y, tooltip, label));
-
-		return this;
-	}
-
-	public CJMachineBuilder addButtonGravity(
-			CJGuiGravity anchor, int x, int y, String tooltip,
-			ItemStack label) {
-
-		return addButton(
-				CJGuiGravityInfo.getButtonAnchoredX(anchor, x),
-				CJGuiGravityInfo.getButtonAnchoredY(anchor, y),
-				tooltip, label);
-	}
-
-	public CJMachineBuilder addCoordinate(int x, int y, String label) {
-		linkCoordinates.add(new CJGuiCoordinate(x, y, label));
-
-		return this;
-	}
-
-	public CJMachineBuilder addCoordinateGravity(
-			CJGuiGravity anchor, int x, int y, String label) {
-
-		return addCoordinate(
-				CJGuiGravityInfo.getCoordinateAnchoredX(anchor, x),
-				CJGuiGravityInfo.getCoordinateAnchoredY(anchor, y),
-				label);
-	}
-
-	public CJMachineBuilder addCoordinateGravityHCenter(
-			CJGuiGravity anchor, int y, String label) {
-
-		return addCoordinate(
-				CJGuiGravityInfo.getCoordinateAnchoredX(CENTER, 0),
-				CJGuiGravityInfo.getCoordinateAnchoredY(anchor, y),
-				label);
-	}
-
-	// NOTE: Pass the block ID of the flowing variant of the fluid you want
-	//       To set as locked to `lockFluid`, otherwise `0`.
-	public CJMachineBuilder addTank(
-			int x, int y, boolean output, boolean bidirectional,
-			int max, int lockFluid) {
-
-		CJTank tank = new CJTank(x, y);
-		tank.output = output;
-		tank.bidirectional = bidirectional;
-		tanks.add(tank);
-
-		CJTankVolume tankVolume = new CJTankVolume();
-		tankVolume.max = max;
-		tankVolume.fluidID = lockFluid;
-		tankVolume.lockFluid = (lockFluid != 0);
-		tankVolumes.add(tankVolume);
-
-		return this;
-	}
-
-	public CJMachineBuilder addFuelTank() {
-		fuelTankIndex = tanks.size();
-
-		return addTankGravityVCenter(
-				CJGuiGravity.TOP_LEFT, FUEL_TANK_INSET, false, false,
-				FUEL_TANK_SIZE, CJMod.fuelFluid);
-	}
-
-	public CJMachineBuilder addJewelSlot() {
-		jewelSlotIndex = slots.size();
-
-		addSlotGravity(
-				CJGuiGravity.BOTTOM_LEFT, JEWEL_SLOT_INSET_X,
-				/* Align bottom of Jewel slot with fuel tank. */
-				(WORKING_HEIGHT - FLUID_HEIGHT) / 2, false);
-
-		slots.getLast().setAllowedItems(
-				new ItemStack[] {
-						new ItemStack(CJMod.fauxJewel),
-						new ItemStack(CJMod.primalJewel),
-						new ItemStack(CJMod.manufacturedJewel),
-						new ItemStack(CJMod.refinedJewel),
-						new ItemStack(CJMod.awakenedJewel)
-				})
-				.setRenderType(CJMachineSlotRenderType.JEWEL);
-
-		return this;
-	}
-
-	public CJMachineBuilder addTankGravity(
-			CJGuiGravity anchor, int x, int y, boolean output,
-			boolean bidirectional, int max, int lockFluid) {
-
-		return addTank(
-				CJGuiGravityInfo.getTankAnchoredX(anchor, x),
-				CJGuiGravityInfo.getTankAnchoredY(anchor, y),
-				output, bidirectional, max, lockFluid);
-	}
-
-	// TODO: Add "ElementBuilder" which has sensible alignment/type defaults
-	//       Then set further sub-members from there.
-	public CJMachineBuilder addTankGravityVCenter(
-			CJGuiGravity anchor, int x, boolean output, boolean bidirectional,
-			int max, int lockFluid) {
-
-		return addTank(
-				CJGuiGravityInfo.getTankAnchoredX(anchor, x),
-				CJGuiGravityInfo.getTankAnchoredY(CENTER, 0),
-				output, bidirectional, max, lockFluid);
-	}
-
-	public CJMachineBuilder addProgressBar(int x, int y) {
-		progressBar = new CJGuiElement(x, y);
-
-		return this;
-	}
-
-	public CJMachineBuilder addProgressBarGravity(
-			CJGuiGravity anchor, int x, int y) {
-
-		return addProgressBar(
-				CJGuiGravityInfo.getProgressBarAnchoredX(anchor, x),
-				CJGuiGravityInfo.getProgressBarAnchoredY(anchor, y));
-	}
-
-	public CJMachineBuilder addProgressBarGravityVCenter(
-			CJGuiGravity anchor, int x) {
-
-		return addProgressBar(
-				CJGuiGravityInfo.getProgressBarAnchoredX(anchor, x),
-				CJGuiGravityInfo.getProgressBarAnchoredY(CENTER, 0));
-	}
-
-	public CJMachineBuilder setTier(CJMachineTier value) {
-		tier = value;
-		return this;
-	}
-
-	public CJMachineBuilder setSideMode(CJMachineBlockSideMode value) {
-		sideMode = value;
-		return this;
-	}
-
-	public CJMachineBuilder setIconNames(String[] value) {
-		iconNames = value;
-		iconDefault = false;
-		return this;
-	}
-
-	public CJMachineBuilder addRecipe(
-			int fuelVolume, CJMachineRecipeComponent in,
-			CJMachineRecipeComponent out, int ticks, boolean allowPassive,
-			int requiredButton) {
-
-		CJMachineRecipe recipe = new CJMachineRecipe(
-				this, fuelVolume, in, out, ticks, allowPassive);
-
-		recipe.requiredButton = requiredButton;
-
-		recipes.add(recipe);
-
-		return this;
-	}
-
-	public CJMachineBuilder addRecipe(
-			int fuelVolume, CJMachineRecipeComponent[] in,
-			CJMachineRecipeComponent[] out, int ticks, boolean allowPassive,
-			int requiredButton) {
-
-		CJMachineRecipe recipe = new CJMachineRecipe(
-				this, fuelVolume, in, out, ticks, allowPassive);
-
-		recipe.requiredButton = requiredButton;
-
-		recipes.add(recipe);
-
-		return this;
-	}
-
-	public CJMachineBuilder addRecipeNoFuel(
-			CJMachineRecipeComponent in, CJMachineRecipeComponent out,
-			int ticks) {
-
-		recipes.add(new CJMachineRecipe(in, out, ticks));
-
-		return this;
-	}
-
-	public CJMachineBuilder addRecipe(CJMachineRecipe recipe) {
-		recipes.add(recipe);
-		return this;
-	}
-
-	public CJMachineBuilder addRecipeRarity(
-			int fuelVolume, CJMachineRecipeComponent in,
-			CJMachineRecipeComponent out, int ticks, CJRarity rarity,
-			int requiredButton) {
-
-		CJMachineRecipe recipe = new CJMachineRecipe(
-				this, fuelVolume, in, out, ticks, false);
-
-		recipe.requiredRarity = rarity;
-		recipe.requiredButton = requiredButton;
-
-		recipes.add(recipe);
-
-		return this;
-	}
-
 	// TODO: Output components don't verify that there is space left.
 	private boolean componentMatch(
 			CJTileEntityMachineBase entity,
 			CJMachineRecipeComponent component, boolean input) {
 
-		if(component.optional) return true;
+		if(component.optional) return false;
 
 		if(component.target == CJMachineRecipeTarget.TANK) {
 			CJTankVolume volume = entity.tanks.get(component.index);
 
-			if(volume.fluidID == 0) return !input;
+			if(volume.fluidID == 0) return input;
 
-			return volume.fluidID == component.volume.fluidID;
+			return volume.fluidID != component.volume.fluidID;
 		}
 		else {
 			ItemStack stack = entity.getStackInSlot(component.index);
-			if(stack == null) return !input;
+			if(stack == null) return input;
 
 			if(component.isTag) {
-				return CJMod.matchesTagItem(component.tag, stack);
+				return !CJMod.matchesTagItem(component.tag, stack);
 			}
 
-			return stack.getItemID() == component.stack.getItemID() &&
-					stack.getItemDamage() == component.stack.getItemDamage();
+			return stack.getItemID() != component.stack.getItemID() ||
+					stack.getItemDamage() != component.stack.getItemDamage();
 		}
 	}
 
@@ -597,9 +328,9 @@ public class CJMachineBuilder {
 		}
 
 		boolean matchedRecipe = false;
-		for(int i = 0; i < recipes.size(); i++) {
+		for(CJMachineRecipe machineRecipe : recipes) {
 			matchedRecipe = true;
-			recipe = recipes.get(i);
+			recipe = machineRecipe;
 
 			if(recipe.requiredButton != -1) {
 				if(!entity.buttonStates.get(recipe.requiredButton)) {
@@ -610,7 +341,7 @@ public class CJMachineBuilder {
 			for(int j = 0; j < recipe.inputs.size(); j++) {
 				CJMachineRecipeComponent component = recipe.inputs.get(j);
 
-				if(!componentMatch(entity, component, true)) {
+				if(componentMatch(entity, component, true)) {
 					matchedRecipe = false;
 					break;
 				}
@@ -619,7 +350,7 @@ public class CJMachineBuilder {
 			for(int j = 0; j < recipe.outputs.size(); j++) {
 				CJMachineRecipeComponent component = recipe.outputs.get(j);
 
-				if(!componentMatch(entity, component, false)) {
+				if(componentMatch(entity, component, false)) {
 					matchedRecipe = false;
 					break;
 				}
@@ -708,7 +439,7 @@ public class CJMachineBuilder {
 		return recipe;
 	}
 
-	public boolean runRecipe(
+	public void runRecipe(
 			CJMachineRecipe recipe, CJTileEntityMachineBase entity) {
 
 		for(int i = 0; i < recipe.outputs.size(); i++) {
@@ -716,7 +447,7 @@ public class CJMachineBuilder {
 
 			if(component.target == CJMachineRecipeTarget.TANK) {
 				CJTankVolume volume = entity.tanks.get(component.index);
-				if(volume.current >= volume.max) return false;
+				if(volume.current >= volume.max) return;
 			}
 			else {
 				ItemStack outputStack =
@@ -725,7 +456,7 @@ public class CJMachineBuilder {
 				if(outputStack == null) continue;
 
 				if(outputStack.stackSize >= outputStack.getMaxStackSize()) {
-					return false;
+					return;
 				}
 			}
 		}
@@ -734,7 +465,7 @@ public class CJMachineBuilder {
 		int timeScale = CJRarityInfo.getRarityTimeScale(entity.jewelRarity);
 		entity.operationLength = recipe.processTime / timeScale;
 		if(entity.isPassive) entity.operationLength *= 2;
-		if(entity.operationTicks++ < entity.operationLength) return false;
+		if(entity.operationTicks++ < entity.operationLength) return;
 
 		// Handle fuel separately from other fluid inputs.
 		int powerScale = CJRarityInfo.getRarityPowerScale(entity.jewelRarity);
@@ -786,7 +517,9 @@ public class CJMachineBuilder {
 
 			if(component.target == CJMachineRecipeTarget.TANK) {
 				CJTankVolume volume = entity.tanks.get(component.index);
-				volume.addFluid(component.volume, true);
+				volume.addFluid(
+						component.volume.fluidID, component.volume.current,
+						true);
 			}
 			else {
 				ItemStack inputStack = entity.getStackInSlot(component.index);
@@ -805,6 +538,5 @@ public class CJMachineBuilder {
 
 		entity.operationTicks = 0;
 
-		return true;
 	}
 }

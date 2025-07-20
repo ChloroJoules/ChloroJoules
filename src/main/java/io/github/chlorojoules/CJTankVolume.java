@@ -1,7 +1,5 @@
 package io.github.chlorojoules;
 
-import com.fox2code.foxloader.registry.GameRegistry;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.common.block.Block;
 import net.minecraft.common.util.JsonUtils;
@@ -70,10 +68,6 @@ public class CJTankVolume {
 		current += amount;
 
 		return amount;
-	}
-
-	public int addFluid(CJTankVolume volume, boolean all) {
-		return addFluid(volume.fluidID, volume.current, all);
 	}
 
 	public int removeFluid(int blockFluid, int amount, boolean all) {

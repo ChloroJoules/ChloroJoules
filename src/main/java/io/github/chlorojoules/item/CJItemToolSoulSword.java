@@ -1,11 +1,8 @@
 package io.github.chlorojoules.item;
 
 import io.github.chlorojoules.CJMod;
-import io.github.chlorojoules.CJRarity;
 import io.github.chlorojoules.CJRarityInfo;
-import net.minecraft.common.entity.Entity;
 import net.minecraft.common.entity.EntityLiving;
-import net.minecraft.common.entity.data.DamageType;
 import net.minecraft.common.entity.data.DamageTypes;
 import net.minecraft.common.entity.other.EntityItem;
 import net.minecraft.common.item.ItemStack;

@@ -1,15 +1,12 @@
 package io.github.chlorojoules;
 
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
-import io.github.chlorojoules.gui.CJGuiMachineBaseSlot;
 import io.github.chlorojoules.machine.CJMachineBuilder;
 import io.github.chlorojoules.machine.CJMachineSlotInfo;
 import net.minecraft.common.block.tileentity.TileEntity;
 import net.minecraft.common.entity.inventory.IInventory;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.world.World;
-
-import static io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase.machineEntity;
 
 public class CJInventoryHelper {
 	private static IInventory getAdjacentInventory(
@@ -79,7 +76,7 @@ public class CJInventoryHelper {
 
 			for(int j = 0; j < machine.getSizeInventory(); j++) {
 				CJMachineSlotInfo slot = machineBuilder.slots.get(j);
-				if(slot.output || !slot.matchesDamageExclusive(machine)) {
+				if(slot.output || slot.checkDamageExclusive(machine)) {
 					continue;
 				}
 

@@ -4,7 +4,6 @@ package io.github.chlorojoules.gui;
 // Which doesn't have any real metadata associated with it.
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.machine.CJMachineBuilder;
@@ -52,16 +51,16 @@ public class CJGuiElement {
 		}
 	}
 
-	public boolean matchesDamageExclusive(
+	public boolean checkDamageExclusive(
 			CJTileEntityMachineBase machineEntity) {
 
-		if(damageExclusive == null) return true;
+		if(damageExclusive == null) return false;
 
 		int meta = machineEntity.getWorldBlockMetadata();
 		CJMachineBuilder machineBuilder = machineEntity.machine.machineBuilder;
 
-		return Arrays.stream(damageExclusive).anyMatch(
-						x -> machineBuilder.getNamedDamage(x) == meta);
+		return Arrays.stream(damageExclusive).noneMatch(
+				x -> machineBuilder.getNamedDamage(x) == meta);
 	}
 
 	public int getXPlacement() {
@@ -87,11 +86,6 @@ public class CJGuiElement {
 
 	public CJGuiElement setID(String value) {
 		this.id = value;
-		return this;
-	}
-
-	public CJGuiElement setDamageExclusive(String[] damageExclusive) {
-		this.damageExclusive = damageExclusive;
 		return this;
 	}
 }

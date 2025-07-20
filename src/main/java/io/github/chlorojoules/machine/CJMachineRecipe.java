@@ -9,7 +9,6 @@ import io.github.chlorojoules.CJTankVolume;
 import net.minecraft.common.util.JsonUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class CJMachineRecipe {
 	public ArrayList<CJMachineRecipeComponent> inputs = new ArrayList<>();
@@ -21,66 +20,6 @@ public class CJMachineRecipe {
 	public CJRarity requiredRarity = CJRarity.PRIMAL;
 	boolean allowPassive = false;
 	public int requiredButton = -1;
-
-	// Fuel + In -> Out.
-	public CJMachineRecipe(
-			CJMachineBuilder builder, int fuelVolume,
-			CJMachineRecipeComponent in, CJMachineRecipeComponent out,
-			int ticks, boolean allowPassive) {
-
-		processTime = ticks;
-		this.allowPassive = allowPassive;
-
-		if(builder.fuelTankIndex == -1) {
-			throw new RuntimeException("No fuel tank in machine");
-		}
-
-		fuelIndex = 0;
-		CJMachineRecipeComponent fuelComponent = new CJMachineRecipeComponent(
-				builder.fuelTankIndex,
-				new CJTankVolume(CJMod.fluidChlorojoules, fuelVolume));
-
-		inputs.add(fuelComponent);
-		inputs.add(in);
-
-		outputs.add(out);
-	}
-
-	// Fuel + In[] -> Out[].
-	public CJMachineRecipe(
-			CJMachineBuilder builder, int fuelVolume,
-			CJMachineRecipeComponent[] in, CJMachineRecipeComponent[] out,
-			int ticks, boolean allowPassive) {
-
-		processTime = ticks;
-		this.allowPassive = allowPassive;
-
-		if(builder.fuelTankIndex == -1) {
-			throw new RuntimeException("No fuel tank in machine");
-		}
-
-		fuelIndex = 0;
-		CJMachineRecipeComponent fuelComponent = new CJMachineRecipeComponent(
-				builder.fuelTankIndex,
-				new CJTankVolume(CJMod.fluidChlorojoules, fuelVolume));
-
-		inputs.add(fuelComponent);
-		inputs.addAll(Arrays.asList(in));
-
-		outputs.addAll(Arrays.asList(out));
-	}
-
-	// In + In -> Out.
-	public CJMachineRecipe(
-			CJMachineRecipeComponent in, CJMachineRecipeComponent out,
-			int ticks) {
-
-		allowPassive = true;
-		processTime = ticks;
-
-		inputs.add(in);
-		outputs.add(out);
-	}
 
 	public CJMachineRecipe() {}
 
@@ -137,21 +76,6 @@ public class CJMachineRecipe {
 
 	public CJMachineRecipe setProcessTime(int value) {
 		processTime = value;
-		return this;
-	}
-
-	public CJMachineRecipe setRequiredRarity(CJRarity value) {
-		requiredRarity = value;
-		return this;
-	}
-
-	public CJMachineRecipe setAllowPassive(boolean value) {
-		allowPassive = value;
-		return this;
-	}
-
-	public CJMachineRecipe setRequiredButton(int value) {
-		requiredButton = value;
 		return this;
 	}
 

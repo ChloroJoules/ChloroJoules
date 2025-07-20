@@ -7,7 +7,7 @@ public enum CJMachineBlockSideMode {
 
 	public static CJMachineBlockSideMode fromString(String id) {
 		return switch(id.toLowerCase()) {
-			case "front" -> FRONT_FACE;
+			//case "front" -> FRONT_FACE;
 			case "sides" -> ALL_SIDES;
 			case "all" -> ALL_FACES;
 

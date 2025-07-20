@@ -19,7 +19,7 @@ public enum CJGuiGravity {
 	public static CJGuiGravity fromString(String id) {
 		return switch(id.toLowerCase()) {
 			case "top" -> TOP;
-			case "top left" -> TOP_LEFT;
+			// case "top left" -> TOP_LEFT;
 			case "top right" -> TOP_RIGHT;
 
 			case "bottom" -> BOTTOM;

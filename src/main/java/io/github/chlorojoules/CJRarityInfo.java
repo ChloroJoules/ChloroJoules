@@ -100,44 +100,33 @@ public class CJRarityInfo {
 	}
 
 	public static int getRarityJewel(CJRarity rarity) {
-		switch(rarity) {
-			case PRIMAL: {
-				return CJMod.primalJewel.itemID;
-			}
-			case MANUFACTURED: {
-				return CJMod.manufacturedJewel.itemID;
-			}
-			case REFINED: {
-				return CJMod.refinedJewel.itemID;
-			}
-			case AWAKENED: {
-				return CJMod.awakenedJewel.itemID;
-			}
-		}
-
-		return -1;
+		return switch(rarity) {
+			case PRIMAL -> CJMod.primalJewel.itemID;
+			case MANUFACTURED -> CJMod.manufacturedJewel.itemID;
+			case REFINED -> CJMod.refinedJewel.itemID;
+			case AWAKENED -> CJMod.awakenedJewel.itemID;
+			default -> -1;
+		};
 	}
 
 	public static int getRarityPowerScale(CJRarity rarity) {
-		switch(rarity) {
-			case PRIMAL: return 1;
-			case MANUFACTURED: return 2;
-			case REFINED: return 3;
-			case AWAKENED: return 4;
-		}
-
-		return -1;
+		return switch(rarity) {
+			case PRIMAL -> 1;
+			case MANUFACTURED -> 2;
+			case REFINED -> 3;
+			case AWAKENED -> 4;
+			default -> -1;
+		};
 	}
 
 	public static int getRarityTimeScale(CJRarity rarity) {
-		switch(rarity) {
-			case PRIMAL: return 1;
-			case MANUFACTURED: return 2;
-			case REFINED: return 4;
-			case AWAKENED: return 8;
-		}
-
-		return -1;
+		return switch(rarity) {
+			case PRIMAL -> 1;
+			case MANUFACTURED -> 2;
+			case REFINED -> 4;
+			case AWAKENED -> 8;
+			default -> -1;
+		};
 	}
 
 	public static boolean raritySufficient(CJRarity test, CJRarity required) {

@@ -11,12 +11,9 @@ public enum CJMachineTier {
 	INDUSTRIAL;
 
 	public static CJMachineTier fromString(String id) {
-		return switch(id.toLowerCase()) {
-			case "primitive" -> PRIMITIVE;
-			case "industrial" -> INDUSTRIAL;
+		if(id.equalsIgnoreCase("primitive")) return PRIMITIVE;
 
-			default -> INDUSTRIAL;
-		};
+		return INDUSTRIAL;
 	}
 
 	public Material getMaterial() {

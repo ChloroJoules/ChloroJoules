@@ -7,7 +7,6 @@ import io.github.chlorojoules.CJTankVolume;
 import io.github.chlorojoules.container.CJContainerMachineBase;
 import io.github.chlorojoules.machine.CJMachineBuilder;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
-import io.github.chlorojoules.machine.CJMachineSlotInfo;
 import net.minecraft.client.gui.GuiContainer;
 import net.minecraft.client.renderer.world.RenderHelper;
 import net.minecraft.client.renderer.world.Tessellator;
@@ -437,7 +436,7 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 		// Draw coordinates.
 		for(int i = 0; i < machineBuilder.linkCoordinates.size(); i++) {
 			CJGuiCoordinate coordinate = machineBuilder.linkCoordinates.get(i);
-			if(!coordinate.matchesDamageExclusive(machineEntity)) continue;
+			if(coordinate.checkDamageExclusive(machineEntity)) continue;
 
 			int x = baseX + coordinate.getXPlacement();
 			int y = baseY + coordinate.getYPlacement();

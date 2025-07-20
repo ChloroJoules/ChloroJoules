@@ -112,58 +112,6 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		impl.updateMachine(this);
 	}
 
-	@Override
-	public void writeToNBT(CompoundTag tagCompound) {
-		super.writeToNBT(tagCompound);
-
-		tagCompound.setString("cj_machine", machine.machineBuilder.name);
-
-		if(impl != null) impl.writeToNBT(tagCompound);
-
-		// Serialize slots.
-		ListTag<Tag> itemsList = new ListTag<>();
-		for(int i = 0; i < stacks.size(); i++) {
-			ItemStack stack = stacks.get(i);
-
-			if(stack == null) continue;
-
-			CompoundTag slotTag = new CompoundTag();
-			slotTag.setByte("slot", (byte) i);
-			stack.writeToNBT(slotTag);
-			itemsList.setTag(slotTag);
-		}
-		tagCompound.setTag("items", itemsList);
-
-		// Serialize tanks.
-		ListTag<Tag> tanksList = new ListTag<>();
-		for(int i = 0; i < tanks.size(); i++) {
-			CJTankVolume tankVolume = tanks.get(i);
-
-			if(tankVolume == null) continue;
-
-			// NOTE: `max` and `lockFluid` are expected to be set statically
-			//       Per-machine so we don't need to serialize them.
-			CompoundTag volumeTag = new CompoundTag();
-			volumeTag.setByte("volume", (byte) i);
-			volumeTag.setInteger("current", tankVolume.current);
-			volumeTag.setInteger("fluid", tankVolume.fluidID);
-			tanksList.setTag(volumeTag);
-		}
-		tagCompound.setTag("tanks", tanksList);
-
-		// Serialize progress.
-		tagCompound.setShort("operation_ticks", (short) operationTicks);
-
-		// Serialize buttons.
-		ListTag<Tag> buttonList = new ListTag<>();
-		for(int i = 0; i < machine.machineBuilder.buttons.size(); i++) {
-			CompoundTag buttonTag = new CompoundTag();
-			buttonTag.setBoolean("state", buttonStates.get(i));
-			buttonList.setTag(buttonTag);
-		}
-		tagCompound.setTag("buttons", buttonList);
-	}
-
 	public int getWorldBlockId() {
 		return worldObj.getBlockId(xCoord, yCoord, zCoord);
 	}
@@ -181,16 +129,66 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		worldObj.notifyBlockChange(xCoord, yCoord, zCoord, getWorldBlockId());
 	}
 
+	private void writeStacks(CompoundTag tagCompound) {
+		ListTag<Tag> itemsList = new ListTag<>();
+		for(int i = 0; i < stacks.size(); i++) {
+			ItemStack stack = stacks.get(i);
+
+			if(stack == null) continue;
+
+			CompoundTag slotTag = new CompoundTag();
+			slotTag.setByte("slot", (byte) i);
+			stack.writeToNBT(slotTag);
+			itemsList.setTag(slotTag);
+		}
+		tagCompound.setTag("items", itemsList);
+	}
+
+	private void writeTanks(CompoundTag tagCompound) {
+		ListTag<Tag> tanksList = new ListTag<>();
+		for(int i = 0; i < tanks.size(); i++) {
+			CJTankVolume tankVolume = tanks.get(i);
+
+			if(tankVolume == null) continue;
+
+			// NOTE: `max` and `lockFluid` are expected to be set statically
+			//       Per-machine so we don't need to serialize them.
+			CompoundTag volumeTag = new CompoundTag();
+			volumeTag.setByte("volume", (byte) i);
+			volumeTag.setInteger("current", tankVolume.current);
+			volumeTag.setInteger("fluid", tankVolume.fluidID);
+			tanksList.setTag(volumeTag);
+		}
+		tagCompound.setTag("tanks", tanksList);
+	}
+
+	private void writeButtons(CompoundTag tagCompound) {
+		// Serialize buttons.
+		ListTag<Tag> buttonList = new ListTag<>();
+		for(int i = 0; i < machine.machineBuilder.buttons.size(); i++) {
+			CompoundTag buttonTag = new CompoundTag();
+			buttonTag.setBoolean("state", buttonStates.get(i));
+			buttonList.setTag(buttonTag);
+		}
+		tagCompound.setTag("buttons", buttonList);
+	}
+
 	@Override
-	public void readFromNBT(CompoundTag tagCompound) {
-		super.readFromNBT(tagCompound);
+	public void writeToNBT(CompoundTag tagCompound) {
+		super.writeToNBT(tagCompound);
 
-		initFromBuilder(CJMod.machines.get(
-				tagCompound.getString("cj_machine")));
+		tagCompound.setString("cj_machine", machine.machineBuilder.name);
 
-		if(impl != null) impl.readFromNBT(tagCompound);
+		if(impl != null) impl.writeToNBT(tagCompound);
 
-		// Deserialize slots.
+		writeStacks(tagCompound);
+		writeTanks(tagCompound);
+		writeButtons(tagCompound);
+
+		tagCompound.setShort("operation_ticks", (short) operationTicks);
+	}
+
+	private void readStacks(CompoundTag tagCompound) {
 		ListTag<Tag> itemsList = tagCompound.getTagList("items");
 		for(int i = 0; i < itemsList.size(); i++) {
 			CompoundTag slotTag = (CompoundTag) itemsList.get(i);
@@ -198,8 +196,9 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 
 			stacks.set(slotIndex, ItemStack.loadItemStackFromNBT(slotTag));
 		}
+	}
 
-		// Deserialize tanks.
+	private void readTanks(CompoundTag tagCompound) {
 		ListTag<Tag> tanksList = tagCompound.getTagList("tanks");
 		for(int i = 0; i < tanksList.size(); i++) {
 			CompoundTag volumeTag = (CompoundTag) tanksList.get(i);
@@ -210,17 +209,31 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 			volume.fluidID = volumeTag.getInteger("fluid");
 			tanks.set(tankIndex, volume);
 		}
+	}
 
-		// Deserialize progress.
-		operationTicks = tagCompound.getShort("operation_ticks");
-
-		// Deserialize buttons.
+	private void readButtons(CompoundTag tagCompound) {
 		ListTag<Tag> buttonsList = tagCompound.getTagList("buttons");
 		for(int i = 0; i < buttonsList.size(); i++) {
 			CompoundTag buttonTag = (CompoundTag) buttonsList.get(i);
 
 			buttonStates.set(i, buttonTag.getBoolean("state"));
 		}
+	}
+
+	@Override
+	public void readFromNBT(CompoundTag tagCompound) {
+		super.readFromNBT(tagCompound);
+
+		initFromBuilder(CJMod.machines.get(
+				tagCompound.getString("cj_machine")));
+
+		if(impl != null) impl.readFromNBT(tagCompound);
+
+		readStacks(tagCompound);
+		readTanks(tagCompound);
+		readButtons(tagCompound);
+
+		operationTicks = tagCompound.getShort("operation_ticks");
 	}
 
 	@Override
