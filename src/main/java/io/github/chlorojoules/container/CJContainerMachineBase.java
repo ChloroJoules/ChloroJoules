@@ -93,28 +93,7 @@ public class CJContainerMachineBase extends Container {
 					stack, machineBuilder.slots.size(), slots.size(), true);
 		}
 		// Player inventory to machine.
-		else {
-			boolean didJewel = false;
-			if(machineBuilder.jewelSlotIndex != -1) {
-				Slot jewelSlot = slots.get(machineBuilder.jewelSlotIndex);
-
-				if(!jewelSlot.getHasStack()) {
-					jewelSlot.putStack(stack.copy());
-					stack.stackSize = 0;
-					didJewel = true;
-				}
-			}
-
-			if(!didJewel) {
-				// TODO: Need to override this to only consider jewel slots if
-				//		 Item is a jewel.
-				// TODO: Need to override this to not allow insertion into
-				//		 Output slots. If we require that jewel slot is first
-				//		 And output slots are last we can just clip them out
-				//		 Of this range.
-				mergeItemStack(stack, 0, machineBuilder.slots.size(), false);
-			}
-		}
+		else mergeItemStack(stack);
 
 		if(stack.stackSize == 0) slot.putStack(null);
 		else slot.onSlotChanged();
@@ -122,5 +101,60 @@ public class CJContainerMachineBase extends Container {
 		if(stack.stackSize == returnStack.stackSize) return null;
 
 		return returnStack;
+	}
+
+	protected void mergeItemStack(ItemStack item) {
+		if(item.isStackable()) {
+			for(int i = 0; i < machineEntity.getSizeInventory(); ++i) {
+				CJGuiMachineBaseSlot slot =
+						(CJGuiMachineBaseSlot) this.slots.get(i);
+
+				ItemStack inStack = slot.getStack();
+
+				if(item.stackSize <= 0) break;
+
+				if(slot.info.output) continue;
+				if(!slot.info.isAllowedItem(item)) continue;
+
+				if(inStack != null
+						&& inStack.getItemID() == item.getItemID()
+						&& (!item.getHasSubtypes() || item.getItemDamage() ==
+								inStack.getItemDamage())
+						&& ItemStack.areNbtEqual(item, inStack)) {
+
+					int combinedSize = inStack.stackSize + item.stackSize;
+					if(combinedSize <= item.getMaxStackSize()) {
+						item.stackSize = 0;
+						inStack.stackSize = combinedSize;
+						slot.onSlotChanged();
+					}
+					else if(inStack.stackSize < item.getMaxStackSize()) {
+						item.stackSize =
+								item.stackSize -
+								(item.getMaxStackSize() - inStack.stackSize);
+
+						inStack.stackSize = item.getMaxStackSize();
+						slot.onSlotChanged();
+					}
+				}
+			}
+		}
+
+		if(item.stackSize > 0) {
+			for(int i = 0; i < machineEntity.getSizeInventory(); ++i) {
+				CJGuiMachineBaseSlot slot =
+						(CJGuiMachineBaseSlot) this.slots.get(i);
+
+				if(slot.info.output) continue;
+				if(!slot.info.isAllowedItem(item)) continue;
+
+				if(slot.getStack() == null) {
+					slot.putStack(item.copy());
+					slot.onSlotChanged();
+					item.stackSize = 0;
+					break;
+				}
+			}
+		}
 	}
 }

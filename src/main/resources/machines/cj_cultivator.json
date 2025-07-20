@@ -25,7 +25,13 @@
       "anchor": "bottom",
       "x": -10,
       "y": 24,
-      "render": "fertilizer"
+      "render": "fertilizer",
+      "allowed": [
+        {
+          "item": "dye",
+          "damage": 15
+        }
+      ]
     },
     {
       "name": "output",

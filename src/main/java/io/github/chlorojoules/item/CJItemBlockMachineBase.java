@@ -1,6 +1,5 @@
 package io.github.chlorojoules.item;
 
-import io.github.chlorojoules.block.CJBlockMachineBase;
 import net.minecraft.common.block.Block;
 import net.minecraft.common.block.Blocks;
 import net.minecraft.common.block.icon.Icon;
