@@ -40,8 +40,6 @@ public class CJMachineBuilder {
 	public ArrayList<CJTankVolume> tankVolumes = new ArrayList<>();
 	public CJGuiElement progressBar = null;
 	public ArrayList<CJGuiButton> buttons = new ArrayList<>();
-	// TODO: This is kind of hardcoded -- is there a way we can make
-	//  	 `CJGuiElement` more generic/programmable?
 	public ArrayList<CJGuiCoordinate> linkCoordinates = new ArrayList<>();
 
 	public ArrayList<CJMachineRecipe> recipes = new ArrayList<>();
@@ -271,7 +269,7 @@ public class CJMachineBuilder {
 	}
 
 	// TODO: Output components don't verify that there is space left.
-	private boolean componentMatch(
+	private boolean noComponentMatch(
 			CJTileEntityMachineBase entity,
 			CJMachineRecipeComponent component, boolean input) {
 
@@ -281,12 +279,23 @@ public class CJMachineBuilder {
 			CJTankVolume volume = entity.tanks.get(component.index);
 
 			if(volume.fluidID == 0) return input;
+			if(!input &&
+					volume.max- volume.current < component.volume.current) {
+
+				return true;
+			}
 
 			return volume.fluidID != component.volume.fluidID;
 		}
 		else {
 			ItemStack stack = entity.getStackInSlot(component.index);
 			if(stack == null) return input;
+			if(!input &&
+					stack.getMaxStackSize() - stack.stackSize <
+					component.stack.stackSize) {
+
+				return true;
+			}
 
 			if(component.isTag) {
 				return !CJMod.matchesTagItem(component.tag, stack);
@@ -341,7 +350,7 @@ public class CJMachineBuilder {
 			for(int j = 0; j < recipe.inputs.size(); j++) {
 				CJMachineRecipeComponent component = recipe.inputs.get(j);
 
-				if(componentMatch(entity, component, true)) {
+				if(noComponentMatch(entity, component, true)) {
 					matchedRecipe = false;
 					break;
 				}
@@ -350,7 +359,7 @@ public class CJMachineBuilder {
 			for(int j = 0; j < recipe.outputs.size(); j++) {
 				CJMachineRecipeComponent component = recipe.outputs.get(j);
 
-				if(componentMatch(entity, component, false)) {
+				if(noComponentMatch(entity, component, false)) {
 					matchedRecipe = false;
 					break;
 				}
