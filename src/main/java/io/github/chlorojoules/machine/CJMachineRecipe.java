@@ -19,12 +19,11 @@ public class CJMachineRecipe {
 
 	public CJRarity requiredRarity = CJRarity.PRIMAL;
 	boolean allowPassive = false;
-	public int requiredButton = -1;
+	public String requiredButton;
 
 	public CJMachineRecipe() {}
 
-	// TODO: Remove builder from here and use string IDs.
-	public CJMachineRecipe(CJMachineBuilder builder, JsonObject jsonObject) {
+	public CJMachineRecipe(JsonObject jsonObject) {
 		if(jsonObject.has("passive")) {
 			allowPassive = JsonUtils.getBoolean(jsonObject, "passive");
 		}
@@ -40,27 +39,25 @@ public class CJMachineRecipe {
 			fuelIndex = inputs.size();
 
 			inputs.add(new CJMachineRecipeComponent(
-					builder.fuelTankIndex,
+					"fuel",
 					new CJTankVolume(
 							CJMod.fluidChlorojoules,
 							JsonUtils.getInt(jsonObject, "fuel"))));
 		}
 
 		if(jsonObject.has("button")) {
-			requiredButton = builder.getButtonIndex(
-					JsonUtils.getString(jsonObject, "button"));
+			requiredButton = JsonUtils.getString(jsonObject, "button");
 		}
 
 		for(JsonElement input : JsonUtils.getJsonArray(jsonObject, "inputs")) {
-			inputs.add(new CJMachineRecipeComponent(
-					builder, input.getAsJsonObject()));
+			inputs.add(new CJMachineRecipeComponent(input.getAsJsonObject()));
 		}
 
 		for(JsonElement output :
 				JsonUtils.getJsonArray(jsonObject, "outputs")) {
 
-			outputs.add(new CJMachineRecipeComponent(
-					builder, output.getAsJsonObject()));
+			outputs.add(
+					new CJMachineRecipeComponent(output.getAsJsonObject()));
 		}
 	}
 

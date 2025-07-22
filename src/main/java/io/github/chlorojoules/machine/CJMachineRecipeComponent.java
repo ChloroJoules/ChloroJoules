@@ -8,7 +8,7 @@ import net.minecraft.common.util.JsonUtils;
 
 public class CJMachineRecipeComponent {
 	public CJMachineRecipeTarget target;
-	public int index;
+	public String targetID;
 
 	public ItemStack stack;
 
@@ -21,22 +21,19 @@ public class CJMachineRecipeComponent {
 	public float chance = 1.0f;
 	public boolean optional = false;
 
-	public CJMachineRecipeComponent(int index, ItemStack stack) {
+	public CJMachineRecipeComponent(String targetID, ItemStack stack) {
 		this.target = CJMachineRecipeTarget.SLOT;
-		this.index = index;
+		this.targetID = targetID;
 		this.stack = stack;
 	}
 
-	public CJMachineRecipeComponent(int index, CJTankVolume volume) {
+	public CJMachineRecipeComponent(String targetID, CJTankVolume volume) {
 		this.target = CJMachineRecipeTarget.TANK;
-		this.index = index;
+		this.targetID = targetID;
 		this.volume = volume;
 	}
 
-	// TODO: Remove builder param and use string slot IDs.
-	public CJMachineRecipeComponent(
-			CJMachineBuilder builder, JsonObject jsonObject) {
-
+	public CJMachineRecipeComponent(JsonObject jsonObject) {
 		if(jsonObject.has("kind")) {
 			target = CJMachineRecipeTarget.fromString(
 					JsonUtils.getString(jsonObject, "kind"));
@@ -60,11 +57,7 @@ public class CJMachineRecipeComponent {
 			else tagCount = 1;
 		}
 
-		String id = JsonUtils.getString(jsonObject, "target");
-		if(target == CJMachineRecipeTarget.SLOT) {
-			index = builder.getSlotIndex(id);
-		}
-		else index = builder.getTankIndex(id);
+		targetID = JsonUtils.getString(jsonObject, "target");
 
 		if(jsonObject.has("chance")) {
 			chance = JsonUtils.getFloat(jsonObject, "chance");

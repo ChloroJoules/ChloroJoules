@@ -112,7 +112,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		impl.updateMachine(this);
 	}
 
-	public int getWorldBlockId() {
+	public int getWorldBlockID() {
 		return worldObj.getBlockId(xCoord, yCoord, zCoord);
 	}
 
@@ -126,7 +126,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 
 	public void setWorldBlockMetadata(int metadata) {
 		worldObj.setBlockMetadata(xCoord, yCoord, zCoord, metadata);
-		worldObj.notifyBlockChange(xCoord, yCoord, zCoord, getWorldBlockId());
+		worldObj.notifyBlockChange(xCoord, yCoord, zCoord, getWorldBlockID());
 	}
 
 	private void writeStacks(CompoundTag tagCompound) {

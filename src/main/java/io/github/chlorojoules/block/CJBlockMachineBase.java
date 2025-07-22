@@ -91,7 +91,7 @@ public class CJBlockMachineBase extends BlockContainer {
 			CJTank tank = machineBuilder.tanks.get(tankIndex);
 
 			if(tank.checkDamageExclusive(machineEntity)) continue;
-			if(machineBuilder.fuelTankIndex == tankIndex) continue;
+			if(tank.id.equals("jewel")) continue;
 			if(i < size && !tank.output && !tank.bidirectional) continue;
 
 			CJTankVolume volume = machineEntity.tanks.get(tankIndex);
@@ -171,8 +171,8 @@ public class CJBlockMachineBase extends BlockContainer {
 			if(tank.output && !tank.bidirectional) continue;
 			if(volume.fluidID != 0 && volume.fluidID != fluidID) continue;
 			if(volume.max - volume.current < CJTank.BUCKET) continue;
-			if(i != machineBuilder.fuelTankIndex &&
-					machineBuilder.fuelTankIndex != -1 &&
+			if(!tank.id.equals("fuel") &&
+					machineBuilder.hasNamedTank("fuel") &&
 					fluidID == CJMod.fuelFluid) {
 
 				continue;

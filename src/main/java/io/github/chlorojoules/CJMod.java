@@ -768,14 +768,11 @@ public class CJMod extends Mod {
 		for(Map.Entry<Integer, ItemStack> entry : furnaceEntries) {
 			furnaceMachineBuilder.recipes.add(new CJMachineRecipe()
 					.addInput(new CJMachineRecipeComponent(
-							furnaceMachineBuilder.getTankIndex("fuel"),
-							new CJTankVolume(fluidChlorojoules, 70)))
+							"fuel", new CJTankVolume(fluidChlorojoules, 70)))
 					.addInput(new CJMachineRecipeComponent(
-							furnaceMachineBuilder.getSlotIndex("input"),
-							new ItemStack(entry.getKey(), 1)))
+							"input", new ItemStack(entry.getKey(), 1)))
 					.addOutput(new CJMachineRecipeComponent(
-							furnaceMachineBuilder.getSlotIndex("output"),
-							entry.getValue()))
+							"output", entry.getValue()))
 					.setProcessTime(200));
 		}
 	}

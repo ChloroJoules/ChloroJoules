@@ -202,9 +202,13 @@ public class CJMachineTransferor implements CJIMachine {
 				if(adjacentTank.output && !adjacentTank.bidirectional) {
 					continue;
 				}
-				if(volume.fluidID == CJMod.fuelFluid &&
-						adjacentMachineBuilder.fuelTankIndex != -1 &&
-						j != adjacentMachineBuilder.fuelTankIndex) continue;
+
+				if(!adjacentTank.id.equals("fuel") &&
+						adjacentMachineBuilder.hasNamedTank("fuel") &&
+						volume.fluidID == CJMod.fuelFluid) {
+
+					continue;
+				}
 
 				if(adjacentVolume.transferFrom(volume, 10)) {
 					didMultiReceive(linkedEntity);
