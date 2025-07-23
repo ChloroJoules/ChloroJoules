@@ -42,7 +42,6 @@ import static io.github.chlorojoules.CJRarityInfo.*;
 public class CJMod extends Mod {
 	public static Map<String, CJBlockMachineBase> machines = new HashMap<>();
 
-	// TODO: This can be removed in favour of `Fluid[s].java`.
 	public static List<ItemBucket> buckets = new ArrayList<>();
 	public static List<Integer> bucketFluids = new ArrayList<>();
 
