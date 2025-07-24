@@ -41,7 +41,7 @@
         {
           "kind": "item",
           "target": "input",
-          "tag": "#compostable"
+          "tag": "cj_compostable"
         }
       ],
       "outputs": [
@@ -58,7 +58,7 @@
         {
           "kind": "item",
           "target": "input",
-          "tag": "#compostable"
+          "tag": "cj_compostable"
         }
       ],
       "outputs": [

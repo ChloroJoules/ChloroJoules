@@ -27,8 +27,7 @@ import net.minecraft.common.block.tileentity.TileEntity;
 import net.minecraft.common.item.*;
 import net.minecraft.common.item.children.ItemBucket;
 import net.minecraft.common.item.data.EnumTools;
-import net.minecraft.common.recipe.CraftingManager;
-import net.minecraft.common.recipe.FurnaceRecipes;
+import net.minecraft.common.recipe.*;
 import net.minecraft.common.util.JsonUtils;
 
 import java.util.*;
@@ -52,7 +51,16 @@ public class CJMod extends Mod {
 	//		 Display name translation key to their implementation.
 	public static HashMap<String, Item> earlyItemMap = new HashMap<>();
 
-	public static HashMap<String, ArrayList<Item>> tagList = new HashMap<>();
+	public static TaggedIngredient tagLeaves = TaggedIngredients.get("cj_leaves");
+	public static TaggedIngredient tagLogs = TaggedIngredients.get("cj_logs");
+	public static TaggedIngredient tagIronOre =
+			TaggedIngredients.get("cj_iron_ore");
+
+	public static TaggedIngredient tagGoldOre =
+			TaggedIngredients.get("cj_gold_ore");
+
+	public static TaggedIngredient tagCompostable =
+			TaggedIngredients.get("cj_compostable");
 
 	public static Block fluidChlorojoules;
 	public static Item bucketFluidChlorojoules;
@@ -143,27 +151,6 @@ public class CJMod extends Mod {
 		throw new RuntimeException();
 	}
 
-	public static void addTagItem(String tag, Item item) {
-		tagList.putIfAbsent(tag, new ArrayList<>());
-		tagList.get(tag).add(item);
-	}
-
-	public static void addTagItem(String tag, int itemID) {
-		addTagItem(tag, ITEMS_LIST[itemID]);
-	}
-
-	public static void addTagItem(String tag, Block block) {
-		addTagItem(tag, block.getItemID());
-	}
-
-	public static boolean matchesTagItem(String tag, Item item) {
-		return tagList.get(tag).contains(item);
-	}
-
-	public static boolean matchesTagItem(String tag, ItemStack stack) {
-		return matchesTagItem(tag, stack.getItem());
-	}
-
 	public static void sendChat(String message) {
 		Minecraft.getInstance().ingameGUI.addChatMessage(message);
 	}
@@ -241,7 +228,7 @@ public class CJMod extends Mod {
 	}
 
 	public void registerFurnaceRecipe(int output, int input) {
-		FurnaceRecipes.instance. addSmelting(output, new ItemStack(input, 1));
+		FurnaceRecipes.instance.addSmelting(output, new ItemStack(input, 1));
 	}
 
 	public void registerFurnaceRecipe(Item output, Item input) {
@@ -466,21 +453,22 @@ public class CJMod extends Mod {
 	public void onPostInit() {
 		for(Block block : BLOCKS_LIST) {
 			if(block instanceof BlockLeavesBase) {
-				addTagItem("#leaves", block);
-				addTagItem("#compostable", block);
+				tagLeaves.addIngredient(block);
+				tagCompostable.addIngredient(block);
 			}
 			else if(block instanceof BlockBasicPlant) {
-				addTagItem("#compostable", block);
+				tagCompostable.addIngredient(block);
 			}
-			else if(block instanceof BlockLog) addTagItem("#log", block);
-			else if(block instanceof BlockPlanks) addTagItem("#planks", block);
+			else if(block instanceof BlockLog) {
+				tagLogs.addIngredient(block);
+			}
 		}
 
-		addTagItem("#iron_ore", IRON_ORE);
-		addTagItem("#iron_ore", NETHER_IRON_ORE);
+		tagIronOre.addIngredient(IRON_ORE);
+		tagIronOre.addIngredient(NETHER_IRON_ORE);
 
-		addTagItem("#gold_ore", GOLD_ORE);
-		addTagItem("#gold_ore", NETHER_GOLD_ORE);
+		tagGoldOre.addIngredient(GOLD_ORE);
+		tagGoldOre.addIngredient(NETHER_GOLD_ORE);
 
 		// TODO: A two way mapping between bucket/fluid IDs would probably be
 		//       More efficient for lookup by `CJBlockMachineBase`.
@@ -501,7 +489,15 @@ public class CJMod extends Mod {
 					"\" (" + fluidID + ")");
 		}
 
-		// Recipe item stacks.
+		registerFurnaceRecipe(goldDust, GOLD_INGOT);
+		registerFurnaceRecipe(ironDust, IRON_INGOT);
+
+		for(Ingredient ingredient : tagLeaves.getIngredients()) {
+			ItemStack stack = (ItemStack) ingredient;
+
+			registerFurnaceRecipe(stack.getItem(), paste);
+		}
+
 		ItemStack machineFrame4Stack = new ItemStack(machineFrame, 4);
 		ItemStack transferor8Stack = new ItemStack(transferor, 8);
 		ItemStack soulDust2Stack = new ItemStack(soulDust, 2);
@@ -509,60 +505,44 @@ public class CJMod extends Mod {
 		ItemStack soulExtractorStack = new ItemStack(
 				soulExtractor, 1, MAX_DAMAGE);
 
-		// Vanilla machine recipes.
-		registerFurnaceRecipe(goldDust, GOLD_INGOT);
-		registerFurnaceRecipe(ironDust, IRON_INGOT);
+		registerShapelessRecipe(pasteBowl, tagLeaves, BOWL);
+		registerRecipe(
+				composter,
+				"%%%",
+				"#|#",
+				"%%%",
+				'%', TaggedIngredients.WOODEN_PLANKS,
+				'|', primitiveMachineFrame,
+				'#', tagLeaves);
 
-		for(Item leaves : tagList.get("#leaves")) {
-			registerFurnaceRecipe(leaves, paste);
-			registerShapelessRecipe(pasteBowl, leaves, BOWL);
+		registerRecipe(
+				pruningShears,
+				"# #",
+				" # ",
+				"/ /",
+				'/', STICK,
+				'#', TaggedIngredients.WOODEN_PLANKS);
 
-			for(Item planks : tagList.get("#planks")) {
-				registerRecipe(
-						composter,
-						"%%%",
-						"#|#",
-						"%%%",
-						'%', planks,
-						'|', primitiveMachineFrame,
-						'#', leaves);
-			}
-		}
+		registerRecipe(
+				primitiveCentrifuge,
+				"###",
+				"/|/",
+				"#^#",
+				'/', STICK,
+				'#', TaggedIngredients.WOODEN_PLANKS,
+				'|', primitiveMachineFrame,
+				'^', FLINT);
 
+		registerRecipe(
+				primitiveMachineFrame,
+				"%|%",
+				"%~%",
+				"%#%",
+				'%', TaggedIngredients.WOODEN_PLANKS,
+				'~', paste,
+				'|', STICK,
+				'#', tagLogs);
 
-		for(Item planks : tagList.get("#planks")) {
-			registerRecipe(
-					pruningShears,
-					"# #",
-					" # ",
-					"/ /",
-					'/', STICK,
-					'#', planks);
-
-			registerRecipe(
-					primitiveCentrifuge,
-					"###",
-					"/|/",
-					"#^#",
-					'/', STICK,
-					'#', planks,
-					'|', primitiveMachineFrame,
-					'^', FLINT);
-
-			for(Item log : tagList.get("#log")) {
-				registerRecipe(
-						primitiveMachineFrame,
-						"%|%",
-						"%~%",
-						"%#%",
-						'%', planks,
-						'~', paste,
-						'|', STICK,
-						'#', log);
-			}
-		}
-
-		// Crafting recipes.
 		registerShapelessRecipe(MOSSY_COBBLESTONE, COBBLESTONE, moss);
 		registerShapelessRecipe(soulDust2Stack, jewelDust, soulEssence);
 		registerShapelessRecipe(dirtBowl, DIRT, BOWL);

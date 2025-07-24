@@ -8,6 +8,7 @@ import io.github.chlorojoules.*;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.gui.*;
 import net.minecraft.common.item.ItemStack;
+import net.minecraft.common.recipe.TaggedIngredients;
 import net.minecraft.common.util.JsonUtils;
 import net.minecraft.common.util.i18n.StringTranslate;
 
@@ -89,8 +90,8 @@ public class CJMachineBuilder {
 					Class<?> implClass = Class.forName(implName);
 					if(!CJIMachine.class.isAssignableFrom(implClass)) {
 						throw new RuntimeException(
-								"Implementation class '" + implName +
-								"' does not implement 'CJIMachine'");
+								"Class '" + implName + "' does not " +
+								"implement 'CJIMachine'");
 					}
 
 					machineImpl = (Class<? extends CJIMachine>) implClass;
@@ -320,7 +321,8 @@ public class CJMachineBuilder {
 			}
 
 			if(component.isTag) {
-				return !CJMod.matchesTagItem(component.tag, stack);
+				return !TaggedIngredients.get(component.tag)
+						.matchIngredient(stack);
 			}
 
 			return stack.getItemID() != component.stack.getItemID() ||
@@ -579,7 +581,11 @@ public class CJMachineBuilder {
 		}
 
 		if(hasNamedSlot("jewel")) {
-			getNamedStack(machineEntity, "jewel").damageItem(1, null, true);
+			ItemStack jewelStack = getNamedStack(machineEntity, "jewel");
+			jewelStack.damageItem(1, null, true);
+			if(jewelStack.stackSize == 0) {
+				setNamedStack(machineEntity, "jewel", null);
+			}
 		}
 
 		machineEntity.operationTicks = 0;

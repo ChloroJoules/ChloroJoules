@@ -114,7 +114,7 @@
         {
           "kind": "item",
           "target": "input",
-          "tag": "#iron_ore"
+          "tag": "cj_iron_ore"
         }
       ],
       "outputs": [
@@ -132,7 +132,7 @@
         {
           "kind": "item",
           "target": "input",
-          "tag": "#gold_ore"
+          "tag": "cj_gold_ore"
         }
       ],
       "outputs": [

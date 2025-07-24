@@ -12,7 +12,6 @@ import net.minecraft.common.util.JsonUtils;
 import static io.github.chlorojoules.gui.CJGuiMachineBaseLayout.*;
 
 public class CJMachineSlotInfo extends CJGuiElement {
-	public String id;
 	public boolean output = false;
 	public ItemStack[] allowedItems = null;
 	public CJMachineSlotRenderType renderType =
