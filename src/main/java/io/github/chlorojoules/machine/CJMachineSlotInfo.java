@@ -7,13 +7,14 @@ import io.github.chlorojoules.gui.CJGuiElement;
 import io.github.chlorojoules.gui.CJGuiGravity;
 import io.github.chlorojoules.gui.CJMachineSlotRenderType;
 import net.minecraft.common.item.ItemStack;
+import net.minecraft.common.recipe.Ingredient;
 import net.minecraft.common.util.JsonUtils;
 
 import static io.github.chlorojoules.gui.CJGuiMachineBaseLayout.*;
 
 public class CJMachineSlotInfo extends CJGuiElement {
 	public boolean output = false;
-	public ItemStack[] allowedItems = null;
+	public Ingredient[] allowedItems = null;
 	public CJMachineSlotRenderType renderType =
 			CJMachineSlotRenderType.DEFAULT;
 
@@ -39,7 +40,8 @@ public class CJMachineSlotInfo extends CJGuiElement {
 			allowedItems = new ItemStack[allowed.size()];
 			for(int i = 0; i < allowed.size(); ++i) {
 				allowedItems[i] =
-						CJMod.stackFromJson(allowed.get(i).getAsJsonObject());
+						CJMod.ingredientFromJson(
+								allowed.get(i).getAsJsonObject());
 			}
 		}
 
@@ -67,11 +69,8 @@ public class CJMachineSlotInfo extends CJGuiElement {
 	public boolean isAllowedItem(ItemStack stack) {
 		if(allowedItems == null) return true;
 
-		for(ItemStack allowed : allowedItems) {
-			if(stack.getItemID() == allowed.getItemID() &&
-					(stack.getItemDamage() == allowed.getItemDamage() ||
-							stack.isItemStackDamageable())) {
-
+		for(Ingredient allowed : allowedItems) {
+			if(allowed.matchIngredient(stack)) {
 				return true;
 			}
 		}

@@ -39,9 +39,8 @@
       "button": "bone_meal",
       "inputs": [
         {
-          "kind": "item",
           "target": "input",
-          "tag": "cj_compostable"
+          "item": "#cj_compostable"
         }
       ],
       "outputs": [
@@ -56,9 +55,8 @@
       "ticks": 1000,
       "inputs": [
         {
-          "kind": "item",
           "target": "input",
-          "tag": "cj_compostable"
+          "item": "#cj_compostable"
         }
       ],
       "outputs": [

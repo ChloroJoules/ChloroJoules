@@ -13,20 +13,13 @@ public class CJGuiButton extends CJGuiElement {
 	String tooltip;
 	ItemStack label;
 
-	public CJGuiButton(int x, int y, String tooltip, ItemStack label) {
-		super(x, y);
-
-		this.tooltip = tooltip;
-		this.label = label;
-	}
-
 	public CJGuiButton(JsonObject jsonObject) {
 		super(jsonObject);
 
 		setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
 
 		tooltip = JsonUtils.getString(jsonObject, "tooltip");
-		label = CJMod.stackFromJson(
+		label = (ItemStack) CJMod.ingredientFromJson(
 				JsonUtils.getJsonObject(jsonObject, "label"));
 	}
 }

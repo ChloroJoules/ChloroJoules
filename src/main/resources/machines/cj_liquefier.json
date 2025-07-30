@@ -30,9 +30,8 @@
       "fuel": 10,
       "inputs": [
         {
-          "kind": "item",
           "target": "input",
-          "tag": "cj_leaves"
+          "item": "#cj_leaves"
         }
       ],
       "outputs": [

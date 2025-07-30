@@ -112,9 +112,8 @@
       "fuel": 80,
       "inputs": [
         {
-          "kind": "item",
           "target": "input",
-          "tag": "cj_iron_ore"
+          "item": "#cj_iron_ore"
         }
       ],
       "outputs": [
@@ -130,9 +129,8 @@
       "fuel": 80,
       "inputs": [
         {
-          "kind": "item",
           "target": "input",
-          "tag": "cj_gold_ore"
+          "item": "#cj_gold_ore"
         }
       ],
       "outputs": [

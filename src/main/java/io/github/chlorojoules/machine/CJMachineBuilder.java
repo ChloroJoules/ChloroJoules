@@ -8,7 +8,6 @@ import io.github.chlorojoules.*;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.gui.*;
 import net.minecraft.common.item.ItemStack;
-import net.minecraft.common.recipe.TaggedIngredients;
 import net.minecraft.common.util.JsonUtils;
 import net.minecraft.common.util.i18n.StringTranslate;
 
@@ -315,18 +314,12 @@ public class CJMachineBuilder {
 			if(stack == null) return input;
 			if(!input &&
 					stack.getMaxStackSize() - stack.stackSize <
-					component.stack.stackSize) {
+							component.getStackSize()) {
 
 				return true;
 			}
 
-			if(component.isTag) {
-				return !TaggedIngredients.get(component.tag)
-						.matchIngredient(stack);
-			}
-
-			return stack.getItemID() != component.stack.getItemID() ||
-					stack.getItemDamage() != component.stack.getItemDamage();
+			return component.item.matchIngredient(stack);
 		}
 	}
 
@@ -402,7 +395,9 @@ public class CJMachineBuilder {
 					CJTankVolume volume = getNamedTankVolume(
 							machineEntity, component.targetID);
 
-					boolean isPrimal = (machineEntity.jewelRarity == CJRarity.PRIMAL);
+					boolean isPrimal =
+							(machineEntity.jewelRarity == CJRarity.PRIMAL);
+
 					if(component.targetID.equals("fuel")) {
 						if(recipe.allowPassive &&
 								isPrimal &&
@@ -418,7 +413,9 @@ public class CJMachineBuilder {
 					if(volume.current < component.volume.current) {
 						if(component.optional) {
 							machineEntity.isPassive = true;
-							machineEntity.errorMessage = "message.cj_no_optional";
+							machineEntity.errorMessage =
+									"message.cj_no_optional";
+
 							machineEntity.isWarning = true;
 							continue;
 						}
@@ -443,7 +440,9 @@ public class CJMachineBuilder {
 					if(stack.stackSize < component.getStackSize()) {
 						if(component.optional) {
 							machineEntity.isPassive = true;
-							machineEntity.errorMessage = "message.cj_no_optional";
+							machineEntity.errorMessage =
+									"message.cj_no_optional";
+
 							machineEntity.isWarning = true;
 							continue;
 						}
@@ -460,7 +459,9 @@ public class CJMachineBuilder {
 		}
 
 		if(recipe != null) {
-			if(!raritySufficient(machineEntity.jewelRarity, recipe.requiredRarity)) {
+			if(!raritySufficient(
+					machineEntity.jewelRarity, recipe.requiredRarity)) {
+
 				machineEntity.errorMessage =
 						translate.translateKey("message.cj_poor_jewel");
 
@@ -503,13 +504,19 @@ public class CJMachineBuilder {
 		}
 
 		// Timescale and ticking.
-		int timeScale = CJRarityInfo.getRarityTimeScale(machineEntity.jewelRarity);
+		int timeScale =
+				CJRarityInfo.getRarityTimeScale(machineEntity.jewelRarity);
+
 		machineEntity.operationLength = recipe.processTime / timeScale;
 		if(machineEntity.isPassive) machineEntity.operationLength *= 2;
-		if(machineEntity.operationTicks++ < machineEntity.operationLength) return;
+		if(machineEntity.operationTicks++ < machineEntity.operationLength) {
+			return;
+		}
 
 		// Handle fuel separately from other fluid inputs.
-		int powerScale = CJRarityInfo.getRarityPowerScale(machineEntity.jewelRarity);
+		int powerScale =
+				CJRarityInfo.getRarityPowerScale(machineEntity.jewelRarity);
+
 		CJMachineRecipeComponent fuelComponent = recipe.getFuelComponent();
 		if(fuelComponent != null) {
 			int cost = fuelComponent.volume.current / powerScale;
@@ -568,15 +575,17 @@ public class CJMachineBuilder {
 						true);
 			}
 			else {
-				ItemStack inputStack =
+				ItemStack outputStack =
 						getNamedStack(machineEntity, component.targetID);
 
-				if(inputStack == null) {
+				ItemStack componentStack = (ItemStack) component.item;
+
+				if(outputStack == null) {
 					setNamedStack(
 							machineEntity, component.targetID,
-							component.stack.copy());
+							componentStack.copy());
 				}
-				else inputStack.stackSize += component.stack.stackSize;
+				else outputStack.stackSize += componentStack.stackSize;
 			}
 		}
 

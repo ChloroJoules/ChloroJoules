@@ -4,19 +4,17 @@ import com.google.gson.JsonObject;
 import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.CJTankVolume;
 import net.minecraft.common.item.ItemStack;
+import net.minecraft.common.recipe.Ingredient;
 import net.minecraft.common.util.JsonUtils;
 
 public class CJMachineRecipeComponent {
 	public CJMachineRecipeTarget target;
 	public String targetID;
 
-	public ItemStack stack;
-
+	public Ingredient item;
 	public CJTankVolume volume;
 
-	public String tag;
-	public int tagCount;
-	public boolean isTag = false;
+	public int tagStackSize = 1;
 
 	public float chance = 1.0f;
 	public boolean optional = false;
@@ -24,7 +22,7 @@ public class CJMachineRecipeComponent {
 	public CJMachineRecipeComponent(String targetID, ItemStack stack) {
 		this.target = CJMachineRecipeTarget.SLOT;
 		this.targetID = targetID;
-		this.stack = stack;
+		this.item = stack;
 	}
 
 	public CJMachineRecipeComponent(String targetID, CJTankVolume volume) {
@@ -45,16 +43,11 @@ public class CJMachineRecipeComponent {
 		}
 		else if(jsonObject.has("item")) {
 			target = CJMachineRecipeTarget.SLOT;
-			stack = CJMod.stackFromJson(jsonObject);
-		}
-		else {
-			isTag = true;
-			tag = JsonUtils.getString(jsonObject, "tag");
+			item = CJMod.ingredientFromJson(jsonObject);
 
-			if(jsonObject.has("amount")) {
-				tagCount = JsonUtils.getInt(jsonObject, "amount");
+			if(!(item instanceof ItemStack) && jsonObject.has("amount")) {
+				tagStackSize = JsonUtils.getInt(jsonObject, "amount");
 			}
-			else tagCount = 1;
 		}
 
 		targetID = JsonUtils.getString(jsonObject, "target");
@@ -69,7 +62,7 @@ public class CJMachineRecipeComponent {
 	}
 
 	public int getStackSize() {
-		if(isTag) return tagCount;
-		return stack.stackSize;
+		if(item instanceof ItemStack stack) return stack.stackSize;
+		return tagStackSize;
 	}
 }

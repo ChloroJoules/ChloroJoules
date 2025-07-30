@@ -155,8 +155,13 @@ public class CJMod extends Mod {
 		Minecraft.getInstance().ingameGUI.addChatMessage(message);
 	}
 
-	public static ItemStack stackFromJson(JsonObject jsonObject) {
+	public static Ingredient ingredientFromJson(JsonObject jsonObject) {
 		String key = JsonUtils.getString(jsonObject, "item");
+
+		if(key.startsWith("#")) {
+			String tag = key.substring(1);
+			return TaggedIngredients.get(tag);
+		}
 
 		ItemStack result;
 
