@@ -319,7 +319,7 @@ public class CJMachineBuilder {
 				return true;
 			}
 
-			return component.item.matchIngredient(stack);
+			return !component.item.matchIngredient(stack);
 		}
 	}
 
