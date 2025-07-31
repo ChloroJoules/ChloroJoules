@@ -5,6 +5,7 @@
   "face": "sides",
   "tanks": [
     {
+      "name": "volume",
       "anchor": "center",
       "volume": 16000,
       "bidirectional": true
