@@ -155,6 +155,23 @@ public class CJMod extends Mod {
 		Minecraft.getInstance().ingameGUI.addChatMessage(message);
 	}
 
+	public static boolean matchIngredientLenient(
+			ItemStack value, Ingredient match) {
+
+		// We don't want to discard all damage value differences.
+		if(match instanceof ItemStack matchStack) {
+			if(matchStack.getItemID() == value.getItemID() &&
+					(matchStack.getItemDamage() ==
+							value.getItemDamage() ||
+							!matchStack.getHasSubtypes())) {
+
+				return true;
+			}
+		}
+
+		return match.matchIngredient(value);
+	}
+
 	public static Ingredient ingredientFromJson(JsonObject jsonObject) {
 		String key = JsonUtils.getString(jsonObject, "item");
 

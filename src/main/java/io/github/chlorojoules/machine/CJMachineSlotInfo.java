@@ -70,7 +70,7 @@ public class CJMachineSlotInfo extends CJGuiElement {
 		if(allowedItems == null) return true;
 
 		for(Ingredient allowed : allowedItems) {
-			if(allowed.matchIngredient(stack)) {
+			if(CJMod.matchIngredientLenient(stack, allowed)) {
 				return true;
 			}
 		}
