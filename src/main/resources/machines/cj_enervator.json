@@ -1,0 +1,21 @@
+{
+  "name": "cj_enervator",
+  "rarity": "manufactured",
+  "implementation": "io.github.chlorojoules.machine.CJMachineEnervator",
+  "face": "sides",
+  "tanks": [
+    {
+      "name": "input",
+      "anchor": "center",
+      "x": -35
+    },
+    {
+      "name": "output",
+      "anchor": "center",
+      "x": 35
+    }
+  ],
+  "progress": {
+    "anchor": "center"
+  }
+}
