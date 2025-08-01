@@ -56,6 +56,9 @@ public class CJMod extends Mod {
 	public static TaggedIngredient tagGlass =
 			TaggedIngredients.get("cj_glass");
 
+	public static TaggedIngredient tagRawStone =
+			TaggedIngredients.get("cj_raw_stone");
+
 	public static TaggedIngredient tagEmptyBucket =
 			TaggedIngredients.get("cj_empty_bucket");
 
@@ -543,6 +546,13 @@ public class CJMod extends Mod {
 		tagEmptyBucket.addIngredient(EMPTY_BUCKET);
 		tagEmptyBucket.addIngredient(GOLDEN_EMPTY_BUCKET);
 
+		tagRawStone.addIngredient(STONE);
+		tagRawStone.addIngredient(COBBLESTONE);
+		tagRawStone.addIngredient(MOSSY_COBBLESTONE);
+		tagRawStone.addIngredient(LIMESTONE);
+		tagRawStone.addIngredient(CLOUDSTONE);
+		tagRawStone.addIngredient(BRIMSTONE);
+
 		registerFurnaceRecipe(goldDust, GOLD_INGOT);
 		registerFurnaceRecipe(ironDust, IRON_INGOT);
 
@@ -632,7 +642,7 @@ public class CJMod extends Mod {
 				"%~%",
 				"~|~",
 				"% %",
-				'%', COBBLESTONE,
+				'%', tagRawStone,
 				'~', paste,
 				'|', tagEmptyBucket);
 
@@ -665,7 +675,7 @@ public class CJMod extends Mod {
 				"@@@",
 				"&|&",
 				"&%&",
-				'&', COBBLESTONE,
+				'&', tagRawStone,
 				'%', FURNACE_IDLE,
 				'@', FLINT,
 				'|', machineFrame);
@@ -685,7 +695,7 @@ public class CJMod extends Mod {
 				"&#&",
 				"*|*",
 				"&&&",
-				'&', COBBLESTONE,
+				'&', tagRawStone,
 				'*', tagFlower,
 				'#', tagGlass,
 				'|', machineFrame);
@@ -695,7 +705,7 @@ public class CJMod extends Mod {
 				"&&&",
 				"~|~",
 				"&&&",
-				'&', COBBLESTONE,
+				'&', tagRawStone,
 				'|', machineFrame,
 				'~', tagEmptyBucket);
 
@@ -704,7 +714,7 @@ public class CJMod extends Mod {
 				"&%&",
 				"@|@",
 				"&&&",
-				'&', COBBLESTONE,
+				'&', tagRawStone,
 				'@', tagGlass,
 				'%', tagEmptyBucket,
 				'|', machineFrame);
@@ -714,7 +724,7 @@ public class CJMod extends Mod {
 				"&@&",
 				"@|@",
 				"&%&",
-				'&', COBBLESTONE,
+				'&', tagRawStone,
 				'@', FLINT,
 				'%', GUNPOWDER,
 				'|', machineFrame);
@@ -724,7 +734,7 @@ public class CJMod extends Mod {
 				"&@&",
 				"%|%",
 				"&%&",
-				'&', COBBLESTONE,
+				'&', tagRawStone,
 				'@', IRON_BLOCK,
 				'%', Items.BRICK,
 				'|', machineFrame);
@@ -734,7 +744,7 @@ public class CJMod extends Mod {
 				"&&&",
 				"@|@",
 				"%&%",
-				'&', COBBLESTONE,
+				'&', tagRawStone,
 				'@', COAL,
 				'%', FURNACE_IDLE,
 				'|', machineFrame);
@@ -744,7 +754,7 @@ public class CJMod extends Mod {
 				"&&&",
 				"a|c",
 				"%b%",
-				'&', COBBLESTONE,
+				'&', tagRawStone,
 				'a', IRON_AXE,
 				'b', IRON_PICKAXE,
 				'c', IRON_SHOVEL,
@@ -755,7 +765,7 @@ public class CJMod extends Mod {
 				"&%&",
 				"&|&",
 				"&@&",
-				'&', COBBLESTONE,
+				'&', tagRawStone,
 				'%', EMPTY_BUCKET,
 				'@', CHEST,
 				'|', machineFrame);
@@ -765,7 +775,7 @@ public class CJMod extends Mod {
 				"&#&",
 				"&|&",
 				"&@&",
-				'&', COBBLESTONE,
+				'&', tagRawStone,
 				'@', BOWL,
 				'#', WOOD_SHOVEL,
 				'|', machineFrame);
@@ -775,7 +785,7 @@ public class CJMod extends Mod {
 				"#&#",
 				"#|#",
 				"#&#",
-				'&', COBBLESTONE,
+				'&', tagRawStone,
 				'#', GLASS,
 				'|', machineFrame);
 
