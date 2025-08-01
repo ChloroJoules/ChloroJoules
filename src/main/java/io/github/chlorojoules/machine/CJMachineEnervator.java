@@ -5,12 +5,9 @@ import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import net.minecraft.common.block.Block;
 import net.minecraft.common.block.Blocks;
 import net.minecraft.common.block.children.*;
-import net.minecraft.common.entity.inventory.IInventory;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.util.i18n.StringTranslate;
 import net.minecraft.common.world.World;
-
-import static io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase.machineEntity;
 
 @SuppressWarnings("unused")
 public class CJMachineEnervator implements CJIMachine {

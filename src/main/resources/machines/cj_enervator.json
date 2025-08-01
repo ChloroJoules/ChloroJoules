@@ -30,6 +30,7 @@
       "x": 35,
 
       "output": true,
+      "lock": true,
       "fluid": "chlorojoules:cj_fluid_chlorojoules"
     }
   ],

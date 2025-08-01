@@ -38,6 +38,10 @@ public class CJTankVolume {
 			fluidID = CJMod.fluidFromName(
 					JsonUtils.getString(jsonObject, "fluid")).blockID;
 		}
+
+		if(jsonObject.has("lock")) {
+			lockFluid = JsonUtils.getBoolean(jsonObject, "lock");
+		}
 	}
 
 	public CJTankVolume setMax(int value) {
