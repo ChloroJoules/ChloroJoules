@@ -46,8 +46,19 @@ public class CJMod extends Mod {
 	//		 Display name translation key to their implementation.
 	public static HashMap<String, Item> earlyItemMap = new HashMap<>();
 
-	public static TaggedIngredient tagLeaves = TaggedIngredients.get("cj_leaves");
+	public static TaggedIngredient tagLeaves =
+			TaggedIngredients.get("cj_leaves");
+
 	public static TaggedIngredient tagLogs = TaggedIngredients.get("cj_logs");
+	public static TaggedIngredient tagFlower =
+			TaggedIngredients.get("cj_flowers");
+
+	public static TaggedIngredient tagGlass =
+			TaggedIngredients.get("cj_glass");
+
+	public static TaggedIngredient tagEmptyBucket =
+			TaggedIngredients.get("cj_empty_bucket");
+
 	public static TaggedIngredient tagIronOre =
 			TaggedIngredients.get("cj_iron_ore");
 
@@ -494,11 +505,21 @@ public class CJMod extends Mod {
 				tagLeaves.addIngredient(block);
 				tagCompostable.addIngredient(block);
 			}
-			else if(block instanceof BlockBasicPlant) {
+
+			if(block instanceof BlockBasicPlant) {
 				tagCompostable.addIngredient(block);
 			}
-			else if(block instanceof BlockLog) {
+
+			if(block instanceof BlockLog) {
 				tagLogs.addIngredient(block);
+			}
+
+			if(block instanceof BlockFlower) {
+				tagFlower.addIngredient(block);
+			}
+
+			if(block instanceof BlockGlass) {
+				tagGlass.addIngredient(block);
 			}
 		}
 
@@ -513,6 +534,9 @@ public class CJMod extends Mod {
 		tagJewel.addIngredient(manufacturedJewel);
 		tagJewel.addIngredient(refinedJewel);
 		tagJewel.addIngredient(awakenedJewel);
+
+		tagEmptyBucket.addIngredient(EMPTY_BUCKET);
+		tagEmptyBucket.addIngredient(GOLDEN_EMPTY_BUCKET);
 
 		registerFurnaceRecipe(goldDust, GOLD_INGOT);
 		registerFurnaceRecipe(ironDust, IRON_INGOT);
@@ -605,7 +629,7 @@ public class CJMod extends Mod {
 				"% %",
 				'%', COBBLESTONE,
 				'~', paste,
-				'|', EMPTY_BUCKET);
+				'|', tagEmptyBucket);
 
 		registerRecipe(
 				ironRod,
@@ -652,13 +676,32 @@ public class CJMod extends Mod {
 				'|', machineFrame);
 
 		registerRecipe(
+				enervator,
+				"&#&",
+				"*|*",
+				"&&&",
+				'&', COBBLESTONE,
+				'*', tagFlower,
+				'#', tagGlass,
+				'|', machineFrame);
+
+		registerRecipe(
+				pump,
+				"&&&",
+				"~|~",
+				"&&&",
+				'&', COBBLESTONE,
+				'|', machineFrame,
+				'~', tagEmptyBucket);
+
+		registerRecipe(
 				refinery,
 				"&%&",
 				"@|@",
 				"&&&",
 				'&', COBBLESTONE,
-				'@', GLASS,
-				'%', EMPTY_BUCKET,
+				'@', tagGlass,
+				'%', tagEmptyBucket,
 				'|', machineFrame);
 
 		registerRecipe(
