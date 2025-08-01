@@ -32,7 +32,9 @@ public class CJItemSoulExtractor extends Item implements CJIItemSocket {
 		int rarityDamage = CJRarityInfo.getRarityDamage(CJRarity.MANUFACTURED);
 		if(itemstack.itemDamage > rarityDamage) {
 			String string = StringTranslate.getInstance().translateKey(
-					"message.cj_poor_jewel");
+					itemstack.itemDamage == CJRarityInfo.MAX_DAMAGE ?
+							"message.cj_no_jewel" :
+							"message.cj_poor_jewel");
 
 			CJMod.sendChat(ChatColors.RED + string);
 
@@ -55,6 +57,8 @@ public class CJItemSoulExtractor extends Item implements CJIItemSocket {
 
 		Minecraft.getInstance().sndManager.playSoundFX(
 				"random.levelup", 1.0F, 1.0F);
+
+		itemstack.setItemDamage(CJRarityInfo.MAX_DAMAGE);
 
 		return true;
 	}
