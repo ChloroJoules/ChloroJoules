@@ -138,7 +138,12 @@ public class CJBlockMachineBase extends BlockContainer {
 				stack.setItemID(bucketID);
 
 				Fluid fluid = Fluids.getFluidFromBlock(volume.fluidID);
-				fluid.playFluidPickUpSound(world, x, y, z);
+				if(fluid == null) {
+					Fluids.WATER.playFluidPickUpSound(world, x, y, z);
+				}
+				else {
+					fluid.playFluidPickUpSound(world, x, y, z);
+				}
 
 				return true;
 			}

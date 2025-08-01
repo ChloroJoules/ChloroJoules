@@ -107,6 +107,8 @@ public class CJMod extends Mod {
 	public static Item pasteBowl;
 	public static Item dirtBowl;
 
+	public static Item blender;
+
 	public static Item fauxJewel;
 	public static Item primalJewel;
 	public static Item manufacturedJewel;
@@ -401,6 +403,9 @@ public class CJMod extends Mod {
 				PRIMAL_COLOR, 1, CJItemConvertBowl.class, "cj_dirt_bowl",
 				new ItemStack(stoneDust));
 
+		blender = registerItem("cj_blender", PRIMAL_COLOR, 1)
+				.setContainerItem(blender);
+
 		fauxJewel = registerItem(
 				"cj_jewel_faux", PRIMAL_COLOR, 1)
 				.setMaxDamage(100);
@@ -636,6 +641,23 @@ public class CJMod extends Mod {
 				"%%",
 				"%%",
 				'%', tinyGoldDust);
+
+		registerRecipe(
+				blender,
+				" % ",
+				"%~%",
+				"%%%",
+				'%', tagRawStone,
+				'~', IRON_INGOT);
+
+		registerShapelessRecipe(GRAVEL, blender, tagRawStone);
+		registerShapelessRecipe(SAND, blender, GRAVEL);
+
+		registerShapelessRecipe(
+				new ItemStack(tinyIronDust, 6), blender, tagIronOre);
+
+		registerShapelessRecipe(
+				new ItemStack(tinyGoldDust, 6), blender, tagGoldOre);
 
 		registerRecipe(
 				machineFrame4Stack,
