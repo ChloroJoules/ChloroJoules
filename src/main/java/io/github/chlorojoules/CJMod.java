@@ -41,9 +41,6 @@ import static io.github.chlorojoules.CJRarityInfo.*;
 public class CJMod extends Mod {
 	public static Map<String, CJBlockMachineBase> machines = new HashMap<>();
 
-	public static List<ItemBucket> buckets = new ArrayList<>();
-	public static List<Integer> bucketFluids = new ArrayList<>();
-
 	// NOTE: This is turbo stupid but there doesn't seem to be a way
 	//		 To iterate *just* the Vanilla mod container.
 	//		 This is not guaranteed to be full -- and honestly we don't want
@@ -518,25 +515,6 @@ public class CJMod extends Mod {
 		tagJewel.addIngredient(manufacturedJewel);
 		tagJewel.addIngredient(refinedJewel);
 		tagJewel.addIngredient(awakenedJewel);
-
-		// TODO: A two way mapping between bucket/fluid IDs would probably be
-		//       More efficient for lookup by `CJBlockMachineBase`.
-		// Register fluids/buckets.
-		for(Item item : ITEMS_LIST) {
-			if(item == null) continue;
-			if(!(item instanceof ItemBucket bucket)) continue;
-			if(item == EMPTY_BUCKET) continue;
-
-			buckets.add(bucket);
-
-			int fluidID = bucket.getHeldLiquid();
-			bucketFluids.add(fluidID);
-
-			Logger.getLogger("ChloroJoules").info("Added bucket \"" +
-					item.getItemName() + "\" (" + item.itemID + ") for " +
-					"fluid \"" + BLOCKS_LIST[fluidID].getBlockName() +
-					"\" (" + fluidID + ")");
-		}
 
 		registerFurnaceRecipe(goldDust, GOLD_INGOT);
 		registerFurnaceRecipe(ironDust, IRON_INGOT);

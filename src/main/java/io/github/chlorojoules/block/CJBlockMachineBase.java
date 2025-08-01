@@ -113,27 +113,14 @@ public class CJBlockMachineBase extends BlockContainer {
 		ItemStack heldItem = player.inventory.getCurrentItem();
 		if(heldItem == null) return false;
 
-		int heldID = heldItem.getItemID();
-
 		// If the bucket is empty -- fill from an available output tank.
-		if(heldID == Items.EMPTY_BUCKET.itemID) {
+		if(heldItem.getItem() == Items.EMPTY_BUCKET) {
 			int index = getEmptyBucketTank(machineEntity);
 			if(index == -1) return false;
 
 			CJTankVolume volume = machineEntity.tanks.get(index);
 
-			int bucketID = -1;
-			int fluidID = -1;
-
-			for(int i = 0; i < CJMod.bucketFluids.size(); i++) {
-				fluidID = CJMod.bucketFluids.get(i);
-
-				if(fluidID != volume.fluidID) continue;
-
-				bucketID = CJMod.buckets.get(i).itemID;
-			}
-
-			if(bucketID == -1) return false;
+			int bucketID = ItemBucket.getFluidBucketMapping(volume.fluidID);
 
 			if(volume.removeFluid(0, CJTank.BUCKET, true) == CJTank.BUCKET) {
 				InventoryPlayer inventory = player.inventory;
@@ -142,7 +129,7 @@ public class CJBlockMachineBase extends BlockContainer {
 
 				stack.setItemID(bucketID);
 
-				Fluid fluid = Fluids.getFluidFromBlock(fluidID);
+				Fluid fluid = Fluids.getFluidFromBlock(volume.fluidID);
 				fluid.playFluidPickUpSound(world, x, y, z);
 
 				return true;
@@ -151,53 +138,46 @@ public class CJBlockMachineBase extends BlockContainer {
 			return false;
 		}
 
-		int fluidID = -1;
-		for(int i = 0; i < CJMod.buckets.size(); i++) {
-			ItemBucket bucket = CJMod.buckets.get(i);
+		if(heldItem.getItem() instanceof ItemBucket bucket) {
+			int fluidID = bucket.getHeldLiquid();
 
-			if(bucket.itemID != heldID) continue;
+			int tankIndex = -1;
+			for(int i = 0; i < machineBuilder.tanks.size(); ++i) {
+				CJTank tank = machineBuilder.tanks.get(i);
+				CJTankVolume volume = machineEntity.tanks.get(i);
 
-			fluidID = CJMod.bucketFluids.get(i);
-			break;
-		}
-		if(fluidID == -1) return false;
+				if(tank.checkDamageExclusive(machineEntity)) continue;
+				if(tank.output && !tank.bidirectional) continue;
+				if(volume.fluidID != 0 && volume.fluidID != fluidID) continue;
+				if(volume.max - volume.current < CJTank.BUCKET) continue;
+				if(!tank.id.equals("fuel") &&
+						machineBuilder.hasNamedTank("fuel") &&
+						fluidID == CJMod.fuelFluid) {
 
-		int tankIndex = -1;
-		for(int i = 0; i < machineBuilder.tanks.size(); ++i) {
-			CJTank tank = machineBuilder.tanks.get(i);
-			CJTankVolume volume = machineEntity.tanks.get(i);
+					continue;
+				}
 
-			if(tank.checkDamageExclusive(machineEntity)) continue;
-			if(tank.output && !tank.bidirectional) continue;
-			if(volume.fluidID != 0 && volume.fluidID != fluidID) continue;
-			if(volume.max - volume.current < CJTank.BUCKET) continue;
-			if(!tank.id.equals("fuel") &&
-					machineBuilder.hasNamedTank("fuel") &&
-					fluidID == CJMod.fuelFluid) {
-
-				continue;
+				tankIndex = i;
+				break;
 			}
 
-			tankIndex = i;
-			break;
-		}
+			if(tankIndex == -1) return false;
 
-		if(tankIndex == -1) return false;
+			CJTankVolume tankVolume = machineEntity.tanks.get(tankIndex);
 
-		CJTankVolume tankVolume = machineEntity.tanks.get(tankIndex);
+			int filled = tankVolume.addFluid(fluidID, CJTank.BUCKET, true);
+			if(filled == CJTank.BUCKET) {
+				InventoryPlayer inventory = player.inventory;
+				ItemStack stack =
+						inventory.mainInventory[inventory.currentItem];
 
-		int filled = tankVolume.addFluid(fluidID, CJTank.BUCKET, true);
-		if(filled == CJTank.BUCKET) {
-			InventoryPlayer inventory = player.inventory;
-			ItemStack stack =
-					inventory.mainInventory[inventory.currentItem];
+				stack.setItemID(Items.EMPTY_BUCKET.itemID);
 
-			stack.setItemID(Items.EMPTY_BUCKET.itemID);
+				Fluid fluid = Fluids.getFluidFromBlock(fluidID);
+				fluid.playFluidDropOutSound(world, x, y, z);
 
-			Fluid fluid = Fluids.getFluidFromBlock(fluidID);
-			fluid.playFluidDropOutSound(world, x, y, z);
-
-			return true;
+				return true;
+			}
 		}
 
 		return false;
