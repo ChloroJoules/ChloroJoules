@@ -184,7 +184,12 @@ public class CJBlockMachineBase extends BlockContainer {
 				ItemStack stack =
 						inventory.mainInventory[inventory.currentItem];
 
-				stack.setItemID(stack.getItem().getContainerItem().itemID);
+				if(stack.getItem() instanceof ItemGoldenBucket) {
+					stack.setItemID(Items.GOLDEN_EMPTY_BUCKET.itemID);
+				}
+				else {
+					stack.setItemID(Items.EMPTY_BUCKET.itemID);
+				}
 
 				Fluid fluid = Fluids.getFluidFromBlock(fluidID);
 				fluid.playFluidDropOutSound(world, x, y, z);

@@ -70,6 +70,8 @@ message.cj_enervator.help=Uses flowers and catalyst fluid to generate Chlorojoul
 message.cj_enervator.flavor=Need a glow-in-the-dark sundial for use at night
 message.cj_pump.help=Transfers adjacent fluids into its tank
 message.cj_pump.flavor=Get two for a nice pair of shoes
+message.cj_reactor.help=Combines fluids together
+message.cj_reactor.flavor=A follow-up to Big and Extreme
 
 message.cj_enable_refine_fuel=Allow processing of fuel tank
 message.cj_compost_bone_meal=Compost to bone meal
@@ -100,22 +102,26 @@ tile.cj_primitive_centrifuge.name=Primitive Centrifuge
 tile.cj_transferor.name=Transferor
 tile.cj_enervator.name=Floral Enervator
 tile.cj_pump.name=Pump
+tile.cj_reactor.name=Chemical Reactor
 
 # Fluids.
 tile.cj_fluid_paste.name=Paste
 tile.cj_fluid_chlorojoules.name=ChloroJoules
 tile.cj_fluid_souls.name=Fluid Souls
 tile.cj_fluid_dimension.name=Dimensional Flux
+tile.cj_fluid_etching.name=Etching Fluid
 
 # Items.
 item.cj_fluid_paste_bucket.name=Paste Bucket
-item.cj_fluid_chlorojoules_bucket.name=Bucket O' Joules
-item.cj_fluid_souls_bucket.name=Fluid Souls Bucket
-item.cj_fluid_dimension_bucket.name=Dimensional Flux Bucket
 item.cj_fluid_paste_bucket_gold.name=Golden Paste Bucket
+item.cj_fluid_chlorojoules_bucket.name=Bucket O' Joules
 item.cj_fluid_chlorojoules_bucket_gold.name=Golden Bucket O' Joules
+item.cj_fluid_souls_bucket.name=Fluid Souls Bucket
 item.cj_fluid_souls_bucket_gold.name=Golden Fluid Souls Bucket
+item.cj_fluid_dimension_bucket.name=Dimensional Flux Bucket
 item.cj_fluid_dimension_bucket_gold.name=Golden Dimensional Flux Bucket
+item.cj_fluid_etching_bucket.name=Etching Fluid Bucket
+item.cj_fluid_etching_bucket_gold.name=Golden Etching Fluid Bucket
 
 item.cj_stone_dust.name=Stone Dust
 item.cj_iron_dust.name=Iron Dust

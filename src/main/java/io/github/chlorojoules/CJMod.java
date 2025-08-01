@@ -82,6 +82,8 @@ public class CJMod extends Mod {
 	public static Item bucketFluidSouls;
 	public static Block fluidDimension;
 	public static Item bucketFluidDimension;
+	public static Block fluidEtching;
+	public static Item bucketFluidEtching;
 
 	public static Block primitiveMachineFrame;
 	public static Block machineFrame;
@@ -102,6 +104,7 @@ public class CJMod extends Mod {
     public static Block primitiveCentrifuge;
 	public static Block enervator;
 	public static Block pump;
+	public static Block reactor;
 
 	public static Item paste;
 	public static Item pasteBowl;
@@ -377,6 +380,10 @@ public class CJMod extends Mod {
 				"cj_fluid_dimension_bucket", MANUFACTURED_COLOR,
 				fluidDimension);
 
+		fluidEtching = registerFluid("cj_fluid_etching");
+		bucketFluidEtching = registerFluidBucket(
+				"cj_fluid_etching_bucket", MANUFACTURED_COLOR, fluidEtching);
+
 		fuelFluid = fluidChlorojoules.blockID;
 		waterFluid = WATER_MOVING.blockID;
 		lavaFluid = LAVA_MOVING.blockID;
@@ -509,6 +516,9 @@ public class CJMod extends Mod {
 
 		pump = registerMachine(
 				new CJMachineBuilder("/machines/cj_pump.json"));
+
+		reactor = registerMachine(
+				new CJMachineBuilder("/machines/cj_reactor.json"));
 	}
 
 	@Override
@@ -720,6 +730,17 @@ public class CJMod extends Mod {
 				'&', tagRawStone,
 				'*', tagFlower,
 				'#', tagGlass,
+				'|', machineFrame);
+
+		registerRecipe(
+				reactor,
+				"&@&",
+				"*|*",
+				"&&&",
+				'&', tagRawStone,
+				'*', tagEmptyBucket,
+				'#', tagGlass,
+				'@', BOTTLE,
 				'|', machineFrame);
 
 		registerRecipe(
