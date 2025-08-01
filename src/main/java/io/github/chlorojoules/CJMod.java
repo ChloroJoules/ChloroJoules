@@ -25,13 +25,11 @@ import net.minecraft.common.block.sound.StepSound;
 import net.minecraft.common.block.sound.StepSounds;
 import net.minecraft.common.block.tileentity.TileEntity;
 import net.minecraft.common.item.*;
-import net.minecraft.common.item.children.ItemBucket;
 import net.minecraft.common.item.data.EnumTools;
 import net.minecraft.common.recipe.*;
 import net.minecraft.common.util.JsonUtils;
 
 import java.util.*;
-import java.util.logging.Logger;
 
 import static net.minecraft.common.block.Blocks.*;
 import static net.minecraft.common.item.Items.*;

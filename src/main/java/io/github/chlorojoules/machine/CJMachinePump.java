@@ -10,7 +10,6 @@ import net.minecraft.common.block.fluid.Fluids;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.util.i18n.StringTranslate;
 import net.minecraft.common.world.World;
-import org.lwjgl.input.Mouse;
 
 @SuppressWarnings("unused")
 public class CJMachinePump implements CJIMachine {
@@ -69,7 +68,6 @@ public class CJMachinePump implements CJIMachine {
 
 				if(damage != 0) continue;
 
-				Mouse.setGrabbed(false);
 				outputAmount = CJTank.BUCKET;
 				machineEntity.operationLength = 250;
 				cost = 50 / CJRarityInfo.getRarityPowerScale(rarity);
