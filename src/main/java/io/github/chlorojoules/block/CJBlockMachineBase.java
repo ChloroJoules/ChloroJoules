@@ -24,6 +24,8 @@ import net.minecraft.common.entity.player.InventoryPlayer;
 import net.minecraft.common.item.*;
 import net.minecraft.common.item.block.ItemBlock;
 import net.minecraft.common.item.children.ItemBucket;
+import net.minecraft.common.item.children.ItemBucketBase;
+import net.minecraft.common.item.children.ItemGoldenBucket;
 import net.minecraft.common.util.math.MathHelper;
 import net.minecraft.common.world.World;
 
@@ -114,13 +116,19 @@ public class CJBlockMachineBase extends BlockContainer {
 		if(heldItem == null) return false;
 
 		// If the bucket is empty -- fill from an available output tank.
-		if(heldItem.getItem() == Items.EMPTY_BUCKET) {
+		boolean isEmpty = heldItem.getItem() == Items.EMPTY_BUCKET;
+		boolean isGoldEmpty = heldItem.getItem() == Items.GOLDEN_EMPTY_BUCKET;
+		if(isEmpty || isGoldEmpty) {
 			int index = getEmptyBucketTank(machineEntity);
 			if(index == -1) return false;
 
 			CJTankVolume volume = machineEntity.tanks.get(index);
 
 			int bucketID = ItemBucket.getFluidBucketMapping(volume.fluidID);
+			if(isGoldEmpty) {
+				bucketID =
+						ItemGoldenBucket.getFluidBucketMapping(volume.fluidID);
+			}
 
 			if(volume.removeFluid(0, CJTank.BUCKET, true) == CJTank.BUCKET) {
 				InventoryPlayer inventory = player.inventory;
@@ -138,7 +146,7 @@ public class CJBlockMachineBase extends BlockContainer {
 			return false;
 		}
 
-		if(heldItem.getItem() instanceof ItemBucket bucket) {
+		if(heldItem.getItem() instanceof ItemBucketBase bucket) {
 			int fluidID = bucket.getHeldLiquid();
 
 			int tankIndex = -1;
@@ -171,7 +179,7 @@ public class CJBlockMachineBase extends BlockContainer {
 				ItemStack stack =
 						inventory.mainInventory[inventory.currentItem];
 
-				stack.setItemID(Items.EMPTY_BUCKET.itemID);
+				stack.setItemID(stack.getItem().getContainerItem().itemID);
 
 				Fluid fluid = Fluids.getFluidFromBlock(fluidID);
 				fluid.playFluidDropOutSound(world, x, y, z);
