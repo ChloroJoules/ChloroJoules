@@ -153,7 +153,7 @@ public class CJMod extends Mod {
 			if(fluid.getName().equals(name)) return fluid.getMoving();
 		}
 
-		throw new RuntimeException();
+		throw new RuntimeException("No such fluid '" + name + "'");
 	}
 
 	public static void sendChat(String message) {

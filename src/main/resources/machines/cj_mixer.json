@@ -66,6 +66,29 @@
           "amount": 50
         }
       ]
+    },
+    {
+      "ticks": 150,
+      "fuel": 15,
+      "rarity": "manufactured",
+      "inputs": [
+        {
+          "target": "input",
+          "fluid": "water",
+          "amount": 150
+        },
+        {
+          "target": "additive",
+          "item": "chlorojoules:cj_jewel_dust"
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "fluid": "chlorojoules:cj_fluid_chlorojoules",
+          "amount": 150
+        }
+      ]
     }
   ]
 }
