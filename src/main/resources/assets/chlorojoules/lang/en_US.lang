@@ -62,6 +62,8 @@ message.cj_primitive_centrifuge.help=Separates items into constituent parts
 message.cj_primitive_centrifuge.flavor=A bit of a narcissist
 message.cj_transferor.help=Transfers items or fluids through the air
 message.cj_transferor.flavor=Has a 5G cell connection
+message.cj_enervator.help=Uses flowers and catalyst fluid to generate Chlorojoules
+message.cj_enervator.flavor=Need a glow-in-the-dark sundial for use at night
 
 message.cj_enable_refine_fuel=Allow processing of fuel tank
 message.cj_compost_bone_meal=Compost to bone meal
@@ -112,6 +114,7 @@ item.cj_soul_core.name=Soul Core
 item.cj_soul_extractor.name=Soul Extractor
 item.cj_soul_sword.name=Soul Slayer
 item.cj_pruning_shears.name=Pruning Shears
+item.cj_sundial.name=Glow-in-the-dark Sundial
 item.cj_linker.name=Chloro Tool
 item.cj_soul_essence.name=Soul Essence
 item.cj_jewel_dust.name=ChloroJewel Dust

@@ -10,15 +10,17 @@ import net.minecraft.common.util.i18n.StringTranslate;
 
 @SuppressWarnings("unused")
 public class CJMachineToolStation implements CJIMachine {
-	public static final int INPUT_SLOT = 0;
-	public static final int TOOL_SLOT = 1;
-
 	@Override
 	public void updateMachine(CJTileEntityMachineBase machineEntity) {
 		StringTranslate translate = StringTranslate.getInstance();
 
-		ItemStack inputStack = machineEntity.getStackInSlot(INPUT_SLOT);
-		ItemStack toolStack = machineEntity.getStackInSlot(TOOL_SLOT);
+		CJMachineBuilder machineBuilder = machineEntity.getBuilder();
+
+		ItemStack inputStack =
+				machineBuilder.getNamedStack(machineEntity, "input");
+
+		ItemStack toolStack =
+				machineBuilder.getNamedStack(machineEntity, "tool");
 
 		machineEntity.errorMessage = null;
 		machineEntity.isWarning = false;
@@ -59,8 +61,9 @@ public class CJMachineToolStation implements CJIMachine {
 
 				CJRarity rarity = CJRarityInfo.getDamageRarity(damage);
 				int id = CJRarityInfo.getRarityJewel(rarity);
-				machineEntity.setInventorySlotContents(
-						TOOL_SLOT, new ItemStack(id, 1));
+
+				machineBuilder.setNamedStack(
+						machineEntity, "tool", new ItemStack(id, 1));
 			}
 
 			return;
@@ -99,7 +102,7 @@ public class CJMachineToolStation implements CJIMachine {
 			machineEntity.operationTicks = 0;
 
 			toolStack.setItemDamage(CJRarityInfo.getRarityDamage(rarity));
-			machineEntity.setInventorySlotContents(INPUT_SLOT, null);
+			machineBuilder.setNamedStack(machineEntity, "input", null);
 		}
 	}
 }

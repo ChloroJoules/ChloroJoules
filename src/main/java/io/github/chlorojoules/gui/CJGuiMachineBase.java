@@ -137,7 +137,7 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 			}
 		}
 
-		CJMachineBuilder machineBuilder = machineEntity.machine.machineBuilder;
+		CJMachineBuilder machineBuilder = machineEntity.getBuilder();
 		for(int i = 0; i < machineBuilder.buttons.size(); ++i) {
 			CJGuiButton button = machineBuilder.buttons.get(i);
 
@@ -263,7 +263,7 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 		// Draw UI base.
 		drawTexturedModalRect(baseX, baseY, 0, 0, xSize, ySize);
 
-		CJMachineBuilder machineBuilder = machineEntity.machine.machineBuilder;
+		CJMachineBuilder machineBuilder = machineEntity.getBuilder();
 
 		// Draw slots.
 		CJGuiMachineBaseSlot slot;

@@ -8,6 +8,7 @@ import io.github.chlorojoules.*;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.gui.*;
 import net.minecraft.common.item.ItemStack;
+import net.minecraft.common.recipe.Ingredient;
 import net.minecraft.common.util.JsonUtils;
 import net.minecraft.common.util.i18n.StringTranslate;
 
@@ -151,12 +152,8 @@ public class CJMachineBuilder {
 							JEWEL_SLOT_INSET_X, JEWEL_SLOT_INSET_Y)
 							.setGravity(BOTTOM_LEFT)
 							.setRenderType(CJMachineSlotRenderType.JEWEL)
-							.setAllowedItems(new ItemStack[] {
-									new ItemStack(CJMod.fauxJewel),
-									new ItemStack(CJMod.primalJewel),
-									new ItemStack(CJMod.manufacturedJewel),
-									new ItemStack(CJMod.refinedJewel),
-									new ItemStack(CJMod.awakenedJewel)
+							.setAllowedItems(new Ingredient[] {
+									CJMod.tagJewel
 							})
 							.setID("jewel"));
 				}
@@ -227,13 +224,13 @@ public class CJMachineBuilder {
 		}
 	}
 
-	private ItemStack getNamedStack(
+	public ItemStack getNamedStack(
 			CJTileEntityMachineBase machineEntity, String id) {
 
 		return machineEntity.getStackInSlot(getNamedSlotIndex(id));
 	}
 
-	private void setNamedStack(
+	public void setNamedStack(
 			CJTileEntityMachineBase machineEntity, String id,
 			ItemStack stack) {
 
@@ -272,7 +269,7 @@ public class CJMachineBuilder {
 		}
 	}
 
-	private CJTankVolume getNamedTankVolume(
+	public CJTankVolume getNamedTankVolume(
 			CJTileEntityMachineBase machineEntity, String id) {
 
 		return machineEntity.tanks.get(getNamedTankIndex(id));

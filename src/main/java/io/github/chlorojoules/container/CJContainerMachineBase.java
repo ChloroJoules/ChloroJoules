@@ -85,7 +85,7 @@ public class CJContainerMachineBase extends Container {
 		ItemStack stack = slot.getStack();
 		ItemStack returnStack = stack.copy();
 
-		CJMachineBuilder machineBuilder = machineEntity.machine.machineBuilder;
+		CJMachineBuilder machineBuilder = machineEntity.getBuilder();
 
 		// Machine inventory to player.
 		if(index < machineBuilder.slots.size()) {

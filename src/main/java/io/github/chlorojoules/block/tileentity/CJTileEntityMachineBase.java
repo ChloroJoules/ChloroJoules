@@ -89,6 +89,10 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		initFromBuilder(machine);
 	}
 
+	public CJMachineBuilder getBuilder() {
+		return machine.machineBuilder;
+	}
+
 	public void onBreak(World world, int x, int y, int z) {
 		for(ItemStack stack : stacks) {
 			if(stack == null) continue;

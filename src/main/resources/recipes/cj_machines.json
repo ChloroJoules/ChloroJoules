@@ -1,0 +1,23 @@
+{
+	"output": {
+		"item": "chlorojoules:cj_composter"
+	},
+
+	"pattern": [
+		"%%%",
+		"#|#",
+		"%%%"
+	],
+
+	"inputs": {
+		"%": {
+			"item": "#wooden_planks"
+		},
+		"|": {
+			"item": "chlorojoules:cj_machine_frame_primitive"
+		},
+		"#": {
+			"item": "#cj_leaves"
+		}
+	}
+}

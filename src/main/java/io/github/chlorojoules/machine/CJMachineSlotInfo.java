@@ -37,11 +37,10 @@ public class CJMachineSlotInfo extends CJGuiElement {
 		if(jsonObject.has("allowed")) {
 			JsonArray allowed = JsonUtils.getJsonArray(jsonObject, "allowed");
 
-			allowedItems = new ItemStack[allowed.size()];
+			allowedItems = new Ingredient[allowed.size()];
 			for(int i = 0; i < allowed.size(); ++i) {
-				allowedItems[i] =
-						CJMod.ingredientFromJson(
-								allowed.get(i).getAsJsonObject());
+				allowedItems[i] = CJMod.ingredientFromJson(
+						allowed.get(i).getAsJsonObject());
 			}
 		}
 
@@ -61,7 +60,7 @@ public class CJMachineSlotInfo extends CJGuiElement {
 		return this;
 	}
 
-	public CJMachineSlotInfo setAllowedItems(ItemStack[] value) {
+	public CJMachineSlotInfo setAllowedItems(Ingredient[] value) {
 		allowedItems = value;
 		return this;
 	}

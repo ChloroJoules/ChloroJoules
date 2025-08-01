@@ -62,6 +62,9 @@ public class CJMod extends Mod {
 	public static TaggedIngredient tagCompostable =
 			TaggedIngredients.get("cj_compostable");
 
+	public static TaggedIngredient tagJewel =
+			TaggedIngredients.get("cj_jewel");
+
 	public static Block fluidChlorojoules;
 	public static Item bucketFluidChlorojoules;
 	public static Block fluidPaste;
@@ -85,7 +88,8 @@ public class CJMod extends Mod {
 	public static Block tank;
 	public static Block mixer;
 	public static Block composter;
-	public static Block primitiveCentrifuge;
+    public static Block primitiveCentrifuge;
+    public static Block enervator;
 
 	public static Item paste;
 	public static Item pasteBowl;
@@ -113,6 +117,7 @@ public class CJMod extends Mod {
 	public static Item soulSword;
 	public static Item linker;
 	public static Item pruningShears;
+	public static Item sundial;
 
 	public static Item ironRod;
 
@@ -414,6 +419,8 @@ public class CJMod extends Mod {
 				PRIMAL_COLOR, 1, CJItemToolPruningShears.class,
 				"cj_pruning_shears");
 
+		sundial = registerItem("cj_sundial", REFINED_COLOR, 1);
+
 		machineFrame = registerBlock(
 				"cj_machine_frame", Materials.ROCK, 1.5F, 10.0F,
 				StepSounds.SOUND_STONE, EnumTools.PICKAXE);
@@ -469,6 +476,9 @@ public class CJMod extends Mod {
 
 		mixer = registerMachine(
 				new CJMachineBuilder("/machines/cj_mixer.json"));
+
+        enervator = registerMachine(
+                new CJMachineBuilder("/machines/cj_enervator.json"));
 	}
 
 	@Override
@@ -491,6 +501,12 @@ public class CJMod extends Mod {
 
 		tagGoldOre.addIngredient(GOLD_ORE);
 		tagGoldOre.addIngredient(NETHER_GOLD_ORE);
+
+		tagJewel.addIngredient(fauxJewel);
+		tagJewel.addIngredient(primalJewel);
+		tagJewel.addIngredient(manufacturedJewel);
+		tagJewel.addIngredient(refinedJewel);
+		tagJewel.addIngredient(awakenedJewel);
 
 		// TODO: A two way mapping between bucket/fluid IDs would probably be
 		//       More efficient for lookup by `CJBlockMachineBase`.
@@ -569,6 +585,7 @@ public class CJMod extends Mod {
 		registerShapelessRecipe(soulDust2Stack, jewelDust, soulEssence);
 		registerShapelessRecipe(dirtBowl, DIRT, BOWL);
 		registerShapelessRecipe(COBBLESTONE, DIRT, stoneDust);
+		registerShapelessRecipe(sundial, CLOCK, GLOWSTONE_DUST);
 
 		registerRecipe(
 				GRAVEL,

@@ -159,8 +159,7 @@ public class CJMachineTransferor implements CJIMachine {
 
 			for(int j = 0; j < machine.tanks.size(); j++) {
 				CJTankVolume adjacentVolume = machine.tanks.get(j);
-				CJTank adjacentTank =
-						machine.machine.machineBuilder.tanks.get(j);
+				CJTank adjacentTank = machine.getBuilder().tanks.get(j);
 
 				if(adjacentTank.checkDamageExclusive(machine)) continue;
 				if(!adjacentTank.output && !adjacentTank.bidirectional) {
@@ -191,8 +190,7 @@ public class CJMachineTransferor implements CJIMachine {
 				continue;
 			}
 
-			CJMachineBuilder adjacentMachineBuilder =
-					machine.machine.machineBuilder;
+			CJMachineBuilder adjacentMachineBuilder = machine.getBuilder();
 
 			for(int j = 0; j < machine.tanks.size(); j++) {
 				CJTankVolume adjacentVolume = machine.tanks.get(j);

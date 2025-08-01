@@ -3,16 +3,34 @@
   "rarity": "manufactured",
   "implementation": "io.github.chlorojoules.machine.CJMachineEnervator",
   "face": "sides",
+  "slots": [
+    {
+      "name": "jewel",
+      "anchor": "bottom left",
+      "x": 22,
+      "y": 24,
+
+      "render": "jewel",
+      "allowed": [
+        {
+          "item": "#cj_jewel"
+        }
+      ]
+    }
+  ],
   "tanks": [
     {
-      "name": "input",
+      "name": "catalyst",
       "anchor": "center",
       "x": -35
     },
     {
       "name": "output",
       "anchor": "center",
-      "x": 35
+      "x": 35,
+
+      "output": true,
+      "fluid": "chlorojoules:cj_fluid_chlorojoules"
     }
   ],
   "progress": {
