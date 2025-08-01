@@ -71,6 +71,8 @@ public class CJMod extends Mod {
 	public static Item bucketFluidPaste;
 	public static Block fluidSouls;
 	public static Item bucketFluidSouls;
+	public static Block fluidDimension;
+	public static Item bucketFluidDimension;
 
 	public static Block primitiveMachineFrame;
 	public static Block machineFrame;
@@ -89,7 +91,8 @@ public class CJMod extends Mod {
 	public static Block mixer;
 	public static Block composter;
     public static Block primitiveCentrifuge;
-    public static Block enervator;
+	public static Block enervator;
+	public static Block pump;
 
 	public static Item paste;
 	public static Item pasteBowl;
@@ -353,6 +356,11 @@ public class CJMod extends Mod {
 		bucketFluidSouls = registerFluidBucket(
 				"cj_fluid_souls_bucket", REFINED_COLOR, fluidSouls);
 
+		fluidDimension = registerFluid("cj_fluid_dimension");
+		bucketFluidDimension = registerFluidBucket(
+				"cj_fluid_dimension_bucket", MANUFACTURED_COLOR,
+				fluidDimension);
+
 		fuelFluid = fluidChlorojoules.blockID;
 		waterFluid = WATER_MOVING.blockID;
 		lavaFluid = LAVA_MOVING.blockID;
@@ -479,6 +487,9 @@ public class CJMod extends Mod {
 
         enervator = registerMachine(
                 new CJMachineBuilder("/machines/cj_enervator.json"));
+
+		pump = registerMachine(
+				new CJMachineBuilder("/machines/cj_pump.json"));
 	}
 
 	@Override

@@ -130,10 +130,10 @@ public class CJMachineEnervator implements CJIMachine {
 		Block block = Blocks.BLOCKS_LIST[world.getBlockId(x + 1, y, z)];
 		if(block instanceof BlockFlower flower) adjacentFlowers[0] = flower;
 		block = Blocks.BLOCKS_LIST[world.getBlockId(x - 1, y, z)];
-		if(block instanceof BlockFlower flower) adjacentFlowers[0] = flower;
+		if(block instanceof BlockFlower flower) adjacentFlowers[1] = flower;
 		block = Blocks.BLOCKS_LIST[world.getBlockId(x, y, z + 1)];
-		if(block instanceof BlockFlower flower) adjacentFlowers[0] = flower;
+		if(block instanceof BlockFlower flower) adjacentFlowers[2] = flower;
 		block = Blocks.BLOCKS_LIST[world.getBlockId(x, y, z - 1)];
-		if(block instanceof BlockFlower flower) adjacentFlowers[0] = flower;
+		if(block instanceof BlockFlower flower) adjacentFlowers[3] = flower;
 	}
 }

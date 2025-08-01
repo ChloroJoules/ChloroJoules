@@ -300,6 +300,9 @@ public class CJMachineBuilder {
 			if(!input &&
 					volume.max- volume.current < component.volume.current) {
 
+				machineEntity.errorMessage = StringTranslate.getInstance()
+						.translateKey("message.cj_full");
+
 				return true;
 			}
 
@@ -312,6 +315,9 @@ public class CJMachineBuilder {
 			if(!input &&
 					stack.getMaxStackSize() - stack.stackSize <
 							component.getStackSize()) {
+
+				machineEntity.errorMessage = StringTranslate.getInstance()
+						.translateKey("message.cj_full");
 
 				return true;
 			}
