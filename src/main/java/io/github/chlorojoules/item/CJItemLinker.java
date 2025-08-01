@@ -50,6 +50,9 @@ public class CJItemLinker extends Item {
 			String string = StringTranslate.getInstance().translateKey(
 					"message.cj_not_transferor");
 
+			Minecraft.getInstance().sndManager.playSoundFX(
+					"random.glass", 1.0F, 1.0F);
+
 			CJMod.sendChat(string);
 
 			return true;
@@ -107,6 +110,9 @@ public class CJItemLinker extends Item {
 					"message.cj_too_far", MAX_LINK);
 
 			CJMod.sendChat(string);
+
+			Minecraft.getInstance().sndManager.playSoundFX(
+					"random.glass", 1.0F, 1.0F);
 
 			return true;
 		}

@@ -54,7 +54,7 @@ public class CJItemSoulExtractor extends Item implements CJIItemSocket {
 		world.entityJoinedWorld(item);
 
 		Minecraft.getInstance().sndManager.playSoundFX(
-				"random.glass", 1.0F, 1.0F);
+				"random.levelup", 1.0F, 1.0F);
 
 		return true;
 	}
