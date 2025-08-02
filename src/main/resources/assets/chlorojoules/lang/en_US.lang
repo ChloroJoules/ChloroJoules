@@ -74,6 +74,8 @@ message.cj_pump.help=Transfers adjacent fluids into its tank
 message.cj_pump.flavor=Get two for a nice pair of shoes
 message.cj_reactor.help=Combines fluids together
 message.cj_reactor.flavor=A follow-up to Big and Extreme
+message.cj_injector.help=Injects fluids into items
+message.cj_injector.flavor=Not scared of needles
 
 message.cj_enable_refine_fuel=Allow processing of fuel tank
 message.cj_compost_bone_meal=Compost to bone meal
@@ -105,6 +107,7 @@ tile.cj_transferor.name=Transferor
 tile.cj_enervator.name=Floral Enervator
 tile.cj_pump.name=Pump
 tile.cj_reactor.name=Chemical Reactor
+tile.cj_injector.name=Fluid Injector
 
 # Fluids.
 tile.cj_fluid_paste.name=Paste

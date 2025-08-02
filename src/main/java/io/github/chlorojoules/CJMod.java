@@ -105,6 +105,7 @@ public class CJMod extends Mod {
 	public static Block enervator;
 	public static Block pump;
 	public static Block reactor;
+	public static Block injector;
 
 	public static Item paste;
 	public static Item pasteBowl;
@@ -410,8 +411,7 @@ public class CJMod extends Mod {
 				PRIMAL_COLOR, 1, CJItemConvertBowl.class, "cj_dirt_bowl",
 				new ItemStack(stoneDust));
 
-		blender = registerItem("cj_blender", PRIMAL_COLOR, 1)
-				.setContainerItem(blender);
+		blender = registerItem("cj_blender", PRIMAL_COLOR, 16);
 
 		fauxJewel = registerItem(
 				"cj_jewel_faux", PRIMAL_COLOR, 1)
@@ -519,6 +519,9 @@ public class CJMod extends Mod {
 
 		reactor = registerMachine(
 				new CJMachineBuilder("/machines/cj_reactor.json"));
+
+		injector = registerMachine(
+				new CJMachineBuilder("/machines/cj_injector.json"));
 	}
 
 	@Override
@@ -653,7 +656,7 @@ public class CJMod extends Mod {
 				'%', tinyGoldDust);
 
 		registerRecipe(
-				blender,
+				new ItemStack(blender, 4),
 				" % ",
 				"%~%",
 				"%%%",
