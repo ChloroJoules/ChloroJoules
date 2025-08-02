@@ -11,15 +11,30 @@ import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.util.i18n.StringTranslate;
 import net.minecraft.common.world.World;
 
+import static io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase.machineEntity;
+
+class CJMachinePumpStorage {
+	public Block[] adjacentBlocks = null;
+}
+
 @SuppressWarnings("unused")
 public class CJMachinePump implements CJIMachine {
-	private Block[] adjacentBlocks;
+	private static CJMachinePumpStorage getStorage(
+			CJTileEntityMachineBase machineEntity) {
+
+		if(machineEntity.machineStorage == null) {
+			machineEntity.machineStorage = new CJMachinePumpStorage();
+		}
+
+		return (CJMachinePumpStorage) machineEntity.machineStorage;
+	}
 
 	@Override
 	public void updateMachine(CJTileEntityMachineBase machineEntity) {
 		StringTranslate translate = StringTranslate.getInstance();
 
 		CJMachineBuilder machineBuilder = machineEntity.getBuilder();
+		CJMachinePumpStorage storage = getStorage(machineEntity);
 
 		ItemStack jewelStack =
 				machineBuilder.getNamedStack(machineEntity, "jewel");
@@ -57,8 +72,8 @@ public class CJMachinePump implements CJIMachine {
 		int outputFluid = 0;
 		int cost = 0;
 		int outputBlockIndex = 0;
-		for(int i = 0; i < adjacentBlocks.length; ++i) {
-			Block block = adjacentBlocks[i];
+		for(int i = 0; i < storage.adjacentBlocks.length; ++i) {
+			Block block = storage.adjacentBlocks[i];
 
 			if(block instanceof BlockFluid) {
 				int[] pos = getAdjacentFromIndex(machineEntity, i);
@@ -148,11 +163,21 @@ public class CJMachinePump implements CJIMachine {
 
 	@Override
 	public void onNeighbourChange(World world, int x, int y, int z) {
-		adjacentBlocks = new Block[4];
+		CJTileEntityMachineBase machineEntity = machineEntity(world, x, y, z);
+		CJMachinePumpStorage storage = getStorage(machineEntity);
 
-		adjacentBlocks[0] = Blocks.BLOCKS_LIST[world.getBlockId(x + 1, y, z)];
-		adjacentBlocks[1] = Blocks.BLOCKS_LIST[world.getBlockId(x - 1, y, z)];
-		adjacentBlocks[2] = Blocks.BLOCKS_LIST[world.getBlockId(x, y, z + 1)];
-		adjacentBlocks[3] = Blocks.BLOCKS_LIST[world.getBlockId(x, y, z - 1)];
+		storage.adjacentBlocks = new Block[4];
+
+		storage.adjacentBlocks[0] =
+				Blocks.BLOCKS_LIST[world.getBlockId(x + 1, y, z)];
+
+		storage.adjacentBlocks[1] =
+				Blocks.BLOCKS_LIST[world.getBlockId(x - 1, y, z)];
+
+		storage.adjacentBlocks[2] =
+				Blocks.BLOCKS_LIST[world.getBlockId(x, y, z + 1)];
+
+		storage.adjacentBlocks[3] =
+				Blocks.BLOCKS_LIST[world.getBlockId(x, y, z - 1)];
 	}
 }

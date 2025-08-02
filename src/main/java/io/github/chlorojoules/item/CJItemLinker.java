@@ -14,6 +14,8 @@ import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.util.i18n.StringTranslate;
 import net.minecraft.common.world.World;
 
+import java.util.ArrayList;
+
 public class CJItemLinker extends Item {
 	public static final int MAX_LINK = 16;
 
@@ -93,6 +95,11 @@ public class CJItemLinker extends Item {
 				(CJTileEntityMachineBase) world.getBlockTileEntity(
 						position[0], position[1], position[2]);
 
+		if(extractorMachine == null) {
+			stack.setItemDamage(stack.getItemDamage() - 1);
+			return true;
+		}
+
 		if(inserterMachine == extractorMachine) {
 			String string = StringTranslate.getInstance().translateKey(
 					"message.cj_same_transferor");
@@ -124,24 +131,22 @@ public class CJItemLinker extends Item {
 
 		CJMod.sendChat(string);
 
-		CJMachineTransferor extractor =
-				(CJMachineTransferor) extractorMachine.impl;
+		if(!isMulti) CJMachineTransferor.breakLink(world, extractorMachine);
+		CJMachineTransferor.breakLink(world, inserterMachine);
 
-		CJMachineTransferor inserter =
-				(CJMachineTransferor) inserterMachine.impl;
+		ArrayList<int[]> extractorLinked =
+				CJMachineTransferor.getLinked(extractorMachine);
 
-		if(!isMulti) {
-			extractor.breakLink(world, extractorMachine);
-			inserter.breakLink(world, inserterMachine);
+		ArrayList<int[]> inserterLinked =
+				CJMachineTransferor.getLinked(inserterMachine);
+
+		if(isMulti || extractorLinked.isEmpty()) {
+			extractorLinked.add(new int[] { blockX, blockY, blockZ });
 		}
+		else extractorLinked.set(0, new int[] { blockX, blockY, blockZ });
 
-		if(isMulti || extractor.linked.isEmpty()) {
-			extractor.linked.add(new int[] { blockX, blockY, blockZ });
-		}
-		else extractor.linked.set(0, new int[] { blockX, blockY, blockZ });
-
-		if(inserter.linked.isEmpty()) inserter.linked.add(position);
-		else inserter.linked.set(0, position);
+		if(inserterLinked.isEmpty()) inserterLinked.add(position);
+		else inserterLinked.set(0, position);
 
 		inserterMachine.coordinateDisplays.set(
 				0, new CJGuiCoordinateDisplay(position));

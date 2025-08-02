@@ -10,6 +10,9 @@ public interface CJIMachine {
 	default void onNeighbourChange(World world, int x, int y, int z) {}
 	default void onBreak(World world, int x, int y, int z) {}
 
-	default void writeToNBT(CompoundTag tagCompound) {}
-	default void readFromNBT(CompoundTag tagCompound) {}
+	default void writeToNBT(
+			CJTileEntityMachineBase machineEntity, CompoundTag tagCompound) {}
+
+	default void readFromNBT(
+			CJTileEntityMachineBase machineEntity, CompoundTag tagCompound) {}
 }

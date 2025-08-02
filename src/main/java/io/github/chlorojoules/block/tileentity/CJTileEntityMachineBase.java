@@ -38,6 +38,8 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	public CJBlockMachineBase machine;
 	public CJIMachine impl;
 
+	public Object machineStorage;
+
 	public static CJTileEntityMachineBase machineEntity(
 			World world, int x, int y, int z) {
 
@@ -180,7 +182,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 
 		tagCompound.setString("cj_machine", machine.machineBuilder.name);
 
-		if(impl != null) impl.writeToNBT(tagCompound);
+		if(impl != null) impl.writeToNBT(this, tagCompound);
 
 		writeStacks(tagCompound);
 		writeTanks(tagCompound);
@@ -227,7 +229,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		initFromBuilder(CJMod.machines.get(
 				tagCompound.getString("cj_machine")));
 
-		if(impl != null) impl.readFromNBT(tagCompound);
+		if(impl != null) impl.readFromNBT(this, tagCompound);
 
 		readStacks(tagCompound);
 		readTanks(tagCompound);

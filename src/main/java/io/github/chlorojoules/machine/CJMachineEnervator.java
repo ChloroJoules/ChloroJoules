@@ -9,15 +9,30 @@ import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.util.i18n.StringTranslate;
 import net.minecraft.common.world.World;
 
+import static io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase.machineEntity;
+
+class CJMachineEnervatorStorage {
+	public BlockFlower[] adjacentFlowers = null;
+}
+
 @SuppressWarnings("unused")
 public class CJMachineEnervator implements CJIMachine {
-	private BlockFlower[] adjacentFlowers;
+	private static CJMachineEnervatorStorage getStorage(
+			CJTileEntityMachineBase machineEntity) {
+
+		if(machineEntity.machineStorage == null) {
+			machineEntity.machineStorage = new CJMachineEnervatorStorage();
+		}
+
+		return (CJMachineEnervatorStorage) machineEntity.machineStorage;
+	}
 
 	@Override
 	public void updateMachine(CJTileEntityMachineBase machineEntity) {
 		StringTranslate translate = StringTranslate.getInstance();
 
 		CJMachineBuilder machineBuilder = machineEntity.getBuilder();
+		CJMachineEnervatorStorage storage = getStorage(machineEntity);
 
 		ItemStack jewelStack =
 				machineBuilder.getNamedStack(machineEntity, "jewel");
@@ -33,7 +48,7 @@ public class CJMachineEnervator implements CJIMachine {
 		machineEntity.isPassive = false;
 		machineEntity.operationLength = 75;
 
-		if(adjacentFlowers == null) {
+		if(storage.adjacentFlowers == null) {
 			onNeighbourChange(
 					machineEntity.worldObj,
 					machineEntity.xCoord,
@@ -102,7 +117,7 @@ public class CJMachineEnervator implements CJIMachine {
 				CJRarityInfo.getRarityTimeScale(rarity);
 
 		int flowerCount = 0;
-		for(BlockFlower flower : adjacentFlowers) {
+		for(BlockFlower flower : storage.adjacentFlowers) {
 			if(flower == null) continue;
 
 			flowerCount++;
@@ -143,15 +158,29 @@ public class CJMachineEnervator implements CJIMachine {
 
 	@Override
 	public void onNeighbourChange(World world, int x, int y, int z) {
-		adjacentFlowers = new BlockFlower[4];
+		CJTileEntityMachineBase machineEntity = machineEntity(world, x, y, z);
+		CJMachineEnervatorStorage storage = getStorage(machineEntity);
+
+		storage.adjacentFlowers = new BlockFlower[4];
 
 		Block block = Blocks.BLOCKS_LIST[world.getBlockId(x + 1, y, z)];
-		if(block instanceof BlockFlower flower) adjacentFlowers[0] = flower;
+		if(block instanceof BlockFlower flower) {
+			storage.adjacentFlowers[0] = flower;
+		}
+
 		block = Blocks.BLOCKS_LIST[world.getBlockId(x - 1, y, z)];
-		if(block instanceof BlockFlower flower) adjacentFlowers[1] = flower;
+		if(block instanceof BlockFlower flower) {
+			storage.adjacentFlowers[1] = flower;
+		}
+
 		block = Blocks.BLOCKS_LIST[world.getBlockId(x, y, z + 1)];
-		if(block instanceof BlockFlower flower) adjacentFlowers[2] = flower;
+		if(block instanceof BlockFlower flower) {
+			storage.adjacentFlowers[2] = flower;
+		}
+
 		block = Blocks.BLOCKS_LIST[world.getBlockId(x, y, z - 1)];
-		if(block instanceof BlockFlower flower) adjacentFlowers[3] = flower;
+		if(block instanceof BlockFlower flower) {
+			storage.adjacentFlowers[3] = flower;
+		}
 	}
 }

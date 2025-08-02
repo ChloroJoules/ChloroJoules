@@ -18,7 +18,17 @@ import java.util.Arrays;
 
 import static io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase.machineEntity;
 
+class CJMachineTransferorStorage {
+	public IInventory[] adjacentInventories = null;
+
+	public ArrayList<int[]> linked = new ArrayList<>();
+	public int next = 0;
+	public boolean breakingLink = false;
+}
+
 public class CJMachineTransferor implements CJIMachine {
+	private static final int FLOW_RATE = 100;
+
 	// Damage states.
 	public static final int INACTIVE = 0;
 	public static final int TRANSMIT_ITEMS = 1;
@@ -28,49 +38,50 @@ public class CJMachineTransferor implements CJIMachine {
 	public static final int MULTI_TRANSMIT_ITEMS = 5;
 	public static final int MULTI_TRANSMIT_FLUIDS = 6;
 
-	private IInventory[] adjacentInventories = null;
-
-	public ArrayList<int[]> linked = new ArrayList<>();
-	public int lastReceiver = 0;
-	public boolean breakingLink = false;
-
 	private static boolean isMulti(int meta) {
 		return meta > RECEIVE_FLUIDS;
+	}
+
+	private static CJMachineTransferorStorage getStorage(
+			CJTileEntityMachineBase machineEntity) {
+
+		if(machineEntity.machineStorage == null) {
+			machineEntity.machineStorage = new CJMachineTransferorStorage();
+		}
+
+		return (CJMachineTransferorStorage) machineEntity.machineStorage;
+	}
+
+	public static ArrayList<int[]> getLinked(
+			CJTileEntityMachineBase machineEntity) {
+
+		return getStorage(machineEntity).linked;
 	}
 
 	private boolean tryMultiReceive(
 			CJTileEntityMachineBase machineEntity,
 			CJTileEntityMachineBase linkedEntity) {
 
-		CJMachineTransferor linkedTransferor =
-					(CJMachineTransferor) linkedEntity.impl;
+		CJMachineTransferorStorage linkedStorage = getStorage(linkedEntity);
 
 		if(isMulti(linkedEntity.getWorldBlockMetadata())) {
-			int[] last =
-					linkedTransferor.linked.get(linkedTransferor.lastReceiver);
+			int[] last = linkedStorage.linked.get(linkedStorage.next);
 
-			return machineEntity.xCoord != last[0] ||
-					machineEntity.yCoord != last[1] ||
-					machineEntity.zCoord != last[2];
+			return machineEntity.xCoord == last[0] &&
+					machineEntity.yCoord == last[1] &&
+					machineEntity.zCoord == last[2];
 		}
 
-		return false;
-	}
-
-	private void didMultiReceive(CJTileEntityMachineBase linkedEntity) {
-		CJMachineTransferor linkedTransferor =
-				(CJMachineTransferor) linkedEntity.impl;
-
-		if(++linkedTransferor.lastReceiver >=
-				linkedTransferor.linked.size()) {
-
-			linkedTransferor.lastReceiver = 0;
-		}
+		return true;
 	}
 
 	private void updateTransmit(CJTileEntityMachineBase machineEntity) {
+		CJMachineTransferorStorage storage = getStorage(machineEntity);
+
 		ItemStack stack = machineEntity.getStackInSlot(0);
 		int currentItemID = -1;
+
+		if(++storage.next >= storage.linked.size()) storage.next = 0;
 
 		if(stack != null) {
 			if(stack.stackSize >= stack.getMaxStackSize()) return;
@@ -78,7 +89,7 @@ public class CJMachineTransferor implements CJIMachine {
 			currentItemID = stack.getItemID();
 		}
 
-		for(IInventory inventory : adjacentInventories) {
+		for(IInventory inventory : storage.adjacentInventories) {
 			if(inventory == null) continue;
 
 			int slotIndex = CJInventoryHelper.getMatchingOutputIndex(
@@ -106,29 +117,29 @@ public class CJMachineTransferor implements CJIMachine {
 	}
 
 	private void updateReceive(CJTileEntityMachineBase machineEntity) {
+		CJMachineTransferorStorage storage = getStorage(machineEntity);
+
 		CJTileEntityMachineBase linkedEntity =
 				machineEntity(
 						machineEntity.worldObj,
-						linked.getFirst()[0],
-						linked.getFirst()[1],
-						linked.getFirst()[2]);
+						storage.linked.getFirst()[0],
+						storage.linked.getFirst()[1],
+						storage.linked.getFirst()[2]);
 
-		if(tryMultiReceive(machineEntity, linkedEntity)) return;
+		if(!tryMultiReceive(machineEntity, linkedEntity)) return;
 
 		ItemStack stack = linkedEntity.getStackInSlot(0);
 		if(stack == null) return;
 
 		int currentItemID = stack.getItemID();
 
-		for(IInventory inventory : adjacentInventories) {
+		for(IInventory inventory : storage.adjacentInventories) {
 			if(inventory == null) continue;
 
 			int slotIndex = CJInventoryHelper.getMatchingInputIndex(
 					inventory, currentItemID);
 
 			if(slotIndex == -1) continue;
-
-			didMultiReceive(linkedEntity);
 
 			ItemStack outStack = inventory.getStackInSlot(slotIndex);
 
@@ -149,9 +160,13 @@ public class CJMachineTransferor implements CJIMachine {
 	}
 
 	private void updateTransmitFluid(CJTileEntityMachineBase machineEntity) {
+		CJMachineTransferorStorage storage = getStorage(machineEntity);
+
 		CJTankVolume volume = machineEntity.tanks.getFirst();
 
-		for(IInventory adjacent : adjacentInventories) {
+		if(++storage.next >= storage.linked.size()) storage.next = 0;
+
+		for(IInventory adjacent : storage.adjacentInventories) {
 			if(adjacent == null) continue;
 			if(!(adjacent instanceof CJTileEntityMachineBase machine)) {
 				continue;
@@ -166,25 +181,26 @@ public class CJMachineTransferor implements CJIMachine {
 					continue;
 				}
 
-				// TODO: Hardcoded flow rate.
-				if(volume.transferFrom(adjacentVolume, 10)) return;
+				if(volume.transferFrom(adjacentVolume, FLOW_RATE)) return;
 			}
 		}
 	}
 
 	private void updateReceiveFluid(CJTileEntityMachineBase machineEntity) {
+		CJMachineTransferorStorage storage = getStorage(machineEntity);
+
 		CJTileEntityMachineBase linkedEntity =
 				machineEntity(
 						machineEntity.worldObj,
-						linked.getFirst()[0],
-						linked.getFirst()[1],
-						linked.getFirst()[2]);
+						storage.linked.getFirst()[0],
+						storage.linked.getFirst()[1],
+						storage.linked.getFirst()[2]);
 
-		if(tryMultiReceive(machineEntity, linkedEntity)) return;
+		if(!tryMultiReceive(machineEntity, linkedEntity)) return;
 
 		CJTankVolume volume = linkedEntity.tanks.getFirst();
 
-		for(IInventory adjacent : adjacentInventories) {
+		for(IInventory adjacent : storage.adjacentInventories) {
 			if(adjacent == null) continue;
 			if(!(adjacent instanceof CJTileEntityMachineBase machine)) {
 				continue;
@@ -208,21 +224,20 @@ public class CJMachineTransferor implements CJIMachine {
 					continue;
 				}
 
-				if(adjacentVolume.transferFrom(volume, 10)) {
-					didMultiReceive(linkedEntity);
-					return;
-				}
+				if(adjacentVolume.transferFrom(volume, FLOW_RATE)) return;
 			}
 		}
 	}
 
 	@Override
 	public void updateMachine(CJTileEntityMachineBase machineEntity) {
+		CJMachineTransferorStorage storage = getStorage(machineEntity);
+
 		int meta = machineEntity.getWorldBlockMetadata();
 		if(meta == INACTIVE) return;
-		if(linked.isEmpty()) return;
+		if(storage.linked.isEmpty()) return;
 
-		if(adjacentInventories == null) {
+		if(storage.adjacentInventories == null) {
 			onNeighbourChange(
 					machineEntity.worldObj,
 					machineEntity.xCoord,
@@ -234,7 +249,7 @@ public class CJMachineTransferor implements CJIMachine {
 				!isMulti(machineEntity.getWorldBlockMetadata())) {
 
 			machineEntity.coordinateDisplays.set(
-					0, new CJGuiCoordinateDisplay(linked.getFirst()));
+					0, new CJGuiCoordinateDisplay(storage.linked.getFirst()));
 		}
 
 		switch(meta) {
@@ -264,48 +279,57 @@ public class CJMachineTransferor implements CJIMachine {
 
 	@Override
 	public void onNeighbourChange(World world, int x, int y, int z) {
-		adjacentInventories = CJInventoryHelper.getAdjacentInventories(
-				world, x, y, z);
+		CJTileEntityMachineBase machineEntity = machineEntity(world, x, y, z);
+		CJMachineTransferorStorage storage = getStorage(machineEntity);
 
-		for (int[] link : linked) {
-			CJTileEntityMachineBase linkedEntity =
-					machineEntity(world, link[0], link[1], link[2]);
+		storage.adjacentInventories =
+				CJInventoryHelper.getAdjacentInventories(world, x, y, z);
 
-			for(int j = 0; j < adjacentInventories.length; ++j) {
-				IInventory inventory = adjacentInventories[j];
-				if(inventory == linkedEntity) adjacentInventories[j] = null;
+		for(int i = 0; i < storage.adjacentInventories.length; ++i) {
+			if(storage.adjacentInventories[i] instanceof
+					CJTileEntityMachineBase adjacentEntity) {
+
+				if(adjacentEntity.impl instanceof CJMachineTransferor) {
+					storage.adjacentInventories[i] = null;
+				}
 			}
 		}
 	}
 
-	public void breakLink(
+	public static void breakLink(
 			World worldObj, CJTileEntityMachineBase machineEntity) {
 
-		if(breakingLink) return;
-		breakingLink = true;
+		CJMachineTransferorStorage storage = getStorage(machineEntity);
+
+		if(storage.breakingLink) return;
+		storage.breakingLink = true;
 
 		ArrayList<int[]> linkedCopy = new ArrayList<>();
-		for(int[] link : linked) linkedCopy.add(link.clone());
+		for(int[] link : storage.linked) linkedCopy.add(link.clone());
 
 		for(int[] link : linkedCopy) {
 			CJTileEntityMachineBase linkedEntity =
 					machineEntity(worldObj, link[0], link[1], link[2]);
 
-			CJMachineTransferor other =
-					(CJMachineTransferor) linkedEntity.impl;
+			CJMachineTransferorStorage linkedStorage =
+					getStorage(linkedEntity);
 
 			if(isMulti(linkedEntity.getWorldBlockMetadata())) {
-				other.linked.removeIf(value -> Arrays.equals(
+				linkedStorage.linked.removeIf(value -> Arrays.equals(
 						value, machineEntity.getWorldPosition()));
+
+				if(linkedStorage.next >= linkedStorage.linked.size()) {
+					linkedStorage.next = 0;
+				}
 			}
-			else other.breakLink(worldObj, linkedEntity);
+			else breakLink(worldObj, linkedEntity);
 		}
 
-		linked.clear();
+		storage.linked.clear();
 		machineEntity.setWorldBlockMetadata(INACTIVE);
 		machineEntity.coordinateDisplays.set(0, null);
 
-		breakingLink = false;
+		storage.breakingLink = false;
 	}
 
 	@Override
@@ -317,9 +341,13 @@ public class CJMachineTransferor implements CJIMachine {
 	}
 
 	@Override
-	public void writeToNBT(CompoundTag tagCompound) {
+	public void writeToNBT(
+			CJTileEntityMachineBase machineEntity, CompoundTag tagCompound) {
+
 		ListTag<IntArrayTag> positions = new ListTag<>();
-		for(int[] link : linked) {
+		CJMachineTransferorStorage storage = getStorage(machineEntity);
+
+		for(int[] link : storage.linked) {
 			positions.setTag(new IntArrayTag(link));
 		}
 
@@ -327,12 +355,16 @@ public class CJMachineTransferor implements CJIMachine {
 	}
 
 	@Override
-	public void readFromNBT(CompoundTag tagCompound) {
+	public void readFromNBT(
+			CJTileEntityMachineBase machineEntity, CompoundTag tagCompound) {
+
 		ListTag<IntArrayTag> linkedPositions =
 				tagCompound.getTagList("link_positions");
 
+		CJMachineTransferorStorage storage = getStorage(machineEntity);
+
 		for(IntArrayTag link : linkedPositions) {
-			linked.add(link.getIntArray());
+			storage.linked.add(link.getIntArray());
 		}
 	}
 }
