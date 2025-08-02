@@ -101,7 +101,7 @@ public class CJMod extends Mod {
 	public static Block tank;
 	public static Block mixer;
 	public static Block composter;
-    public static Block primitiveCentrifuge;
+	public static Block primitiveCentrifuge;
 	public static Block enervator;
 	public static Block pump;
 	public static Block reactor;
@@ -136,6 +136,8 @@ public class CJMod extends Mod {
 	public static Item linker;
 	public static Item pruningShears;
 	public static Item sundial;
+	public static Item bloodInjector;
+	public static Item fluidContainer;
 
 	public static Item ironRod;
 
@@ -299,7 +301,6 @@ public class CJMod extends Mod {
 					.setItemName(name)
 					.setMaxStackSize(maxStack)
 					.setTooltipColor(rarity)
-					.addDescription(new CJItemDescriptionModTag())
 					.setCreativeTab(creativeTab);
 		}
 		catch(Exception e) {
@@ -411,7 +412,8 @@ public class CJMod extends Mod {
 				PRIMAL_COLOR, 1, CJItemConvertBowl.class, "cj_dirt_bowl",
 				new ItemStack(stoneDust));
 
-		blender = registerItem("cj_blender", PRIMAL_COLOR, 16);
+		blender = registerItem("cj_blender", PRIMAL_COLOR, 1)
+				.setDoNotConsumeOnCrafting(true);
 
 		fauxJewel = registerItem(
 				"cj_jewel_faux", PRIMAL_COLOR, 1)
@@ -454,6 +456,14 @@ public class CJMod extends Mod {
 				"cj_pruning_shears");
 
 		sundial = registerItem("cj_sundial", REFINED_COLOR, 1);
+
+		bloodInjector = registerItem(
+				REFINED_COLOR, 1, CJItemBloodInjector.class,
+				"cj_blood_injector");
+
+		fluidContainer = registerItem(
+				REFINED_COLOR, 1, CJItemFluidContainer.class,
+				"cj_fluid_container");
 
 		machineFrame = registerBlock(
 				"cj_machine_frame", Materials.ROCK, 1.5F, 10.0F,
@@ -511,8 +521,8 @@ public class CJMod extends Mod {
 		mixer = registerMachine(
 				new CJMachineBuilder("/machines/cj_mixer.json"));
 
-        enervator = registerMachine(
-                new CJMachineBuilder("/machines/cj_enervator.json"));
+		enervator = registerMachine(
+				new CJMachineBuilder("/machines/cj_enervator.json"));
 
 		pump = registerMachine(
 				new CJMachineBuilder("/machines/cj_pump.json"));
@@ -656,7 +666,7 @@ public class CJMod extends Mod {
 				'%', tinyGoldDust);
 
 		registerRecipe(
-				new ItemStack(blender, 4),
+				blender,
 				" % ",
 				"%~%",
 				"%%%",

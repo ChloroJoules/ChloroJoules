@@ -155,12 +155,9 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 
 			if(tankVolume == null) continue;
 
-			// NOTE: `max` and `lockFluid` are expected to be set statically
-			//       Per-machine so we don't need to serialize them.
 			CompoundTag volumeTag = new CompoundTag();
 			volumeTag.setByte("volume", (byte) i);
-			volumeTag.setInteger("current", tankVolume.current);
-			volumeTag.setInteger("fluid", tankVolume.fluidID);
+			tankVolume.writeToNBT(volumeTag);
 			tanksList.setTag(volumeTag);
 		}
 		tagCompound.setTag("tanks", tanksList);
@@ -209,8 +206,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 			byte tankIndex = volumeTag.getByte("volume");
 
 			CJTankVolume volume = tanks.get(tankIndex);
-			volume.current = volumeTag.getInteger("current");
-			volume.fluidID = volumeTag.getInteger("fluid");
+			volume.readFromNBT(volumeTag);
 			tanks.set(tankIndex, volume);
 		}
 	}

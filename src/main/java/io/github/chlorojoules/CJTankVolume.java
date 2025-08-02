@@ -1,6 +1,7 @@
 package io.github.chlorojoules;
 
 import com.google.gson.JsonObject;
+import com.mojang.nbt.CompoundTag;
 import net.minecraft.common.block.Block;
 import net.minecraft.common.util.JsonUtils;
 
@@ -42,6 +43,18 @@ public class CJTankVolume {
 		if(jsonObject.has("lock")) {
 			lockFluid = JsonUtils.getBoolean(jsonObject, "lock");
 		}
+	}
+
+	public void writeToNBT(CompoundTag tagCompound) {
+		// NOTE: `max` and `lockFluid` are expected to be set statically
+		//       Per-machine so we don't need to serialize them.
+		tagCompound.setInteger("current", current);
+		tagCompound.setInteger("fluid", fluidID);
+	}
+
+	public void readFromNBT(CompoundTag tagCompound) {
+		current = tagCompound.getInteger("current");
+		fluidID = tagCompound.getInteger("fluid");
 	}
 
 	public CJTankVolume setMax(int value) {
