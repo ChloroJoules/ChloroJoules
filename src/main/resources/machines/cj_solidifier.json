@@ -22,18 +22,6 @@
       "output": true
     }
   ],
-  "buttons": [
-    {
-      "name": "fuel_refine",
-      "tooltip": "message.cj_enable_refine_fuel",
-      "label": {
-        "item": "chlorojoules:cj_jewel_manufactured"
-      },
-      "anchor": "bottom right",
-      "x": 22,
-      "y": 26
-    }
-  ],
   "progress": {
     "anchor": "center"
   },
@@ -54,24 +42,6 @@
           "target": "output",
           "item": "chlorojoules:cj_paste",
           "amount": 2
-        }
-      ]
-    },
-    {
-      "ticks": 650,
-      "fuel": 100,
-      "button": "fuel_refine",
-      "inputs": [
-        {
-          "target": "fuel",
-          "fluid": "chlorojoules:cj_fluid_chlorojoules",
-          "amount": 900
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "item": "chlorojoules:cj_jewel_faux"
         }
       ]
     }
