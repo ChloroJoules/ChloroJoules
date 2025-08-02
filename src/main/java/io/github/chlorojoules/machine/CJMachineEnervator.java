@@ -79,14 +79,16 @@ public class CJMachineEnervator implements CJIMachine {
 			return;
 		}
 
-		if(machineEntity.worldObj.worldInfo.getDimension() == -1) {
-			machineEntity.operationTicks = 0;
-			machineEntity.errorMessage =
-					translate.translateKey("message.cj_in_hell");
+		// TODO: This is broken.
+		//if(machineEntity.worldObj.worldInfo.getDimension() == -1) {
+		//	machineEntity.operationTicks = 0;
+		//	machineEntity.errorMessage =
+		//			translate.translateKey("message.cj_in_hell");
+		//
+		//	return;
+		//}
 
-			return;
-		}
-
+		// TODO: Can see sky.
 		if(!(machineEntity.worldObj.getWorldTime() < 12000L)) {
 			machineEntity.operationTicks = 0;
 			machineEntity.errorMessage =
