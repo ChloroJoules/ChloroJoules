@@ -79,6 +79,22 @@ public class CJMachineEnervator implements CJIMachine {
 			return;
 		}
 
+		if(machineEntity.worldObj.worldInfo.getDimension() == -1) {
+			machineEntity.operationTicks = 0;
+			machineEntity.errorMessage =
+					translate.translateKey("message.cj_in_hell");
+
+			return;
+		}
+
+		if(!(machineEntity.worldObj.getWorldTime() < 12000L)) {
+			machineEntity.operationTicks = 0;
+			machineEntity.errorMessage =
+					translate.translateKey("message.cj_no_sky");
+
+			return;
+		}
+
 		CJRarity rarity = CJRarityInfo.getJewelRarity(jewelStack.getItemID());
 		machineEntity.operationLength -=
 				CJRarityInfo.getRarityTimeScale(rarity);
