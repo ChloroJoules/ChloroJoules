@@ -52,7 +52,7 @@ public class CJItemFluidContainer extends Item {
 		itemstack.setItemDamage(CJTankVolume.DEFAULT_MAX - volume.current);
 	}
 
-		public static boolean consumeFromContainers(
+	public static boolean consumeFromContainers(
 			ItemStack[] inventory, int fluidID, int required) {
 
 		ArrayList<ItemStack> containers = new ArrayList<>();

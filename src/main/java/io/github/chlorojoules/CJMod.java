@@ -25,9 +25,12 @@ import net.minecraft.common.block.sound.StepSound;
 import net.minecraft.common.block.sound.StepSounds;
 import net.minecraft.common.block.tileentity.TileEntity;
 import net.minecraft.common.item.*;
+import net.minecraft.common.item.children.ItemBucket;
+import net.minecraft.common.item.children.ItemGoldenBucket;
 import net.minecraft.common.item.data.EnumTools;
 import net.minecraft.common.recipe.*;
 import net.minecraft.common.util.JsonUtils;
+import net.minecraft.common.world.map.MapColor;
 
 import java.util.*;
 
@@ -85,6 +88,16 @@ public class CJMod extends Mod {
 	public static Block fluidEtching;
 	public static Item bucketFluidEtching;
 
+	public static final Material fluidAwarenessMaterial = new MaterialLiquid(
+			MapColor.tntColor)
+			.setNoPushMobility()
+			.setFogColors(0.6F, 0.1F, 0.0F);
+
+	public static Fluid fluidAwarenessFluid;
+	public static Block fluidAwareness;
+	public static Block fluidAwarenessStill;
+	public static Item bucketFluidAwareness;
+
 	public static Block primitiveMachineFrame;
 	public static Block machineFrame;
 	public static Block compactedJewelDust;
@@ -108,6 +121,7 @@ public class CJMod extends Mod {
 	public static Block injector;
 
 	public static Item paste;
+	public static Item soulGem;
 	public static Item pasteBowl;
 	public static Item dirtBowl;
 
@@ -387,11 +401,41 @@ public class CJMod extends Mod {
 		bucketFluidEtching = registerFluidBucket(
 				"cj_fluid_etching_bucket", MANUFACTURED_COLOR, fluidEtching);
 
+		fluidAwareness = registerBlock(
+				100.0f, 0.0f, StepSounds.SOUND_UNUSED, EnumTools.PICKAXE,
+				BlockFluid.class, "cj_fluid_awareness_flowing",
+				fluidAwarenessMaterial, "cj_fluid_awareness", true)
+				.disableStats()
+				.setLightOpacity(1);
+
+		fluidAwarenessStill = registerBlock(
+				100.0f, 0.0f, StepSounds.SOUND_UNUSED, EnumTools.PICKAXE,
+				BlockFluid.class, "cj_fluid_awareness", fluidAwarenessMaterial,
+				"cj_fluid_awareness", false)
+				.disableStats()
+				.setLightOpacity(1);
+
+		fluidAwarenessFluid = new Fluid(
+				"cj_fluid_awareness", fluidAwarenessStill, fluidAwareness);
+
+		registerItem(
+				REFINED_COLOR, 1, ItemGoldenBucket.class,
+				"cj_fluid_awareness_bucket_gold", fluidAwareness.blockID)
+				.setContainerItem(GOLDEN_EMPTY_BUCKET);
+
+		bucketFluidAwareness = registerItem(
+				REFINED_COLOR, 1, ItemBucket.class,
+				"cj_fluid_awareness_bucket", fluidAwareness.blockID)
+				.setContainerItem(EMPTY_BUCKET);
+
 		fuelFluid = fluidChlorojoules.blockID;
 		waterFluid = WATER_MOVING.blockID;
 		lavaFluid = LAVA_MOVING.blockID;
 
 		paste = registerItem("cj_paste", PRIMAL_COLOR);
+		soulGem = registerItem(
+				REFINED_COLOR, 64, CJItemSoulGem.class, "cj_soul_gem");
+
 		jewelDust = registerItem("cj_jewel_dust", MANUFACTURED_COLOR);
 		stoneDust = registerItem("cj_stone_dust", PRIMAL_COLOR);
 		ironDust = registerItem("cj_iron_dust", PRIMAL_COLOR);
@@ -903,7 +947,7 @@ public class CJMod extends Mod {
 				" @%",
 				"@  ",
 				'%', paste,
-				'#', IRON_INGOT,
+				'#', SOUL_SAND,
 				'@', ironRod);
 
 		registerRecipe(

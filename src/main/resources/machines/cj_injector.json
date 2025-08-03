@@ -22,7 +22,7 @@
     {
       "name": "output",
       "anchor": "center",
-      "x": 50,
+      "x": 48,
       "y": 5,
 
       "output": true
@@ -36,13 +36,13 @@
         "item": "chlorojoules:cj_fluid_chlorojoules_bucket"
       },
       "anchor": "bottom right",
-      "x": 27,
+      "x": 16,
       "y": 26
     }
   ],
   "progress": {
     "anchor": "center",
-    "x": 20
+    "x": 14
   },
   "recipes": [
     {
@@ -64,6 +64,28 @@
         {
           "target": "output",
           "item": "chlorojoules:cj_jewel_refined"
+        }
+      ]
+    },
+    {
+      "ticks": 850,
+      "fuel": 350,
+      "rarity": "refined",
+      "inputs": [
+        {
+          "target": "inject",
+          "fluid": "chlorojoules:cj_fluid_awareness_flowing",
+          "amount": 150
+        },
+        {
+          "target": "input",
+          "item": "chlorojoules:cj_jewel_refined"
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "item": "chlorojoules:cj_jewel_awakened"
         }
       ]
     }

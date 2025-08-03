@@ -115,6 +115,8 @@ tile.cj_fluid_chlorojoules.name=ChloroJoules
 tile.cj_fluid_souls.name=Fluid Souls
 tile.cj_fluid_dimension.name=Dimensional Flux
 tile.cj_fluid_etching.name=Etching Fluid
+tile.cj_fluid_awareness.name=Awareness
+tile.cj_fluid_awareness_flowing.name=Awareness
 
 # Items.
 item.cj_fluid_paste_bucket.name=Paste Bucket
@@ -127,6 +129,8 @@ item.cj_fluid_dimension_bucket.name=Dimensional Flux Bucket
 item.cj_fluid_dimension_bucket_gold.name=Golden Dimensional Flux Bucket
 item.cj_fluid_etching_bucket.name=Etching Fluid Bucket
 item.cj_fluid_etching_bucket_gold.name=Golden Etching Fluid Bucket
+item.cj_fluid_awareness_bucket.name=Awareness Bucket
+item.cj_fluid_awareness_bucket_gold.name=Golden Awareness Bucket
 
 item.cj_stone_dust.name=Stone Dust
 item.cj_iron_dust.name=Iron Dust
@@ -144,6 +148,7 @@ item.cj_linker.name=Chloro Tool
 item.cj_soul_essence.name=Soul Essence
 item.cj_jewel_dust.name=ChloroJewel Dust
 item.cj_paste.name=Plant Paste
+item.cj_soul_gem.name=Soul Gem
 item.cj_paste_bowl.name=Leafy Salad
 item.cj_dirt_bowl.name=Gritty Salad
 item.cj_iron_rod.name=Iron Rod

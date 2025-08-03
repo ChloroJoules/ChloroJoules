@@ -44,6 +44,24 @@
           "amount": 2
         }
       ]
+    },
+    {
+      "ticks": 150,
+      "fuel": 35,
+      "inputs": [
+        {
+          "target": "input",
+          "fluid": "chlorojoules:cj_fluid_souls",
+          "amount": 100
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "item": "chlorojoules:cj_soul_gem",
+          "amount": 1
+        }
+      ]
     }
   ]
 }
