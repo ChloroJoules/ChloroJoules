@@ -1,6 +1,7 @@
 {
   "name": "cj_injector",
   "rarity": "manufactured",
+  "implementation": "io.github.chlorojoules.machine.CJMachineInjector",
   "tanks": [
     "fuel",
     {

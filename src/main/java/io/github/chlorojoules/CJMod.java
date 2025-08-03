@@ -333,7 +333,7 @@ public class CJMod extends Mod {
 					.setResistance(resistance)
 					.setSound(sound)
 					.setEffectiveTool(tool)
-					.addDescription(new CJItemDescriptionModTag())
+					//.addDescription(new CJItemDescriptionModTag())
 					.setCreativeTab(creativeTab);
 		}
 		catch(Exception e) {
@@ -463,7 +463,8 @@ public class CJMod extends Mod {
 
 		fluidContainer = registerItem(
 				REFINED_COLOR, 1, CJItemFluidContainer.class,
-				"cj_fluid_container");
+				"cj_fluid_container")
+				.addDescription(new CJItemDescriptionFluidContainer());
 
 		machineFrame = registerBlock(
 				"cj_machine_frame", Materials.ROCK, 1.5F, 10.0F,

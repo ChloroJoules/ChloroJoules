@@ -1,8 +1,7 @@
 package io.github.chlorojoules.item;
 
+import com.mojang.nbt.CompoundTag;
 import io.github.chlorojoules.CJTankVolume;
-import net.minecraft.common.entity.Entity;
-import net.minecraft.common.entity.inventory.IInventory;
 import net.minecraft.common.item.Item;
 import net.minecraft.common.item.ItemStack;
 
@@ -12,15 +11,17 @@ public class CJItemFluidContainer extends Item {
 	}
 
 	public static ItemStack getContainerMatchingFluid(
-			Entity entity, int fluidID) {
-
-		ItemStack[] inventory = entity.getInventory();
+			ItemStack[] inventory, int fluidID) {
 
 		for(ItemStack stack : inventory) {
+			if(stack == null) continue;
 			if(!(stack.getItem() instanceof CJItemFluidContainer)) continue;
 
+			CompoundTag tagCompound = stack.getTagCompound();
+			if(tagCompound == null) continue;
+
 			CJTankVolume volume = new CJTankVolume();
-			volume.readFromNBT(stack.getTagCompound());
+			volume.readFromNBT(tagCompound);
 			if(volume.fluidID != fluidID) continue;
 
 			return stack;

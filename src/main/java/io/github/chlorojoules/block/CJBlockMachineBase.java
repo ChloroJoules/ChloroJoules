@@ -6,7 +6,6 @@ import io.github.chlorojoules.CJTankVolume;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.gui.CJGuiMachineBase;
 import io.github.chlorojoules.item.CJItemBlockMachineBase;
-import io.github.chlorojoules.item.CJItemDescriptionModTag;
 import io.github.chlorojoules.machine.CJMachineBlockSideMode;
 import io.github.chlorojoules.machine.CJMachineTier;
 import io.github.chlorojoules.machine.CJMachineBuilder;
@@ -41,7 +40,7 @@ public class CJBlockMachineBase extends BlockContainer {
 		this.machineBuilder = machineBuilder;
 
 		super.setBlockName(machineBuilder.name);
-		super.addDescription(new CJItemDescriptionModTag());
+		//super.addDescription(new CJItemDescriptionModTag());
 		super.setTooltipColor(getRarityColor(machineBuilder.rarity));
 
 		super.setHardness(machineBuilder.tier.getHardness());
