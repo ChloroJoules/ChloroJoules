@@ -1,7 +1,6 @@
 package io.github.chlorojoules.item;
 
 import com.mojang.nbt.CompoundTag;
-import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.CJRarity;
 import io.github.chlorojoules.CJRarityInfo;
 import io.github.chlorojoules.CJTankVolume;

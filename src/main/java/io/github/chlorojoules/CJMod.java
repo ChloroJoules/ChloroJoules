@@ -462,7 +462,7 @@ public class CJMod extends Mod {
 				"cj_blood_injector");
 
 		fluidContainer = registerItem(
-				REFINED_COLOR, 1, CJItemFluidContainer.class,
+				MANUFACTURED_COLOR, 1, CJItemFluidContainer.class,
 				"cj_fluid_container")
 				.addDescription(new CJItemDescriptionFluidContainer());
 
