@@ -28,6 +28,18 @@
       "output": true
     }
   ],
+  "buttons": [
+    {
+      "name": "refine_fuel",
+      "tooltip": "message.cj_enable_refine_fuel",
+      "label": {
+        "item": "chlorojoules:cj_fluid_chlorojoules_bucket"
+      },
+      "anchor": "bottom right",
+      "x": 27,
+      "y": 26
+    }
+  ],
   "progress": {
     "anchor": "center",
     "x": 20

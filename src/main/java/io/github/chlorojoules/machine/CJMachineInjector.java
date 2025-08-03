@@ -45,6 +45,11 @@ public class CJMachineInjector extends CJMachineRecipeConsumer {
 			return;
 		}
 
+		if(machineBuilder.getNamedButtonState(machineEntity, "refine_fuel")) {
+			injectVolume =
+					machineBuilder.getNamedTankVolume(machineEntity, "fuel");
+		}
+
 		CJRarity rarity = CJRarityInfo.getJewelRarity(jewelStack.getItemID());
 
 		machineEntity.operationLength /=

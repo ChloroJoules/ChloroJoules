@@ -237,7 +237,7 @@ public class CJMachineBuilder {
 		machineEntity.setInventorySlotContents(getNamedSlotIndex(id), stack);
 	}
 
-	private boolean getNamedButtonState(
+	public boolean getNamedButtonState(
 			CJTileEntityMachineBase machineEntity, String id) {
 
 		for(int i = 0; i < buttons.size(); ++i) {

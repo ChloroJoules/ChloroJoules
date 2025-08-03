@@ -45,38 +45,13 @@ public class CJItemBloodInjector extends Item implements CJIItemSocket {
 		CJRarity rarity =
 				CJRarityInfo.getDamageRarity(itemstack.getItemDamage());
 
-		ArrayList<ItemStack> containers = new ArrayList<>();
-		int consumed = 0;
 		int required = REQUIRED * CJRarityInfo.getRarityPowerScale(rarity);
+		boolean consumed =
+				CJItemFluidContainer.consumeFromContainers(
+						player.inventory.mainInventory,
+						Blocks.SANGUIS_MOVING.blockID, required);
 
-		while(consumed < required) {
-			ItemStack container =
-					CJItemFluidContainer.getContainerMatchingFluid(
-							player.inventory.mainInventory,
-							Blocks.SANGUIS_MOVING.blockID);
-
-			if(container == null) return;
-
-			CompoundTag tag = container.getTagCompound();
-			CJTankVolume volume = new CJTankVolume();
-			volume.readFromNBT(tag);
-
-			consumed += Math.min(required - consumed, volume.current);
-			containers.add(container);
-		}
-
-		consumed = 0;
-		for(ItemStack container : containers) {
-			CompoundTag tag = container.getTagCompound();
-			CJTankVolume volume = new CJTankVolume();
-			volume.readFromNBT(tag);
-
-			consumed += volume.removeFluid(
-					Blocks.SANGUIS_MOVING.blockID,
-					Math.max(required - consumed, 0), false);
-
-			volume.writeToNBT(tag);
-		}
+		if(!consumed) return;
 
 		player.heal(1);
 		selfTag.setInteger(

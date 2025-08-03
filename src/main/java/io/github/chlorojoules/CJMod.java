@@ -138,6 +138,7 @@ public class CJMod extends Mod {
 	public static Item sundial;
 	public static Item bloodInjector;
 	public static Item fluidContainer;
+	public static Item jetpack;
 
 	public static Item ironRod;
 
@@ -465,6 +466,9 @@ public class CJMod extends Mod {
 				MANUFACTURED_COLOR, 1, CJItemFluidContainer.class,
 				"cj_fluid_container")
 				.addDescription(new CJItemDescriptionFluidContainer());
+
+		jetpack = registerItem(
+				REFINED_COLOR, 1, CJItemJetpack.class, "cj_jetpack");
 
 		machineFrame = registerBlock(
 				"cj_machine_frame", Materials.ROCK, 1.5F, 10.0F,
