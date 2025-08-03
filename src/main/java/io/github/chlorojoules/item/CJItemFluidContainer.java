@@ -1,11 +1,7 @@
 package io.github.chlorojoules.item;
 
 import com.mojang.nbt.CompoundTag;
-import io.github.chlorojoules.CJMod;
-import io.github.chlorojoules.CJRarityInfo;
-import io.github.chlorojoules.CJTank;
 import io.github.chlorojoules.CJTankVolume;
-import net.minecraft.common.block.Blocks;
 import net.minecraft.common.entity.Entity;
 import net.minecraft.common.item.Item;
 import net.minecraft.common.item.ItemStack;

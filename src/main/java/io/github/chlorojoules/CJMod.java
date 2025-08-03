@@ -602,6 +602,13 @@ public class CJMod extends Mod {
 		ItemStack soulExtractorStack = new ItemStack(
 				soulExtractor, 1, MAX_DAMAGE);
 
+		ItemStack bloodInjectorStack = new ItemStack(
+				bloodInjector, 1, MAX_DAMAGE);
+
+		ItemStack jetpackStack = new ItemStack(jetpack, 1, MAX_DAMAGE);
+		ItemStack fluidContainerStack = new ItemStack(
+				fluidContainer, 1, CJTankVolume.DEFAULT_MAX);
+
 		registerShapelessRecipe(pasteBowl, tagLeaves, BOWL);
 		registerRecipe(
 				composter,
@@ -611,6 +618,37 @@ public class CJMod extends Mod {
 				'%', TaggedIngredients.WOODEN_PLANKS,
 				'|', primitiveMachineFrame,
 				'#', tagLeaves);
+
+		registerRecipe(
+				bloodInjectorStack,
+				"-|-",
+				"~#~",
+				" / ",
+				'-', tagRawStone,
+				'|', machineFrame,
+				'~', GOLD_INGOT,
+				'/', IRON_INGOT,
+				'#', COAGULATED_SANGUIS);
+
+		registerRecipe(
+				jetpackStack,
+				"-~-",
+				"-|-",
+				"/@/",
+				'-', tagRawStone,
+				'~', GOLD_INGOT,
+				'|', machineFrame,
+				'/', IRON_INGOT,
+				'@', DIAMOND_BLOCK);
+
+		registerRecipe(
+				fluidContainerStack,
+				" - ",
+				"-~-",
+				" | ",
+				'-', tagRawStone,
+				'|', IRON_INGOT,
+				'~', tank);
 
 		registerRecipe(
 				pruningShears,
