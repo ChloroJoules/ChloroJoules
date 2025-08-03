@@ -149,6 +149,8 @@ item.cj_dirt_bowl.name=Gritty Salad
 item.cj_iron_rod.name=Iron Rod
 item.cj_moss.name=Moss
 item.cj_blender.name=Rock Grinder
+item.cj_blood_injector.name=Sanguophagic Injector
+item.cj_fluid_container.name=Personal Tank
 
 item.cj_jewel_faux.name=Faux ChloroJewel
 item.cj_jewel_primal.name=Primal ChloroJewel
