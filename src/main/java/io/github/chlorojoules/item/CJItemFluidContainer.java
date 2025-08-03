@@ -3,16 +3,21 @@ package io.github.chlorojoules.item;
 import com.mojang.nbt.CompoundTag;
 import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.CJRarityInfo;
+import io.github.chlorojoules.CJTank;
 import io.github.chlorojoules.CJTankVolume;
 import net.minecraft.common.block.Blocks;
+import net.minecraft.common.entity.Entity;
 import net.minecraft.common.item.Item;
 import net.minecraft.common.item.ItemStack;
+import net.minecraft.common.world.World;
 
 import java.util.ArrayList;
 
 public class CJItemFluidContainer extends Item {
 	public CJItemFluidContainer(String name) {
 		super(name);
+
+		setMaxDamage(CJTankVolume.DEFAULT_MAX);
 	}
 
 	public static ItemStack getContainerMatchingFluid(
@@ -35,7 +40,23 @@ public class CJItemFluidContainer extends Item {
 		return null;
 	}
 
-	public static boolean consumeFromContainers(
+	@Override
+	public void onUpdate(
+			ItemStack itemstack, World world, Entity entity, int slot,
+			boolean inHand) {
+
+		super.onUpdate(itemstack, world, entity, slot, inHand);
+
+		CompoundTag tagCompound = itemstack.getTagCompound();
+		if(tagCompound == null) return;
+
+		CJTankVolume volume = new CJTankVolume();
+		volume.readFromNBT(tagCompound);
+
+		itemstack.setItemDamage(CJTankVolume.DEFAULT_MAX - volume.current);
+	}
+
+		public static boolean consumeFromContainers(
 			ItemStack[] inventory, int fluidID, int required) {
 
 		ArrayList<ItemStack> containers = new ArrayList<>();
