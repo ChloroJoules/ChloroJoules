@@ -1,19 +1,25 @@
 package io.github.chlorojoules.item;
 
 import io.github.chlorojoules.CJMod;
+import io.github.chlorojoules.CJRarity;
+import io.github.chlorojoules.CJRarityInfo;
 import net.minecraft.common.entity.player.EntityPlayer;
 import net.minecraft.common.item.Item;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.util.i18n.StringTranslate;
 import net.minecraft.common.world.World;
 
-public class CJItemRiftIdentifier extends Item {
+public class CJItemRiftIdentifier extends Item implements CJIItemSocket {
 	private static final int RIFT_MIN = 128;
 	private static final int RIFT_JITTER = 25;
 	private static final int RIFT_RANGE = 8;
 
 	public CJItemRiftIdentifier(String name) {
 		super(name);
+
+		setMaxDamage(0);
+		addDescription(new CJItemDescriptionSocket());
+		setHasSubtypes(true);
 	}
 
 	private static int signNoZero(int n) {
@@ -36,6 +42,14 @@ public class CJItemRiftIdentifier extends Item {
 			ItemStack itemstack, World world, EntityPlayer player) {
 
 		StringTranslate translate = StringTranslate.getInstance();
+
+		CJRarity rarity =
+				CJRarityInfo.getDamageRarity(itemstack.getItemDamage());
+
+		if(rarity != CJRarity.AWAKENED) {
+			CJMod.sendChat(translate.translateKey("message.cj_poor_jewel"));
+			return itemstack;
+		}
 
 		if(player.dimension != 0) {
 			CJMod.sendChat(translate.translateKey(
