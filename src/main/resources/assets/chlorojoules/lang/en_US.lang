@@ -40,6 +40,10 @@ message.cj_link_switch_fluid=§9Switched to fluid mode
 message.cj_link_switch_item=§6Switched to item mode
 message.cj_link_switch_multi_fluid=§9Switched to multi-fluid mode
 message.cj_link_switch_multi_item=§6Switched to multi-item mode
+message.cj_activate_rift=§DTethering rift to current manifold
+message.cj_rift_locate=§ANearest rift is %s blocks away
+message.cj_rift_active=§CRift is already active
+message.cj_unstable_dimension=§CCurrent manifold unstable, cannot isolate rift
 
 # Help messages.
 message.cj_liquefier.help=Turns items into fluids

@@ -6,6 +6,7 @@ import com.fox2code.foxloader.registry.GameRegistry;
 import com.google.gson.JsonObject;
 
 import io.github.chlorojoules.block.CJBlockMachineBase;
+import io.github.chlorojoules.block.CJBlockRift;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.item.*;
 import io.github.chlorojoules.machine.*;
@@ -101,6 +102,7 @@ public class CJMod extends Mod {
 	public static Block primitiveMachineFrame;
 	public static Block machineFrame;
 	public static Block compactedJewelDust;
+	public static Block rift;
 
 	public static Block cultivator;
 	public static Block liquefier;
@@ -153,6 +155,7 @@ public class CJMod extends Mod {
 	public static Item bloodInjector;
 	public static Item fluidContainer;
 	public static Item jetpack;
+	public static Item riftIdentifier;
 
 	public static Item ironRod;
 
@@ -514,6 +517,10 @@ public class CJMod extends Mod {
 		jetpack = registerItem(
 				REFINED_COLOR, 1, CJItemJetpack.class, "cj_jetpack");
 
+		riftIdentifier = registerItem(
+				REFINED_COLOR, 1, CJItemRiftIdentifier.class,
+				"cj_rift_identifier");
+
 		machineFrame = registerBlock(
 				"cj_machine_frame", Materials.ROCK, 1.5F, 10.0F,
 				StepSounds.SOUND_STONE, EnumTools.PICKAXE);
@@ -525,6 +532,12 @@ public class CJMod extends Mod {
 		compactedJewelDust = registerBlock(
 				"cj_block_jewel_dust", Materials.SAND, 1.5F, 0.0F,
 				StepSounds.SOUND_SAND, EnumTools.SHOVEL);
+
+		rift = registerBlock(
+				6000000.0F, 6000000.0F, StepSounds.SOUND_GEM,
+				EnumTools.PICKAXE, CJBlockRift.class, "cj_rift")
+				.setBlockUnbreakable()
+				.setLightValue(1.0F);
 
 		// TODO: Make achievements to get ready for when they start working!
 
