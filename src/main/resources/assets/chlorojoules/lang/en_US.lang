@@ -11,6 +11,7 @@ message.cj_bad_jewel=Bad jewel inserted
 message.cj_full_tool=Tool already has jewel
 message.cj_poor_jewel=Low-tier jewel inserted
 message.cj_in_hell=In Hell
+message.cj_no_rift=No rift detected
 message.cj_no_sky=No sunlight
 message.cj_bad_recipe=No matching recipe
 message.cj_no_fluid=No adjacent fluid
@@ -27,6 +28,11 @@ message.cj_working=Machine Working
 message.cj_ok=All okay!
 message.cj_link_coordinate=§7Linked to §LX: %d Y: %d Z: %d
 message.cj_coordinate_unset=§CCoordinates unset
+
+message.cj_rift1=§DThe walls of reality have been stretched thin
+message.cj_rift2=§DYou feel a §K###§R §D§Lpresence §R§D§K###§R §Dgrow close
+message.cj_rift3=§D§K###§R §O§LI see your light §R§D§K###§R
+message.cj_rift4=§DAs the rift fades, a gift from beyond is left in its wake
 
 # Tool messages.
 message.cj_not_transferor=§CBlock is not a Transferor

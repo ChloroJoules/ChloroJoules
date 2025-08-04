@@ -1,19 +1,40 @@
 package io.github.chlorojoules.machine;
 
 import com.indigo3d.util.RenderSystem;
+import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.CJRarity;
 import io.github.chlorojoules.CJRarityInfo;
 import io.github.chlorojoules.CJTankVolume;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import net.minecraft.client.renderer.world.Tessellator;
+import net.minecraft.common.block.Blocks;
+import net.minecraft.common.entity.Entity;
+import net.minecraft.common.entity.player.EntityPlayer;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.util.i18n.StringTranslate;
 import org.lwjgl.opengl.GL11;
 
+class CJMachineRiftBeaconStorage {
+	int riftTicks = 0;
+}
+
 @SuppressWarnings("unused")
 public class CJMachineRiftBeacon implements CJIMachine {
-	private static final int BAND_DIVISOR = 5;
+	private static final int BAND_DIVISOR = 8;
 	private static final int TIME_SCALE = 8;
+	private static final int Y_OFFSET = 4;
+	private static final double CAP = 0.8f;
+	private static final int CUTSCENE_THRESHOLD = 80;
+
+	private static CJMachineRiftBeaconStorage getStorage(
+			CJTileEntityMachineBase machineEntity) {
+
+		if(machineEntity.machineStorage == null) {
+			machineEntity.machineStorage = new CJMachineRiftBeaconStorage();
+		}
+
+		return (CJMachineRiftBeaconStorage) machineEntity.machineStorage;
+	}
 
 	@Override
 	public void updateMachine(CJTileEntityMachineBase machineEntity) {
@@ -41,6 +62,66 @@ public class CJMachineRiftBeacon implements CJIMachine {
 				(machineEntity.operationLength / BAND_DIVISOR);
 
 		if(machineEntity.operationTicks >= machineEntity.operationLength) {
+			CJMachineRiftBeaconStorage storage = getStorage(machineEntity);
+
+			for(Entity entity : machineEntity.worldObj.loadedEntityList) {
+				double dx = (machineEntity.xCoord + 0.5) - entity.posX;
+				double dz = (machineEntity.zCoord + 0.5) - entity.posZ;
+				double dy =
+						(machineEntity.yCoord + 0.5 + Y_OFFSET) - entity.posY;
+
+				double distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+				if(distance > 16.0) continue;
+
+				if(entity instanceof EntityPlayer player && distance < 1.0) {
+					if(storage.riftTicks == 0) {
+						player.addChatMessage("message.cj_rift1");
+					}
+					else if(storage.riftTicks == CUTSCENE_THRESHOLD) {
+						player.addChatMessage("message.cj_rift2");
+					}
+					else if(storage.riftTicks == CUTSCENE_THRESHOLD * 2) {
+						player.addChatMessage("message.cj_rift3");
+					}
+					else if(storage.riftTicks == CUTSCENE_THRESHOLD * 3) {
+						player.addChatMessage("message.cj_rift4");
+					}
+					else if(storage.riftTicks == CUTSCENE_THRESHOLD * 4) {
+						machineEntity.worldObj.setBlockWithNotify(
+								machineEntity.xCoord,
+								machineEntity.yCoord + 1,
+								machineEntity.zCoord,
+								Blocks.AIR.blockID);
+
+						machineEntity.operationTicks = 0;
+						return;
+					}
+
+					storage.riftTicks++;
+				}
+
+				dx /= distance * 16.0;
+				dy /= distance * 16.0;
+				dz /= distance * 16.0;
+
+				if(entity.motionX < CAP) entity.addVelocity(dx, 0, 0);
+				if(entity.motionY < CAP) entity.addVelocity(0, dy, 0);
+				if(entity.motionZ < CAP) entity.addVelocity(0, 0, dz);
+			}
+
+			return;
+		}
+
+		int blockID = machineEntity.worldObj.getBlockId(
+				machineEntity.xCoord,
+				machineEntity.yCoord + 1,
+				machineEntity.zCoord);
+
+		if(blockID != CJMod.rift.blockID) {
+			machineEntity.operationTicks = 0;
+			machineEntity.errorMessage =
+					translate.translateKey("message.cj_no_rift");
+
 			return;
 		}
 
@@ -61,7 +142,7 @@ public class CJMachineRiftBeacon implements CJIMachine {
 			return;
 		}
 
-		if(fuelVolume.current < fuelVolume.max) {
+		if(fuelVolume.current <= 0) {
 			machineEntity.operationTicks = 0;
 			machineEntity.errorMessage =
 					translate.translateKey("message.cj_no_power");
@@ -87,6 +168,7 @@ public class CJMachineRiftBeacon implements CJIMachine {
 
 		soulVolume.removeFluid(0, TIME_SCALE, false);
 		etchingVolume.removeFluid(0, TIME_SCALE, false);
+		fuelVolume.removeFluid(0, TIME_SCALE / 2, false);
 		machineEntity.operationTicks++;
 	}
 
@@ -153,7 +235,7 @@ public class CJMachineRiftBeacon implements CJIMachine {
 		GL11.glLineWidth(4.0f);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW_MATRIX);
 		GL11.glPushMatrix();
-		GL11.glTranslated(x + 0.5, y + 3.5, z + 0.5);
+		GL11.glTranslated(x + 0.5, y + 0.5 + Y_OFFSET, z + 0.5);
 
 		for(int i = 0; i < machineEntity.riftDensity; ++i) {
 			tess.startDrawing(GL11.GL_LINES);
