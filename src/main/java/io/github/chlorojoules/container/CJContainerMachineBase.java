@@ -145,6 +145,7 @@ public class CJContainerMachineBase extends Container {
 				CJGuiMachineBaseSlot slot =
 						(CJGuiMachineBaseSlot) this.slots.get(i);
 
+				if(slot == null) continue;
 				if(slot.info.output) continue;
 				if(!slot.info.isAllowedItem(item)) continue;
 
