@@ -32,6 +32,7 @@ public class CJMachineBuilder {
 			CJMachineRecipeConsumer.class;
 
 	public boolean doDropMeta = false;
+	public boolean hasRiftView = false;
 
 	public ArrayList<CJMachineSlotInfo> slots = new ArrayList<>();
 	public ArrayList<CJTank> tanks = new ArrayList<>();
@@ -74,6 +75,10 @@ public class CJMachineBuilder {
 		if(root.has("tier")) {
 			tier = CJMachineTier.fromString(
 					JsonUtils.getString(root, "tier"));
+		}
+
+		if(root.has("rift")) {
+			hasRiftView = JsonUtils.getBoolean(root, "rift");
 		}
 
 		if(root.has("face")) {

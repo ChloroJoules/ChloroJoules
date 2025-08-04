@@ -41,6 +41,12 @@ public class CJGuiMachineBaseLayout {
 	public static final int PROGRESS_WIDTH = 24;
 	public static final int PROGRESS_HEIGHT = 17;
 
+	public static final int RIFT_VIEW_X = 176;
+	public static final int RIFT_VIEW_Y = 151;
+
+	public static final int RIFT_VIEW_WIDTH = 63;
+	public static final int RIFT_VIEW_HEIGHT = 63;
+
 	public static final int SLOT_IN_X = 176;
 	public static final int SLOT_IN_Y = 34;
 

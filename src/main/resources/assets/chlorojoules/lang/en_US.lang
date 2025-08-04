@@ -80,6 +80,8 @@ message.cj_reactor.help=Combines fluids together
 message.cj_reactor.flavor=A follow-up to Big and Extreme
 message.cj_injector.help=Injects fluids into items
 message.cj_injector.flavor=Not scared of needles
+message.cj_rift_beacon.help=Takes control of a dimensional rift
+message.cj_rift_beacon.flavor=I hope you know what you're doing
 
 message.cj_enable_refine_fuel=Allow processing of fuel tank
 message.cj_compost_bone_meal=Compost to bone meal
@@ -94,6 +96,7 @@ message.cj_tool_awakened=§BAwakened Jewel
 tile.cj_machine_frame.name=Machine Frame
 tile.cj_machine_frame_primitive.name=Primitive Machine Frame
 tile.cj_block_jewel_dust.name=Compacted Jewel Dust
+tile.cj_rift.name=Rift
 
 tile.cj_liquefier.name=Liquefier
 tile.cj_cultivator.name=Cultivator
@@ -112,6 +115,7 @@ tile.cj_enervator.name=Floral Enervator
 tile.cj_pump.name=Pump
 tile.cj_reactor.name=Chemical Reactor
 tile.cj_injector.name=Fluid Injector
+tile.cj_rift_beacon.name=Rift Beacon
 
 # Fluids.
 tile.cj_fluid_paste.name=Paste

@@ -15,4 +15,8 @@ public interface CJIMachine {
 
 	default void readFromNBT(
 			CJTileEntityMachineBase machineEntity, CompoundTag tagCompound) {}
+
+	default void renderTileEntityAt(
+			CJTileEntityMachineBase machineEntity,
+			double x, double y, double z, float deltaTicks, int progress) {}
 }

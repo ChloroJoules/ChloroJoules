@@ -29,7 +29,9 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 
 	public String errorMessage = null;
 	public boolean isWarning = false;
+	public int riftDensity = 0;
 
+	public float renderDelta = 0.0f;
 	public boolean isPassive = false;
 	public int operationTicks = 0;
 	public int operationLength = 1;

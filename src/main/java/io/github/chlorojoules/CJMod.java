@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import io.github.chlorojoules.block.CJBlockMachineBase;
 import io.github.chlorojoules.block.CJBlockRift;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
+import io.github.chlorojoules.block.tileentity.CJTileEntityRendererMachineBase;
 import io.github.chlorojoules.item.*;
 import io.github.chlorojoules.machine.*;
 
@@ -15,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.creative.CreativeTab;
 import net.minecraft.client.gui.creative.CreativeTabs;
 
+import net.minecraft.client.renderer.block.tileentity.TileEntityRenderManager;
 import net.minecraft.common.block.*;
 import net.minecraft.common.block.children.*;
 import net.minecraft.common.block.data.Material;
@@ -121,6 +123,7 @@ public class CJMod extends Mod {
 	public static Block pump;
 	public static Block reactor;
 	public static Block injector;
+	public static Block riftBeacon;
 
 	public static Item paste;
 	public static Item soulGem;
@@ -382,6 +385,10 @@ public class CJMod extends Mod {
 		TileEntity.addMapping(
 				CJTileEntityMachineBase.class, "cj_machine_base");
 
+		TileEntityRenderManager.instance.addTileEntityRenderer(
+				CJTileEntityMachineBase.class,
+				new CJTileEntityRendererMachineBase());
+
 		fluidChlorojoules = registerFluid("cj_fluid_chlorojoules");
 		bucketFluidChlorojoules = registerFluidBucket(
 				"cj_fluid_chlorojoules_bucket", MANUFACTURED_COLOR,
@@ -594,6 +601,9 @@ public class CJMod extends Mod {
 
 		injector = registerMachine(
 				new CJMachineBuilder("/machines/cj_injector.json"));
+
+		riftBeacon = registerMachine(
+				new CJMachineBuilder("/machines/cj_rift_beacon.json"));
 	}
 
 	@Override

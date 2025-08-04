@@ -405,6 +405,45 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 			RenderSystem.disableDepthTest();
 		}
 
+		// Draw rift view.
+		if(machineBuilder.hasRiftView) {
+			int riftX = baseX + (WORKING_WIDTH / 2) - (RIFT_VIEW_WIDTH / 2);
+			int riftY = baseY + 16;
+
+			drawTexturedModalRect(
+					riftX, riftY, RIFT_VIEW_X, RIFT_VIEW_Y,
+					RIFT_VIEW_WIDTH, RIFT_VIEW_HEIGHT);
+
+			GL11.glLineWidth(4.0f);
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GL11.glBegin(GL11.GL_LINES);
+
+			float dt = mc.ticksRan / 4.0f;
+
+			for(int i = 0; i < machineEntity.riftDensity; ++i) {
+				float dti = dt / i + i * 16;
+				float sdt = (float) Math.sin(dti) * 0.5f + 0.5f;
+				float cdt = (float) Math.cos(dti) * 0.5f + 0.5f;
+				float n_sdt = (float) Math.sin(-dti) * 0.5f + 0.5f;
+				float n_cdt = (float) Math.cos(-dti) * 0.5f + 0.5f;
+
+				GL11.glColor3f(cdt, sdt, 1.0f);
+
+				GL11.glVertex2i(
+						riftX + (int) (RIFT_VIEW_WIDTH * sdt),
+						riftY + (int) (RIFT_VIEW_WIDTH * cdt));
+
+				GL11.glVertex2i(
+						riftX + (int) (RIFT_VIEW_WIDTH * n_sdt),
+						riftY + (int) (RIFT_VIEW_WIDTH * n_cdt));
+			}
+
+			GL11.glEnd();
+			GL11.glColor3f(1.0f, 1.0f, 1.0f);
+
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+		}
+
 		// Draw status badge.
 		String message = machineEntity.errorMessage;
 		if(message == null) {
