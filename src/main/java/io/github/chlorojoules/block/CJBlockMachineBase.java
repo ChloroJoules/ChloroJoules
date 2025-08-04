@@ -4,6 +4,7 @@ import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.CJTank;
 import io.github.chlorojoules.CJTankVolume;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
+import io.github.chlorojoules.container.CJContainerMachineBase;
 import io.github.chlorojoules.gui.CJGuiMachineBase;
 import io.github.chlorojoules.item.CJItemBlockMachineBase;
 import io.github.chlorojoules.machine.CJMachineBlockSideMode;
@@ -12,6 +13,7 @@ import io.github.chlorojoules.machine.CJMachineBuilder;
 
 import net.minecraft.client.Minecraft;
 
+import net.minecraft.client.player.EntityPlayerSP;
 import net.minecraft.common.block.children.BlockContainer;
 import net.minecraft.common.block.fluid.Fluid;
 import net.minecraft.common.block.fluid.Fluids;
@@ -25,8 +27,11 @@ import net.minecraft.common.item.block.ItemBlock;
 import net.minecraft.common.item.children.ItemBucket;
 import net.minecraft.common.item.children.ItemBucketBase;
 import net.minecraft.common.item.children.ItemGoldenBucket;
+import net.minecraft.common.networking.Packet;
+import net.minecraft.common.networking.Packet100OpenWindow;
 import net.minecraft.common.util.math.MathHelper;
 import net.minecraft.common.world.World;
+import net.minecraft.server.entity.player.EntityPlayerMP;
 
 import static io.github.chlorojoules.CJRarityInfo.getRarityColor;
 import static io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase.machineEntity;
@@ -207,7 +212,36 @@ public class CJBlockMachineBase extends BlockContainer {
 		return new CJItemBlockMachineBase(this, !machineBuilder.iconDefault);
 	}
 
-	@Override
+	public void displayGUIMP(
+			EntityPlayerMP player, CJTileEntityMachineBase machineEntity) {
+
+		player.getNextWindowId();
+
+		Packet packet = new Packet100OpenWindow(
+				player.currentWindowId,
+				0, machineEntity.getInvName(),
+				machineEntity.getSizeInventory());
+
+		player.playerNetServerHandler.sendPacket(packet);
+
+		player.currentContainer = new CJContainerMachineBase(
+				player.inventory, machineEntity);
+
+		player.currentContainer.windowId = player.currentWindowId;
+		player.currentContainer.onCraftGuiOpened(player);
+		player.mcServer.getPlayerInteractionHandler().blockActivation(
+				machineEntity.getBuilder().name, player);
+	}
+
+	public void displayGUISP(
+			EntityPlayerSP player, CJTileEntityMachineBase machineEntity) {
+
+		CJGuiMachineBase gui = new CJGuiMachineBase(
+				player.inventory, machineEntity);
+
+		Minecraft.getInstance().displayGuiScreen(gui);
+	}
+
 	public boolean blockActivated(
 			World world, int x, int y, int z, EntityPlayer player) {
 
@@ -217,10 +251,14 @@ public class CJBlockMachineBase extends BlockContainer {
 			return true;
 		}
 
-		CJGuiMachineBase gui = new CJGuiMachineBase(
-				player.inventory, machineEntity);
-
-		Minecraft.theMinecraft.displayGuiScreen(gui);
+		if(!world.isRemote) {
+			if(player instanceof EntityPlayerMP mp) {
+				displayGUIMP(mp, machineEntity);
+			}
+			else if(player instanceof EntityPlayerSP sp) {
+				displayGUISP(sp, machineEntity);
+			}
+		}
 
 		return true;
 	}
