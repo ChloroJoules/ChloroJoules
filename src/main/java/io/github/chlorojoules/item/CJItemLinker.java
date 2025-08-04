@@ -49,13 +49,9 @@ public class CJItemLinker extends Item {
 		int id = world.getBlockId(blockX, blockY, blockZ);
 
 		if(id != CJMod.transferor.blockID) {
-			String string = StringTranslate.getInstance().translateKey(
-					"message.cj_not_transferor");
-
+			player.addChatMessage("message.cj_not_transferor");
 			Minecraft.getInstance().sndManager.playSoundFX(
 					"random.glass", 1.0F, 1.0F);
-
-			CJMod.sendChat(string);
 
 			return true;
 		}
@@ -74,7 +70,7 @@ public class CJItemLinker extends Item {
 			String string = StringTranslate.getInstance().translateKeyFormat(
 					"message.cj_linked_position", blockX, blockY, blockZ);
 
-			CJMod.sendChat(string);
+			player.addChatMessage(string);
 
 			Minecraft.getInstance().sndManager.playSoundFX(
 					"random.click", 1.0F, 1.0F);
@@ -104,7 +100,7 @@ public class CJItemLinker extends Item {
 			String string = StringTranslate.getInstance().translateKey(
 					"message.cj_same_transferor");
 
-			CJMod.sendChat(string);
+			player.addChatMessage(string);
 
 			return true;
 		}
@@ -116,7 +112,7 @@ public class CJItemLinker extends Item {
 			String string = StringTranslate.getInstance().translateKeyFormat(
 					"message.cj_too_far", MAX_LINK);
 
-			CJMod.sendChat(string);
+			player.addChatMessage(string);
 
 			Minecraft.getInstance().sndManager.playSoundFX(
 					"random.glass", 1.0F, 1.0F);
@@ -129,7 +125,7 @@ public class CJItemLinker extends Item {
 				blockX, blockY, blockZ,
 				position[0], position[1], position[2]);
 
-		CJMod.sendChat(string);
+		player.addChatMessage(string);
 
 		if(!isMulti) CJMachineTransferor.breakLink(world, extractorMachine);
 		CJMachineTransferor.breakLink(world, inserterMachine);
@@ -203,33 +199,29 @@ public class CJItemLinker extends Item {
 					stack.itemDamage == ITEM_FULL) {
 
 				stack.setItemDamage(FLUID_EMPTY);
-				string = StringTranslate.getInstance().translateKey(
-						"message.cj_link_switch_fluid");
+				string = "message.cj_link_switch_fluid";
 			}
 			else if(stack.itemDamage == FLUID_EMPTY ||
 					stack.itemDamage == FLUID_FULL) {
 
 				stack.setItemDamage(MULTI_ITEM_EMPTY);
-				string = StringTranslate.getInstance().translateKey(
-						"message.cj_link_switch_multi_item");
+				string = "message.cj_link_switch_multi_item";
 			}
 			else if(stack.itemDamage == MULTI_ITEM_EMPTY ||
 					stack.itemDamage == MULTI_ITEM_FULL) {
 
 				stack.setItemDamage(MULTI_FLUID_EMPTY);
-				string = StringTranslate.getInstance().translateKey(
-						"message.cj_link_switch_multi_fluid");
+				string = "message.cj_link_switch_multi_fluid";
 			}
 			else {
 				stack.setItemDamage(ITEM_EMPTY);
-				string = StringTranslate.getInstance().translateKey(
-						"message.cj_link_switch_item");
+				string = "message.cj_link_switch_item";
 			}
 
 			Minecraft.getInstance().sndManager.playSoundFX(
 					"random.ratchet", 1.0F, 1.0F);
 
-			CJMod.sendChat(string);
+			player.addChatMessage(string);
 		}
 
 		if(stack.itemDamage != ITEM_FULL &&
@@ -237,13 +229,10 @@ public class CJItemLinker extends Item {
 				stack.itemDamage != MULTI_ITEM_FULL &&
 				stack.itemDamage != MULTI_FLUID_FULL) return stack;
 
-		String string = StringTranslate.getInstance().translateKey(
-				"message.cj_link_clear");
-
 		Minecraft.getInstance().sndManager.playSoundFX(
 				"random.break", 1.0F, 1.0F);
 
-		CJMod.sendChat(string);
+		player.addChatMessage("message.cj_link_clear");
 
 		stack.itemDamage--;
 

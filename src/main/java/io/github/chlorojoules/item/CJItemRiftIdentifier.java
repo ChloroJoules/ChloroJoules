@@ -41,20 +41,16 @@ public class CJItemRiftIdentifier extends Item implements CJIItemSocket {
 	public ItemStack onItemRightClick(
 			ItemStack itemstack, World world, EntityPlayer player) {
 
-		StringTranslate translate = StringTranslate.getInstance();
-
 		CJRarity rarity =
 				CJRarityInfo.getDamageRarity(itemstack.getItemDamage());
 
 		if(rarity != CJRarity.AWAKENED) {
-			CJMod.sendChat(translate.translateKey("message.cj_poor_jewel"));
+			player.addChatMessage("message.cj_poor_jewel");
 			return itemstack;
 		}
 
 		if(player.dimension != 0) {
-			CJMod.sendChat(translate.translateKey(
-					"message.cj_unstable_dimension"));
-
+			player.addChatMessage("message.cj_unstable_dimension");
 			return itemstack;
 		}
 
@@ -86,12 +82,10 @@ public class CJItemRiftIdentifier extends Item implements CJIItemSocket {
 		int dist = blockDist(riftX, riftY, riftZ, blockX, blockY, blockZ);
 		if(dist < RIFT_RANGE) {
 			if(world.getBlockId(riftX, riftY, riftZ) == CJMod.rift.blockID) {
-				CJMod.sendChat(translate.translateKey(
-						"message.cj_rift_active"));
+				player.addChatMessage("message.cj_rift_active");
 			}
 			else {
-				CJMod.sendChat(translate.translateKey(
-						"message.cj_activate_rift"));
+				player.addChatMessage("message.cj_activate_rift");
 
 				world.createExplosion(null, riftX, riftY, riftZ, 6.0F);
 				world.setBlockWithNotify(
@@ -99,8 +93,7 @@ public class CJItemRiftIdentifier extends Item implements CJIItemSocket {
 			}
 		}
 		else {
-			CJMod.sendChat(translate.translateKeyFormat(
-					"message.cj_rift_locate", dist));
+			player.addChatMessage("message.cj_rift_locate");
 		}
 
 		return itemstack;

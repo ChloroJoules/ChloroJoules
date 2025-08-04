@@ -6,7 +6,6 @@ import io.github.chlorojoules.CJRarityInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.common.block.Blocks;
 import net.minecraft.common.util.ChatColors;
-import net.minecraft.common.util.i18n.StringTranslate;
 import net.minecraft.common.entity.other.EntityItem;
 import net.minecraft.common.entity.player.EntityPlayer;
 import net.minecraft.common.item.Item;
@@ -31,12 +30,11 @@ public class CJItemSoulExtractor extends Item implements CJIItemSocket {
 
 		int rarityDamage = CJRarityInfo.getRarityDamage(CJRarity.MANUFACTURED);
 		if(itemstack.itemDamage > rarityDamage) {
-			String string = StringTranslate.getInstance().translateKey(
-					itemstack.itemDamage == CJRarityInfo.MAX_DAMAGE ?
-							"message.cj_no_jewel" :
-							"message.cj_poor_jewel");
+			String string = itemstack.itemDamage == CJRarityInfo.MAX_DAMAGE ?
+					"message.cj_no_jewel" :
+					"message.cj_poor_jewel";
 
-			CJMod.sendChat(ChatColors.RED + string);
+			player.addChatMessage(ChatColors.RED + string);
 
 			return false;
 		}

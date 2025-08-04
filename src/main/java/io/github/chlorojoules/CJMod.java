@@ -12,7 +12,6 @@ import io.github.chlorojoules.block.tileentity.CJTileEntityRendererMachineBase;
 import io.github.chlorojoules.item.*;
 import io.github.chlorojoules.machine.*;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.creative.CreativeTab;
 import net.minecraft.client.gui.creative.CreativeTabs;
 
@@ -195,10 +194,6 @@ public class CJMod extends Mod {
 		}
 
 		throw new RuntimeException("No such fluid '" + name + "'");
-	}
-
-	public static void sendChat(String message) {
-		Minecraft.getInstance().ingameGUI.addChatMessage(message);
 	}
 
 	public static boolean matchIngredientLenient(
