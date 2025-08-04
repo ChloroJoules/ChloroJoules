@@ -261,6 +261,11 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	}
 
 	@Override
+	public boolean ignoreFrustumCulling() {
+		return getBuilder().hasRiftView;
+	}
+
+	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		stacks.set(slot, stack);
 

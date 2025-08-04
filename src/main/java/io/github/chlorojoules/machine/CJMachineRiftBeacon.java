@@ -213,6 +213,7 @@ public class CJMachineRiftBeacon implements CJIMachine {
 
 		for(int i = 0; i < indices.length; i += 2) {
 			int indexBase = indices[i] * 3;
+
 			tess.addVertex(
 					vertices[indexBase],
 					vertices[indexBase + 1],
@@ -223,6 +224,7 @@ public class CJMachineRiftBeacon implements CJIMachine {
 					vertices[indexBase],
 					vertices[indexBase + 1],
 					vertices[indexBase + 2]);
+
 		}
 
 		tess.draw();
@@ -240,7 +242,7 @@ public class CJMachineRiftBeacon implements CJIMachine {
 		RenderSystem.disableLighting();
 		RenderSystem.enableDepthMask();
 		RenderSystem.enableBlend();
-		RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_LINES);
+		RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 
 		GL11.glLineWidth(4.0f);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW_MATRIX);
