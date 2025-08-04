@@ -1,0 +1,2 @@
+Otherworld fragment animation render output conversion using ImageMagick Montage
+montage -background transparent -tile 1x [input] -geometry 32x32 -filter Point [output]

@@ -9,6 +9,7 @@ import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import net.minecraft.client.renderer.world.Tessellator;
 import net.minecraft.common.block.Blocks;
 import net.minecraft.common.entity.Entity;
+import net.minecraft.common.entity.other.EntityItem;
 import net.minecraft.common.entity.player.EntityPlayer;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.util.i18n.StringTranslate;
@@ -87,6 +88,15 @@ public class CJMachineRiftBeacon implements CJIMachine {
 						player.addChatMessage("message.cj_rift4");
 					}
 					else if(storage.riftTicks == CUTSCENE_THRESHOLD * 4) {
+						EntityItem item = new EntityItem(
+								machineEntity.worldObj,
+								machineEntity.xCoord,
+								machineEntity.yCoord + Y_OFFSET,
+								machineEntity.zCoord,
+								new ItemStack(CJMod.otherworld));
+
+						machineEntity.worldObj.entityJoinedWorld(item);
+
 						machineEntity.worldObj.setBlockWithNotify(
 								machineEntity.xCoord,
 								machineEntity.yCoord + 1,

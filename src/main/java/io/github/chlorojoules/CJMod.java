@@ -34,6 +34,7 @@ import net.minecraft.common.recipe.*;
 import net.minecraft.common.util.JsonUtils;
 import net.minecraft.common.world.map.MapColor;
 
+import java.awt.*;
 import java.util.*;
 
 import static net.minecraft.common.block.Blocks.*;
@@ -128,6 +129,7 @@ public class CJMod extends Mod {
 	public static Item soulGem;
 	public static Item pasteBowl;
 	public static Item dirtBowl;
+	public static Item otherworld;
 
 	public static Item blender;
 
@@ -461,6 +463,9 @@ public class CJMod extends Mod {
 		dirtBowl = registerItem(
 				PRIMAL_COLOR, 1, CJItemConvertBowl.class, "cj_dirt_bowl",
 				new ItemStack(stoneDust));
+
+		otherworld = registerItem("cj_otherworld", Color.MAGENTA.getRGB(), 1)
+				.setDoNotConsumeOnCrafting(true);
 
 		blender = registerItem("cj_blender", PRIMAL_COLOR, 1)
 				.setDoNotConsumeOnCrafting(true);
