@@ -199,6 +199,29 @@
 					"amount": 2
 				}
 			]
+		},
+		{
+			"ticks": 325,
+			"fuel": 125,
+			"rarity": "refined",
+			"button": "refine_fuel",
+			"inputs": [
+				{
+					"target": "fuel",
+					"fluid": "chlorojoules:cj_fluid_chlorojoules",
+					"amount": 250
+				},
+				{
+					"target": "input",
+					"item": "iron_ingot"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "chlorojoules:cj_jewel_faux"
+				}
+			]
 		}
 	]
 }
