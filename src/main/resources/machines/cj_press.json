@@ -57,6 +57,57 @@
           "item": "gear"
         }
       ]
+    },
+    {
+      "ticks": 105,
+      "fuel": 95,
+      "inputs": [
+        {
+          "target": "input",
+          "item": "chlorojoules:cj_tiny_iron_dust",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "item": "chlorojoules:cj_iron_dust"
+        }
+      ]
+    },
+    {
+      "ticks": 105,
+      "fuel": 95,
+      "inputs": [
+        {
+          "target": "input",
+          "item": "chlorojoules:cj_tiny_gold_dust",
+          "amount": 4
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "item": "chlorojoules:cj_gold_dust"
+        }
+      ]
+    },
+    {
+      "ticks": 205,
+      "fuel": 405,
+      "inputs": [
+        {
+          "target": "input",
+          "item": "chlorojoules:cj_tiny_diamond_dust",
+          "amount": 9
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "item": "chlorojoules:cj_diamond_dust"
+        }
+      ]
     }
   ]
 }

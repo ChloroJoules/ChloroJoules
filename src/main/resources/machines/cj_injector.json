@@ -110,6 +110,75 @@
           "item": "clay"
         }
       ]
+    },
+    {
+      "ticks": 75,
+      "fuel": 85,
+      "rarity": "refined",
+      "inputs": [
+        {
+          "target": "inject",
+          "fluid": "chlorojoules:cj_fluid_etching",
+          "amount": 15
+        },
+        {
+          "target": "input",
+          "item": "chlorojoules:cj_iron_dust"
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "item": "iron_ingot",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "ticks": 75,
+      "fuel": 85,
+      "rarity": "refined",
+      "inputs": [
+        {
+          "target": "inject",
+          "fluid": "chlorojoules:cj_fluid_etching",
+          "amount": 15
+        },
+        {
+          "target": "input",
+          "item": "chlorojoules:cj_gold_dust"
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "item": "gold_ingot",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "ticks": 95,
+      "fuel": 225,
+      "rarity": "refined",
+      "inputs": [
+        {
+          "target": "inject",
+          "fluid": "chlorojoules:cj_fluid_etching",
+          "amount": 45
+        },
+        {
+          "target": "input",
+          "item": "chlorojoules:cj_diamond_dust"
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "item": "diamond",
+          "amount": 2
+        }
+      ]
     }
   ]
 }
