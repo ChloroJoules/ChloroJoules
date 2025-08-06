@@ -13,7 +13,7 @@ public class CJItemSoulGem extends Item {
 
 	@Override
 	public boolean onItemUse(
-			ItemStack itemstack, EntityPlayer player, World world,
+			ItemStack stack, EntityPlayer player, World world,
 			int blockX, int blockY, int blockZ, int side,
 			float x, float y, float z) {
 

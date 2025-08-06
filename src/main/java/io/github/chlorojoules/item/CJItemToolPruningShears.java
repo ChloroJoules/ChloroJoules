@@ -15,7 +15,7 @@ public class CJItemToolPruningShears extends ItemTool {
 	}
 
 	@Override
-	public float getStrVsBlock(ItemStack itemstack, Block block) {
+	public float getStrVsBlock(ItemStack stack, Block block) {
 		return block instanceof BlockLeavesBase ? 10.0F : 0.0F;
 	}
 

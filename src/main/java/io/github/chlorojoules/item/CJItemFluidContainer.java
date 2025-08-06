@@ -38,18 +38,18 @@ public class CJItemFluidContainer extends Item {
 
 	@Override
 	public void onUpdate(
-			ItemStack itemstack, World world, Entity entity, int slot,
+			ItemStack stack, World world, Entity entity, int slot,
 			boolean inHand) {
 
-		super.onUpdate(itemstack, world, entity, slot, inHand);
+		super.onUpdate(stack, world, entity, slot, inHand);
 
-		CompoundTag tagCompound = itemstack.getTagCompound();
+		CompoundTag tagCompound = stack.getTagCompound();
 		if(tagCompound == null) return;
 
 		CJTankVolume volume = new CJTankVolume();
 		volume.readFromNBT(tagCompound);
 
-		itemstack.setItemDamage(CJTankVolume.DEFAULT_MAX - volume.current);
+		stack.setItemDamage(CJTankVolume.DEFAULT_MAX - volume.current);
 	}
 
 	public static boolean consumeFromContainers(

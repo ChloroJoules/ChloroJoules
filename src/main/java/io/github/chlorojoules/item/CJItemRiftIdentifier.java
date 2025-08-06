@@ -39,19 +39,19 @@ public class CJItemRiftIdentifier extends Item implements CJIItemSocket {
 
 	@Override
 	public ItemStack onItemRightClick(
-			ItemStack itemstack, World world, EntityPlayer player) {
+			ItemStack stack, World world, EntityPlayer player) {
 
 		CJRarity rarity =
-				CJRarityInfo.getDamageRarity(itemstack.getItemDamage());
+				CJRarityInfo.getDamageRarity(stack.getItemDamage());
 
 		if(rarity != CJRarity.AWAKENED) {
 			player.addChatMessage("message.cj_poor_jewel");
-			return itemstack;
+			return stack;
 		}
 
 		if(player.dimension != 0) {
 			player.addChatMessage("message.cj_unstable_dimension");
-			return itemstack;
+			return stack;
 		}
 
 		int blockX = (int) Math.round(player.posX);
@@ -96,6 +96,6 @@ public class CJItemRiftIdentifier extends Item implements CJIItemSocket {
 			player.addChatMessage("message.cj_rift_locate");
 		}
 
-		return itemstack;
+		return stack;
 	}
 }

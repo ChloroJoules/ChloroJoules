@@ -750,6 +750,7 @@ public class CJMod extends Mod {
 		tagRawStone.addIngredient(LIMESTONE);
 		tagRawStone.addIngredient(CLOUDSTONE);
 		tagRawStone.addIngredient(BRIMSTONE);
+		tagRawStone.addIngredient(RIDROCK);
 
 		registerFurnaceRecipe(goldDust, GOLD_INGOT);
 		registerFurnaceRecipe(ironDust, IRON_INGOT);

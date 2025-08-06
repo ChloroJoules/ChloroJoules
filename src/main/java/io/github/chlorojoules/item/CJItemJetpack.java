@@ -34,10 +34,10 @@ public class CJItemJetpack extends Item implements CJIItemSocket {
 
 	@Override
 	public void onUpdate(
-			ItemStack itemstack, World world, Entity entity, int slot,
+			ItemStack stack, World world, Entity entity, int slot,
 			boolean inHand) {
 
-		super.onUpdate(itemstack, world, entity, slot, inHand);
+		super.onUpdate(stack, world, entity, slot, inHand);
 
 		if(!(entity instanceof EntityPlayer player)) return;
 
@@ -45,7 +45,7 @@ public class CJItemJetpack extends Item implements CJIItemSocket {
 
 		if(Minecraft.getInstance().gameSettings.keyBindJump.pressed) {
 			CJRarity rarity =
-					CJRarityInfo.getDamageRarity(itemstack.getItemDamage());
+					CJRarityInfo.getDamageRarity(stack.getItemDamage());
 
 			boolean consumed = CJItemFluidContainer.consumeFromContainers(
 					player.inventory.mainInventory, CJMod.fuelFluid,

@@ -54,17 +54,17 @@ public class CJItemToolSoulSword extends ItemTool implements CJIItemSocket {
 
 	@Override
 	public boolean hitEntity(
-			ItemStack itemstack, EntityLiving target, EntityLiving attacker) {
+			ItemStack stack, EntityLiving target, EntityLiving attacker) {
 
 		target.beenAttacked = false;
 		target.attackEntityFrom(
-				attacker, getStackDamage(itemstack), DamageTypes.PLAYER);
+				attacker, getStackDamage(stack), DamageTypes.PLAYER);
 
 		if(target.health <= 0) {
 			World world = target.worldObj;
 
 			int count = (int) ((world.rand.nextFloat() * 0.7) *
-							(CJRarityInfo.MAX_DAMAGE - itemstack.itemDamage));
+							(CJRarityInfo.MAX_DAMAGE - stack.itemDamage));
 
 			if(count <= 0) return true;
 
@@ -83,7 +83,7 @@ public class CJItemToolSoulSword extends ItemTool implements CJIItemSocket {
 
 	@Override
 	public boolean onBlockDestroyed(
-			ItemStack itemstack, int id, int x, int y, int z,
+			ItemStack stack, int id, int x, int y, int z,
 			EntityLiving entity) {
 
 		return true;

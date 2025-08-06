@@ -12,8 +12,8 @@ public class CJItemBucket extends ItemBucket {
 
 	@Override
 	public ItemStack onItemRightClick(
-			ItemStack itemstack, World world, EntityPlayer player) {
+			ItemStack stack, World world, EntityPlayer player) {
 
-		return itemstack;
+		return stack;
 	}
 }

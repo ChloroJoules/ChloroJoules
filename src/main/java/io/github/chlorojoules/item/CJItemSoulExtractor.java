@@ -24,13 +24,13 @@ public class CJItemSoulExtractor extends Item implements CJIItemSocket {
 
 	@Override
 	public boolean onItemUse(
-			ItemStack itemstack, EntityPlayer player, World world,
+			ItemStack stack, EntityPlayer player, World world,
 			int blockX, int blockY, int blockZ, int side,
 			float x, float y, float z) {
 
 		int rarityDamage = CJRarityInfo.getRarityDamage(CJRarity.MANUFACTURED);
-		if(itemstack.itemDamage > rarityDamage) {
-			String string = itemstack.itemDamage == CJRarityInfo.MAX_DAMAGE ?
+		if(stack.itemDamage > rarityDamage) {
+			String string = stack.itemDamage == CJRarityInfo.MAX_DAMAGE ?
 					"message.cj_no_jewel" :
 					"message.cj_poor_jewel";
 
@@ -56,7 +56,7 @@ public class CJItemSoulExtractor extends Item implements CJIItemSocket {
 		Minecraft.getInstance().sndManager.playSoundFX(
 				"random.levelup", 1.0F, 1.0F);
 
-		itemstack.setItemDamage(CJRarityInfo.MAX_DAMAGE);
+		stack.setItemDamage(CJRarityInfo.MAX_DAMAGE);
 
 		return true;
 	}

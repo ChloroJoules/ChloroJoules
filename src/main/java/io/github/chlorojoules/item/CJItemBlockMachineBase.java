@@ -30,7 +30,7 @@ public class CJItemBlockMachineBase extends ItemBlock {
 	}
 
 	@Override
-	public String getItemNameIS(ItemStack itemstack) {
+	public String getItemNameIS(ItemStack stack) {
 		return super.getItemName();
 	}
 }

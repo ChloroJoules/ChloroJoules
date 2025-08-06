@@ -27,14 +27,14 @@ public class CJItemBloodInjector extends Item implements CJIItemSocket {
 
 	@Override
 	public void onUpdate(
-			ItemStack itemstack, World world, Entity entity, int slot,
+			ItemStack stack, World world, Entity entity, int slot,
 			boolean inHand) {
 
-		super.onUpdate(itemstack, world, entity, slot, inHand);
+		super.onUpdate(stack, world, entity, slot, inHand);
 
 		if(!(entity instanceof EntityPlayer player)) return;
 
-		CompoundTag selfTag = itemstack.getTagCompoundNonNull();
+		CompoundTag selfTag = stack.getTagCompoundNonNull();
 		int cooldown = selfTag.getInteger("cooldown");
 
 		selfTag.setInteger("cooldown", Math.max(--cooldown, 0));
@@ -43,7 +43,7 @@ public class CJItemBloodInjector extends Item implements CJIItemSocket {
 		if(player.health >= 20) return;
 
 		CJRarity rarity =
-				CJRarityInfo.getDamageRarity(itemstack.getItemDamage());
+				CJRarityInfo.getDamageRarity(stack.getItemDamage());
 
 		int required = REQUIRED * CJRarityInfo.getRarityPowerScale(rarity);
 		boolean consumed =
