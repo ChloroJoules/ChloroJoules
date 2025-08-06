@@ -1,6 +1,6 @@
 # ChloroJoules
-*A tech mod for ReIndev*
+*Flower power to the extreme!*
 
-(Based on [FoxLoaderExampleMod](https://github.com/Fox2Code/FoxLoaderExampleMod))
-
-There will probably be something here eventually...
+Chlorojoules is a complete tech mod for ReIndev featuring machines, item
+and fluid logistics, and a parallel progression path with a new endgame:
+the Soul Rift.

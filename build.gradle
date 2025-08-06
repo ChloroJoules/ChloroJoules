@@ -18,7 +18,10 @@ foxloader {
 	modName = 'ChloroJoules'
 	modVersion = project.version
 	modAuthors = 'Emily "TTG" Banerjee <prs.ttg+cj@pm.me>'
-	modDesc = 'Flower power to the extreme!'
 	modWebsite = 'https://chlorojoules.github.io/'
 	modMain = 'io.github.chlorojoules.CJMod'
+	modIcon = 'textures/items/cj_jewel_awakened.png'
+	modDesc = new File('README.md').text
+			.replace('# ChloroJoules\n', '')
+			.replace('*', '')
 }
