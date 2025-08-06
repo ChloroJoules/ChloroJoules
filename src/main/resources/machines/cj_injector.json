@@ -88,6 +88,28 @@
           "item": "chlorojoules:cj_jewel_awakened"
         }
       ]
+    },
+    {
+      "ticks": 75,
+      "fuel": 45,
+      "rarity": "primal",
+      "inputs": [
+        {
+          "target": "inject",
+          "fluid": "water",
+          "amount": 150
+        },
+        {
+          "target": "input",
+          "item": "sand"
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "item": "clay"
+        }
+      ]
     }
   ]
 }
