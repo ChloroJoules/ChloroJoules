@@ -9,7 +9,6 @@ import io.github.chlorojoules.CJTankVolume;
 import net.minecraft.common.util.JsonUtils;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class CJMachineRecipe {
 	public ArrayList<CJMachineRecipeComponent> inputs = new ArrayList<>();
@@ -37,7 +36,7 @@ public class CJMachineRecipe {
 		processTime = JsonUtils.getInt(jsonObject, "ticks");
 
 		if(jsonObject.has("fuel")) {
-			fuelIndex = inputs.size();
+			fuelIndex = 0;
 
 			inputs.add(new CJMachineRecipeComponent(
 					"fuel",
