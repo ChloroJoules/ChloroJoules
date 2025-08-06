@@ -3,15 +3,12 @@ package io.github.chlorojoules.item;
 import com.mojang.nbt.CompoundTag;
 import io.github.chlorojoules.CJRarity;
 import io.github.chlorojoules.CJRarityInfo;
-import io.github.chlorojoules.CJTankVolume;
 import net.minecraft.common.block.Blocks;
 import net.minecraft.common.entity.Entity;
 import net.minecraft.common.entity.player.EntityPlayer;
 import net.minecraft.common.item.Item;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.world.World;
-
-import java.util.ArrayList;
 
 public class CJItemBloodInjector extends Item implements CJIItemSocket {
 	private static final int REQUIRED = 35;

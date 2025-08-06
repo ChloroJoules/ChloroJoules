@@ -6,7 +6,6 @@ import io.github.chlorojoules.CJRarityInfo;
 import net.minecraft.common.entity.player.EntityPlayer;
 import net.minecraft.common.item.Item;
 import net.minecraft.common.item.ItemStack;
-import net.minecraft.common.util.i18n.StringTranslate;
 import net.minecraft.common.world.World;
 
 public class CJItemRiftIdentifier extends Item implements CJIItemSocket {
