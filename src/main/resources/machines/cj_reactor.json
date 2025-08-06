@@ -1,134 +1,131 @@
 {
-  "name": "cj_reactor",
-  "rarity": "manufactured",
-  "tanks": [
-    "fuel",
-    {
-      "name": "reactant",
-      "anchor": "left",
-      "x": 58,
-
-      "volume": 4000
-    },
-    {
-      "name": "reagent",
-      "anchor": "left",
-      "x": 80,
-
-      "volume": 4000
-    },
-    {
-      "name": "output",
-      "anchor": "center",
-      "x": 45,
-
-      "volume": 8000,
-      "output": true
-    }
-  ],
-  "slots": [
-    "jewel"
-  ],
-  "progress": {
-    "anchor": "center",
-    "x": 20
-  },
-  "recipes": [
-    {
-      "ticks": 150,
-      "fuel": 75,
-      "rarity": "manufactured",
-      "inputs": [
-        {
-          "target": "reactant",
-          "fluid": "chlorojoules:cj_fluid_dimension",
-          "amount": 50
-        },
-        {
-          "target": "reagent",
-          "fluid": "acid",
-          "amount": 50
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "fluid": "chlorojoules:cj_fluid_etching",
-          "amount": 75
-        }
-      ]
-    },
-    {
-      "ticks": 150,
-      "fuel": 75,
-      "rarity": "manufactured",
-      "inputs": [
-        {
-          "target": "reactant",
-          "fluid": "acid",
-          "amount": 50
-        },
-        {
-          "target": "reagent",
-          "fluid": "chlorojoules:cj_fluid_dimension",
-          "amount": 50
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "fluid": "chlorojoules:cj_fluid_etching",
-          "amount": 75
-        }
-      ]
-    },
-    {
-      "ticks": 200,
-      "fuel": 65,
-      "rarity": "manufactured",
-      "inputs": [
-        {
-          "target": "reactant",
-          "fluid": "chlorojoules:cj_fluid_paste",
-          "amount": 35
-        },
-        {
-          "target": "reagent",
-          "fluid": "acid",
-          "amount": 50
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "fluid": "chlorojoules:cj_fluid_chlorojoules",
-          "amount": 35
-        }
-      ]
-    },
-    {
-      "ticks": 200,
-      "fuel": 65,
-      "rarity": "manufactured",
-      "inputs": [
-        {
-          "target": "reactant",
-          "fluid": "acid",
-          "amount": 50
-        },
-        {
-          "target": "reagent",
-          "fluid": "chlorojoules:cj_fluid_paste",
-          "amount": 35
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "fluid": "chlorojoules:cj_fluid_chlorojoules",
-          "amount": 35
-        }
-      ]
-    }
-  ]
+	"name": "cj_reactor",
+	"rarity": "manufactured",
+	"tanks": [
+		"fuel",
+		{
+			"name": "reactant",
+			"anchor": "left",
+			"x": 58,
+			"volume": 4000
+		},
+		{
+			"name": "reagent",
+			"anchor": "left",
+			"x": 80,
+			"volume": 4000
+		},
+		{
+			"name": "output",
+			"anchor": "center",
+			"x": 45,
+			"volume": 8000,
+			"output": true
+		}
+	],
+	"slots": [
+		"jewel"
+	],
+	"progress": {
+		"anchor": "center",
+		"x": 20
+	},
+	"recipes": [
+		{
+			"ticks": 150,
+			"fuel": 75,
+			"rarity": "manufactured",
+			"inputs": [
+				{
+					"target": "reactant",
+					"fluid": "chlorojoules:cj_fluid_dimension",
+					"amount": 50
+				},
+				{
+					"target": "reagent",
+					"fluid": "acid",
+					"amount": 50
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"fluid": "chlorojoules:cj_fluid_etching",
+					"amount": 75
+				}
+			]
+		},
+		{
+			"ticks": 150,
+			"fuel": 75,
+			"rarity": "manufactured",
+			"inputs": [
+				{
+					"target": "reactant",
+					"fluid": "acid",
+					"amount": 50
+				},
+				{
+					"target": "reagent",
+					"fluid": "chlorojoules:cj_fluid_dimension",
+					"amount": 50
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"fluid": "chlorojoules:cj_fluid_etching",
+					"amount": 75
+				}
+			]
+		},
+		{
+			"ticks": 200,
+			"fuel": 65,
+			"rarity": "manufactured",
+			"inputs": [
+				{
+					"target": "reactant",
+					"fluid": "chlorojoules:cj_fluid_paste",
+					"amount": 35
+				},
+				{
+					"target": "reagent",
+					"fluid": "acid",
+					"amount": 50
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"fluid": "chlorojoules:cj_fluid_chlorojoules",
+					"amount": 35
+				}
+			]
+		},
+		{
+			"ticks": 200,
+			"fuel": 65,
+			"rarity": "manufactured",
+			"inputs": [
+				{
+					"target": "reactant",
+					"fluid": "acid",
+					"amount": 50
+				},
+				{
+					"target": "reagent",
+					"fluid": "chlorojoules:cj_fluid_paste",
+					"amount": 35
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"fluid": "chlorojoules:cj_fluid_chlorojoules",
+					"amount": 35
+				}
+			]
+		}
+	]
 }

@@ -1,22 +1,21 @@
 {
-  "name": "cj_pump",
-  "rarity": "manufactured",
-  "implementation": "io.github.chlorojoules.machine.CJMachinePump",
-  "face": "sides",
-  "slots": [
-    "jewel"
-  ],
-  "tanks": [
-    "fuel",
-    {
-      "name": "output",
-      "anchor": "center",
-      "x": 35,
-
-      "output": true
-    }
-  ],
-  "progress": {
-    "anchor": "center"
-  }
+	"name": "cj_pump",
+	"rarity": "manufactured",
+	"implementation": "io.github.chlorojoules.machine.CJMachinePump",
+	"face": "sides",
+	"slots": [
+		"jewel"
+	],
+	"tanks": [
+		"fuel",
+		{
+			"name": "output",
+			"anchor": "center",
+			"x": 35,
+			"output": true
+		}
+	],
+	"progress": {
+		"anchor": "center"
+	}
 }

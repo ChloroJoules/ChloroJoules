@@ -1,121 +1,119 @@
 {
-  "name": "cj_primitive_centrifuge",
-  "rarity": "primal",
-  "tier": "primitive",
-  "slots": [
-    {
-      "name": "paste",
-      "anchor": "bottom left",
-      "x": 22,
-      "y": 24,
-      "render": "paste",
-      "allowed": [
-        {
-          "item": "chlorojoules:cj_paste"
-        }
-      ]
-    },
-    {
-      "name": "input",
-      "anchor": "center",
-      "x": -38
-    },
-    {
-      "name": "output",
-      "anchor": "center",
-      "x": 20,
-      "y": 4,
-
-      "output": true
-    },
-    {
-      "name": "additional",
-      "anchor": "center",
-      "x": 56,
-      "y": 4,
-
-      "output": true
-    }
-  ],
-  "progress": {
-    "anchor": "center",
-    "x": -14
-  },
-  "recipes": [
-    {
-      "ticks": 100,
-      "inputs": [
-        {
-          "target": "paste",
-          "item": "chlorojoules:cj_paste"
-        },
-        {
-          "target": "input",
-          "item": "chlorojoules:cj_stone_dust"
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "item": "chlorojoules:cj_tiny_iron_dust",
-          "chance": 0.55
-        },
-        {
-          "target": "additional",
-          "item": "chlorojoules:cj_tiny_stone_dust",
-          "chance": 0.85
-        }
-      ]
-    },
-    {
-      "ticks": 100,
-      "inputs": [
-        {
-          "target": "paste",
-          "item": "chlorojoules:cj_paste"
-        },
-        {
-          "target": "input",
-          "item": "dirt"
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "item": "chlorojoules:cj_stone_dust",
-          "chance": 0.85
-        },
-        {
-          "target": "additional",
-          "item": "seeds",
-          "chance": 0.025
-        }
-      ]
-    },
-    {
-      "ticks": 100,
-      "inputs": [
-        {
-          "target": "paste",
-          "item": "chlorojoules:cj_paste"
-        },
-        {
-          "target": "input",
-          "item": "gravel"
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "item": "flint",
-          "chance": 0.65
-        },
-        {
-          "target": "additional",
-          "item": "chlorojoules:cj_stone_dust",
-          "chance": 0.85
-        }
-      ]
-    }
-  ]
+	"name": "cj_primitive_centrifuge",
+	"rarity": "primal",
+	"tier": "primitive",
+	"slots": [
+		{
+			"name": "paste",
+			"anchor": "bottom left",
+			"x": 22,
+			"y": 24,
+			"render": "paste",
+			"allowed": [
+				{
+					"item": "chlorojoules:cj_paste"
+				}
+			]
+		},
+		{
+			"name": "input",
+			"anchor": "center",
+			"x": -38
+		},
+		{
+			"name": "output",
+			"anchor": "center",
+			"x": 20,
+			"y": 4,
+			"output": true
+		},
+		{
+			"name": "additional",
+			"anchor": "center",
+			"x": 56,
+			"y": 4,
+			"output": true
+		}
+	],
+	"progress": {
+		"anchor": "center",
+		"x": -14
+	},
+	"recipes": [
+		{
+			"ticks": 100,
+			"inputs": [
+				{
+					"target": "paste",
+					"item": "chlorojoules:cj_paste"
+				},
+				{
+					"target": "input",
+					"item": "chlorojoules:cj_stone_dust"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "chlorojoules:cj_tiny_iron_dust",
+					"chance": 0.55
+				},
+				{
+					"target": "additional",
+					"item": "chlorojoules:cj_tiny_stone_dust",
+					"chance": 0.85
+				}
+			]
+		},
+		{
+			"ticks": 100,
+			"inputs": [
+				{
+					"target": "paste",
+					"item": "chlorojoules:cj_paste"
+				},
+				{
+					"target": "input",
+					"item": "dirt"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "chlorojoules:cj_stone_dust",
+					"chance": 0.85
+				},
+				{
+					"target": "additional",
+					"item": "seeds",
+					"chance": 0.025
+				}
+			]
+		},
+		{
+			"ticks": 100,
+			"inputs": [
+				{
+					"target": "paste",
+					"item": "chlorojoules:cj_paste"
+				},
+				{
+					"target": "input",
+					"item": "gravel"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "flint",
+					"chance": 0.65
+				},
+				{
+					"target": "additional",
+					"item": "chlorojoules:cj_stone_dust",
+					"chance": 0.85
+				}
+			]
+		}
+	]
 }

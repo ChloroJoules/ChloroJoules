@@ -1,21 +1,21 @@
 {
-  "name": "cj_tool_station",
-  "rarity": "manufactured",
-  "implementation": "io.github.chlorojoules.machine.CJMachineToolStation",
-  "face": "sides",
-  "slots": [
-    {
-      "name": "input",
-      "anchor": "center",
-      "x": -33
-    },
-    {
-      "name": "tool",
-      "anchor": "center",
-      "x": 35
-    }
-  ],
-  "progress": {
-    "anchor": "center"
-  }
+	"name": "cj_tool_station",
+	"rarity": "manufactured",
+	"implementation": "io.github.chlorojoules.machine.CJMachineToolStation",
+	"face": "sides",
+	"slots": [
+		{
+			"name": "input",
+			"anchor": "center",
+			"x": -33
+		},
+		{
+			"name": "tool",
+			"anchor": "center",
+			"x": 35
+		}
+	],
+	"progress": {
+		"anchor": "center"
+	}
 }

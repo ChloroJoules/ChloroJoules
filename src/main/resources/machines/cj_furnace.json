@@ -1,44 +1,43 @@
 {
-  "name": "cj_furnace",
-  "rarity": "manufactured",
-  "tanks": [
-    "fuel"
-  ],
-  "slots": [
-    "jewel",
-    {
-      "name": "input",
-      "anchor": "center",
-      "x": -24
-    },
-    {
-      "name": "output",
-      "anchor": "center",
-      "x": 35,
-      "y": 4,
-
-      "output": true
-    }
-  ],
-  "progress": {
-    "anchor": "center"
-  },
-  "recipes": [
-    {
-      "ticks": 300,
-      "fuel": 500,
-      "inputs": [
-        {
-          "target": "input",
-          "item": "chlorojoules:cj_block_jewel_dust"
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "item": "chlorojoules:cj_jewel_manufactured"
-        }
-      ]
-    }
-  ]
+	"name": "cj_furnace",
+	"rarity": "manufactured",
+	"tanks": [
+		"fuel"
+	],
+	"slots": [
+		"jewel",
+		{
+			"name": "input",
+			"anchor": "center",
+			"x": -24
+		},
+		{
+			"name": "output",
+			"anchor": "center",
+			"x": 35,
+			"y": 4,
+			"output": true
+		}
+	],
+	"progress": {
+		"anchor": "center"
+	},
+	"recipes": [
+		{
+			"ticks": 300,
+			"fuel": 500,
+			"inputs": [
+				{
+					"target": "input",
+					"item": "chlorojoules:cj_block_jewel_dust"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "chlorojoules:cj_jewel_manufactured"
+				}
+			]
+		}
+	]
 }

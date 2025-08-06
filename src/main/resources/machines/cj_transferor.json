@@ -1,57 +1,50 @@
 {
-  "name": "cj_transferor",
-  "rarity": "manufactured",
-  "implementation": "io.github.chlorojoules.machine.CJMachineTransferor",
-
-  "face": "all",
-  "icons": [
-    "cj_inactive",
-    "cj_whooper",
-    "cj_swooper",
-    "cj_flooper",
-    "cj_slooper",
-    "cj_multi_whooper",
-    "cj_multi_flooper"
-  ],
-
-  "slots": [
-    {
-      "name": "extract",
-      "anchor": "center",
-
-      "damages": [
-        "cj_whooper",
-        "cj_multi_whooper"
-      ]
-    }
-  ],
-  "tanks": [
-    {
-      "name": "extract",
-      "anchor": "center",
-
-      "volume": 2000,
-      "bidirectional": "true",
-
-      "damages": [
-        "cj_flooper",
-        "cj_multi_flooper"
-      ]
-    }
-  ],
-
-  "coordinates": [
-    {
-      "label": "message.cj_link_coordinate",
-      "anchor": "center",
-      "y": 12,
-
-      "damages": [
-        "cj_whooper",
-        "cj_swooper",
-        "cj_flooper",
-        "cj_slooper"
-      ]
-    }
-  ]
+	"name": "cj_transferor",
+	"rarity": "manufactured",
+	"implementation": "io.github.chlorojoules.machine.CJMachineTransferor",
+	"face": "all",
+	"icons": [
+		"cj_inactive",
+		"cj_whooper",
+		"cj_swooper",
+		"cj_flooper",
+		"cj_slooper",
+		"cj_multi_whooper",
+		"cj_multi_flooper"
+	],
+	"slots": [
+		{
+			"name": "extract",
+			"anchor": "center",
+			"damages": [
+				"cj_whooper",
+				"cj_multi_whooper"
+			]
+		}
+	],
+	"tanks": [
+		{
+			"name": "extract",
+			"anchor": "center",
+			"volume": 2000,
+			"bidirectional": "true",
+			"damages": [
+				"cj_flooper",
+				"cj_multi_flooper"
+			]
+		}
+	],
+	"coordinates": [
+		{
+			"label": "message.cj_link_coordinate",
+			"anchor": "center",
+			"y": 12,
+			"damages": [
+				"cj_whooper",
+				"cj_swooper",
+				"cj_flooper",
+				"cj_slooper"
+			]
+		}
+	]
 }

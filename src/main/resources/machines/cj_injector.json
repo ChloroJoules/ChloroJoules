@@ -1,184 +1,204 @@
 {
-  "name": "cj_injector",
-  "rarity": "manufactured",
-  "implementation": "io.github.chlorojoules.machine.CJMachineInjector",
-  "tanks": [
-    "fuel",
-    {
-      "name": "inject",
-      "anchor": "left",
-      "x": 58,
-
-      "volume": 8000
-    }
-  ],
-  "slots": [
-    "jewel",
-    {
-      "name": "input",
-      "anchor": "left",
-      "x": 80
-    },
-    {
-      "name": "output",
-      "anchor": "center",
-      "x": 48,
-      "y": 5,
-
-      "output": true
-    }
-  ],
-  "buttons": [
-    {
-      "name": "refine_fuel",
-      "tooltip": "message.cj_enable_refine_fuel",
-      "label": {
-        "item": "chlorojoules:cj_fluid_chlorojoules_bucket"
-      },
-      "anchor": "bottom right",
-      "x": 16,
-      "y": 26
-    }
-  ],
-  "progress": {
-    "anchor": "center",
-    "x": 14
-  },
-  "recipes": [
-    {
-      "ticks": 650,
-      "fuel": 100,
-      "rarity": "manufactured",
-      "inputs": [
-        {
-          "target": "inject",
-          "fluid": "chlorojoules:cj_fluid_etching",
-          "amount": 50
-        },
-        {
-          "target": "input",
-          "item": "chlorojoules:cj_jewel_manufactured"
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "item": "chlorojoules:cj_jewel_refined"
-        }
-      ]
-    },
-    {
-      "ticks": 850,
-      "fuel": 350,
-      "rarity": "refined",
-      "inputs": [
-        {
-          "target": "inject",
-          "fluid": "chlorojoules:cj_fluid_awareness_flowing",
-          "amount": 150
-        },
-        {
-          "target": "input",
-          "item": "chlorojoules:cj_jewel_refined"
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "item": "chlorojoules:cj_jewel_awakened"
-        }
-      ]
-    },
-    {
-      "ticks": 75,
-      "fuel": 45,
-      "rarity": "primal",
-      "inputs": [
-        {
-          "target": "inject",
-          "fluid": "water",
-          "amount": 150
-        },
-        {
-          "target": "input",
-          "item": "sand"
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "item": "clay"
-        }
-      ]
-    },
-    {
-      "ticks": 75,
-      "fuel": 85,
-      "rarity": "refined",
-      "inputs": [
-        {
-          "target": "inject",
-          "fluid": "chlorojoules:cj_fluid_etching",
-          "amount": 15
-        },
-        {
-          "target": "input",
-          "item": "chlorojoules:cj_iron_dust"
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "item": "iron_ingot",
-          "amount": 2
-        }
-      ]
-    },
-    {
-      "ticks": 75,
-      "fuel": 85,
-      "rarity": "refined",
-      "inputs": [
-        {
-          "target": "inject",
-          "fluid": "chlorojoules:cj_fluid_etching",
-          "amount": 15
-        },
-        {
-          "target": "input",
-          "item": "chlorojoules:cj_gold_dust"
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "item": "gold_ingot",
-          "amount": 2
-        }
-      ]
-    },
-    {
-      "ticks": 95,
-      "fuel": 225,
-      "rarity": "refined",
-      "inputs": [
-        {
-          "target": "inject",
-          "fluid": "chlorojoules:cj_fluid_etching",
-          "amount": 45
-        },
-        {
-          "target": "input",
-          "item": "chlorojoules:cj_diamond_dust"
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "item": "diamond",
-          "amount": 2
-        }
-      ]
-    }
-  ]
+	"name": "cj_injector",
+	"rarity": "manufactured",
+	"implementation": "io.github.chlorojoules.machine.CJMachineInjector",
+	"tanks": [
+		"fuel",
+		{
+			"name": "inject",
+			"anchor": "left",
+			"x": 58,
+			"volume": 8000
+		}
+	],
+	"slots": [
+		"jewel",
+		{
+			"name": "input",
+			"anchor": "left",
+			"x": 80
+		},
+		{
+			"name": "output",
+			"anchor": "center",
+			"x": 48,
+			"y": 5,
+			"output": true
+		}
+	],
+	"buttons": [
+		{
+			"name": "refine_fuel",
+			"tooltip": "message.cj_enable_refine_fuel",
+			"label": {
+				"item": "chlorojoules:cj_fluid_chlorojoules_bucket"
+			},
+			"anchor": "bottom right",
+			"x": 16,
+			"y": 26
+		}
+	],
+	"progress": {
+		"anchor": "center",
+		"x": 14
+	},
+	"recipes": [
+		{
+			"ticks": 650,
+			"fuel": 100,
+			"rarity": "manufactured",
+			"inputs": [
+				{
+					"target": "inject",
+					"fluid": "chlorojoules:cj_fluid_etching",
+					"amount": 50
+				},
+				{
+					"target": "input",
+					"item": "chlorojoules:cj_jewel_manufactured"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "chlorojoules:cj_jewel_refined"
+				}
+			]
+		},
+		{
+			"ticks": 850,
+			"fuel": 350,
+			"rarity": "refined",
+			"inputs": [
+				{
+					"target": "inject",
+					"fluid": "chlorojoules:cj_fluid_awareness_flowing",
+					"amount": 150
+				},
+				{
+					"target": "input",
+					"item": "chlorojoules:cj_jewel_refined"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "chlorojoules:cj_jewel_awakened"
+				}
+			]
+		},
+		{
+			"ticks": 850,
+			"fuel": 350,
+			"rarity": "refined",
+			"inputs": [
+				{
+					"target": "inject",
+					"fluid": "chlorojoules:cj_fluid_awareness_flowing",
+					"amount": 150
+				},
+				{
+					"target": "input",
+					"item": "chlorojoules:cj_jewel_refined"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "chlorojoules:cj_jewel_awakened"
+				}
+			]
+		},
+		{
+			"ticks": 75,
+			"fuel": 45,
+			"rarity": "primal",
+			"inputs": [
+				{
+					"target": "inject",
+					"fluid": "water",
+					"amount": 150
+				},
+				{
+					"target": "input",
+					"item": "sand"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "clay"
+				}
+			]
+		},
+		{
+			"ticks": 75,
+			"fuel": 85,
+			"rarity": "refined",
+			"inputs": [
+				{
+					"target": "inject",
+					"fluid": "chlorojoules:cj_fluid_etching",
+					"amount": 15
+				},
+				{
+					"target": "input",
+					"item": "chlorojoules:cj_iron_dust"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "iron_ingot",
+					"amount": 2
+				}
+			]
+		},
+		{
+			"ticks": 75,
+			"fuel": 85,
+			"rarity": "refined",
+			"inputs": [
+				{
+					"target": "inject",
+					"fluid": "chlorojoules:cj_fluid_etching",
+					"amount": 15
+				},
+				{
+					"target": "input",
+					"item": "chlorojoules:cj_gold_dust"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "gold_ingot",
+					"amount": 2
+				}
+			]
+		},
+		{
+			"ticks": 95,
+			"fuel": 225,
+			"rarity": "refined",
+			"inputs": [
+				{
+					"target": "inject",
+					"fluid": "chlorojoules:cj_fluid_etching",
+					"amount": 45
+				},
+				{
+					"target": "input",
+					"item": "chlorojoules:cj_diamond_dust"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "diamond",
+					"amount": 2
+				}
+			]
+		}
+	]
 }

@@ -1,179 +1,178 @@
 {
-  "name": "cj_pulverizer",
-  "rarity": "manufactured",
-  "tanks": [
-    "fuel"
-  ],
-  "slots": [
-    "jewel",
-    {
-      "name": "input",
-      "anchor": "center",
-      "x": -24
-    },
-    {
-      "name": "output",
-      "anchor": "center",
-      "x": 35,
-      "y": 4,
-
-      "output": true
-    }
-  ],
-  "progress": {
-    "anchor": "center"
-  },
-  "recipes": [
-    {
-      "ticks": 100,
-      "fuel": 10,
-      "inputs": [
-        {
-          "target": "input",
-          "item": "chlorojoules:cj_jewel_faux"
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "item": "chlorojoules:cj_jewel_dust"
-        }
-      ]
-    },
-    {
-      "ticks": 100,
-      "fuel": 40,
-      "inputs": [
-        {
-          "target": "input",
-          "item": "chlorojoules:cj_jewel_primal"
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "item": "chlorojoules:cj_jewel_dust"
-        }
-      ]
-    },
-    {
-      "ticks": 200,
-      "fuel": 160,
-      "inputs": [
-        {
-          "target": "input",
-          "item": "chlorojoules:cj_jewel_manufactured"
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "item": "chlorojoules:cj_jewel_dust",
-          "amount": 2
-        }
-      ]
-    },
-    {
-      "ticks": 250,
-      "fuel": 640,
-      "inputs": [
-        {
-          "target": "input",
-          "item": "chlorojoules:cj_jewel_refined"
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "item": "chlorojoules:cj_jewel_dust",
-          "amount": 3
-        }
-      ]
-    },
-    {
-      "ticks": 550,
-      "fuel": 800,
-      "inputs": [
-        {
-          "target": "input",
-          "item": "chlorojoules:cj_jewel_awakened"
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "item": "chlorojoules:cj_jewel_dust",
-          "amount": 8
-        }
-      ]
-    },
-    {
-      "ticks": 150,
-      "fuel": 80,
-      "inputs": [
-        {
-          "target": "input",
-          "item": "#cj_iron_ore"
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "item": "chlorojoules:cj_iron_dust",
-          "amount": 2
-        }
-      ]
-    },
-    {
-      "ticks": 150,
-      "fuel": 80,
-      "inputs": [
-        {
-          "target": "input",
-          "item": "#cj_gold_ore"
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "item": "chlorojoules:cj_gold_dust",
-          "amount": 2
-        }
-      ]
-    },
-    {
-      "ticks": 90,
-      "fuel": 30,
-      "inputs": [
-        {
-          "target": "input",
-          "item": "sugar_cane"
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "item": "sugar",
-          "amount": 4
-        }
-      ]
-    },
-    {
-      "ticks": 200,
-      "fuel": 15,
-      "passive": true,
-      "inputs": [
-        {
-          "target": "input",
-          "item": "gravel"
-        }
-      ],
-      "outputs": [
-        {
-          "target": "output",
-          "item": "sand"
-        }
-      ]
-    }
-  ]
+	"name": "cj_pulverizer",
+	"rarity": "manufactured",
+	"tanks": [
+		"fuel"
+	],
+	"slots": [
+		"jewel",
+		{
+			"name": "input",
+			"anchor": "center",
+			"x": -24
+		},
+		{
+			"name": "output",
+			"anchor": "center",
+			"x": 35,
+			"y": 4,
+			"output": true
+		}
+	],
+	"progress": {
+		"anchor": "center"
+	},
+	"recipes": [
+		{
+			"ticks": 100,
+			"fuel": 10,
+			"inputs": [
+				{
+					"target": "input",
+					"item": "chlorojoules:cj_jewel_faux"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "chlorojoules:cj_jewel_dust"
+				}
+			]
+		},
+		{
+			"ticks": 100,
+			"fuel": 40,
+			"inputs": [
+				{
+					"target": "input",
+					"item": "chlorojoules:cj_jewel_primal"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "chlorojoules:cj_jewel_dust"
+				}
+			]
+		},
+		{
+			"ticks": 200,
+			"fuel": 160,
+			"inputs": [
+				{
+					"target": "input",
+					"item": "chlorojoules:cj_jewel_manufactured"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "chlorojoules:cj_jewel_dust",
+					"amount": 2
+				}
+			]
+		},
+		{
+			"ticks": 250,
+			"fuel": 640,
+			"inputs": [
+				{
+					"target": "input",
+					"item": "chlorojoules:cj_jewel_refined"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "chlorojoules:cj_jewel_dust",
+					"amount": 3
+				}
+			]
+		},
+		{
+			"ticks": 550,
+			"fuel": 800,
+			"inputs": [
+				{
+					"target": "input",
+					"item": "chlorojoules:cj_jewel_awakened"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "chlorojoules:cj_jewel_dust",
+					"amount": 8
+				}
+			]
+		},
+		{
+			"ticks": 150,
+			"fuel": 80,
+			"inputs": [
+				{
+					"target": "input",
+					"item": "#cj_iron_ore"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "chlorojoules:cj_iron_dust",
+					"amount": 2
+				}
+			]
+		},
+		{
+			"ticks": 150,
+			"fuel": 80,
+			"inputs": [
+				{
+					"target": "input",
+					"item": "#cj_gold_ore"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "chlorojoules:cj_gold_dust",
+					"amount": 2
+				}
+			]
+		},
+		{
+			"ticks": 90,
+			"fuel": 30,
+			"inputs": [
+				{
+					"target": "input",
+					"item": "sugar_cane"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "sugar",
+					"amount": 4
+				}
+			]
+		},
+		{
+			"ticks": 200,
+			"fuel": 15,
+			"passive": true,
+			"inputs": [
+				{
+					"target": "input",
+					"item": "gravel"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "sand"
+				}
+			]
+		}
+	]
 }
