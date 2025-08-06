@@ -136,6 +136,7 @@ public class CJMod extends Mod {
 	public static CJBlockMachineBase reactor;
 	public static CJBlockMachineBase injector;
 	public static CJBlockMachineBase riftBeacon;
+	public static CJBlockMachineBase centrifuge;
 
 	public static Item paste;
 	public static Item soulGem;
@@ -157,9 +158,11 @@ public class CJMod extends Mod {
 	public static Item stoneDust;
 	public static Item ironDust;
 	public static Item goldDust;
+	public static Item diamondDust;
 	public static Item tinyStoneDust;
 	public static Item tinyIronDust;
 	public static Item tinyGoldDust;
+	public static Item tinyDiamondDust;
 	public static Item soulCore;
 	public static Item moss;
 
@@ -282,12 +285,13 @@ public class CJMod extends Mod {
 		return JsonParser.parseString(textAsset(path)).getAsJsonObject();
 	}
 
-	public CJBlockMachineBase registerMachine(CJMachineBuilder builder) {
-		CJBlockMachineBase result = new CJBlockMachineBase(builder);
+	public CJBlockMachineBase registerMachine(String source) {
+		CJMachineBuilder machineBuilder = new CJMachineBuilder(source);
+		CJBlockMachineBase result = new CJBlockMachineBase(machineBuilder);
 
 		result.setCreativeTab(creativeTab);
 
-		machines.put(builder.name, result);
+		machines.put(machineBuilder.name, result);
 
 		return result;
 	}
@@ -510,9 +514,15 @@ public class CJMod extends Mod {
 		stoneDust = registerItem("cj_stone_dust", PRIMAL_COLOR);
 		ironDust = registerItem("cj_iron_dust", PRIMAL_COLOR);
 		goldDust = registerItem("cj_gold_dust", PRIMAL_COLOR);
+		diamondDust = registerItem(
+				"cj_diamond_dust", MANUFACTURED_COLOR);
+
 		tinyStoneDust = registerItem("cj_tiny_stone_dust", PRIMAL_COLOR);
 		tinyIronDust = registerItem("cj_tiny_iron_dust", PRIMAL_COLOR);
 		tinyGoldDust = registerItem("cj_tiny_gold_dust", PRIMAL_COLOR);
+		tinyDiamondDust = registerItem(
+				"cj_tiny_diamond_dust", MANUFACTURED_COLOR);
+
 		ironRod = registerItem("cj_iron_rod", PRIMAL_COLOR);
 		moss = registerItem("cj_moss", PRIMAL_COLOR);
 		soulDust = registerItem("cj_soul_dust", REFINED_COLOR);
@@ -611,62 +621,29 @@ public class CJMod extends Mod {
 
 		// TODO: Make achievements to get ready for when they start working!
 
-		cultivator = registerMachine(
-				new CJMachineBuilder("/machines/cj_cultivator.json"));
-
-		liquefier = registerMachine(
-				new CJMachineBuilder("/machines/cj_liquefier.json"));
-
-		refinery = registerMachine(
-				new CJMachineBuilder("/machines/cj_refinery.json"));
-
-		solidifier = registerMachine(
-				new CJMachineBuilder("/machines/cj_solidifier.json"));
-
-		pulverizer = registerMachine(
-				new CJMachineBuilder("/machines/cj_pulverizer.json"));
-
-		press = registerMachine(
-				new CJMachineBuilder("/machines/cj_press.json"));
-
-		furnace = registerMachine(
-				new CJMachineBuilder("/machines/cj_furnace.json"));
-
-		toolStation = registerMachine(
-				new CJMachineBuilder("/machines/cj_tool_station.json"));
-
+		cultivator = registerMachine("/machines/cj_cultivator.json");
+		liquefier = registerMachine("/machines/cj_liquefier.json");
+		refinery = registerMachine("/machines/cj_refinery.json");
+		solidifier = registerMachine("/machines/cj_solidifier.json");
+		pulverizer = registerMachine("/machines/cj_pulverizer.json");
+		press = registerMachine("/machines/cj_press.json");
+		furnace = registerMachine("/machines/cj_furnace.json");
+		toolStation = registerMachine("/machines/cj_tool_station.json");
 		// TODO: Figure out how to make Gear controls.
-		// TODO: Filtered transferors.
-		transferor = registerMachine(
-				new CJMachineBuilder("/machines/cj_transferor.json"));
-
-		tank = registerMachine(
-				new CJMachineBuilder("/machines/cj_tank.json"));
-
-		composter = registerMachine(
-				new CJMachineBuilder("/machines/cj_composter.json"));
-
+		// TODO: Filtered transferor.
+		transferor = registerMachine("/machines/cj_transferor.json");
+		tank = registerMachine("/machines/cj_tank.json");
+		composter = registerMachine("/machines/cj_composter.json");
 		primitiveCentrifuge = registerMachine(
-				new CJMachineBuilder(
-						"/machines/cj_primitive_centrifuge.json"));
+				"/machines/cj_primitive_centrifuge.json");
 
-		mixer = registerMachine(
-				new CJMachineBuilder("/machines/cj_mixer.json"));
-
-		enervator = registerMachine(
-				new CJMachineBuilder("/machines/cj_enervator.json"));
-
-		pump = registerMachine(
-				new CJMachineBuilder("/machines/cj_pump.json"));
-
-		reactor = registerMachine(
-				new CJMachineBuilder("/machines/cj_reactor.json"));
-
-		injector = registerMachine(
-				new CJMachineBuilder("/machines/cj_injector.json"));
-
-		riftBeacon = registerMachine(
-				new CJMachineBuilder("/machines/cj_rift_beacon.json"));
+		mixer = registerMachine("/machines/cj_mixer.json");
+		enervator = registerMachine("/machines/cj_enervator.json");
+		pump = registerMachine("/machines/cj_pump.json");
+		reactor = registerMachine("/machines/cj_reactor.json");
+		injector = registerMachine("/machines/cj_injector.json");
+		riftBeacon = registerMachine("/machines/cj_rift_beacon.json");
+		centrifuge = registerMachine("/machines/cj_centrifuge.json");
 	}
 
 	@Override
@@ -758,6 +735,7 @@ public class CJMod extends Mod {
 		tagRawStone.addIngredient(BRIMSTONE);
 		tagRawStone.addIngredient(RIDROCK);
 
+		registerFurnaceRecipe(diamondDust, DIAMOND);
 		registerFurnaceRecipe(goldDust, GOLD_INGOT);
 		registerFurnaceRecipe(ironDust, IRON_INGOT);
 
@@ -879,6 +857,13 @@ public class CJMod extends Mod {
 				"%%",
 				"%%",
 				'%', tinyGoldDust);
+
+		registerRecipe(
+				diamondDust,
+				"%%%",
+				"%%%",
+				"%%%",
+				'%', tinyDiamondDust);
 
 		registerRecipe(
 				blender,

@@ -88,6 +88,8 @@ message.cj_injector.help=Injects fluids into items
 message.cj_injector.flavor=Not scared of needles
 message.cj_rift_beacon.help=Takes control of a dimensional rift
 message.cj_rift_beacon.flavor=I hope you know what you're doing
+message.cj_centrifuge.help=Separates items into constituent parts
+message.cj_centrifuge.flavor=Always thinking of others
 
 message.cj_enable_refine_fuel=Allow processing of fuel tank
 message.cj_compost_bone_meal=Compost to bone meal
@@ -122,6 +124,7 @@ tile.cj_pump.name=Pump
 tile.cj_reactor.name=Chemical Reactor
 tile.cj_injector.name=Fluid Injector
 tile.cj_rift_beacon.name=Rift Beacon
+tile.cj_centrifuge.name=Centrifuge
 
 # Fluids.
 tile.cj_fluid_paste.name=Paste
@@ -173,6 +176,8 @@ item.cj_fluid_container.name=Personal Tank
 item.cj_jetpack.name=Elevation Unit
 item.cj_rift_identifier.name=Rift Signature Identifier
 item.cj_otherworld.name=§GFragment of the Beyond
+item.cj_diamond_dust.name=Diamond Dust
+item.cj_tiny_diamond_dust.name=Tiny Diamond Dust
 
 item.cj_jewel_faux.name=Faux ChloroJewel
 item.cj_jewel_primal.name=Primal ChloroJewel

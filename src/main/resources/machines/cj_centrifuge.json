@@ -1,0 +1,141 @@
+{
+  "name": "cj_centrifuge",
+  "rarity": "manufactured",
+  "slots": [
+    "jewel",
+    {
+      "name": "input",
+      "anchor": "center",
+      "x": -25
+    },
+    {
+      "name": "output",
+      "anchor": "center",
+      "x": 35,
+      "y": 4,
+
+      "output": true
+    },
+    {
+      "name": "additional",
+      "anchor": "center",
+      "x": 67,
+      "y": 4,
+
+      "output": true
+    }
+  ],
+  "tanks": [
+    "fuel"
+  ],
+  "progress": {
+    "anchor": "center"
+  },
+  "recipes": [
+    {
+      "ticks": 80,
+      "fuel": 25,
+      "inputs": [
+        {
+          "target": "input",
+          "item": "chlorojoules:cj_stone_dust"
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "item": "chlorojoules:cj_tiny_iron_dust",
+          "chance": 0.55
+        },
+        {
+          "target": "additional",
+          "item": "chlorojoules:cj_tiny_stone_dust",
+          "chance": 0.85
+        }
+      ]
+    },
+    {
+      "ticks": 80,
+      "fuel": 25,
+      "inputs": [
+        {
+          "target": "input",
+          "item": "sand"
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "item": "chlorojoules:cj_tiny_gold_dust",
+          "chance": 0.55
+        },
+        {
+          "target": "additional",
+          "item": "chlorojoules:cj_tiny_stone_dust",
+          "chance": 0.85
+        }
+      ]
+    },
+    {
+      "ticks": 80,
+      "fuel": 25,
+      "inputs": [
+        {
+          "target": "input",
+          "item": "dirt"
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "item": "chlorojoules:cj_stone_dust",
+          "chance": 0.85
+        },
+        {
+          "target": "additional",
+          "item": "seeds",
+          "chance": 0.01
+        }
+      ]
+    },
+    {
+      "ticks": 80,
+      "fuel": 25,
+      "inputs": [
+        {
+          "target": "input",
+          "item": "gravel"
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "item": "flint",
+          "chance": 0.65
+        },
+        {
+          "target": "additional",
+          "item": "chlorojoules:cj_stone_dust",
+          "chance": 0.85
+        }
+      ]
+    },
+    {
+      "ticks": 80,
+      "fuel": 25,
+      "inputs": [
+        {
+          "target": "input",
+          "item": "chlorojoules:cj_jewel_dust"
+        }
+      ],
+      "outputs": [
+        {
+          "target": "output",
+          "item": "chlorojoules:cj_tiny_diamond_dust",
+          "chance": 0.45
+        }
+      ]
+    }
+  ]
+}
