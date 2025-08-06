@@ -5,6 +5,7 @@ import com.fox2code.foxloader.registry.GameRegistry;
 
 import com.google.gson.JsonObject;
 
+import com.google.gson.JsonParser;
 import io.github.chlorojoules.block.CJBlockMachineBase;
 import io.github.chlorojoules.block.CJBlockRift;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
@@ -12,6 +13,7 @@ import io.github.chlorojoules.block.tileentity.CJTileEntityRendererMachineBase;
 import io.github.chlorojoules.item.*;
 import io.github.chlorojoules.machine.*;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.creative.CreativeTab;
 import net.minecraft.client.gui.creative.CreativeTabs;
 
@@ -29,13 +31,21 @@ import net.minecraft.common.block.tileentity.TileEntity;
 import net.minecraft.common.item.*;
 import net.minecraft.common.item.children.ItemBucket;
 import net.minecraft.common.item.children.ItemGoldenBucket;
+import net.minecraft.common.item.children.ItemSeeds;
 import net.minecraft.common.item.data.EnumTools;
 import net.minecraft.common.recipe.*;
 import net.minecraft.common.util.JsonUtils;
 import net.minecraft.common.world.map.MapColor;
 
 import java.awt.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.logging.Logger;
 
 import static net.minecraft.common.block.Blocks.*;
 import static net.minecraft.common.item.Items.*;
@@ -106,24 +116,24 @@ public class CJMod extends Mod {
 	public static Block compactedJewelDust;
 	public static Block rift;
 
-	public static Block cultivator;
-	public static Block liquefier;
-	public static Block solidifier;
-	public static Block refinery;
-	public static Block pulverizer;
-	public static Block press;
-	public static Block furnace;
-	public static Block toolStation;
-	public static Block transferor;
-	public static Block tank;
-	public static Block mixer;
-	public static Block composter;
-	public static Block primitiveCentrifuge;
-	public static Block enervator;
-	public static Block pump;
-	public static Block reactor;
-	public static Block injector;
-	public static Block riftBeacon;
+	public static CJBlockMachineBase cultivator;
+	public static CJBlockMachineBase liquefier;
+	public static CJBlockMachineBase solidifier;
+	public static CJBlockMachineBase refinery;
+	public static CJBlockMachineBase pulverizer;
+	public static CJBlockMachineBase press;
+	public static CJBlockMachineBase furnace;
+	public static CJBlockMachineBase toolStation;
+	public static CJBlockMachineBase transferor;
+	public static CJBlockMachineBase tank;
+	public static CJBlockMachineBase mixer;
+	public static CJBlockMachineBase composter;
+	public static CJBlockMachineBase primitiveCentrifuge;
+	public static CJBlockMachineBase enervator;
+	public static CJBlockMachineBase pump;
+	public static CJBlockMachineBase reactor;
+	public static CJBlockMachineBase injector;
+	public static CJBlockMachineBase riftBeacon;
 
 	public static Item paste;
 	public static Item soulGem;
@@ -246,13 +256,64 @@ public class CJMod extends Mod {
 		return result;
 	}
 
-	public Block registerMachine(CJMachineBuilder builder) {
-		Block result = new CJBlockMachineBase(builder)
-				.setCreativeTab(creativeTab);
+	public static String textAsset(String path) {
+		String source;
+		try {
+			InputStream stream = CJMod.class.getResourceAsStream(path);
+			if(stream == null) {
+				throw new RuntimeException(
+						"Failed to open resource stream for '" + path + "'");
+			}
 
-		machines.put(builder.name, (CJBlockMachineBase) result);
+			ByteBuffer bytes = ByteBuffer.wrap(stream.readAllBytes());
+			source = StandardCharsets.UTF_8.decode(bytes).toString();
+			stream.close();
+		}
+		catch(IOException e) {
+			throw new RuntimeException(e);
+		}
+
+		return source;
+	}
+
+	public static JsonObject jsonAsset(String path) {
+		return JsonParser.parseString(textAsset(path)).getAsJsonObject();
+	}
+
+	public CJBlockMachineBase registerMachine(CJMachineBuilder builder) {
+		CJBlockMachineBase result = new CJBlockMachineBase(builder);
+
+		result.setCreativeTab(creativeTab);
+
+		machines.put(builder.name, result);
 
 		return result;
+	}
+
+	private static Object getField(Object object, String name) {
+		try {
+			Field f = object.getClass().getDeclaredField(name);
+			f.setAccessible(true);
+			return f.get(object);
+		}
+		catch(Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private static Object callMethod(
+			Object object, String name, Object... args) {
+
+		try {
+			Method f = object.getClass().getDeclaredMethod(
+					name, objectArrayToTypes(args));
+
+			f.setAccessible(true);
+			return f.invoke(object, args);
+		}
+		catch(Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private Block registerFluid(String name) {
@@ -608,6 +669,9 @@ public class CJMod extends Mod {
 
 	@Override
 	public void onPostInit() {
+		JsonObject cultivatorTemplate = CJMod.jsonAsset(
+				"/templates/cj_cultivator_seed_recipe.json");
+
 		for(Block block : BLOCKS_LIST) {
 			if(block instanceof BlockLeavesBase) {
 				tagLeaves.addIngredient(block);
@@ -628,6 +692,41 @@ public class CJMod extends Mod {
 
 			if(block instanceof BlockGlass) {
 				tagGlass.addIngredient(block);
+			}
+		}
+
+		for(Item item : ITEMS_LIST) {
+			if(item instanceof ItemSeeds seeds) {
+				CJMachineRecipe recipe =
+						new CJMachineRecipe(cultivatorTemplate);
+
+				recipe.getInputByTarget("seed").item = new ItemStack(seeds, 0);
+
+				CJMachineRecipeComponent output =
+						recipe.getOutputByTarget("output");
+
+				Block block = BLOCKS_LIST[(Integer) getField(seeds, "blockId")];
+				if(block instanceof BlockCrops crops) {
+					Integer droppedID = (Integer) callMethod(crops, "cropID");
+
+					output.item = new ItemStack(ITEMS_LIST[droppedID]);
+				}
+				else if(block instanceof BlockMelonStem stem) {
+					Integer fruitID = (Integer) getField(stem, "fruit");
+					int droppedID = BLOCKS_LIST[fruitID]
+							.idDropped(0, new Random());
+
+					output.item = new ItemStack(ITEMS_LIST[droppedID]);
+				}
+				else {
+					Logger.getLogger("Chlorojoules").warning(
+							"Could not determine seed crop for '" +
+							seeds.itemID + "'");
+
+					continue;
+				}
+
+				cultivator.machineBuilder.recipes.add(recipe);
 			}
 		}
 

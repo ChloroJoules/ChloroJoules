@@ -9,6 +9,7 @@ import io.github.chlorojoules.CJTankVolume;
 import net.minecraft.common.util.JsonUtils;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class CJMachineRecipe {
 	public ArrayList<CJMachineRecipeComponent> inputs = new ArrayList<>();
@@ -69,6 +70,22 @@ public class CJMachineRecipe {
 	public CJMachineRecipe addOutput(CJMachineRecipeComponent component) {
 		outputs.add(component);
 		return this;
+	}
+
+	public CJMachineRecipeComponent getInputByTarget(String target) {
+		for(CJMachineRecipeComponent component : inputs) {
+			if(component.targetID.equals(target)) return component;
+		}
+
+		throw new RuntimeException("No input with target '" + target + "'");
+	}
+
+	public CJMachineRecipeComponent getOutputByTarget(String target) {
+		for(CJMachineRecipeComponent component : outputs) {
+			if(component.targetID.equals(target)) return component;
+		}
+
+		throw new RuntimeException("No output with target '" + target + "'");
 	}
 
 	public CJMachineRecipe setProcessTime(int value) {

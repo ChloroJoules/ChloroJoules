@@ -1,0 +1,28 @@
+{
+  "ticks": 100,
+  "fuel": 50,
+  "inputs": [
+    {
+      "target": "seed",
+      "item": "seeds",
+      "amount": 0
+    },
+    {
+      "target": "water",
+      "fluid": "water",
+      "amount": 100
+    },
+    {
+      "target": "fertilizer",
+      "item": "dye",
+      "damage": 15,
+      "optional": true
+    }
+  ],
+  "outputs": [
+    {
+      "target": "output",
+      "item": "wheat"
+    }
+  ]
+}

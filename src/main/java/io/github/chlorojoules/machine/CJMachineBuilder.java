@@ -50,23 +50,7 @@ public class CJMachineBuilder {
 
 	@SuppressWarnings("unchecked")
 	public CJMachineBuilder(String jsonPath) {
-		String source;
-		try {
-			InputStream stream = getClass().getResourceAsStream(jsonPath);
-			if(stream == null) {
-				throw new RuntimeException(
-						"Failed to open resource stream for '" +
-						jsonPath + "'");
-			}
-			ByteBuffer bytes = ByteBuffer.wrap(stream.readAllBytes());
-			source = StandardCharsets.UTF_8.decode(bytes).toString();
-			stream.close();
-		}
-		catch(IOException e) {
-			throw new RuntimeException(e);
-		}
-
-		JsonObject root = JsonParser.parseString(source).getAsJsonObject();
+		JsonObject root = CJMod.jsonAsset(jsonPath);
 
 		name = JsonUtils.getString(root, "name");
 		rarity = CJRarityInfo.fromString(
