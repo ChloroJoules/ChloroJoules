@@ -22,6 +22,7 @@ foxloader {
 	modMain = 'io.github.chlorojoules.CJMod'
 	modIcon = 'textures/items/cj_jewel_awakened.png'
 	modDesc = new File('README.md').text
+			.replace('\r', '')
 			.replace('# ChloroJoules\n', '')
 			.replace('*', '')
 }
