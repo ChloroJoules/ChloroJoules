@@ -77,6 +77,9 @@ public class CJMod extends Mod {
 	public static TaggedIngredient tagEmptyBucket =
 			TaggedIngredients.get("cj_empty_bucket");
 
+	public static TaggedIngredient tagChest =
+			TaggedIngredients.get("cj_chest");
+
 	public static TaggedIngredient tagIronOre =
 			TaggedIngredients.get("cj_iron_ore");
 
@@ -744,6 +747,9 @@ public class CJMod extends Mod {
 		tagEmptyBucket.addIngredient(EMPTY_BUCKET);
 		tagEmptyBucket.addIngredient(GOLDEN_EMPTY_BUCKET);
 
+		tagChest.addIngredient(CHEST);
+		tagChest.addIngredient(COLORED_CHEST);
+
 		tagRawStone.addIngredient(STONE);
 		tagRawStone.addIngredient(COBBLESTONE);
 		tagRawStone.addIngredient(MOSSY_COBBLESTONE);
@@ -945,6 +951,16 @@ public class CJMod extends Mod {
 				'|', machineFrame);
 
 		registerRecipe(
+				injector,
+				"&@&",
+				"&|&",
+				"&%&",
+				'&', COBBLESTONE,
+				'@', tagEmptyBucket,
+				'%', tagChest,
+				'|', machineFrame);
+
+		registerRecipe(
 				enervator,
 				"&#&",
 				"*|*",
@@ -1031,8 +1047,8 @@ public class CJMod extends Mod {
 				"&|&",
 				"&@&",
 				'&', tagRawStone,
-				'%', EMPTY_BUCKET,
-				'@', CHEST,
+				'%', tagEmptyBucket,
+				'@', tagChest,
 				'|', machineFrame);
 
 		registerRecipe(
@@ -1077,8 +1093,8 @@ public class CJMod extends Mod {
 				" %|",
 				" @#",
 				"@  ",
-				'%', CHEST,
-				'#', EMPTY_BUCKET,
+				'%', tagChest,
+				'#', tagEmptyBucket,
 				'|', paste,
 				'@', ironRod);
 
