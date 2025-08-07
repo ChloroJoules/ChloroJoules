@@ -245,7 +245,7 @@ public class CJMachineRiftBeacon implements CJIMachine {
 		RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 
 		GL11.glLineWidth(4.0f);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW_MATRIX);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5, y + 0.5 + Y_OFFSET, z + 0.5);
 
