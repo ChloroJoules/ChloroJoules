@@ -14,14 +14,12 @@ public class CJMachineRecipe {
 	public ArrayList<CJMachineRecipeComponent> inputs = new ArrayList<>();
 	public ArrayList<CJMachineRecipeComponent> outputs = new ArrayList<>();
 
-	public int processTime = 20;
+	public int processTime;
 	public int fuelIndex = -1;
 
 	public CJRarity requiredRarity = CJRarity.PRIMAL;
 	boolean allowPassive = false;
 	public String requiredButton;
-
-	public CJMachineRecipe() {}
 
 	public CJMachineRecipe(JsonObject jsonObject) {
 		if(jsonObject.has("passive")) {
@@ -61,16 +59,6 @@ public class CJMachineRecipe {
 		}
 	}
 
-	public CJMachineRecipe addInput(CJMachineRecipeComponent component) {
-		inputs.add(component);
-		return this;
-	}
-
-	public CJMachineRecipe addOutput(CJMachineRecipeComponent component) {
-		outputs.add(component);
-		return this;
-	}
-
 	public CJMachineRecipeComponent getInputByTarget(String target) {
 		for(CJMachineRecipeComponent component : inputs) {
 			if(component.targetID.equals(target)) return component;
@@ -85,11 +73,6 @@ public class CJMachineRecipe {
 		}
 
 		throw new RuntimeException("No output with target '" + target + "'");
-	}
-
-	public CJMachineRecipe setProcessTime(int value) {
-		processTime = value;
-		return this;
 	}
 
 	public CJMachineRecipeComponent getFuelComponent() {

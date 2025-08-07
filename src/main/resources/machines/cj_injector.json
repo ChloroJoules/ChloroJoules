@@ -222,6 +222,28 @@
 					"item": "chlorojoules:cj_jewel_faux"
 				}
 			]
+		},
+		{
+			"ticks": 45,
+			"fuel": 35,
+			"rarity": "primal",
+			"inputs": [
+				{
+					"target": "inject",
+					"fluid": "chlorojoules:cj_fluid_souls",
+					"amount": 15
+				},
+				{
+					"target": "input",
+					"item": "sand"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "soul_sand"
+				}
+			]
 		}
 	]
 }

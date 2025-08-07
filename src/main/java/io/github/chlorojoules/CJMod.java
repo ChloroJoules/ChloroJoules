@@ -1096,15 +1096,16 @@ public class CJMod extends Mod {
 		CJBlockMachineBase furnaceMachine = machines.get("cj_furnace");
 		CJMachineBuilder furnaceMachineBuilder = furnaceMachine.machineBuilder;
 
+		JsonObject template = jsonAsset("/templates/cj_furnace_recipe.json");
 		for(Map.Entry<Integer, ItemStack> entry : furnaceEntries) {
-			furnaceMachineBuilder.recipes.add(new CJMachineRecipe()
-					.addInput(new CJMachineRecipeComponent(
-							"fuel", new CJTankVolume(fluidChlorojoules, 70)))
-					.addInput(new CJMachineRecipeComponent(
-							"input", new ItemStack(entry.getKey(), 1)))
-					.addOutput(new CJMachineRecipeComponent(
-							"output", entry.getValue()))
-					.setProcessTime(200));
+			CJMachineRecipe recipe = new CJMachineRecipe(template);
+
+			recipe.getInputByTarget("input").item =
+					new ItemStack(entry.getKey(), 1);
+
+			recipe.getOutputByTarget("output").item = entry.getValue().copy();
+
+			furnaceMachineBuilder.recipes.add(recipe);
 		}
 	}
 }

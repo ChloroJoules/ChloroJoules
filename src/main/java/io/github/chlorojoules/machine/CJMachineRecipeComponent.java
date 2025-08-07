@@ -19,12 +19,6 @@ public class CJMachineRecipeComponent {
 	public float chance = 1.0f;
 	public boolean optional = false;
 
-	public CJMachineRecipeComponent(String targetID, ItemStack stack) {
-		this.target = CJMachineRecipeTarget.SLOT;
-		this.targetID = targetID;
-		this.item = stack;
-	}
-
 	public CJMachineRecipeComponent(String targetID, CJTankVolume volume) {
 		this.target = CJMachineRecipeTarget.TANK;
 		this.targetID = targetID;

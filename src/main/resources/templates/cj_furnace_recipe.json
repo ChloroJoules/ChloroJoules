@@ -1,0 +1,16 @@
+{
+	"ticks": 200,
+	"fuel": 70,
+	"inputs": [
+		{
+			"target": "input",
+			"item": "cobblestone"
+		}
+	],
+	"outputs": [
+		{
+			"target": "output",
+			"item": "stone"
+		}
+	]
+}
