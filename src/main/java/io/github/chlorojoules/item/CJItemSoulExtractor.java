@@ -45,13 +45,9 @@ public class CJItemSoulExtractor extends Item implements CJIItemSocket {
 
 		world.setBlock(blockX, blockY, blockZ, Blocks.AIR.blockID);
 
-		ItemStack soulStack =
-				new ItemStack(CJMod.soulCore.itemID, 1);
-
-		EntityItem item =
-				new EntityItem(world, blockX, blockY, blockZ, soulStack);
-
-		world.entityJoinedWorld(item);
+		CJMod.spawnItem(
+				world, blockX, blockY, blockZ,
+				new ItemStack(CJMod.soulCore.itemID, 1), false);
 
 		Minecraft.getInstance().sndManager.playSoundFX(
 				"random.levelup", 1.0F, 1.0F);

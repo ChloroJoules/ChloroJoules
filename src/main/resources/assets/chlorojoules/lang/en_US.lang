@@ -7,6 +7,7 @@ tile.flowing_acid.name=Acid
 # Machine messages.
 message.cj_no_power=Not enough CJ
 message.cj_no_jewel=No jewel inserted
+message.cj_no_fragment=No §9t§Dr§Fa§Dn§9s§Rdimensional material detected
 message.cj_bad_jewel=Bad jewel inserted
 message.cj_full_tool=Tool already has jewel
 message.cj_poor_jewel=Low-tier jewel inserted
@@ -90,6 +91,8 @@ message.cj_rift_beacon.help=Takes control of a dimensional rift
 message.cj_rift_beacon.flavor=I hope you know what you're doing
 message.cj_centrifuge.help=Separates items into constituent parts
 message.cj_centrifuge.flavor=Always thinking of others
+message.cj_otherworld_pinhole.help=Pulls volatile foreign matter from another dimension
+message.cj_otherworld_pinhole.flavor=Always thinking of others
 
 message.cj_enable_refine_fuel=Allow processing of fuel tank
 message.cj_compost_bone_meal=Compost to bone meal
@@ -124,6 +127,7 @@ tile.cj_pump.name=Pump
 tile.cj_reactor.name=Chemical Reactor
 tile.cj_injector.name=Fluid Injector
 tile.cj_rift_beacon.name=Rift Beacon
+tile.cj_otherworld_pinhole.name=Otherworld Pinhole
 tile.cj_centrifuge.name=Centrifuge
 
 # Fluids.
@@ -178,6 +182,7 @@ item.cj_rift_identifier.name=Rift Signature Identifier
 item.cj_otherworld.name=§GFragment of the Beyond
 item.cj_diamond_dust.name=Diamond Dust
 item.cj_tiny_diamond_dust.name=Tiny Diamond Dust
+item.cj_otherworld_essence.name=Semi-Realized Fabric
 
 item.cj_jewel_faux.name=Faux ChloroJewel
 item.cj_jewel_primal.name=Primal ChloroJewel

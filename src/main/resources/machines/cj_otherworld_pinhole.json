@@ -1,0 +1,21 @@
+{
+	"name": "cj_otherworld_pinhole",
+	"rarity": "awakened",
+	"implementation": "io.github.chlorojoules.machine.CJMachinePinhole",
+	"slots": [
+		"jewel",
+		{
+			"name": "fragment",
+			"anchor": "center",
+			"render": "otherworld",
+			"allowed": [
+				{
+					"item": "chlorojoules:cj_otherworld"
+				}
+			]
+		}
+	],
+	"tanks": [
+		"fuel"
+	]
+}

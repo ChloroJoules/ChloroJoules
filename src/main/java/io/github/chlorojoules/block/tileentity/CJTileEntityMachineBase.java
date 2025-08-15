@@ -100,8 +100,8 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	public void onBreak(World world, int x, int y, int z) {
 		for(ItemStack stack : stacks) {
 			if(stack == null) continue;
-			EntityItem entity = new EntityItem(world, x, y, z, stack);
-			world.entityJoinedWorld(entity);
+
+			CJMod.spawnItem(world, x, y, z, stack, false);
 		}
 
 		stacks = null;

@@ -27,6 +27,7 @@ import net.minecraft.common.block.fluid.Fluids;
 import net.minecraft.common.block.sound.StepSound;
 import net.minecraft.common.block.sound.StepSounds;
 import net.minecraft.common.block.tileentity.TileEntity;
+import net.minecraft.common.entity.other.EntityItem;
 import net.minecraft.common.item.*;
 import net.minecraft.common.item.children.ItemBucket;
 import net.minecraft.common.item.children.ItemGoldenBucket;
@@ -34,6 +35,7 @@ import net.minecraft.common.item.children.ItemSeeds;
 import net.minecraft.common.item.data.EnumTools;
 import net.minecraft.common.recipe.*;
 import net.minecraft.common.util.JsonUtils;
+import net.minecraft.common.world.World;
 import net.minecraft.common.world.map.MapColor;
 
 import java.awt.*;
@@ -60,6 +62,8 @@ public class CJMod extends Mod {
 	//		 It to be -- but should contain all Vanilla items mapped from their
 	//		 Display name translation key to their implementation.
 	public static HashMap<String, Item> earlyItemMap = new HashMap<>();
+
+	public static ArrayList<Item> otherworldEligibleItems = new ArrayList<>();
 
 	public static TaggedIngredient tagLeaves =
 			TaggedIngredients.get("cj_leaves");
@@ -143,6 +147,7 @@ public class CJMod extends Mod {
 	public static Item pasteBowl;
 	public static Item dirtBowl;
 	public static Item otherworld;
+	public static Item otherworldEssence;
 
 	public static Item blender;
 
@@ -285,15 +290,18 @@ public class CJMod extends Mod {
 		return JsonParser.parseString(textAsset(path)).getAsJsonObject();
 	}
 
-	public CJBlockMachineBase registerMachine(String source) {
-		CJMachineBuilder machineBuilder = new CJMachineBuilder(source);
-		CJBlockMachineBase result = new CJBlockMachineBase(machineBuilder);
+	public static void spawnItem(
+			World world, double x, double y, double z, ItemStack stack,
+			boolean inert) {
 
-		result.setCreativeTab(creativeTab);
+		EntityItem item = new EntityItem(world, x, y, z, stack);
+		if(inert) {
+			item.motionX = 0;
+			item.motionY = 0;
+			item.motionZ = 0;
+		}
 
-		machines.put(machineBuilder.name, result);
-
-		return result;
+		world.entityJoinedWorld(item);
 	}
 
 	private static Object getField(Object object, String name) {
@@ -320,6 +328,17 @@ public class CJMod extends Mod {
 		catch(Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public CJBlockMachineBase registerMachine(String source) {
+		CJMachineBuilder machineBuilder = new CJMachineBuilder(source);
+		CJBlockMachineBase result = new CJBlockMachineBase(machineBuilder);
+
+		result.setCreativeTab(creativeTab);
+
+		machines.put(machineBuilder.name, result);
+
+		return result;
 	}
 
 	private Block registerFluid(String name) {
@@ -540,6 +559,9 @@ public class CJMod extends Mod {
 		otherworld = registerItem("cj_otherworld", Color.MAGENTA.getRGB(), 1)
 				.setDoNotConsumeOnCrafting(true);
 
+		otherworldEssence = registerItem(
+				"cj_otherworld_essence", AWAKENED_COLOR);
+
 		blender = registerItem("cj_blender", PRIMAL_COLOR, 1)
 				.setDoNotConsumeOnCrafting(true);
 
@@ -598,7 +620,7 @@ public class CJMod extends Mod {
 				REFINED_COLOR, 1, CJItemJetpack.class, "cj_jetpack");
 
 		riftIdentifier = registerItem(
-				REFINED_COLOR, 1, CJItemRiftIdentifier.class,
+				AWAKENED_COLOR, 1, CJItemRiftIdentifier.class,
 				"cj_rift_identifier");
 
 		machineFrame = registerBlock(
@@ -643,11 +665,32 @@ public class CJMod extends Mod {
 		reactor = registerMachine("/machines/cj_reactor.json");
 		injector = registerMachine("/machines/cj_injector.json");
 		riftBeacon = registerMachine("/machines/cj_rift_beacon.json");
+		riftBeacon = registerMachine("/machines/cj_otherworld_pinhole.json");
 		centrifuge = registerMachine("/machines/cj_centrifuge.json");
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void onPostInit() {
+		ArrayList<IRecipe> recipes = (ArrayList<IRecipe>) getField(
+				CraftingManager.getInstance(), "recipes");
+
+		for(Item item : earlyItemMap.values()) {
+			if(item == null) continue;
+			if(item.getItemStackLimit() != 64) continue;
+
+			for(IRecipe recipe : recipes) {
+				if(recipe == null) continue;
+
+				ItemStack output = recipe.getRecipeOutput();
+				if(output == null) continue;
+
+				if(output.getItemID() == item.itemID) {
+					otherworldEligibleItems.add(item);
+				}
+			}
+		}
+
 		JsonObject cultivatorTemplate = CJMod.jsonAsset(
 				"/templates/cj_cultivator_seed_recipe.json");
 
@@ -684,7 +727,9 @@ public class CJMod extends Mod {
 				CJMachineRecipeComponent output =
 						recipe.getOutputByTarget("output");
 
-				Block block = BLOCKS_LIST[(Integer) getField(seeds, "blockId")];
+				Block block =
+						BLOCKS_LIST[(Integer) getField(seeds, "blockId")];
+
 				if(block instanceof BlockCrops crops) {
 					Integer droppedID = (Integer) callMethod(crops, "cropID");
 
@@ -790,8 +835,29 @@ public class CJMod extends Mod {
 				'-', tagRawStone,
 				'~', GOLD_INGOT,
 				'|', machineFrame,
-				'/', IRON_INGOT,
-				'@', DIAMOND_BLOCK);
+				'/', DIAMOND,
+				'@', AUGMENTITE);
+
+		registerRecipe(
+				riftBeacon,
+				"@@@",
+				"#|#",
+				"-&-",
+				'-', tagRawStone,
+				'#', IRON_INGOT,
+				'&', soulGem,
+				'|', machineFrame,
+				'@', AUGMENTITE);
+
+		registerRecipe(
+				riftIdentifier,
+				" | ",
+				"~@~",
+				" & ",
+				'~', jewelDust,
+				'&', soulGem,
+				'|', ironRod,
+				'@', AUGMENTITE);
 
 		registerRecipe(
 				fluidContainerStack,
@@ -918,6 +984,17 @@ public class CJMod extends Mod {
 				'@', IRON_INGOT);
 
 		registerRecipe(
+				cultivator,
+				"@#@",
+				"&|&",
+				"&%&",
+				'&', tagRawStone,
+				'%', composter,
+				'#', BONSAI_PLANTER,
+				'@', tagCompostable,
+				'|', machineFrame);
+
+		registerRecipe(
 				liquefier,
 				"@@@",
 				"&|&",
@@ -995,6 +1072,16 @@ public class CJMod extends Mod {
 				'&', tagRawStone,
 				'@', FLINT,
 				'%', GUNPOWDER,
+				'|', machineFrame);
+
+		registerRecipe(
+				centrifuge,
+				"&@&",
+				"@|@",
+				"&%&",
+				'&', tagRawStone,
+				'@', tagChest,
+				'%', PISTON_BASE,
 				'|', machineFrame);
 
 		registerRecipe(

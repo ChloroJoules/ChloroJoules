@@ -53,7 +53,8 @@
 			"outputs": [
 				{
 					"target": "output",
-					"item": "gear"
+					"item": "gear",
+					"amount": 24
 				}
 			]
 		},

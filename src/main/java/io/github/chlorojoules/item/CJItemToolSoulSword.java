@@ -68,14 +68,9 @@ public class CJItemToolSoulSword extends ItemTool implements CJIItemSocket {
 
 			if(count <= 0) return true;
 
-			ItemStack soulStack = new ItemStack(
-					CJMod.soulEssence.itemID, count);
-
-			EntityItem item = new EntityItem(
+			CJMod.spawnItem(
 					world, target.posX, target.posY, target.posZ,
-					soulStack);
-
-			world.entityJoinedWorld(item);
+					new ItemStack(CJMod.soulEssence.itemID, count), false);
 		}
 
 		return true;

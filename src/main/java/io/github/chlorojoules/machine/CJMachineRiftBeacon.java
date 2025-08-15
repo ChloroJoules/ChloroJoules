@@ -9,7 +9,6 @@ import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import net.minecraft.client.renderer.world.Tessellator;
 import net.minecraft.common.block.Blocks;
 import net.minecraft.common.entity.Entity;
-import net.minecraft.common.entity.other.EntityItem;
 import net.minecraft.common.entity.player.EntityPlayer;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.util.i18n.StringTranslate;
@@ -88,14 +87,11 @@ public class CJMachineRiftBeacon implements CJIMachine {
 						player.addChatMessage("message.cj_rift4");
 					}
 					else if(storage.riftTicks == CUTSCENE_THRESHOLD * 4) {
-						EntityItem item = new EntityItem(
-								machineEntity.worldObj,
-								machineEntity.xCoord,
+						CJMod.spawnItem(
+								machineEntity.worldObj, machineEntity.xCoord,
 								machineEntity.yCoord + Y_OFFSET,
 								machineEntity.zCoord,
-								new ItemStack(CJMod.otherworld));
-
-						machineEntity.worldObj.entityJoinedWorld(item);
+								new ItemStack(CJMod.otherworld), false);
 
 						machineEntity.worldObj.setBlockWithNotify(
 								machineEntity.xCoord,
@@ -182,7 +178,7 @@ public class CJMachineRiftBeacon implements CJIMachine {
 		machineEntity.operationTicks++;
 	}
 
-	private void lineCube(Tessellator tess) {
+	public static void lineCube(Tessellator tess) {
 		final double[] vertices = new double[] {
 				 1.0f,  1.0f,  1.0f,
 				 1.0f,  1.0f, -1.0f,
@@ -230,9 +226,10 @@ public class CJMachineRiftBeacon implements CJIMachine {
 		tess.draw();
 	}
 
-	public void renderTileEntityAt(
+	public static void renderCubeVortex(
 			CJTileEntityMachineBase machineEntity,
-			double x, double y, double z, float deltaTicks, int progress) {
+			double x, double y, double z, float deltaTicks, int progress,
+			float base_scale, float mr, float mg, float mb, float ma) {
 
 		machineEntity.renderDelta += deltaTicks;
 
@@ -247,17 +244,17 @@ public class CJMachineRiftBeacon implements CJIMachine {
 		GL11.glLineWidth(4.0f);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glPushMatrix();
-		GL11.glTranslated(x + 0.5, y + 0.5 + Y_OFFSET, z + 0.5);
+		GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
 
 		for(int i = 0; i < machineEntity.riftDensity; ++i) {
 			tess.startDrawing(GL11.GL_LINES);
 
 			float r = 1.0f - (i * (1.0f / BAND_DIVISOR));
 			if(machineEntity.operationTicks >= machineEntity.operationLength) {
-				tess.setColorRGBA_F(r, 0.0f, 0.0f, 1.0f);
+				tess.setColorRGBA_F(r * mr, 0.0f, 0.0f, ma);
 			}
 			else {
-				tess.setColorRGBA_F(1.0f, 1.0f, 1.0f, r);
+				tess.setColorRGBA_F(mr, mg, mb, r * ma);
 			}
 
 			GL11.glPushMatrix();
@@ -265,7 +262,7 @@ public class CJMachineRiftBeacon implements CJIMachine {
 					machineEntity.renderDelta * (i + 1), 1.0, 1.0,
 					Math.sin(Math.sqrt(machineEntity.renderDelta)));
 
-			float scale = 0.65f + i * 0.15f;
+			float scale = base_scale + i * 0.15f;
 			GL11.glScalef(scale, scale, scale);
 
 			lineCube(tess);
@@ -278,5 +275,14 @@ public class CJMachineRiftBeacon implements CJIMachine {
 		RenderSystem.enableLighting();
 		RenderSystem.enableTexture2D();
 		RenderSystem.enableDepthMask();
+	}
+
+	public void renderTileEntityAt(
+			CJTileEntityMachineBase machineEntity,
+			double x, double y, double z, float deltaTicks, int progress) {
+
+		renderCubeVortex(
+				machineEntity, x, y + Y_OFFSET, z, deltaTicks, progress,
+				0.65f, 1.0f, 1.0f, 1.0f, 1.0f);
 	}
 }
