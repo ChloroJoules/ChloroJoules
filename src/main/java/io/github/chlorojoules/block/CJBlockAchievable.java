@@ -1,23 +1,17 @@
-package io.github.chlorojoules.item;
+package io.github.chlorojoules.block;
 
+import net.minecraft.common.block.Block;
+import net.minecraft.common.block.data.Material;
 import net.minecraft.common.entity.player.EntityPlayer;
 import net.minecraft.common.item.ItemStack;
-import net.minecraft.common.item.children.ItemBucket;
 import net.minecraft.common.stats.Achievement;
 import net.minecraft.common.world.World;
 
-public class CJItemBucket extends ItemBucket {
-	Achievement achievement;
+public class CJBlockAchievable extends Block {
+	private Achievement achievement;
 
-	public CJItemBucket(String id, int fluid) {
-		super(id, fluid);
-	}
-
-	@Override
-	public ItemStack onItemRightClick(
-			ItemStack stack, World world, EntityPlayer player) {
-
-		return stack;
+	public CJBlockAchievable(String name, Material material) {
+		super(name, material);
 	}
 
 	public void setAchievement(Achievement achievement) {

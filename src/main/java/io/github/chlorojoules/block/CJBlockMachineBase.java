@@ -31,6 +31,7 @@ import net.minecraft.common.item.children.ItemBucketBase;
 import net.minecraft.common.item.children.ItemGoldenBucket;
 import net.minecraft.common.networking.Packet;
 import net.minecraft.common.networking.Packet100OpenWindow;
+import net.minecraft.common.stats.Achievement;
 import net.minecraft.common.util.math.MathHelper;
 import net.minecraft.common.world.BlockAccess;
 import net.minecraft.common.world.World;
@@ -42,6 +43,8 @@ import static io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase.ma
 
 public class CJBlockMachineBase
 		extends BlockContainer implements FoxPowerBlock {
+
+	private Achievement achievement;
 
 	public CJMachineBuilder machineBuilder;
 
@@ -103,7 +106,8 @@ public class CJBlockMachineBase
 			CJTank tank = machineBuilder.tanks.get(tankIndex);
 
 			if(tank.checkDamageExclusive(machineEntity)) continue;
-			if(tank.id.equals("jewel")) continue;
+			// TODO: Add a third pass for fuel.
+			if(tank.id.equals("fuel")) continue;
 			if(i < size && !tank.output && !tank.bidirectional) continue;
 
 			CJTankVolume volume = machineEntity.tanks.get(tankIndex);
@@ -154,6 +158,8 @@ public class CJBlockMachineBase
 				else {
 					fluid.playFluidPickUpSound(world, x, y, z);
 				}
+
+				stack.onCrafting(world, player);
 
 				return true;
 			}
@@ -344,6 +350,21 @@ public class CJBlockMachineBase
 	@Override
 	protected int damageDropped(int metadata) {
 		return machineBuilder.doDropMeta ? metadata : 0;
+	}
+
+	public void setAchievement(Achievement achievement) {
+		this.achievement = achievement;
+	}
+
+	@Override
+	public void onCrafting(
+			ItemStack itemstack, World world, EntityPlayer player) {
+
+		if(this.achievement != null) {
+			player.triggerAchievement(this.achievement);
+		}
+
+		super.onCrafting(itemstack, world, player);
 	}
 
 	@Override

@@ -1,0 +1,90 @@
+[
+	{
+		"name": "cj_woodnt_you_like_to_tech",
+		"x": 5,
+		"y": -3,
+		"parent": 2,
+		"icon": "chlorojoules:cj_machine_frame_primitive",
+		"trigger": "chlorojoules:cj_machine_frame_primitive"
+	},
+	{
+		"name": "cj_brittle_beginnings",
+		"x": 3,
+		"y": 7,
+		"parent": 5,
+		"icon": "chlorojoules:cj_jewel_faux",
+		"trigger": "chlorojoules:cj_jewel_faux"
+	},
+	{
+		"name": "cj_building_the_framework",
+		"x": 5,
+		"y": 7,
+		"parent": "cj_brittle_beginnings",
+		"icon": "chlorojoules:cj_machine_frame",
+		"trigger": "chlorojoules:cj_machine_frame"
+	},
+	{
+		"name": "cj_but_put_me_in_summer_and",
+		"x": 6,
+		"y": 8,
+		"parent": "cj_building_the_framework",
+		"icon": "chlorojoules:cj_liquefier",
+		"trigger": "chlorojoules:cj_liquefier"
+	},
+	{
+		"name": "cj_not_for_moonshine",
+		"x": 6,
+		"y": 10,
+		"parent": "cj_building_the_framework",
+		"icon": "chlorojoules:cj_refinery",
+		"trigger": "chlorojoules:cj_refinery"
+	},
+	{
+		"name": "cj_it_begins",
+		"x": 7,
+		"y": 7,
+		"parent": "cj_not_for_moonshine",
+		"icon": "chlorojoules:cj_fluid_chlorojoules_bucket",
+		"trigger": "chlorojoules:cj_fluid_chlorojoules_bucket"
+	},
+	{
+		"name": "cj_vegan_solar",
+		"x": 8,
+		"y": 5,
+		"parent": "cj_it_begins",
+		"icon": "chlorojoules:cj_enervator",
+		"trigger": "chlorojoules:cj_enervator"
+	},
+	{
+		"name": "cj_crushing_it",
+		"x": 9,
+		"y": 7,
+		"parent": "cj_it_begins",
+		"icon": "chlorojoules:cj_pulverizer",
+		"trigger": "chlorojoules:cj_pulverizer"
+	},
+	{
+		"name": "cj_desecrating_the_pristine",
+		"x": 11,
+		"y": 7,
+		"parent": "cj_crushing_it",
+		"icon": "chlorojoules:cj_jewel_dust",
+		"trigger": "chlorojoules:cj_jewel_dust"
+	},
+	{
+		"name": "cj_under_pressure",
+		"x": 13,
+		"y": 7,
+		"parent": "cj_desecrating_the_pristine",
+		"icon": "chlorojoules:cj_press",
+		"trigger": "chlorojoules:cj_press"
+	},
+	{
+		"name": "cj_industrial_age",
+		"x": 15,
+		"y": 7,
+		"parent": "cj_under_pressure",
+		"icon": "chlorojoules:cj_jewel_manufactured",
+		"trigger": "chlorojoules:cj_jewel_manufactured"
+	}
+]

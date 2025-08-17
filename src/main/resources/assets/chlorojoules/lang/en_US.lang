@@ -106,6 +106,26 @@ message.cj_tool_awakened=§BAwakened Jewel
 # Achievements
 achievement.cj_brittle_beginnings=Brittle Beginnings
 achievement.cj_brittle_beginnings.desc=Craft a Faux ChloroJewel
+achievement.cj_woodnt_you_like_to_tech=Woodn't you Like to Know
+achievement.cj_woodnt_you_like_to_tech.desc=Craft a primitive machine frame
+achievement.cj_building_the_framework=Building the Framework
+achievement.cj_building_the_framework.desc=Craft a machine frame
+achievement.cj_but_put_me_in_summer_and=But Put Me in Summer...
+achievement.cj_but_put_me_in_summer_and.desc=Craft a Liquefier
+achievement.cj_not_for_moonshine=Not for Moonshine
+achievement.cj_not_for_moonshine.desc=Craft a Refinery
+achievement.cj_it_begins=It Begins
+achievement.cj_it_begins.desc=Obtain a Bucket O' Joules
+achievement.cj_vegan_solar=Vegan Solar
+achievement.cj_vegan_solar.desc=Craft a Floral Enervator
+achievement.cj_crushing_it=Crushing It
+achievement.cj_crushing_it.desc=Craft a Pulverizer
+achievement.cj_desecrating_the_pristine=Desecrating the Pristine
+achievement.cj_desecrating_the_pristine.desc=Create Jewel Dust
+achievement.cj_under_pressure=Under Pressure
+achievement.cj_under_pressure.desc=Craft a Press
+achievement.cj_industrial_age=Industrial Age
+achievement.cj_industrial_age.desc=Create a Manufactured ChloroJewel
 
 # Blocks.
 tile.cj_machine_frame.name=Machine Frame

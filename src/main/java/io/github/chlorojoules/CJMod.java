@@ -4,9 +4,11 @@ import com.fox2code.foxloader.energy.FoxPowerCableBlock;
 import com.fox2code.foxloader.loader.Mod;
 import com.fox2code.foxloader.registry.GameRegistry;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import com.google.gson.JsonParser;
+import io.github.chlorojoules.block.CJBlockAchievable;
 import io.github.chlorojoules.block.CJBlockFoxPowerCable;
 import io.github.chlorojoules.block.CJBlockMachineBase;
 import io.github.chlorojoules.block.CJBlockRift;
@@ -32,6 +34,7 @@ import net.minecraft.common.block.sound.StepSounds;
 import net.minecraft.common.block.tileentity.TileEntity;
 import net.minecraft.common.entity.other.EntityItem;
 import net.minecraft.common.item.*;
+import net.minecraft.common.item.block.ItemBlock;
 import net.minecraft.common.item.children.ItemBucket;
 import net.minecraft.common.item.children.ItemGoldenBucket;
 import net.minecraft.common.item.children.ItemSeeds;
@@ -68,6 +71,9 @@ public class CJMod extends Mod {
 	//		 Display name translation key to their implementation.
 	public static HashMap<String, Item> earlyItemMap = new HashMap<>();
 
+	public static HashMap<String, Achievement> achievementMap =
+			new HashMap<>();
+
 	public static ArrayList<Item> otherworldEligibleItems = new ArrayList<>();
 
 	public static TaggedIngredient tagLeaves =
@@ -100,8 +106,6 @@ public class CJMod extends Mod {
 
 	public static TaggedIngredient tagJewel =
 			TaggedIngredients.get("cj_jewel");
-
-	public static Achievement brittleBeginnings;
 
 	public static Block fluidChlorojoules;
 	public static Item bucketFluidChlorojoules;
@@ -244,6 +248,19 @@ public class CJMod extends Mod {
 		return match.matchIngredient(value);
 	}
 
+	public static ItemStack itemStackFromName(String name) {
+		Item item = GameRegistry.getRegisteredItem(name);
+		if(item == null) {
+			Block block = GameRegistry.getRegisteredBlock(name);
+			if(block == null) {
+				return new ItemStack(earlyItemMap.get("item." + name));
+			}
+			else return new ItemStack(block);
+		}
+
+		return new ItemStack(item);
+	}
+
 	public static Ingredient ingredientFromJson(JsonObject jsonObject) {
 		String key = JsonUtils.getString(jsonObject, "item");
 
@@ -252,17 +269,11 @@ public class CJMod extends Mod {
 			return TaggedIngredients.get(tag);
 		}
 
-		ItemStack result;
-
-		Item item = GameRegistry.getRegisteredItem(key);
-		if(item == null) {
-			Block block = GameRegistry.getRegisteredBlock(key);
-			if(block == null) {
-				result = new ItemStack(earlyItemMap.get("item." + key));
-			}
-			else result = new ItemStack(block);
+		ItemStack result = itemStackFromName(key);
+		if(result == null) {
+			throw new RuntimeException(
+					"Failed to find ingredient with name '" + key + "'");
 		}
-		else result = new ItemStack(item);
 
 		if(jsonObject.has("amount")) {
 			result.stackSize = JsonUtils.getInt(jsonObject, "amount");
@@ -459,8 +470,8 @@ public class CJMod extends Mod {
 			StepSound sound, EnumTools tool) {
 
 		return registerBlock(
-				hardness, resistance, sound, tool, Block.class, name,
-				material);
+				hardness, resistance, sound, tool, CJBlockAchievable.class,
+				name, material);
 	}
 
 	@Override
@@ -657,8 +668,6 @@ public class CJMod extends Mod {
 				0.8F, 3.0F, StepSounds.SOUND_STONE, EnumTools.PICKAXE,
 				CJBlockFoxPowerCable.class, "cj_fox_power_cable");
 
-		// TODO: Make achievements to get ready for when they start working!
-
 		cultivator = registerMachine("/machines/cj_cultivator.json");
 		liquefier = registerMachine("/machines/cj_liquefier.json");
 		refinery = registerMachine("/machines/cj_refinery.json");
@@ -688,12 +697,62 @@ public class CJMod extends Mod {
 	@Override
 	@SuppressWarnings("unchecked")
 	public void onPostInit() {
-		brittleBeginnings = new Achievement(
-				59, "cj_brittle_beginnings", 5, 7, fauxJewel,
-				ACQUIRE_HARDWARE)
-				.registerStat();
+		JsonElement achievementRoot = JsonParser.parseString(textAsset(
+				"/achievements/cj_achievements.json"));
 
-		((CJItemAchievable) fauxJewel).setAchievement(brittleBeginnings);
+		for(JsonElement element : achievementRoot.getAsJsonArray()) {
+			JsonObject object = element.getAsJsonObject();
+			String name = JsonUtils.getString(object, "name");
+			int x = JsonUtils.getInt(object, "x");
+			int y = JsonUtils.getInt(object, "y");
+			String icon = JsonUtils.getString(object, "icon");
+
+			JsonElement parentElement = object.get("parent");
+
+			Achievement parent;
+			if(JsonUtils.isString(parentElement)) {
+				parent = achievementMap.get(parentElement.getAsString());
+			}
+			// TODO: Mixins to automatically register achievement mappings.
+			else parent = ACHIEVEMENTS.get(parentElement.getAsInt());
+
+			Achievement achievement = new Achievement(
+					ACHIEVEMENTS.size(), name, x, y, itemStackFromName(icon),
+					parent)
+					.registerStat();
+
+			achievementMap.put(name, achievement);
+
+			if(JsonUtils.hasField(object, "trigger")) {
+				String trigger = JsonUtils.getString(object, "trigger");
+
+				Item item = GameRegistry.getRegisteredItem(trigger);
+				if(item == null || item instanceof ItemBlock) {
+					Block block = GameRegistry.getRegisteredBlock(trigger);
+
+					if(block instanceof CJBlockAchievable blockAchievable) {
+						blockAchievable.setAchievement(achievement);
+					}
+					else if(block instanceof CJBlockMachineBase blockMachine) {
+						blockMachine.setAchievement(achievement);
+					}
+					else {
+						throw new RuntimeException(
+								"Unknown trigger block '" + trigger + "'");
+					}
+				}
+				else if(item instanceof CJItemAchievable itemAchievable){
+					itemAchievable.setAchievement(achievement);
+				}
+				else if(item instanceof CJItemBucket itemBucket){
+					itemBucket.setAchievement(achievement);
+				}
+				else {
+					throw new RuntimeException(
+							"Unknown trigger item '" + trigger + "'");
+				}
+			}
+		}
 
 		ArrayList<IRecipe> recipes = (ArrayList<IRecipe>) getField(
 				CraftingManager.getInstance(), "recipes");
