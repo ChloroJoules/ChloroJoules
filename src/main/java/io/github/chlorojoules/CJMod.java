@@ -1,13 +1,16 @@
 package io.github.chlorojoules;
 
+import com.fox2code.foxloader.energy.FoxPowerCableBlock;
 import com.fox2code.foxloader.loader.Mod;
 import com.fox2code.foxloader.registry.GameRegistry;
 
 import com.google.gson.JsonObject;
 
 import com.google.gson.JsonParser;
+import io.github.chlorojoules.block.CJBlockFoxPowerCable;
 import io.github.chlorojoules.block.CJBlockMachineBase;
 import io.github.chlorojoules.block.CJBlockRift;
+import io.github.chlorojoules.block.tileentity.CJTileEntityFoxPowerCable;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.block.tileentity.CJTileEntityRendererMachineBase;
 import io.github.chlorojoules.item.*;
@@ -121,6 +124,8 @@ public class CJMod extends Mod {
 	public static Block machineFrame;
 	public static Block compactedJewelDust;
 	public static Block rift;
+
+	public static FoxPowerCableBlock foxPowerCable;
 
 	public static CJBlockMachineBase cultivator;
 	public static CJBlockMachineBase liquefier;
@@ -466,6 +471,9 @@ public class CJMod extends Mod {
 		}
 
 		TileEntity.addMapping(
+				CJTileEntityFoxPowerCable.class, "cj_fox_power_cable");
+
+		TileEntity.addMapping(
 				CJTileEntityMachineBase.class, "cj_machine_base");
 
 		TileEntityRenderManager.instance.addTileEntityRenderer(
@@ -640,6 +648,10 @@ public class CJMod extends Mod {
 				EnumTools.PICKAXE, CJBlockRift.class, "cj_rift")
 				.setBlockUnbreakable()
 				.setLightValue(1.0F);
+
+		foxPowerCable = (FoxPowerCableBlock) registerBlock(
+				0.8F, 3.0F, StepSounds.SOUND_STONE, EnumTools.PICKAXE,
+				CJBlockFoxPowerCable.class, "cj_fox_power_cable");
 
 		// TODO: Make achievements to get ready for when they start working!
 

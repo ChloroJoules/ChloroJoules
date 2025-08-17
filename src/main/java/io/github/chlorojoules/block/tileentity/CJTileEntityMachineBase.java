@@ -12,9 +12,9 @@ import io.github.chlorojoules.gui.CJGuiCoordinateDisplay;
 import io.github.chlorojoules.machine.CJIMachine;
 import io.github.chlorojoules.machine.CJMachineBuilder;
 
+import io.github.chlorojoules.machine.CJMachineFoxPowerInterface;
 import net.minecraft.common.entity.inventory.IInventory;
 import net.minecraft.common.entity.player.EntityPlayer;
-import net.minecraft.common.entity.other.EntityItem;
 import net.minecraft.common.block.tileentity.TileEntity;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.world.World;
@@ -41,6 +41,8 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	public CJIMachine impl;
 
 	public Object machineStorage;
+
+	public CJMachineFoxPowerInterface powerInterface;
 
 	public static CJTileEntityMachineBase machineEntity(
 			World world, int x, int y, int z) {
@@ -87,9 +89,12 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		}
 	}
 
-	public CJTileEntityMachineBase() {}
+	public CJTileEntityMachineBase() {
+		powerInterface = new CJMachineFoxPowerInterface(this);
+	}
 
 	public CJTileEntityMachineBase(CJBlockMachineBase machine) {
+		powerInterface = new CJMachineFoxPowerInterface(this);
 		initFromBuilder(machine);
 	}
 

@@ -1,5 +1,7 @@
 package io.github.chlorojoules.block;
 
+import com.fox2code.foxloader.energy.FoxPowerBlock;
+import com.fox2code.foxloader.energy.FoxPowerInterface;
 import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.CJTank;
 import io.github.chlorojoules.CJTankVolume;
@@ -30,13 +32,15 @@ import net.minecraft.common.item.children.ItemGoldenBucket;
 import net.minecraft.common.networking.Packet;
 import net.minecraft.common.networking.Packet100OpenWindow;
 import net.minecraft.common.util.math.MathHelper;
+import net.minecraft.common.world.BlockAccess;
 import net.minecraft.common.world.World;
 import net.minecraft.server.entity.player.EntityPlayerMP;
+import org.jetbrains.annotations.Nullable;
 
 import static io.github.chlorojoules.CJRarityInfo.getRarityColor;
 import static io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase.machineEntity;
 
-public class CJBlockMachineBase extends BlockContainer {
+public class CJBlockMachineBase extends BlockContainer implements FoxPowerBlock {
 	public CJMachineBuilder machineBuilder;
 
 	public CJBlockMachineBase(CJMachineBuilder machineBuilder) {
@@ -340,5 +344,16 @@ public class CJBlockMachineBase extends BlockContainer {
 	@Override
 	protected int damageDropped(int metadata) {
 		return machineBuilder.doDropMeta ? metadata : 0;
+	}
+
+	@Override
+	public @Nullable FoxPowerInterface getIntrinsicPowerInterface(
+			BlockAccess blockAccess, int x, int y, int z) {
+
+		CJTileEntityMachineBase machineEntity =
+				(CJTileEntityMachineBase) blockAccess.getBlockTileEntity(
+						x, y, z);
+
+		return machineEntity.powerInterface;
 	}
 }

@@ -1,5 +1,6 @@
 package io.github.chlorojoules.machine;
 
+import com.fox2code.foxloader.energy.FoxPowerType;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -43,6 +44,18 @@ public class CJMachineBuilder {
 	public CJMachineBlockSideMode sideMode = CJMachineBlockSideMode.FRONT_FACE;
 	public CJMachineTier tier = CJMachineTier.INDUSTRIAL;
 
+	public FoxPowerType powerType = FoxPowerType.RECEIVER;
+
+	private static FoxPowerType powerTypeFromString(String string) {
+		return switch(string) {
+			case "generator" -> FoxPowerType.PRODUCER;
+			case "cable" -> FoxPowerType.TRANSMITTER;
+			case "battery" -> FoxPowerType.STORAGE;
+			// case "receiver" -> FoxPowerType.RECEIVER;
+			default -> FoxPowerType.RECEIVER;
+		};
+	}
+
 	@SuppressWarnings("unchecked")
 	public CJMachineBuilder(String jsonPath) {
 		JsonObject root = CJMod.jsonAsset(jsonPath);
@@ -54,6 +67,11 @@ public class CJMachineBuilder {
 		if(root.has("tier")) {
 			tier = CJMachineTier.fromString(
 					JsonUtils.getString(root, "tier"));
+		}
+
+		if(root.has("fox_transmission")) {
+			powerType = powerTypeFromString(
+					JsonUtils.getString(root, "fox_transmission"));
 		}
 
 		if(root.has("rift")) {

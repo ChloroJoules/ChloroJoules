@@ -108,7 +108,9 @@ tile.cj_machine_frame.name=Machine Frame
 tile.cj_machine_frame_primitive.name=Primitive Machine Frame
 tile.cj_block_jewel_dust.name=Compacted Jewel Dust
 tile.cj_rift.name=Rift
+tile.cj_fox_power_cable.name=Fox Cable
 
+# Machines.
 tile.cj_liquefier.name=Liquefier
 tile.cj_cultivator.name=Cultivator
 tile.cj_refinery.name=Refinery

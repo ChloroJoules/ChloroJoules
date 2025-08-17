@@ -3,6 +3,7 @@
 	"implementation": null,
 	"rarity": "manufactured",
 	"face": "sides",
+	"fox_transmission": "battery",
 	"tanks": [
 		{
 			"name": "volume",
