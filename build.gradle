@@ -1,7 +1,6 @@
 buildscript {
 	repositories {
 		mavenCentral()
-		maven { url 'https://cdn.fox2code.com/maven' }
 		maven { url 'https://jitpack.io/' }
 	}
 	dependencies {

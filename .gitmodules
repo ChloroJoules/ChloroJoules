@@ -1,0 +1,3 @@
+[submodule "vendor/FoxLoader"]
+	path = FoxLoader
+	url = https://github.com/Fox2Code/FoxLoader
