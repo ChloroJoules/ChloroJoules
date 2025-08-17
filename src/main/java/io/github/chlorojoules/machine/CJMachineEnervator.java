@@ -3,36 +3,17 @@ package io.github.chlorojoules.machine;
 import io.github.chlorojoules.*;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import net.minecraft.common.block.Block;
-import net.minecraft.common.block.Blocks;
 import net.minecraft.common.block.children.*;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.util.i18n.StringTranslate;
-import net.minecraft.common.world.World;
-
-import static io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase.machineEntity;
-
-class CJMachineEnervatorStorage {
-	public BlockFlower[] adjacentFlowers = null;
-}
 
 @SuppressWarnings("unused")
 public class CJMachineEnervator implements CJIMachine {
-	private static CJMachineEnervatorStorage getStorage(
-			CJTileEntityMachineBase machineEntity) {
-
-		if(machineEntity.machineStorage == null) {
-			machineEntity.machineStorage = new CJMachineEnervatorStorage();
-		}
-
-		return (CJMachineEnervatorStorage) machineEntity.machineStorage;
-	}
-
 	@Override
 	public void updateMachine(CJTileEntityMachineBase machineEntity) {
 		StringTranslate translate = StringTranslate.getInstance();
 
 		CJMachineBuilder machineBuilder = machineEntity.getBuilder();
-		CJMachineEnervatorStorage storage = getStorage(machineEntity);
 
 		ItemStack jewelStack =
 				machineBuilder.getNamedStack(machineEntity, "jewel");
@@ -47,14 +28,6 @@ public class CJMachineEnervator implements CJIMachine {
 		machineEntity.isWarning = false;
 		machineEntity.isPassive = false;
 		machineEntity.operationLength = 75;
-
-		if(storage.adjacentFlowers == null) {
-			onNeighbourChange(
-					machineEntity.worldObj,
-					machineEntity.xCoord,
-					machineEntity.yCoord,
-					machineEntity.zCoord);
-		}
 
 		if(jewelStack == null) {
 			machineEntity.operationTicks = 0;
@@ -117,22 +90,25 @@ public class CJMachineEnervator implements CJIMachine {
 				CJRarityInfo.getRarityTimeScale(rarity);
 
 		int flowerCount = 0;
-		for(BlockFlower flower : storage.adjacentFlowers) {
+		for(Block flower : machineEntity.adjacentBlocks) {
 			if(flower == null) continue;
 
 			flowerCount++;
 
-			if(flower instanceof BlockGoldenFlower) {
-				machineEntity.operationLength -= 9;
-				efficiency += 8;
-			}
-			else if(flower instanceof BlockSilverFlower) {
-				machineEntity.operationLength -= 6;
-				efficiency += 4;
-			}
-			else {
-				machineEntity.operationLength -= 2;
-				efficiency += 2;
+			switch(flower) {
+				case BlockSilverFlower blockSilverFlower -> {
+					machineEntity.operationLength -= 6;
+					efficiency += 4;
+				}
+				case BlockGoldenFlower blockGoldenFlower -> {
+					machineEntity.operationLength -= 9;
+					efficiency += 8;
+				}
+				case BlockFlower blockFlower -> {
+					machineEntity.operationLength -= 2;
+					efficiency += 2;
+				}
+				default -> {}
 			}
 		}
 
@@ -153,34 +129,6 @@ public class CJMachineEnervator implements CJIMachine {
 			output.addFluid(CJMod.fuelFluid, efficiency, false);
 			catalyst.removeFluid(catalyst.fluidID, consumption, false);
 			machineEntity.operationTicks = 0;
-		}
-	}
-
-	@Override
-	public void onNeighbourChange(World world, int x, int y, int z) {
-		CJTileEntityMachineBase machineEntity = machineEntity(world, x, y, z);
-		CJMachineEnervatorStorage storage = getStorage(machineEntity);
-
-		storage.adjacentFlowers = new BlockFlower[4];
-
-		Block block = Blocks.BLOCKS_LIST[world.getBlockId(x + 1, y, z)];
-		if(block instanceof BlockFlower flower) {
-			storage.adjacentFlowers[0] = flower;
-		}
-
-		block = Blocks.BLOCKS_LIST[world.getBlockId(x - 1, y, z)];
-		if(block instanceof BlockFlower flower) {
-			storage.adjacentFlowers[1] = flower;
-		}
-
-		block = Blocks.BLOCKS_LIST[world.getBlockId(x, y, z + 1)];
-		if(block instanceof BlockFlower flower) {
-			storage.adjacentFlowers[2] = flower;
-		}
-
-		block = Blocks.BLOCKS_LIST[world.getBlockId(x, y, z - 1)];
-		if(block instanceof BlockFlower flower) {
-			storage.adjacentFlowers[3] = flower;
 		}
 	}
 }

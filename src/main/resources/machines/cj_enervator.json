@@ -3,6 +3,7 @@
 	"rarity": "manufactured",
 	"implementation": "io.github.chlorojoules.machine.CJMachineEnervator",
 	"face": "sides",
+	"fox_transmission": "generator",
 	"slots": [
 		{
 			"name": "jewel",

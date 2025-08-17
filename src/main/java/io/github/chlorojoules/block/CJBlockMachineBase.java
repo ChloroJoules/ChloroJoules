@@ -40,7 +40,9 @@ import org.jetbrains.annotations.Nullable;
 import static io.github.chlorojoules.CJRarityInfo.getRarityColor;
 import static io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase.machineEntity;
 
-public class CJBlockMachineBase extends BlockContainer implements FoxPowerBlock {
+public class CJBlockMachineBase
+		extends BlockContainer implements FoxPowerBlock {
+
 	public CJMachineBuilder machineBuilder;
 
 	public CJBlockMachineBase(CJMachineBuilder machineBuilder) {
@@ -282,9 +284,7 @@ public class CJBlockMachineBase extends BlockContainer implements FoxPowerBlock 
 
 		CJTileEntityMachineBase machine = machineEntity(world, x, y, z);
 
-		if(machine.impl != null) {
-			machine.impl.onNeighbourChange(world, x, y, z);
-		}
+		machine.onNeighbourChange();
 
 		super.onNeighborBlockChange(world, x, y, z, ext);
 	}

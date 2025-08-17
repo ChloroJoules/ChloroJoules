@@ -3,38 +3,19 @@ package io.github.chlorojoules.machine;
 import io.github.chlorojoules.*;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import net.minecraft.common.block.Block;
-import net.minecraft.common.block.Blocks;
 import net.minecraft.common.block.children.*;
 import net.minecraft.common.block.fluid.Fluid;
 import net.minecraft.common.block.fluid.Fluids;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.util.i18n.StringTranslate;
-import net.minecraft.common.world.World;
-
-import static io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase.machineEntity;
-
-class CJMachinePumpStorage {
-	public Block[] adjacentBlocks = null;
-}
 
 @SuppressWarnings("unused")
 public class CJMachinePump implements CJIMachine {
-	private static CJMachinePumpStorage getStorage(
-			CJTileEntityMachineBase machineEntity) {
-
-		if(machineEntity.machineStorage == null) {
-			machineEntity.machineStorage = new CJMachinePumpStorage();
-		}
-
-		return (CJMachinePumpStorage) machineEntity.machineStorage;
-	}
-
 	@Override
 	public void updateMachine(CJTileEntityMachineBase machineEntity) {
 		StringTranslate translate = StringTranslate.getInstance();
 
 		CJMachineBuilder machineBuilder = machineEntity.getBuilder();
-		CJMachinePumpStorage storage = getStorage(machineEntity);
 
 		ItemStack jewelStack =
 				machineBuilder.getNamedStack(machineEntity, "jewel");
@@ -52,11 +33,7 @@ public class CJMachinePump implements CJIMachine {
 
 		// Unfortunately nether portal ignition doesn't notify adjacent so we
 		// Just need to check every frame.
-		onNeighbourChange(
-				machineEntity.worldObj,
-				machineEntity.xCoord,
-				machineEntity.yCoord,
-				machineEntity.zCoord);
+		machineEntity.onNeighbourChange();
 
 		if(jewelStack == null) {
 			machineEntity.operationTicks = 0;
@@ -72,11 +49,11 @@ public class CJMachinePump implements CJIMachine {
 		int outputFluid = 0;
 		int cost = 0;
 		int outputBlockIndex = 0;
-		for(int i = 0; i < storage.adjacentBlocks.length; ++i) {
-			Block block = storage.adjacentBlocks[i];
+		for(int i = 0; i < machineEntity.adjacentBlocks.length; ++i) {
+			Block block = machineEntity.adjacentBlocks[i];
 
 			if(block instanceof BlockFluid) {
-				int[] pos = getAdjacentFromIndex(machineEntity, i);
+				int[] pos = machineEntity.getAdjacentFromIndex(i);
 				Fluid fluid = Fluids.getFluidFromBlock(block);
 				int damage = machineEntity.worldObj.getBlockMetadata(
 						pos[0], pos[1], pos[2]);
@@ -131,7 +108,7 @@ public class CJMachinePump implements CJIMachine {
 		machineEntity.operationTicks++;
 
 		if(machineEntity.operationTicks >= machineEntity.operationLength) {
-			int[] pos = getAdjacentFromIndex(machineEntity, outputBlockIndex);
+			int[] pos = machineEntity.getAdjacentFromIndex(outputBlockIndex);
 
 			machineEntity.worldObj.setBlockWithNotify(
 					pos[0], pos[1], pos[2], 0);
@@ -142,42 +119,5 @@ public class CJMachinePump implements CJIMachine {
 			jewelStack.damageItem(1, null, true);
 			machineEntity.operationTicks = 0;
 		}
-	}
-
-	public int[] getAdjacentFromIndex(
-			CJTileEntityMachineBase machineEntity, int index) {
-
-		int x = machineEntity.xCoord;
-		int y = machineEntity.yCoord;
-		int z = machineEntity.zCoord;
-
-		switch(index) {
-			case 0: x += 1; break;
-			case 1: x -= 1; break;
-			case 2: z += 1; break;
-			case 3: z -= 1; break;
-		}
-
-		return new int[] { x, y, z };
-	}
-
-	@Override
-	public void onNeighbourChange(World world, int x, int y, int z) {
-		CJTileEntityMachineBase machineEntity = machineEntity(world, x, y, z);
-		CJMachinePumpStorage storage = getStorage(machineEntity);
-
-		storage.adjacentBlocks = new Block[4];
-
-		storage.adjacentBlocks[0] =
-				Blocks.BLOCKS_LIST[world.getBlockId(x + 1, y, z)];
-
-		storage.adjacentBlocks[1] =
-				Blocks.BLOCKS_LIST[world.getBlockId(x - 1, y, z)];
-
-		storage.adjacentBlocks[2] =
-				Blocks.BLOCKS_LIST[world.getBlockId(x, y, z + 1)];
-
-		storage.adjacentBlocks[3] =
-				Blocks.BLOCKS_LIST[world.getBlockId(x, y, z - 1)];
 	}
 }

@@ -130,11 +130,8 @@ public class CJItemLinker extends Item {
 		if(!isMulti) CJMachineTransferor.breakLink(world, extractorMachine);
 		CJMachineTransferor.breakLink(world, inserterMachine);
 
-		ArrayList<int[]> extractorLinked =
-				CJMachineTransferor.getLinked(extractorMachine);
-
-		ArrayList<int[]> inserterLinked =
-				CJMachineTransferor.getLinked(inserterMachine);
+		ArrayList<int[]> extractorLinked = extractorMachine.linked;
+		ArrayList<int[]> inserterLinked = inserterMachine.linked;
 
 		if(isMulti || extractorLinked.isEmpty()) {
 			extractorLinked.add(new int[] { blockX, blockY, blockZ });

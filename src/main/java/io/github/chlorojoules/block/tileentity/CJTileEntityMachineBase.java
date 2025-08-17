@@ -13,6 +13,7 @@ import io.github.chlorojoules.machine.CJIMachine;
 import io.github.chlorojoules.machine.CJMachineBuilder;
 
 import io.github.chlorojoules.machine.CJMachineFoxPowerInterface;
+import net.minecraft.common.block.Block;
 import net.minecraft.common.entity.inventory.IInventory;
 import net.minecraft.common.entity.player.EntityPlayer;
 import net.minecraft.common.block.tileentity.TileEntity;
@@ -21,7 +22,10 @@ import net.minecraft.common.world.World;
 
 import java.util.ArrayList;
 
+import static net.minecraft.common.block.Blocks.BLOCKS_LIST;
+
 public class CJTileEntityMachineBase extends TileEntity implements IInventory {
+	// TODO: This is full of a bunch of machine-specific garbage.
 	private ArrayList<ItemStack> stacks;
 	public ArrayList<CJTankVolume> tanks;
 	public ArrayList<Boolean> buttonStates;
@@ -40,9 +44,16 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	public CJBlockMachineBase machine;
 	public CJIMachine impl;
 
-	public Object machineStorage;
+	public Block[] adjacentBlocks = null;
+	public TileEntity[] adjacentTileEntities = null;
 
 	public CJMachineFoxPowerInterface powerInterface;
+
+	public ArrayList<int[]> linked = new ArrayList<>();
+	public int next = 0;
+	public boolean breakingLink = false;
+
+	public int riftTime = 0;
 
 	public static CJTileEntityMachineBase machineEntity(
 			World world, int x, int y, int z) {
@@ -102,6 +113,39 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		return machine.machineBuilder;
 	}
 
+	public void onNeighbourChange() {
+		adjacentBlocks = new Block[6];
+		adjacentTileEntities = new TileEntity[6];
+
+		for(int i = 0; i < 6; ++i) {
+			int[] pos = getAdjacentFromIndex(i);
+
+			int x = pos[0];
+			int y = pos[1];
+			int z = pos[2];
+
+			adjacentBlocks[i] = BLOCKS_LIST[worldObj.getBlockId(x, y, z)];
+			adjacentTileEntities[i] = worldObj.getBlockTileEntity(x, y, z);
+		}
+	}
+
+	public int[] getAdjacentFromIndex(int index) {
+		int x = xCoord;
+		int y = yCoord;
+		int z = zCoord;
+
+		switch(index) {
+			case 0 -> x++;
+			case 1 -> x--;
+			case 2 -> y++;
+			case 3 -> y--;
+			case 4 -> z++;
+			case 5 -> z--;
+		}
+
+		return new int[] { x, y, z };
+	}
+
 	public void onBreak(World world, int x, int y, int z) {
 		for(ItemStack stack : stacks) {
 			if(stack == null) continue;
@@ -121,6 +165,9 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	@Override
 	public void updateEntity() {
 		if(impl == null) return;
+		if(adjacentTileEntities == null) {
+			onNeighbourChange();
+		}
 
 		impl.updateMachine(this);
 	}

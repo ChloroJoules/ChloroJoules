@@ -14,10 +14,6 @@ import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.util.i18n.StringTranslate;
 import org.lwjgl.opengl.GL11;
 
-class CJMachineRiftBeaconStorage {
-	int riftTicks = 0;
-}
-
 @SuppressWarnings("unused")
 public class CJMachineRiftBeacon implements CJIMachine {
 	private static final int BAND_DIVISOR = 8;
@@ -25,16 +21,6 @@ public class CJMachineRiftBeacon implements CJIMachine {
 	private static final int Y_OFFSET = 4;
 	private static final double CAP = 0.8f;
 	private static final int CUTSCENE_THRESHOLD = 80;
-
-	private static CJMachineRiftBeaconStorage getStorage(
-			CJTileEntityMachineBase machineEntity) {
-
-		if(machineEntity.machineStorage == null) {
-			machineEntity.machineStorage = new CJMachineRiftBeaconStorage();
-		}
-
-		return (CJMachineRiftBeaconStorage) machineEntity.machineStorage;
-	}
 
 	@Override
 	public void updateMachine(CJTileEntityMachineBase machineEntity) {
@@ -62,8 +48,6 @@ public class CJMachineRiftBeacon implements CJIMachine {
 				(machineEntity.operationLength / BAND_DIVISOR);
 
 		if(machineEntity.operationTicks >= machineEntity.operationLength) {
-			CJMachineRiftBeaconStorage storage = getStorage(machineEntity);
-
 			for(Entity entity : machineEntity.worldObj.loadedEntityList) {
 				double dx = (machineEntity.xCoord + 0.5) - entity.posX;
 				double dz = (machineEntity.zCoord + 0.5) - entity.posZ;
@@ -74,19 +58,19 @@ public class CJMachineRiftBeacon implements CJIMachine {
 				if(distance > 16.0) continue;
 
 				if(entity instanceof EntityPlayer player && distance < 1.0) {
-					if(storage.riftTicks == 0) {
+					if(machineEntity.riftTime == 0) {
 						player.addChatMessage("message.cj_rift1");
 					}
-					else if(storage.riftTicks == CUTSCENE_THRESHOLD) {
+					else if(machineEntity.riftTime == CUTSCENE_THRESHOLD) {
 						player.addChatMessage("message.cj_rift2");
 					}
-					else if(storage.riftTicks == CUTSCENE_THRESHOLD * 2) {
+					else if(machineEntity.riftTime == CUTSCENE_THRESHOLD * 2) {
 						player.addChatMessage("message.cj_rift3");
 					}
-					else if(storage.riftTicks == CUTSCENE_THRESHOLD * 3) {
+					else if(machineEntity.riftTime == CUTSCENE_THRESHOLD * 3) {
 						player.addChatMessage("message.cj_rift4");
 					}
-					else if(storage.riftTicks == CUTSCENE_THRESHOLD * 4) {
+					else if(machineEntity.riftTime == CUTSCENE_THRESHOLD * 4) {
 						CJMod.spawnItem(
 								machineEntity.worldObj, machineEntity.xCoord,
 								machineEntity.yCoord + Y_OFFSET,
@@ -103,7 +87,7 @@ public class CJMachineRiftBeacon implements CJIMachine {
 						return;
 					}
 
-					storage.riftTicks++;
+					machineEntity.riftTime++;
 				}
 
 				dx /= distance * 16.0;
