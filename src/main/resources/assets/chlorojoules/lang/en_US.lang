@@ -103,6 +103,10 @@ message.cj_tool_manufactured=§AManufactured Jewel
 message.cj_tool_refined=§ERefined Jewel
 message.cj_tool_awakened=§BAwakened Jewel
 
+# Achievements
+achievement.cj_brittle_beginnings=Brittle Beginnings
+achievement.cj_brittle_beginnings.desc=Craft a Faux ChloroJewel
+
 # Blocks.
 tile.cj_machine_frame.name=Machine Frame
 tile.cj_machine_frame_primitive.name=Primitive Machine Frame

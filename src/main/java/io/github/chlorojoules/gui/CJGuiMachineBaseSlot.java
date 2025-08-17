@@ -5,6 +5,8 @@ import net.minecraft.common.block.container.Slot;
 import net.minecraft.common.entity.inventory.IInventory;
 import net.minecraft.common.entity.player.EntityPlayer;
 import net.minecraft.common.item.ItemStack;
+import net.minecraft.common.item.Items;
+import net.minecraft.common.stats.Achievements;
 
 public class CJGuiMachineBaseSlot extends Slot {
 	public CJMachineSlotInfo info;
@@ -28,6 +30,12 @@ public class CJGuiMachineBaseSlot extends Slot {
 
 	@Override
 	public void onPickupFromSlot(EntityPlayer player, ItemStack item) {
+		item.onCrafting(player.worldObj, player);
+
+//		if(item.getItemID() == Items.IRON_INGOT.itemID) {
+//			player.addStat(Achievements.ACQUIRE_HARDWARE, 1);
+//		}
+
 		super.onPickupFromSlot(player, item);
 	}
 }

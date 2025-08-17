@@ -37,6 +37,7 @@ import net.minecraft.common.item.children.ItemGoldenBucket;
 import net.minecraft.common.item.children.ItemSeeds;
 import net.minecraft.common.item.data.EnumTools;
 import net.minecraft.common.recipe.*;
+import net.minecraft.common.stats.Achievement;
 import net.minecraft.common.util.JsonUtils;
 import net.minecraft.common.world.World;
 import net.minecraft.common.world.map.MapColor;
@@ -53,6 +54,7 @@ import java.util.logging.Logger;
 
 import static net.minecraft.common.block.Blocks.*;
 import static net.minecraft.common.item.Items.*;
+import static net.minecraft.common.stats.Achievements.*;
 
 import static io.github.chlorojoules.CJRarityInfo.*;
 
@@ -98,6 +100,8 @@ public class CJMod extends Mod {
 
 	public static TaggedIngredient tagJewel =
 			TaggedIngredients.get("cj_jewel");
+
+	public static Achievement brittleBeginnings;
 
 	public static Block fluidChlorojoules;
 	public static Item bucketFluidChlorojoules;
@@ -418,11 +422,11 @@ public class CJMod extends Mod {
 	}
 
 	public Item registerItem(String name, int rarity, int maxStack) {
-		return registerItem(rarity, maxStack, Item.class, name);
+		return registerItem(rarity, maxStack, CJItemAchievable.class, name);
 	}
 
 	public Item registerItem(String name, int rarity) {
-		return registerItem(rarity, 64, Item.class, name);
+		return registerItem(rarity, 64, CJItemAchievable.class, name);
 	}
 
 	public Block registerBlock(
@@ -684,6 +688,13 @@ public class CJMod extends Mod {
 	@Override
 	@SuppressWarnings("unchecked")
 	public void onPostInit() {
+		brittleBeginnings = new Achievement(
+				59, "cj_brittle_beginnings", 5, 7, fauxJewel,
+				ACQUIRE_HARDWARE)
+				.registerStat();
+
+		((CJItemAchievable) fauxJewel).setAchievement(brittleBeginnings);
+
 		ArrayList<IRecipe> recipes = (ArrayList<IRecipe>) getField(
 				CraftingManager.getInstance(), "recipes");
 

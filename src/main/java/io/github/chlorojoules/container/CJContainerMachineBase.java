@@ -18,6 +18,7 @@ import static io.github.chlorojoules.gui.CJGuiMachineBaseLayout.*;
 
 public class CJContainerMachineBase extends Container {
 	private final CJTileEntityMachineBase machineEntity;
+	private final EntityPlayer player;
 
 	public ArrayList<CJTank> tanks = new ArrayList<>();
 
@@ -70,6 +71,8 @@ public class CJContainerMachineBase extends Container {
 		}
 
 		addPlayerInventory(inventoryPlayer);
+
+		player = inventoryPlayer.player;
 	}
 
 	@Override
@@ -99,6 +102,8 @@ public class CJContainerMachineBase extends Container {
 		else slot.onSlotChanged();
 
 		if(stack.stackSize == returnStack.stackSize) return null;
+
+		slot.onPickupFromSlot(this.player, stack);
 
 		return returnStack;
 	}
@@ -157,5 +162,6 @@ public class CJContainerMachineBase extends Container {
 				}
 			}
 		}
+
 	}
 }
