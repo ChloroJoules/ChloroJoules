@@ -13,6 +13,13 @@ public class CJMachineRecipeConsumer implements CJIMachine {
 			return;
 		}
 
+		if(machineEntity.isPaused) return;
+
 		builder.runRecipe(recipe, machineEntity);
+	}
+
+	@Override
+	public boolean canPause() {
+		return true;
 	}
 }

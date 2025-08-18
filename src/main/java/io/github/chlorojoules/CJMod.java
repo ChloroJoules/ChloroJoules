@@ -675,7 +675,6 @@ public class CJMod extends Mod {
 		press = registerMachine("/machines/cj_press.json");
 		furnace = registerMachine("/machines/cj_furnace.json");
 		toolStation = registerMachine("/machines/cj_tool_station.json");
-		// TODO: Figure out how to make Gear controls.
 		// TODO: Filtered transferor.
 		transferor = registerMachine("/machines/cj_transferor.json");
 		tank = registerMachine("/machines/cj_tank.json");

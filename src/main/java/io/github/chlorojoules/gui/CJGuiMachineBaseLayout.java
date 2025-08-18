@@ -108,6 +108,9 @@ public class CJGuiMachineBaseLayout {
 	public static final int STATUS_WARNING_X = 203;
 	public static final int STATUS_WARNING_Y = 34;
 
+	public static final int STATUS_PAUSED_X = 212;
+	public static final int STATUS_PAUSED_Y = 34;
+
 	public static final int STATUS_INFO_X = 203;
 	public static final int STATUS_INFO_Y = 43;
 

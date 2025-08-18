@@ -20,4 +20,6 @@ public interface CJIMachine {
 	default void renderTileEntityAt(
 			CJTileEntityMachineBase machineEntity,
 			double x, double y, double z, float deltaTicks, int progress) {}
+
+	default boolean canPause() { return false; }
 }

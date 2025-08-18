@@ -27,6 +27,7 @@ import static io.github.chlorojoules.gui.CJGuiMachineBaseLayout.*;
 public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 	public static final int MACHINE_TEXT = Color.DARK_GRAY.getRGB();
 	public static final int MACHINE_OK = Color.GREEN.getRGB();
+	public static final int MACHINE_PAUSED = Color.DARK_GRAY.getRGB();
 	public static final int MACHINE_WARNING = Color.ORANGE.getRGB();
 	public static final int MACHINE_ERROR = Color.RED.getRGB();
 	public static final int MACHINE_INFO = Color.BLUE.getRGB();
@@ -178,9 +179,16 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 			String name = machineEntity.errorMessage;
 
 			if(machineEntity.errorMessage == null) {
-				title = "message.cj_working";
-				color = MACHINE_OK;
-				name = "message.cj_ok";
+				if(machineEntity.isPaused) {
+					title = "message.cj_paused";
+					color = MACHINE_PAUSED;
+					name = "message.cj_paused_by_gear";
+				}
+				else {
+					title = "message.cj_working";
+					color = MACHINE_OK;
+					name = "message.cj_ok";
+				}
 			}
 			else if(machineEntity.isWarning) {
 				title = "message.cj_warning";
@@ -455,7 +463,13 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 		// Draw status badge.
 		String message = machineEntity.errorMessage;
 		if(message == null) {
-			drawTexturedModalRect(
+			if(machineEntity.isPaused) {
+				drawTexturedModalRect(
+						STATUS_X + baseX, STATUS_Y + baseY,
+						STATUS_PAUSED_X, STATUS_PAUSED_Y,
+						STATUS_WIDTH, STATUS_HEIGHT);
+			}
+			else drawTexturedModalRect(
 					STATUS_X + baseX, STATUS_Y + baseY,
 					STATUS_OK_X, STATUS_OK_Y,
 					STATUS_WIDTH, STATUS_HEIGHT);

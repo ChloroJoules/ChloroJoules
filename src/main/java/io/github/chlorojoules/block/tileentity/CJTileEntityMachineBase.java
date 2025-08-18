@@ -37,6 +37,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 
 	public float renderDelta = 0.0f;
 	public boolean isPassive = false;
+	public boolean isPaused = false;
 	public int operationTicks = 0;
 	public int operationLength = 1;
 	public CJRarity jewelRarity = CJRarity.MANUFACTURED;
@@ -165,6 +166,10 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	@Override
 	public void updateEntity() {
 		if(impl == null) return;
+
+		isPaused = impl.canPause() && worldObj.isBlockIndirectlyGettingPowered(
+				xCoord, yCoord, zCoord);
+
 		if(adjacentTileEntities == null) {
 			onNeighbourChange();
 		}
@@ -243,6 +248,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		writeButtons(tagCompound);
 
 		tagCompound.setShort("operation_ticks", (short) operationTicks);
+		tagCompound.setShort("operation_length", (short) operationLength);
 	}
 
 	private void readStacks(CompoundTag tagCompound) {
@@ -290,6 +296,7 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 		readButtons(tagCompound);
 
 		operationTicks = tagCompound.getShort("operation_ticks");
+		operationLength = tagCompound.getShort("operation_length");
 	}
 
 	@Override

@@ -27,6 +27,8 @@ message.cj_warning=Machine Efficiency Reduced
 message.cj_stopped=Machine Stopped
 message.cj_working=Machine Working
 message.cj_ok=All okay!
+message.cj_paused=Machine Paused
+message.cj_paused_by_gear=Gear signal applied
 message.cj_link_coordinate=§7Linked to §LX: %d Y: %d Z: %d
 message.cj_coordinate_unset=§CCoordinates unset
 
