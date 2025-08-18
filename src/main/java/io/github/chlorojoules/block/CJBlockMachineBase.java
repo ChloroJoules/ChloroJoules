@@ -101,13 +101,12 @@ public class CJBlockMachineBase
 
 	private int getEmptyBucketTank(CJTileEntityMachineBase machineEntity) {
 		int size = machineBuilder.tanks.size();
-		for(int i = 0; i < size * 2; ++i) {
+		for(int i = 0; i < size * 3; ++i) {
 			int tankIndex = i % size;
 			CJTank tank = machineBuilder.tanks.get(tankIndex);
 
 			if(tank.checkDamageExclusive(machineEntity)) continue;
-			// TODO: Add a third pass for fuel.
-			if(tank.id.equals("fuel")) continue;
+			if(i < size * 2 && tank.id.equals("fuel")) continue;
 			if(i < size && !tank.output && !tank.bidirectional) continue;
 
 			CJTankVolume volume = machineEntity.tanks.get(tankIndex);
