@@ -148,7 +148,12 @@ public class CJBlockMachineBase
 				ItemStack stack =
 						inventory.mainInventory[inventory.currentItem];
 
-				stack.setItemID(bucketID);
+				if(isGoldEmpty) {
+					stack.stackSize--;
+					player.inventory.addItemStackToInventory(
+							new ItemStack(bucketID, 1));
+				}
+				else stack.setItemID(bucketID);
 
 				Fluid fluid = Fluids.getFluidFromBlock(volume.fluidID);
 				if(fluid == null) {
@@ -201,7 +206,9 @@ public class CJBlockMachineBase
 
 				if(!player.capabilities.isCreativeMode) {
 					if(stack.getItem() instanceof ItemGoldenBucket) {
-						stack.setItemID(Items.GOLDEN_EMPTY_BUCKET.itemID);
+						stack.stackSize--;
+						player.inventory.addItemStackToInventory(
+								new ItemStack(Items.GOLDEN_EMPTY_BUCKET));
 					}
 					else {
 						stack.setItemID(Items.EMPTY_BUCKET.itemID);

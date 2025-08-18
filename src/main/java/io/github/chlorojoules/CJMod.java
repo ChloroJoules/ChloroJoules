@@ -371,9 +371,8 @@ public class CJMod extends Mod {
 
 	private Item registerFluidBucket(String name, int rarity, Block tile) {
 		registerItem(
-				rarity, 1, CJItemGoldenBucket.class, name + "_gold",
-				tile.blockID)
-				.setContainerItem(GOLDEN_EMPTY_BUCKET);
+				rarity, 64, CJItemGoldenBucket.class, name + "_gold",
+				tile.blockID);
 
 		return registerItem(rarity, 1, CJItemBucket.class, name, tile.blockID)
 				.setContainerItem(EMPTY_BUCKET);
