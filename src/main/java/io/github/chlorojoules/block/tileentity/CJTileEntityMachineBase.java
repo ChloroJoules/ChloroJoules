@@ -167,8 +167,9 @@ public class CJTileEntityMachineBase extends TileEntity implements IInventory {
 	public void updateEntity() {
 		if(impl == null) return;
 
-		isPaused = impl.canPause() && worldObj.isBlockIndirectlyGettingPowered(
-				xCoord, yCoord, zCoord);
+		isPaused = impl.canPause(this) &&
+				worldObj.isBlockIndirectlyGettingPowered(
+						xCoord, yCoord, zCoord);
 
 		if(adjacentTileEntities == null) {
 			onNeighbourChange();

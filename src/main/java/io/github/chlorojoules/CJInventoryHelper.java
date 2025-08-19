@@ -3,38 +3,10 @@ package io.github.chlorojoules;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.machine.CJMachineBuilder;
 import io.github.chlorojoules.machine.CJMachineSlotInfo;
-import net.minecraft.common.block.tileentity.TileEntity;
 import net.minecraft.common.entity.inventory.IInventory;
 import net.minecraft.common.item.ItemStack;
-import net.minecraft.common.world.World;
 
 public class CJInventoryHelper {
-	private static IInventory getAdjacentInventory(
-			World world, int x, int y, int z) {
-
-		TileEntity entity = world.getBlockTileEntity(x, y, z);
-		if(entity instanceof IInventory) {
-			return (IInventory) entity;
-		}
-
-		return null;
-	}
-
-	public static IInventory[] getAdjacentInventories(
-			World world, int x, int y, int z) {
-
-		IInventory[] adjacentInventories = new IInventory[6];
-
-		adjacentInventories[0] = getAdjacentInventory(world, x + 1, y, z);
-		adjacentInventories[1] = getAdjacentInventory(world, x - 1, y, z);
-		adjacentInventories[2] = getAdjacentInventory(world, x, y + 1, z);
-		adjacentInventories[3] = getAdjacentInventory(world, x, y - 1, z);
-		adjacentInventories[4] = getAdjacentInventory(world, x, y, z + 1);
-		adjacentInventories[5] = getAdjacentInventory(world, x, y, z - 1);
-
-		return adjacentInventories;
-	}
-
 	private static boolean doesMatchFilter(
 			IInventory inventory, int index, int itemID, ItemStack filter,
 			boolean blacklist) {

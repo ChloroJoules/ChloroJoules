@@ -19,7 +19,7 @@ public class CJMachineRecipeConsumer implements CJIMachine {
 	}
 
 	@Override
-	public boolean canPause() {
+	public boolean canPause(CJTileEntityMachineBase machineEntity) {
 		return true;
 	}
 }

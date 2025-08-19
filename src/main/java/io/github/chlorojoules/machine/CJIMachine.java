@@ -21,5 +21,7 @@ public interface CJIMachine {
 			CJTileEntityMachineBase machineEntity,
 			double x, double y, double z, float deltaTicks, int progress) {}
 
-	default boolean canPause() { return false; }
+	default boolean canPause(CJTileEntityMachineBase machineEntity) {
+		return false;
+	}
 }

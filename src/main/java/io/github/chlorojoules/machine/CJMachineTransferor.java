@@ -213,8 +213,11 @@ public class CJMachineTransferor implements CJIMachine {
 				!isMulti(machineEntity.getWorldBlockMetadata())) {
 
 			machineEntity.coordinateDisplays.set(
-					0, new CJGuiCoordinateDisplay(machineEntity.linked.getFirst()));
+					0, new CJGuiCoordinateDisplay(
+							machineEntity.linked.getFirst()));
 		}
+
+		if(machineEntity.isPaused) return;
 
 		switch(meta) {
 			case MULTI_TRANSMIT_ITEMS:
@@ -303,5 +306,15 @@ public class CJMachineTransferor implements CJIMachine {
 		for(IntArrayTag link : linkedPositions) {
 			machineEntity.linked.add(link.getIntArray());
 		}
+	}
+
+	@Override
+	public boolean canPause(CJTileEntityMachineBase machineEntity) {
+		int damage = machineEntity.getWorldBlockMetadata();
+
+		return damage == TRANSMIT_ITEMS ||
+				damage == TRANSMIT_FLUIDS ||
+				damage == MULTI_TRANSMIT_ITEMS ||
+				damage == MULTI_TRANSMIT_FLUIDS;
 	}
 }
