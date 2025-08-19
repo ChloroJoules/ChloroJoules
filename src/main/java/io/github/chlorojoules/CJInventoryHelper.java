@@ -35,8 +35,34 @@ public class CJInventoryHelper {
 		return adjacentInventories;
 	}
 
+	private static boolean doesMatchFilter(
+			IInventory inventory, int index, int itemID, ItemStack filter,
+			boolean blacklist) {
+
+		ItemStack stack = inventory.getStackInSlot(index);
+		if(stack != null) {
+			if(itemID != -1 && stack.getItemID() != itemID) {
+				return false;
+			}
+
+			if(filter != null) {
+				if(blacklist) {
+					return stack.getItemID() != filter.getItemID();
+				}
+				else {
+					return stack.getItemID() == filter.getItemID();
+				}
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
 	public static int getMatchingOutputIndex(
-			IInventory inventory, int itemID) {
+			IInventory inventory, int itemID, ItemStack filter,
+			boolean blacklist) {
 
 		if(inventory instanceof CJTileEntityMachineBase machine) {
 			CJMachineBuilder builder = machine.machine.machineBuilder;
@@ -45,7 +71,7 @@ public class CJInventoryHelper {
 
 				if(!slot.output) continue;
 
-				if(machine.getStackInSlot(i) != null) {
+				if(doesMatchFilter(machine, i, itemID, filter, blacklist)) {
 					return i;
 				}
 			}
@@ -54,12 +80,7 @@ public class CJInventoryHelper {
 		}
 
 		for(int i = 0; i < inventory.getSizeInventory(); i++) {
-			ItemStack stack = inventory.getStackInSlot(i);
-			if(stack != null) {
-				if(itemID != -1 && stack.getItemID() != itemID) {
-					continue;
-				}
-
+			if(doesMatchFilter(inventory, i, itemID, filter, blacklist)) {
 				return i;
 			}
 		}

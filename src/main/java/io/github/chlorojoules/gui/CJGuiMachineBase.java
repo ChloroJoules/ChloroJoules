@@ -141,14 +141,24 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 		CJMachineBuilder machineBuilder = machineEntity.getBuilder();
 		for(int i = 0; i < machineBuilder.buttons.size(); ++i) {
 			CJGuiButton button = machineBuilder.buttons.get(i);
+			if(button.checkDamageExclusive(machineEntity)) continue;
 
 			if(getIsMouseOverRect(
 					mouseX, mouseY,
 					button.getXPlacement(), button.getYPlacement(),
 					BUTTON_WIDTH, BUTTON_HEIGHT)) {
 
+				String tooltip = button.tooltip;
+				boolean state = machineEntity.buttonStates.get(i);
+
+				if(button.filter) {
+					tooltip =
+							state ? "message.cj_blacklist" :
+									"message.cj_whitelist";
+				}
+
 				drawTooltip(
-						translate.translateKey(button.tooltip),
+						translate.translateKey(tooltip),
 						null,
 						mouseX, mouseY,
 						Color.WHITE.getRGB());
@@ -159,8 +169,7 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 								"random.click", 1.0F, 1.0F);
 
 						machineEntity.operationTicks = 0;
-						machineEntity.buttonStates.set(
-								i, !machineEntity.buttonStates.get(i));
+						machineEntity.buttonStates.set(i, !state);
 					}
 
 					wasMousePressed = true;
@@ -322,6 +331,12 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 						inX = SLOT_OTHERWORLD_X;
 						inY = SLOT_OTHERWORLD_Y;
 					}
+					else if(slot.info.renderType ==
+							CJMachineSlotRenderType.FILTER) {
+
+						inX = SLOT_FILTER_X;
+						inY = SLOT_FILTER_Y;
+					}
 				}
 
 				drawTexturedModalRect(
@@ -394,24 +409,38 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 		// Draw buttons.
 		for(int i = 0; i < machineBuilder.buttons.size(); ++i) {
 			CJGuiButton button = machineBuilder.buttons.get(i);
+			if(button.checkDamageExclusive(machineEntity)) continue;
+
 			int x = baseX + button.getXPlacement();
 			int y = baseY + button.getYPlacement();
 
 			boolean state = machineEntity.buttonStates.get(i);
-			int srcX = state ? BUTTON_ACTIVE_X : BUTTON_INACTIVE_X;
-			int srcY = state ? BUTTON_ACTIVE_Y : BUTTON_INACTIVE_Y;
 
-			drawTexturedModalRect(
-					x, y,
-					srcX, srcY,
-					BUTTON_WIDTH, BUTTON_HEIGHT);
+			if(button.filter) {
+				int srcX = state ? BUTTON_BLACKLIST_X : BUTTON_WHITELIST_X;
+				int srcY = state ? BUTTON_BLACKLIST_Y : BUTTON_WHITELIST_Y;
 
-			x += BUTTON_LABEL_INSET;
-			y += BUTTON_LABEL_INSET;
+				drawTexturedModalRect(
+						x, y,
+						srcX, srcY,
+						BUTTON_WIDTH, BUTTON_HEIGHT);
+			}
+			else {
+				int srcX = state ? BUTTON_ACTIVE_X : BUTTON_INACTIVE_X;
+				int srcY = state ? BUTTON_ACTIVE_Y : BUTTON_INACTIVE_Y;
 
-			itemRenderer.renderItemIntoGUI(
-					this.fontRenderer, this.mc.renderEngine, button.label,
-					x, y);
+				drawTexturedModalRect(
+						x, y,
+						srcX, srcY,
+						BUTTON_WIDTH, BUTTON_HEIGHT);
+
+				x += BUTTON_LABEL_INSET;
+				y += BUTTON_LABEL_INSET;
+
+				itemRenderer.renderItemIntoGUI(
+						this.fontRenderer, this.mc.renderEngine, button.label,
+						x, y);
+			}
 
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			mc.renderEngine.bindTexture(texture);

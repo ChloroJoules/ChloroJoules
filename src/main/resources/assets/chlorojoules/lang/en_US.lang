@@ -31,6 +31,8 @@ message.cj_paused=Machine Paused
 message.cj_paused_by_gear=Gear signal applied
 message.cj_link_coordinate=§7Linked to §LX: %d Y: %d Z: %d
 message.cj_coordinate_unset=§CCoordinates unset
+message.cj_blacklist=Blacklist
+message.cj_whitelist=Whitelist
 
 message.cj_rift1=§DThe walls of reality have been stretched thin
 message.cj_rift2=§DYou feel a §K###§R §D§Lpresence §R§D§K###§R §Dgrow close

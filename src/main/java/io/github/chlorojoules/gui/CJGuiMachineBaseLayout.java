@@ -62,6 +62,9 @@ public class CJGuiMachineBaseLayout {
 	public static final int SLOT_OTHERWORLD_X = 202;
 	public static final int SLOT_OTHERWORLD_Y = 106;
 
+	public static final int SLOT_FILTER_X = 220;
+	public static final int SLOT_FILTER_Y = 106;
+
 	public static final int SLOT_IN_WIDTH = 18;
 	public static final int SLOT_IN_HEIGHT = 18;
 
@@ -122,6 +125,12 @@ public class CJGuiMachineBaseLayout {
 
 	public static final int BUTTON_ACTIVE_X = 196;
 	public static final int BUTTON_ACTIVE_Y = 131;
+
+	public static final int BUTTON_BLACKLIST_X = 220;
+	public static final int BUTTON_BLACKLIST_Y = 72;
+
+	public static final int BUTTON_WHITELIST_X = 220;
+	public static final int BUTTON_WHITELIST_Y = 52;
 
 	public static final int BUTTON_WIDTH = 20;
 	public static final int BUTTON_HEIGHT = 20;

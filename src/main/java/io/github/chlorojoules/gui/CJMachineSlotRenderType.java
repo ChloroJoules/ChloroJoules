@@ -5,7 +5,8 @@ public enum CJMachineSlotRenderType {
 	JEWEL,
 	FERTILIZER,
 	PASTE,
-	OTHERWORLD;
+	OTHERWORLD,
+	FILTER;
 
 	public static CJMachineSlotRenderType fromString(String id) {
 		return switch(id.toLowerCase()) {
@@ -14,6 +15,7 @@ public enum CJMachineSlotRenderType {
 			case "fertilizer" -> FERTILIZER;
 			case "paste" -> PASTE;
 			case "otherworld" -> OTHERWORLD;
+			case "filter" -> FILTER;
 
 			default -> DEFAULT;
 		};

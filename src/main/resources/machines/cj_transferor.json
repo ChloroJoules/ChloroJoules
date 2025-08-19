@@ -20,6 +20,17 @@
 				"cj_whooper",
 				"cj_multi_whooper"
 			]
+		},
+		{
+			"name": "filter",
+			"render": "filter",
+			"anchor": "bottom right",
+			"x": 45,
+			"y": 25,
+			"damages": [
+				"cj_whooper",
+				"cj_multi_whooper"
+			]
 		}
 	],
 	"tanks": [
@@ -34,15 +45,26 @@
 			]
 		}
 	],
+	"buttons": [
+		{
+			"name": "filter_mode",
+			"filter": true,
+			"anchor": "bottom right",
+			"x": 22,
+			"y": 26,
+			"damages": [
+				"cj_whooper",
+				"cj_multi_whooper"
+			]
+		}
+	],
 	"coordinates": [
 		{
 			"label": "message.cj_link_coordinate",
 			"anchor": "center",
 			"y": 12,
 			"damages": [
-				"cj_whooper",
 				"cj_swooper",
-				"cj_flooper",
 				"cj_slooper"
 			]
 		}

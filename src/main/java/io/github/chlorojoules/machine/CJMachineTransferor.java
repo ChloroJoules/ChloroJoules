@@ -62,12 +62,15 @@ public class CJMachineTransferor implements CJIMachine {
 			currentItemID = stack.getItemID();
 		}
 
+		ItemStack filterStack = machineEntity.getStackInSlot(1);
+
 		for(TileEntity tileEntity : machineEntity.adjacentTileEntities) {
 			if(tileEntity == null) continue;
 			if(!(tileEntity instanceof IInventory inventory)) continue;
 
 			int slotIndex = CJInventoryHelper.getMatchingOutputIndex(
-					inventory, currentItemID);
+					inventory, currentItemID, filterStack,
+					machineEntity.buttonStates.getFirst());
 
 			if(slotIndex == -1) continue;
 			ItemStack inStack = inventory.getStackInSlot(slotIndex);
