@@ -6,7 +6,6 @@ import io.github.chlorojoules.CJRarityInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.common.block.Blocks;
 import net.minecraft.common.util.ChatColors;
-import net.minecraft.common.entity.other.EntityItem;
 import net.minecraft.common.entity.player.EntityPlayer;
 import net.minecraft.common.item.Item;
 import net.minecraft.common.item.ItemStack;

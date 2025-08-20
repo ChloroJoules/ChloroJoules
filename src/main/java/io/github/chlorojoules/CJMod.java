@@ -675,7 +675,6 @@ public class CJMod extends Mod {
 		press = registerMachine("/machines/cj_press.json");
 		furnace = registerMachine("/machines/cj_furnace.json");
 		toolStation = registerMachine("/machines/cj_tool_station.json");
-		// TODO: Filtered transferor.
 		transferor = registerMachine("/machines/cj_transferor.json");
 		tank = registerMachine("/machines/cj_tank.json");
 		composter = registerMachine("/machines/cj_composter.json");
@@ -930,7 +929,7 @@ public class CJMod extends Mod {
 				'@', AUGMENTITE);
 
 		registerRecipe(
-				riftIdentifier,
+				new ItemStack(riftIdentifier, 1, MAX_DAMAGE),
 				" | ",
 				"~@~",
 				" & ",

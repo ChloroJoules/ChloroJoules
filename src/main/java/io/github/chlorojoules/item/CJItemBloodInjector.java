@@ -39,9 +39,10 @@ public class CJItemBloodInjector extends Item implements CJIItemSocket {
 
 		if(player.health >= 20) return;
 
-		CJRarity rarity =
-				CJRarityInfo.getDamageRarity(stack.getItemDamage());
+		int damage = stack.getItemDamage();
+		if(damage == CJRarityInfo.MAX_DAMAGE) return;
 
+		CJRarity rarity = CJRarityInfo.getDamageRarity(damage);
 		int required = REQUIRED * CJRarityInfo.getRarityPowerScale(rarity);
 		boolean consumed =
 				CJItemFluidContainer.consumeFromContainers(
