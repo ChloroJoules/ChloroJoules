@@ -153,6 +153,7 @@ public class CJMod extends Mod {
 	public static CJBlockMachineBase reactor;
 	public static CJBlockMachineBase injector;
 	public static CJBlockMachineBase riftBeacon;
+	public static CJBlockMachineBase otherworldPinhole;
 	public static CJBlockMachineBase centrifuge;
 
 	public static Item paste;
@@ -687,7 +688,9 @@ public class CJMod extends Mod {
 		reactor = registerMachine("/machines/cj_reactor.json");
 		injector = registerMachine("/machines/cj_injector.json");
 		riftBeacon = registerMachine("/machines/cj_rift_beacon.json");
-		riftBeacon = registerMachine("/machines/cj_otherworld_pinhole.json");
+		otherworldPinhole = registerMachine(
+				"/machines/cj_otherworld_pinhole.json");
+
 		centrifuge = registerMachine("/machines/cj_centrifuge.json");
 	}
 
@@ -915,6 +918,17 @@ public class CJMod extends Mod {
 				'~', GOLD_INGOT,
 				'|', machineFrame,
 				'/', DIAMOND,
+				'@', AUGMENTITE);
+
+		registerRecipe(
+				otherworldPinhole,
+				"@#@",
+				"@|@",
+				"-&-",
+				'-', tagRawStone,
+				'#', DIAMOND,
+				'&', soulGem,
+				'|', machineFrame,
 				'@', AUGMENTITE);
 
 		registerRecipe(
