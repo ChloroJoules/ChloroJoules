@@ -57,34 +57,187 @@
 	},
 	{
 		"name": "cj_crushing_it",
-		"x": 9,
-		"y": 7,
+		"x": 8,
+		"y": 9,
 		"parent": "cj_it_begins",
 		"icon": "chlorojoules:cj_pulverizer",
 		"trigger": "chlorojoules:cj_pulverizer"
 	},
 	{
 		"name": "cj_desecrating_the_pristine",
-		"x": 11,
-		"y": 7,
+		"x": 10,
+		"y": 9,
 		"parent": "cj_crushing_it",
 		"icon": "chlorojoules:cj_jewel_dust",
 		"trigger": "chlorojoules:cj_jewel_dust"
 	},
 	{
 		"name": "cj_under_pressure",
-		"x": 13,
-		"y": 7,
+		"x": 10,
+		"y": 5,
 		"parent": "cj_desecrating_the_pristine",
 		"icon": "chlorojoules:cj_press",
 		"trigger": "chlorojoules:cj_press"
 	},
 	{
-		"name": "cj_industrial_age",
-		"x": 15,
+		"name": "cj_hotter_than_rocks",
+		"x": 10,
 		"y": 7,
+		"parent": "cj_it_begins",
+		"icon": "chlorojoules:cj_furnace",
+		"trigger": "chlorojoules:cj_furnace"
+	},
+	{
+		"name": "cj_industrial_age",
+		"x": 12,
+		"y": 5,
 		"parent": "cj_under_pressure",
 		"icon": "chlorojoules:cj_jewel_manufactured",
 		"trigger": "chlorojoules:cj_jewel_manufactured"
+	},
+	{
+		"name": "cj_advanced_tooling",
+		"x": 12,
+		"y": 3,
+		"parent": "cj_industrial_age",
+		"icon": "chlorojoules:cj_tool_station",
+		"trigger": "chlorojoules:cj_tool_station"
+	},
+	{
+		"name": "cj_getting_high",
+		"x": 14,
+		"y": 3,
+		"parent": "cj_advanced_tooling",
+		"icon": "chlorojoules:cj_jetpack",
+		"trigger": "chlorojoules:cj_jetpack",
+		"special": true
+	},
+	{
+		"name": "cj_pump_up_the_jam",
+		"x": 13,
+		"y": 8,
+		"parent": "cj_industrial_age",
+		"icon": "chlorojoules:cj_pump",
+		"trigger": "chlorojoules:cj_pump"
+	},
+	{
+		"name": "cj_please_dont_drink_it",
+		"x": 13,
+		"y": 6,
+		"parent": "cj_pump_up_the_jam",
+		"icon": "chlorojoules:cj_fluid_dimension_bucket",
+		"trigger": "chlorojoules:cj_fluid_dimension_bucket"
+	},
+	{
+		"name": "cj_all_mixed_up",
+		"x": 14,
+		"y": 5,
+		"parent": "cj_industrial_age",
+		"icon": "chlorojoules:cj_mixer",
+		"trigger": "chlorojoules:cj_mixer"
+	},
+	{
+		"name": "cj_for_refined_tastes",
+		"x": 16,
+		"y": 5,
+		"parent": "cj_please_dont_drink_it",
+		"icon": "chlorojoules:cj_jewel_refined",
+		"trigger": "chlorojoules:cj_jewel_refined"
+	},
+	{
+		"name": "cj_vacuum_time",
+		"x": 16,
+		"y": 7,
+		"parent": "cj_for_refined_tastes",
+		"icon": "chlorojoules:cj_soul_extractor",
+		"trigger": "chlorojoules:cj_soul_extractor"
+	},
+	{
+		"name": "cj_heart_gold_soul_silver",
+		"x": 16,
+		"y": 9,
+		"parent": "cj_vacuum_time",
+		"icon": "chlorojoules:cj_soul_core",
+		"trigger": "chlorojoules:cj_soul_core"
+	},
+	{
+		"name": "cj_eater_of_souls",
+		"x": 18,
+		"y": 9,
+		"parent": "cj_heart_gold_soul_silver",
+		"icon": "chlorojoules:cj_soul_sword",
+		"trigger": "chlorojoules:cj_soul_sword"
+	},
+	{
+		"name": "cj_essential_oils",
+		"x": 18,
+		"y": 7,
+		"parent": "cj_eater_of_souls",
+		"icon": "chlorojoules:cj_soul_essence",
+		"trigger": "chlorojoules:cj_soul_essence"
+	},
+	{
+		"name": "cj_a_solid_basis",
+		"x": 18,
+		"y": 5,
+		"parent": "cj_essential_oils",
+		"icon": "chlorojoules:cj_solidifier",
+		"trigger": "chlorojoules:cj_solidifier"
+	},
+	{
+		"name": "cj_gemtrification",
+		"x": 20,
+		"y": 5,
+		"parent": "cj_a_solid_basis",
+		"icon": "chlorojoules:cj_soul_gem",
+		"trigger": "chlorojoules:cj_soul_gem"
+	},
+	{
+		"name": "cj_to_ash_and_dust",
+		"x": 20,
+		"y": 7,
+		"parent": "cj_gemtrification",
+		"icon": "chlorojoules:cj_fluid_awareness_bucket"
+	},
+	{
+		"name": "cj_the_final_awakening",
+		"x": 22,
+		"y": 7,
+		"parent": "cj_to_ash_and_dust",
+		"icon": "chlorojoules:cj_jewel_awakened",
+		"trigger": "chlorojoules:cj_jewel_awakened",
+		"special": true
+	},
+	{
+		"name": "cj_soul_searching",
+		"x": 21,
+		"y": 3,
+		"parent": "cj_to_ash_and_dust",
+		"icon": "chlorojoules:cj_rift_identifier",
+		"trigger": "chlorojoules:cj_rift_identifier"
+	},
+	{
+		"name": "cj_a_glimpse_of_something_greater",
+		"x": 22,
+		"y": 5,
+		"parent": "cj_soul_searching",
+		"icon": "chlorojoules:cj_rift"
+	},
+	{
+		"name": "cj_holes_to_nowhere",
+		"x": 22,
+		"y": 9,
+		"parent": "cj_a_glimpse_of_something_greater",
+		"icon": "chlorojoules:cj_rift_beacon",
+		"trigger": "chlorojoules:cj_rift_beacon"
+	},
+	{
+		"name": "cj_an_eternal_gift",
+		"x": 24,
+		"y": 9,
+		"parent": "cj_holes_to_nowhere",
+		"icon": "chlorojoules:cj_otherworld",
+		"trigger": "chlorojoules:cj_otherworld",
+		"special": true
 	}
 ]

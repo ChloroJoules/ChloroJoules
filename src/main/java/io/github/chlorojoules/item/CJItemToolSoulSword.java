@@ -6,17 +6,21 @@ import io.github.chlorojoules.CJRarityInfo;
 import net.minecraft.common.entity.EntityLiving;
 import net.minecraft.common.entity.data.DamageTypes;
 import net.minecraft.common.entity.other.EntityItem;
+import net.minecraft.common.entity.player.EntityPlayer;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.item.children.ItemTool;
 import net.minecraft.common.item.data.EnumTools;
 import net.minecraft.common.item.data.ToolMaterials;
 import net.minecraft.common.item.description.ItemDesc;
 import net.minecraft.common.item.description.ItemDescTool;
+import net.minecraft.common.stats.Achievement;
 import net.minecraft.common.world.World;
 
 import java.util.List;
 
 public class CJItemToolSoulSword extends ItemTool implements CJIItemSocket {
+	Achievement achievement;
+
 	public CJItemToolSoulSword(String id) {
 		super(id, 0, ToolMaterials.OBSIDIAN, EnumTools.SWORD);
 
@@ -82,5 +86,20 @@ public class CJItemToolSoulSword extends ItemTool implements CJIItemSocket {
 			EntityLiving entity) {
 
 		return true;
+	}
+
+	public void setAchievement(Achievement achievement) {
+		this.achievement = achievement;
+	}
+
+	@Override
+	public void onCrafting(
+			ItemStack itemstack, World world, EntityPlayer player) {
+
+		if(this.achievement != null) {
+			player.triggerAchievement(this.achievement);
+		}
+
+		super.onCrafting(itemstack, world, player);
 	}
 }

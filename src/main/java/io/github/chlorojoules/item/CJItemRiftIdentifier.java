@@ -4,12 +4,11 @@ import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.CJRarity;
 import io.github.chlorojoules.CJRarityInfo;
 import net.minecraft.common.entity.player.EntityPlayer;
-import net.minecraft.common.item.Item;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.util.i18n.StringTranslate;
 import net.minecraft.common.world.World;
 
-public class CJItemRiftIdentifier extends Item implements CJIItemSocket {
+public class CJItemRiftIdentifier extends CJItemAchievable implements CJIItemSocket {
 	private static final int RIFT_MIN = 128;
 	private static final int RIFT_JITTER = 25;
 	private static final int RIFT_RANGE = 8;
@@ -90,6 +89,9 @@ public class CJItemRiftIdentifier extends Item implements CJIItemSocket {
 				world.createExplosion(null, riftX, riftY, riftZ, 6.0F);
 				world.setBlockWithNotify(
 						riftX, riftY, riftZ, CJMod.rift.blockID);
+
+				player.triggerAchievement(CJMod.achievementMap.get(
+						"cj_a_glimpse_of_something_greater"));
 			}
 		}
 		else {

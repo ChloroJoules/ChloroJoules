@@ -7,12 +7,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.common.block.Blocks;
 import net.minecraft.common.util.ChatColors;
 import net.minecraft.common.entity.player.EntityPlayer;
-import net.minecraft.common.item.Item;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.world.World;
 
 // TODO: Add damage so texture can appear greyed when no jewel is inserted.
-public class CJItemSoulExtractor extends Item implements CJIItemSocket {
+public class CJItemSoulExtractor extends CJItemAchievable implements CJIItemSocket {
 	public CJItemSoulExtractor(String id) {
 		super(id);
 
@@ -48,10 +47,11 @@ public class CJItemSoulExtractor extends Item implements CJIItemSocket {
 				world, blockX, blockY, blockZ,
 				new ItemStack(CJMod.soulCore.itemID, 1), false);
 
+		player.triggerAchievement(CJMod.achievementMap.get(
+				"cj_heart_gold_soul_silver"));
+
 		Minecraft.getInstance().sndManager.playSoundFX(
 				"random.levelup", 1.0F, 1.0F);
-
-		stack.setItemDamage(CJRarityInfo.MAX_DAMAGE);
 
 		return true;
 	}

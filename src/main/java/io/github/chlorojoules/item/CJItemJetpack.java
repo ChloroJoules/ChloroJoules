@@ -6,11 +6,10 @@ import io.github.chlorojoules.CJRarityInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.common.entity.Entity;
 import net.minecraft.common.entity.player.EntityPlayer;
-import net.minecraft.common.item.Item;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.world.World;
 
-public class CJItemJetpack extends Item implements CJIItemSocket {
+public class CJItemJetpack extends CJItemAchievable implements CJIItemSocket {
 	private static final int MAX_TICKS = 1;
 	private static final int REQUIRED = 1;
 

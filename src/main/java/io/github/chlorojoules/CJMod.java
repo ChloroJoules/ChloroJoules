@@ -664,9 +664,9 @@ public class CJMod extends Mod {
 				.setBlockUnbreakable()
 				.setLightValue(1.0F);
 
-		foxPowerCable = (FoxPowerCableBlock) registerBlock(
-				0.8F, 3.0F, StepSounds.SOUND_STONE, EnumTools.PICKAXE,
-				CJBlockFoxPowerCable.class, "cj_fox_power_cable");
+		//foxPowerCable = (FoxPowerCableBlock) registerBlock(
+		//		0.8F, 3.0F, StepSounds.SOUND_STONE, EnumTools.PICKAXE,
+		//		CJBlockFoxPowerCable.class, "cj_fox_power_cable");
 
 		cultivator = registerMachine("/machines/cj_cultivator.json");
 		liquefier = registerMachine("/machines/cj_liquefier.json");
@@ -709,6 +709,11 @@ public class CJMod extends Mod {
 
 			JsonElement parentElement = object.get("parent");
 
+			boolean special = false;
+			if(object.has("special")) {
+				special = JsonUtils.getBoolean(object, "special");
+			}
+
 			Achievement parent;
 			if(JsonUtils.isString(parentElement)) {
 				parent = achievementMap.get(parentElement.getAsString());
@@ -720,6 +725,10 @@ public class CJMod extends Mod {
 					ACHIEVEMENTS.size(), name, x, y, itemStackFromName(icon),
 					parent)
 					.registerStat();
+
+			if(special) {
+				achievement.setSpecial();
+			}
 
 			achievementMap.put(name, achievement);
 
@@ -741,11 +750,14 @@ public class CJMod extends Mod {
 								"Unknown trigger block '" + trigger + "'");
 					}
 				}
-				else if(item instanceof CJItemAchievable itemAchievable){
+				else if(item instanceof CJItemAchievable itemAchievable) {
 					itemAchievable.setAchievement(achievement);
 				}
-				else if(item instanceof CJItemBucket itemBucket){
+				else if(item instanceof CJItemBucket itemBucket) {
 					itemBucket.setAchievement(achievement);
+				}
+				else if(item instanceof CJItemToolSoulSword swordAchievable) {
+					swordAchievable.setAchievement(achievement);
 				}
 				else {
 					throw new RuntimeException(
@@ -938,7 +950,7 @@ public class CJMod extends Mod {
 				"-&-",
 				'-', tagRawStone,
 				'#', IRON_INGOT,
-				'&', soulGem,
+				'&', soulCore,
 				'|', machineFrame,
 				'@', AUGMENTITE);
 

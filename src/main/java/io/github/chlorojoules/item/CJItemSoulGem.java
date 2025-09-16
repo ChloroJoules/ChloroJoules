@@ -2,11 +2,10 @@ package io.github.chlorojoules.item;
 
 import io.github.chlorojoules.CJMod;
 import net.minecraft.common.entity.player.EntityPlayer;
-import net.minecraft.common.item.Item;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.world.World;
 
-public class CJItemSoulGem extends Item {
+public class CJItemSoulGem extends CJItemAchievable {
 	public CJItemSoulGem(String name) {
 		super(name);
 	}
@@ -25,6 +24,9 @@ public class CJItemSoulGem extends Item {
 				blockX, blockY, blockZ, CJMod.fluidAwareness.blockID);
 
 		player.inventory.decrStackSize(player.inventory.currentItem, 1);
+
+		player.triggerAchievement(
+				CJMod.achievementMap.get("cj_to_ash_and_dust"));
 
 		return true;
 	}
