@@ -71,6 +71,9 @@ public class CJMachineRiftBeacon implements CJIMachine {
 						player.addChatMessage("message.cj_rift4");
 					}
 					else if(machineEntity.riftTime == CUTSCENE_THRESHOLD * 4) {
+						player.triggerAchievement(CJMod.achievementMap.get(
+								"cj_an_eternal_gift"));
+
 						CJMod.spawnItem(
 								machineEntity.worldObj, machineEntity.xCoord,
 								machineEntity.yCoord + Y_OFFSET,

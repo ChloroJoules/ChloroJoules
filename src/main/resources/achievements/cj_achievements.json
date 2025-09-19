@@ -114,8 +114,8 @@
 	},
 	{
 		"name": "cj_pump_up_the_jam",
-		"x": 13,
-		"y": 8,
+		"x": 12,
+		"y": 7,
 		"parent": "cj_industrial_age",
 		"icon": "chlorojoules:cj_pump",
 		"trigger": "chlorojoules:cj_pump"
@@ -123,24 +123,32 @@
 	{
 		"name": "cj_please_dont_drink_it",
 		"x": 13,
-		"y": 6,
+		"y": 9,
 		"parent": "cj_pump_up_the_jam",
 		"icon": "chlorojoules:cj_fluid_dimension_bucket",
 		"trigger": "chlorojoules:cj_fluid_dimension_bucket"
 	},
 	{
-		"name": "cj_all_mixed_up",
+		"name": "cj_my_chemical_romance",
+		"x": 14,
+		"y": 7,
+		"parent": "cj_please_dont_drink_it",
+		"icon": "chlorojoules:cj_reactor",
+		"trigger": "chlorojoules:cj_reactor"
+	},
+	{
+		"name": "cj_just_a_prick",
 		"x": 14,
 		"y": 5,
 		"parent": "cj_industrial_age",
-		"icon": "chlorojoules:cj_mixer",
-		"trigger": "chlorojoules:cj_mixer"
+		"icon": "chlorojoules:cj_injector",
+		"trigger": "chlorojoules:cj_injector"
 	},
 	{
 		"name": "cj_for_refined_tastes",
 		"x": 16,
 		"y": 5,
-		"parent": "cj_please_dont_drink_it",
+		"parent": "cj_my_chemical_romance",
 		"icon": "chlorojoules:cj_jewel_refined",
 		"trigger": "chlorojoules:cj_jewel_refined"
 	},
@@ -177,8 +185,16 @@
 		"trigger": "chlorojoules:cj_soul_essence"
 	},
 	{
-		"name": "cj_a_solid_basis",
+		"name": "cj_all_mixed_up",
 		"x": 18,
+		"y": 5,
+		"parent": "cj_essential_oils",
+		"icon": "chlorojoules:cj_mixer",
+		"trigger": "chlorojoules:cj_mixer"
+	},
+	{
+		"name": "cj_a_solid_basis",
+		"x": 20,
 		"y": 5,
 		"parent": "cj_essential_oils",
 		"icon": "chlorojoules:cj_solidifier",
@@ -187,15 +203,15 @@
 	{
 		"name": "cj_gemtrification",
 		"x": 20,
-		"y": 5,
+		"y": 7,
 		"parent": "cj_a_solid_basis",
 		"icon": "chlorojoules:cj_soul_gem",
 		"trigger": "chlorojoules:cj_soul_gem"
 	},
 	{
 		"name": "cj_to_ash_and_dust",
-		"x": 20,
-		"y": 7,
+		"x": 21,
+		"y": 9,
 		"parent": "cj_gemtrification",
 		"icon": "chlorojoules:cj_fluid_awareness_bucket"
 	},
@@ -210,31 +226,31 @@
 	},
 	{
 		"name": "cj_soul_searching",
-		"x": 21,
-		"y": 3,
-		"parent": "cj_to_ash_and_dust",
+		"x": 22,
+		"y": 5,
+		"parent": "cj_the_final_awakening",
 		"icon": "chlorojoules:cj_rift_identifier",
 		"trigger": "chlorojoules:cj_rift_identifier"
 	},
 	{
 		"name": "cj_a_glimpse_of_something_greater",
 		"x": 22,
-		"y": 5,
+		"y": 3,
 		"parent": "cj_soul_searching",
 		"icon": "chlorojoules:cj_rift"
 	},
 	{
 		"name": "cj_holes_to_nowhere",
 		"x": 22,
-		"y": 9,
+		"y": 1,
 		"parent": "cj_a_glimpse_of_something_greater",
 		"icon": "chlorojoules:cj_rift_beacon",
 		"trigger": "chlorojoules:cj_rift_beacon"
 	},
 	{
 		"name": "cj_an_eternal_gift",
-		"x": 24,
-		"y": 9,
+		"x": 22,
+		"y": -1,
 		"parent": "cj_holes_to_nowhere",
 		"icon": "chlorojoules:cj_otherworld",
 		"trigger": "chlorojoules:cj_otherworld",

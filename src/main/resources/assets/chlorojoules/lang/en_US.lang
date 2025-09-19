@@ -168,6 +168,10 @@ achievement.cj_holes_to_nowhere=Holes to Nowhere
 achievement.cj_holes_to_nowhere.desc=Craft a Rift Beacon
 achievement.cj_an_eternal_gift=An Eternal Gift
 achievement.cj_an_eternal_gift.desc=Obtain a Fragment of the Beyond
+achievement.cj_my_chemical_romance=My Chemical Romance
+achievement.cj_my_chemical_romance.desc=Craft a Chemical Reactor
+achievement.cj_just_a_prick=Just a Prick
+achievement.cj_just_a_prick.desc=Craft a Fluid Injector
 
 # Blocks.
 tile.cj_machine_frame.name=Machine Frame

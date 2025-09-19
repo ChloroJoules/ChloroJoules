@@ -1114,7 +1114,7 @@ public class CJMod extends Mod {
 				"&@&",
 				"@|@",
 				"&%&",
-				'&', COBBLESTONE,
+				'&', tagRawStone,
 				'@', ASH,
 				'%', COAL,
 				'|', machineFrame);

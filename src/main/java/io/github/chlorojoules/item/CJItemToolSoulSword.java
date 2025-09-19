@@ -75,6 +75,11 @@ public class CJItemToolSoulSword extends ItemTool implements CJIItemSocket {
 			CJMod.spawnItem(
 					world, target.posX, target.posY, target.posZ,
 					new ItemStack(CJMod.soulEssence.itemID, count), false);
+
+			if(attacker instanceof EntityPlayer player) {
+				player.triggerAchievement(CJMod.achievementMap.get(
+						"cj_essential_oils"));
+			}
 		}
 
 		return true;
