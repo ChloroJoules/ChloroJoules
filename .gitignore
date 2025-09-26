@@ -5,4 +5,6 @@ build/
 
 .idea/
 
+resources/A_Glimpse_Of_The_Beyond/Backup/*
+
 *.blend1

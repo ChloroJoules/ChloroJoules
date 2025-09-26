@@ -9,7 +9,6 @@ import com.google.gson.JsonObject;
 
 import com.google.gson.JsonParser;
 import io.github.chlorojoules.block.CJBlockAchievable;
-import io.github.chlorojoules.block.CJBlockFoxPowerCable;
 import io.github.chlorojoules.block.CJBlockMachineBase;
 import io.github.chlorojoules.block.CJBlockRift;
 import io.github.chlorojoules.block.tileentity.CJTileEntityFoxPowerCable;
@@ -37,6 +36,7 @@ import net.minecraft.common.item.*;
 import net.minecraft.common.item.block.ItemBlock;
 import net.minecraft.common.item.children.ItemBucket;
 import net.minecraft.common.item.children.ItemGoldenBucket;
+import net.minecraft.common.item.children.ItemRecord;
 import net.minecraft.common.item.children.ItemSeeds;
 import net.minecraft.common.item.data.EnumTools;
 import net.minecraft.common.recipe.*;
@@ -46,6 +46,7 @@ import net.minecraft.common.world.World;
 import net.minecraft.common.world.map.MapColor;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -196,6 +197,8 @@ public class CJMod extends Mod {
 	public static Item riftIdentifier;
 
 	public static Item ironRod;
+
+	public static Item record;
 
 	public static int fuelFluid;
 	public static int waterFluid;
@@ -564,6 +567,11 @@ public class CJMod extends Mod {
 		tinyGoldDust = registerItem("cj_tiny_gold_dust", PRIMAL_COLOR);
 		tinyDiamondDust = registerItem(
 				"cj_tiny_diamond_dust", MANUFACTURED_COLOR);
+
+		record = registerItem(
+				AWAKENED_COLOR, 1, ItemRecord.class,
+				"cj_record", "glimpse_of_the_beyond",
+				"A Glimpse of the Beyond", "Emily \"TTG\" Banerjee");
 
 		ironRod = registerItem("cj_iron_rod", PRIMAL_COLOR);
 		moss = registerItem("cj_moss", PRIMAL_COLOR);
