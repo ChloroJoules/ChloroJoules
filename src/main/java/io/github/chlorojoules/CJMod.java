@@ -569,7 +569,7 @@ public class CJMod extends Mod {
 				"cj_tiny_diamond_dust", MANUFACTURED_COLOR);
 
 		record = registerItem(
-				AWAKENED_COLOR, 1, ItemRecord.class,
+				OTHERWORLD_COLOR, 1, ItemRecord.class,
 				"cj_record", "glimpse_of_the_beyond",
 				"A Glimpse of the Beyond", "Emily \"TTG\" Banerjee");
 
@@ -587,7 +587,7 @@ public class CJMod extends Mod {
 				PRIMAL_COLOR, 1, CJItemConvertBowl.class, "cj_dirt_bowl",
 				new ItemStack(stoneDust));
 
-		otherworld = registerItem("cj_otherworld", Color.MAGENTA.getRGB(), 1)
+		otherworld = registerItem("cj_otherworld", OTHERWORLD_COLOR, 1)
 				.setDoNotConsumeOnCrafting(true);
 
 		otherworldEssence = registerItem(

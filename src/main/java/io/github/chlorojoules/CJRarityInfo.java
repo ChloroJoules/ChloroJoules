@@ -11,6 +11,7 @@ public class CJRarityInfo {
 	public static final int MANUFACTURED_COLOR = Color.GREEN.getRGB();
 	public static final int REFINED_COLOR = Color.YELLOW.getRGB();
 	public static final int AWAKENED_COLOR = Color.CYAN.getRGB();
+	public static final int OTHERWORLD_COLOR = Color.MAGENTA.getRGB();
 
 	public static final int MAX_DAMAGE = 4;
 
