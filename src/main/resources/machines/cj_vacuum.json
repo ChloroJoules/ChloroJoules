@@ -1,0 +1,15 @@
+{
+	"name": "cj_vacuum",
+	"rarity": "manufactured",
+	"implementation": "io.github.chlorojoules.machine.CJMachineVacuum",
+	"face": "all",
+	"slots": [
+		{
+			"name": "buffer",
+			"anchor": "center",
+			"output": true,
+			"x": 4,
+			"y": 4
+		}
+	]
+}

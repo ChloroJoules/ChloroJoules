@@ -153,6 +153,7 @@ public class CJMod extends Mod {
 	public static CJBlockMachineBase pump;
 	public static CJBlockMachineBase reactor;
 	public static CJBlockMachineBase injector;
+	public static CJBlockMachineBase vacuum;
 	public static CJBlockMachineBase riftBeacon;
 	public static CJBlockMachineBase otherworldPinhole;
 	public static CJBlockMachineBase centrifuge;
@@ -695,6 +696,7 @@ public class CJMod extends Mod {
 		pump = registerMachine("/machines/cj_pump.json");
 		reactor = registerMachine("/machines/cj_reactor.json");
 		injector = registerMachine("/machines/cj_injector.json");
+		vacuum = registerMachine("/machines/cj_vacuum.json");
 		riftBeacon = registerMachine("/machines/cj_rift_beacon.json");
 		otherworldPinhole = registerMachine(
 				"/machines/cj_otherworld_pinhole.json");

@@ -97,6 +97,8 @@ message.cj_centrifuge.help=Separates items into constituent parts
 message.cj_centrifuge.flavor=Always thinking of others
 message.cj_otherworld_pinhole.help=Pulls volatile foreign matter from another dimension
 message.cj_otherworld_pinhole.flavor=Always thinking of others
+message.cj_vacuum.help=Collects items in a cube around the machine
+message.cj_vacuum.flavor=Not called Henry
 
 message.cj_enable_refine_fuel=Allow processing of fuel tank
 message.cj_compost_bone_meal=Compost to bone meal
@@ -201,6 +203,7 @@ tile.cj_injector.name=Fluid Injector
 tile.cj_rift_beacon.name=Rift Beacon
 tile.cj_otherworld_pinhole.name=Otherworld Pinhole
 tile.cj_centrifuge.name=Centrifuge
+tile.cj_vacuum.name=Vacuum
 
 # Fluids.
 tile.cj_fluid_paste.name=Paste
