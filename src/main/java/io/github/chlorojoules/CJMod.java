@@ -331,7 +331,7 @@ public class CJMod extends Mod {
 		world.entityJoinedWorld(item);
 	}
 
-	private static Object getField(Object object, String name) {
+	public static Object getField(Object object, String name) {
 		try {
 			Field f = object.getClass().getDeclaredField(name);
 			f.setAccessible(true);

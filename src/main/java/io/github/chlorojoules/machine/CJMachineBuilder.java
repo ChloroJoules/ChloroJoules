@@ -4,13 +4,24 @@ import com.fox2code.foxloader.energy.FoxPowerType;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.indigo3d.util.RenderSystem;
 import io.github.chlorojoules.*;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
+import io.github.chlorojoules.container.CJContainerMachineBase;
 import io.github.chlorojoules.gui.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.world.RenderEngine;
+import net.minecraft.client.renderer.world.RenderHelper;
+import net.minecraft.client.renderer.world.Tessellator;
+import net.minecraft.common.block.Blocks;
+import net.minecraft.common.block.icon.Icon;
+import net.minecraft.common.block.texture.Face;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.recipe.Ingredient;
 import net.minecraft.common.util.JsonUtils;
 import net.minecraft.common.util.i18n.StringTranslate;
+import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
@@ -603,5 +614,148 @@ public class CJMachineBuilder {
 		}
 
 		machineEntity.operationTicks = 0;
+	}
+
+	public void renderIconClipped(
+			int x, int y, Icon icon, int width, int height, float z) {
+
+		Tessellator t = Tessellator.instance;
+		Tessellator.instance.startDrawingQuads();
+
+		float w = icon.getMaxU() - icon.getMinU();
+		float h = icon.getMaxV() - icon.getMinV();
+		float maxU = icon.getMinU() + (w * (width / 16F));
+		float maxV = icon.getMinV() + (h * (height / 16F));
+
+		t.addVertexWithUV(x, y + height, z, icon.getMinU(), maxV);
+		t.addVertexWithUV(x + width, y + height, z, maxU, maxV);
+		t.addVertexWithUV(x + width, y, z, maxU, icon.getMinV());
+		t.addVertexWithUV(x, y, z, icon.getMinU(), icon.getMinV());
+
+		t.draw();
+	}
+
+	public void drawTankWithVolume(
+			Gui gui, int baseX, int baseY, CJTank tank, CJTankVolume volume,
+			float z) {
+
+		Minecraft mc = Minecraft.getInstance();
+		RenderEngine renderEngine = mc.renderEngine;
+
+		int tankX = baseX + tank.getXPlacement();
+		int tankY = baseY + tank.getYPlacement();
+
+		gui.drawTexturedModalRect(
+				tankX, tankY, FLUID_FULL_X, FLUID_FULL_Y,
+				FLUID_WIDTH, FLUID_HEIGHT);
+
+		if(volume.fluidID != CJMod.fuelFluid) {
+			Icon icon = Blocks.BLOCKS_LIST[volume.fluidID].getIcon(
+					Face.TOP.direction(), 0);
+
+			int texture = GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);
+			int fluidTexture = renderEngine.getTexture("/terrain.png");
+			renderEngine.bindTexture(fluidTexture);
+
+			for(int j = 0; j < FLUID_HEIGHT - 2; j += 16) {
+				renderIconClipped(
+						tankX + 1, tankY + 1 + j, icon, FLUID_WIDTH - 2,
+						Math.min(16, FLUID_HEIGHT - 2 - j), z);
+			}
+
+			renderEngine.bindTexture(texture);
+		}
+
+		// Overlay the full tank graphic with an amount of the empty one.
+		int tankFill = (volume.current * FLUID_HEIGHT) / volume.max;
+		int tankEmptyDrawHeight = FLUID_HEIGHT - tankFill;
+
+		gui.drawTexturedModalRect(
+				tankX, tankY,
+				FLUID_EMPTY_X, FLUID_EMPTY_Y,
+				FLUID_WIDTH, tankEmptyDrawHeight);
+	}
+
+	public void drawProgressBar(
+			Gui gui, int baseX, int baseY, int ticks, int length) {
+
+		if(progressBar == null) return;
+
+		// Draw progress bar.
+		int x = baseX + progressBar.getXPlacement();
+		int y = baseY + progressBar.getYPlacement();
+
+		gui.drawTexturedModalRect(
+				x, y, PROGRESS_EMPTY_X, PROGRESS_EMPTY_Y,
+				PROGRESS_WIDTH, PROGRESS_HEIGHT);
+
+		gui.drawTexturedModalRect(
+				x, y, PROGRESS_FULL_X, PROGRESS_FULL_Y,
+				(ticks * PROGRESS_WIDTH) / length, PROGRESS_HEIGHT);
+	}
+
+	public void drawSlot(
+			Gui gui, int baseX, int baseY, CJMachineSlotInfo slot) {
+
+		int slotX = baseX + slot.getXPlacement();
+		int slotY = baseY + slot.getYPlacement();
+
+		if(slot.output) {
+			gui.drawTexturedModalRect(
+					slotX - SLOT_OUT_OFFSET_X, slotY - SLOT_OUT_OFFSET_Y,
+					SLOT_OUT_X, SLOT_OUT_Y,
+					SLOT_OUT_WIDTH, SLOT_OUT_HEIGHT);
+		}
+		else {
+			int inX = SLOT_IN_X;
+			int inY = SLOT_IN_Y;
+
+			switch (slot.renderType) {
+				case CJMachineSlotRenderType.JEWEL: {
+					inX = SLOT_JEWEL_X;
+					inY = SLOT_JEWEL_Y;
+					break;
+				}
+
+				case CJMachineSlotRenderType.FERTILIZER: {
+					inX = SLOT_FERTILIZER_X;
+					inY = SLOT_FERTILIZER_Y;
+					break;
+				}
+
+				case CJMachineSlotRenderType.PASTE: {
+					inX = SLOT_PASTE_X;
+					inY = SLOT_PASTE_Y;
+					break;
+				}
+
+				case CJMachineSlotRenderType.OTHERWORLD: {
+					inX = SLOT_OTHERWORLD_X;
+					inY = SLOT_OTHERWORLD_Y;
+					break;
+				}
+
+				case CJMachineSlotRenderType.FILTER: {
+					inX = SLOT_FILTER_X;
+					inY = SLOT_FILTER_Y;
+					break;
+				}
+			}
+
+			gui.drawTexturedModalRect(
+					slotX - SLOT_IN_OFFSET_X, slotY - SLOT_IN_OFFSET_Y,
+					inX, inY, SLOT_IN_WIDTH, SLOT_IN_HEIGHT);
+		}
+	}
+
+	public void drawGui(Gui gui, int baseX, int baseY, int xSize, int ySize) {
+		Minecraft mc = Minecraft.getInstance();
+		RenderEngine renderEngine = mc.renderEngine;
+
+		int texture = renderEngine.getTexture("/gui/cj_machinebase.png");
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		renderEngine.bindTexture(texture);
+
+		gui.drawTexturedModalRect(baseX, baseY, 0, 0, xSize, ySize);
 	}
 }

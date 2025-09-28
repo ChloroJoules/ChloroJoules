@@ -7,6 +7,7 @@ import io.github.chlorojoules.CJTankVolume;
 import io.github.chlorojoules.container.CJContainerMachineBase;
 import io.github.chlorojoules.machine.CJMachineBuilder;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
+import io.github.chlorojoules.machine.CJMachineSlotInfo;
 import net.minecraft.client.gui.GuiContainer;
 import net.minecraft.client.renderer.world.RenderHelper;
 import net.minecraft.client.renderer.world.Tessellator;
@@ -241,169 +242,51 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 				inventory, INVENTORY_LABEL_X, INVENTORY_LABEL_Y, MACHINE_TEXT);
 	}
 
-	public void renderIconClipped(
-			int x, int y, Icon icon, int width, int height) {
-
-		Tessellator t = Tessellator.instance;
-		Tessellator.instance.startDrawingQuads();
-
-		float w = icon.getMaxU() - icon.getMinU();
-		float h = icon.getMaxV() - icon.getMinV();
-		float maxU = icon.getMinU() + (w * (width / 16F));
-		float maxV = icon.getMinV() + (h * (height / 16F));
-
-		t.addVertexWithUV(
-				x, y + height, this.zLevel,
-				icon.getMinU(), maxV);
-
-		t.addVertexWithUV(x + width, y + height, this.zLevel, maxU, maxV);
-		t.addVertexWithUV(x + width, y, this.zLevel, maxU, icon.getMinV());
-
-		t.addVertexWithUV(
-				x, y, this.zLevel,
-				icon.getMinU(), icon.getMinV());
-
-		t.draw();
-	}
-
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float deltaTicks) {
 		CJContainerMachineBase machine = inventorySlots;
-
-		int texture = mc.renderEngine.getTexture("/gui/cj_machinebase.png");
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.renderEngine.bindTexture(texture);
+		CJMachineBuilder machineBuilder = machineEntity.getBuilder();
 
 		int baseX = (width - xSize) / 2;
 		int baseY = (height - ySize) / 2;
 
-		// Draw UI base.
-		drawTexturedModalRect(baseX, baseY, 0, 0, xSize, ySize);
+		machineBuilder.drawGui(this, baseX, baseY, xSize, ySize);
 
-		CJMachineBuilder machineBuilder = machineEntity.getBuilder();
+		for(CJMachineSlotInfo slot : machineBuilder.slots) {
+			if(slot.checkDamageExclusive(machineEntity)) continue;
 
-		// Draw slots.
+			machineBuilder.drawSlot(this, baseX, baseY, slot);
+		}
+
+		for(int i = 0; i < machineEntity.tanks.size(); i++) {
+			CJTank tank = machineBuilder.tanks.get(i);
+			if(tank.checkDamageExclusive(machineEntity)) continue;
+
+			CJTankVolume volume = machineEntity.tanks.get(i);
+			machineBuilder.drawTankWithVolume(
+					this, baseX, baseY, tank, volume, zLevel);
+		}
+
+		machineBuilder.drawProgressBar(
+				this, baseX, baseY, machineEntity.operationTicks,
+				machineEntity.operationLength);
+
+		// Draw player inventory.
 		CJGuiMachineBaseSlot slot;
 		int slotX;
 		int slotY;
 		for(int i = 0; i < machine.slots.size(); i++) {
 			slot = (CJGuiMachineBaseSlot) machine.slots.get(i);
+			if(!(slot.inventory instanceof InventoryPlayer)) continue;
+
 			// Placement is pre-applied to slots during container population.
 			slotX = baseX + slot.xDisplayPosition;
 			slotY = baseY + slot.yDisplayPosition;
 
-			if(slot.info != null && slot.info.output) {
-				drawTexturedModalRect(
-						slotX - SLOT_OUT_OFFSET_X, slotY - SLOT_OUT_OFFSET_Y,
-						SLOT_OUT_X, SLOT_OUT_Y,
-						SLOT_OUT_WIDTH, SLOT_OUT_HEIGHT);
-			}
-			else {
-				int inX = SLOT_IN_X;
-				int inY = SLOT_IN_Y;
-
-				if(slot.info != null &&
-						slot.info.renderType !=
-								CJMachineSlotRenderType.DEFAULT &&
-						(machineEntity.getStackInSlot(i) == null ||
-								slot.info.renderType ==
-								CJMachineSlotRenderType.OTHERWORLD)) {
-
-					if(slot.info.renderType == CJMachineSlotRenderType.JEWEL) {
-						inX = SLOT_JEWEL_X;
-						inY = SLOT_JEWEL_Y;
-					}
-					else if(slot.info.renderType ==
-							CJMachineSlotRenderType.FERTILIZER) {
-
-						inX = SLOT_FERTILIZER_X;
-						inY = SLOT_FERTILIZER_Y;
-					}
-					else if(slot.info.renderType ==
-							CJMachineSlotRenderType.PASTE) {
-
-						inX = SLOT_PASTE_X;
-						inY = SLOT_PASTE_Y;
-					}
-					else if(slot.info.renderType ==
-							CJMachineSlotRenderType.OTHERWORLD) {
-
-						inX = SLOT_OTHERWORLD_X;
-						inY = SLOT_OTHERWORLD_Y;
-					}
-					else if(slot.info.renderType ==
-							CJMachineSlotRenderType.FILTER) {
-
-						inX = SLOT_FILTER_X;
-						inY = SLOT_FILTER_Y;
-					}
-				}
-
-				drawTexturedModalRect(
-						slotX - SLOT_IN_OFFSET_X, slotY - SLOT_IN_OFFSET_Y,
-						inX, inY,
-						SLOT_IN_WIDTH, SLOT_IN_HEIGHT);
-			}
-		}
-
-		// Draw tanks.
-		for(int i = 0; i < machine.tanks.size(); i++) {
-			CJTank tank = machine.tanks.get(i);
-			CJTankVolume tankVolume = machineEntity.tanks.get(i);
-			int tankX = baseX + tank.getXPlacement();
-			int tankY = baseY + tank.getYPlacement();
-
 			drawTexturedModalRect(
-					tankX, tankY,
-					FLUID_FULL_X, FLUID_FULL_Y,
-					FLUID_WIDTH, FLUID_HEIGHT);
-
-			if(tankVolume.fluidID != CJMod.fuelFluid) {
-				Icon icon = Blocks.BLOCKS_LIST[tankVolume.fluidID].getIcon(
-						Face.TOP.direction(), 0);
-
-				int fluidTexture = mc.renderEngine.getTexture("/terrain.png");
-				mc.renderEngine.bindTexture(fluidTexture);
-
-				int j;
-				for(j = 0; j < FLUID_HEIGHT - 2; j += 16) {
-					renderIconClipped(
-							tankX + 1, tankY + 1 + j,
-							icon,
-							FLUID_WIDTH - 2,
-							Math.min(16, FLUID_HEIGHT - 2 - j));
-				}
-
-				mc.renderEngine.bindTexture(texture);
-			}
-
-			// Overlay the full tank graphic with an amount of the empty one.
-			int tankFill =
-					(tankVolume.current * FLUID_HEIGHT) / tankVolume.max;
-
-			int tankEmptyDrawHeight = FLUID_HEIGHT - tankFill;
-
-			drawTexturedModalRect(
-					tankX, tankY,
-					FLUID_EMPTY_X, FLUID_EMPTY_Y,
-					FLUID_WIDTH, tankEmptyDrawHeight);
-		}
-
-		// Draw progress bar.
-		if(machineBuilder.progressBar != null) {
-			int x = baseX + machineBuilder.progressBar.getXPlacement();
-			int y = baseY + machineBuilder.progressBar.getYPlacement();
-
-			drawTexturedModalRect(
-					x, y,
-					PROGRESS_EMPTY_X, PROGRESS_EMPTY_Y,
-					PROGRESS_WIDTH, PROGRESS_HEIGHT);
-
-			int width = machineEntity.operationTicks * PROGRESS_WIDTH;
-			drawTexturedModalRect(
-					x, y,
-					PROGRESS_FULL_X, PROGRESS_FULL_Y,
-					width / machineEntity.operationLength, PROGRESS_HEIGHT);
+					slotX - SLOT_IN_OFFSET_X, slotY - SLOT_IN_OFFSET_Y,
+					SLOT_IN_X, SLOT_IN_Y,
+					SLOT_IN_WIDTH, SLOT_IN_HEIGHT);
 		}
 
 		// Draw buttons.
@@ -415,6 +298,7 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 			int y = baseY + button.getYPlacement();
 
 			boolean state = machineEntity.buttonStates.get(i);
+			int texture = GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);
 
 			if(button.filter) {
 				int srcX = state ? BUTTON_BLACKLIST_X : BUTTON_WHITELIST_X;
@@ -438,7 +322,7 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 				y += BUTTON_LABEL_INSET;
 
 				itemRenderer.renderItemIntoGUI(
-						this.fontRenderer, this.mc.renderEngine, button.label,
+						this.fontRenderer, mc.renderEngine, button.label,
 						x, y);
 			}
 
