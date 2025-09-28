@@ -38,6 +38,7 @@ import net.minecraft.common.item.children.ItemBucket;
 import net.minecraft.common.item.children.ItemGoldenBucket;
 import net.minecraft.common.item.children.ItemRecord;
 import net.minecraft.common.item.children.ItemSeeds;
+import net.minecraft.common.item.data.ArmorMaterial;
 import net.minecraft.common.item.data.EnumTools;
 import net.minecraft.common.recipe.*;
 import net.minecraft.common.stats.Achievement;
@@ -45,8 +46,6 @@ import net.minecraft.common.util.JsonUtils;
 import net.minecraft.common.world.World;
 import net.minecraft.common.world.map.MapColor;
 
-import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -133,6 +132,7 @@ public class CJMod extends Mod {
 	public static Block machineFrame;
 	public static Block compactedJewelDust;
 	public static Block rift;
+	public static Block compactedFabric;
 
 	public static FoxPowerCableBlock foxPowerCable;
 
@@ -196,6 +196,11 @@ public class CJMod extends Mod {
 	public static Item fluidContainer;
 	public static Item jetpack;
 	public static Item riftIdentifier;
+
+	public static Item riftHelmet;
+	public static Item riftChestplate;
+	public static Item riftLeggings;
+	public static Item riftBoots;
 
 	public static Item ironRod;
 
@@ -655,6 +660,22 @@ public class CJMod extends Mod {
 				AWAKENED_COLOR, 1, CJItemRiftIdentifier.class,
 				"cj_rift_identifier");
 
+		riftHelmet = registerItem(
+				OTHERWORLD_COLOR, 1, CJItemArmor.class,
+				"cj_rift_helmet", 0);
+
+		riftChestplate = registerItem(
+				OTHERWORLD_COLOR, 1, CJItemArmor.class,
+				"cj_rift_chestplate", 1);
+
+		riftLeggings = registerItem(
+				OTHERWORLD_COLOR, 1, CJItemArmor.class,
+				"cj_rift_leggings", 2);
+
+		riftBoots = registerItem(
+				OTHERWORLD_COLOR, 1, CJItemArmor.class,
+				"cj_rift_boots", 3);
+
 		machineFrame = registerBlock(
 				"cj_machine_frame", Materials.ROCK, 1.5F, 10.0F,
 				StepSounds.SOUND_STONE, EnumTools.PICKAXE);
@@ -672,6 +693,10 @@ public class CJMod extends Mod {
 				EnumTools.PICKAXE, CJBlockRift.class, "cj_rift")
 				.setBlockUnbreakable()
 				.setLightValue(1.0F);
+
+		compactedFabric = registerBlock(
+				"cj_compacted_fabric", Materials.CLOTH, 1.5F, 0.0F,
+				StepSounds.SOUND_CLOTH, EnumTools.HOE);
 
 		//foxPowerCable = (FoxPowerCableBlock) registerBlock(
 		//		0.8F, 3.0F, StepSounds.SOUND_STONE, EnumTools.PICKAXE,
@@ -1220,6 +1245,16 @@ public class CJMod extends Mod {
 				'|', machineFrame);
 
 		registerRecipe(
+				vacuum,
+				"%&%",
+				"&|&",
+				"&@&",
+				'&', tagRawStone,
+				'@', tagChest,
+				'%', IRON_INGOT,
+				'|', machineFrame);
+
+		registerRecipe(
 				toolStation,
 				"&&&",
 				"a|c",
@@ -1286,6 +1321,38 @@ public class CJMod extends Mod {
 				'#', tagEmptyBucket,
 				'|', paste,
 				'@', ironRod);
+
+		registerRecipe(
+				riftHelmet,
+				"~~~",
+				"~@~",
+				"   ",
+				'~', otherworldEssence,
+				'@', compactedFabric);
+
+		registerRecipe(
+				riftChestplate,
+				"~@~",
+				"~~~",
+				"~~~",
+				'~', otherworldEssence,
+				'@', compactedFabric);
+
+		registerRecipe(
+				riftLeggings,
+				"~~~",
+				"~@~",
+				"~ ~",
+				'~', otherworldEssence,
+				'@', compactedFabric);
+
+		registerRecipe(
+				riftBoots,
+				"   ",
+				"~@~",
+				"~ ~",
+				'~', otherworldEssence,
+				'@', compactedFabric);
 
 		// Consume furnace recipes.
 		FurnaceRecipes furnaceRecipes = FurnaceRecipes.instance;

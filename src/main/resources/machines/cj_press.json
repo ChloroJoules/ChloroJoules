@@ -108,6 +108,23 @@
 					"item": "chlorojoules:cj_diamond_dust"
 				}
 			]
+		},
+		{
+			"ticks": 95,
+			"fuel": 75,
+			"inputs": [
+				{
+					"target": "input",
+					"item": "chlorojoules:cj_otherworld_essence",
+					"amount": 16
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "chlorojoules:cj_compacted_fabric"
+				}
+			]
 		}
 	]
 }

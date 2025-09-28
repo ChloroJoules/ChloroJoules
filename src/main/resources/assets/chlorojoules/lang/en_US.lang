@@ -181,6 +181,7 @@ tile.cj_machine_frame_primitive.name=Primitive Machine Frame
 tile.cj_block_jewel_dust.name=Compacted Jewel Dust
 tile.cj_rift.name=Rift
 tile.cj_fox_power_cable.name=Fox Cable
+tile.cj_compacted_fabric.name=Compacted Fabric
 
 # Machines.
 tile.cj_liquefier.name=Liquefier
@@ -259,6 +260,10 @@ item.cj_diamond_dust.name=Diamond Dust
 item.cj_tiny_diamond_dust.name=Tiny Diamond Dust
 item.cj_otherworld_essence.name=Semi-Realized Fabric
 item.cj_record.name=Ethereal Disc
+item.cj_rift_helmet.name=Untethered Crown
+item.cj_rift_chestplate.name=Untethered Cuirass
+item.cj_rift_leggings.name=Untethered Chausses
+item.cj_rift_boots.name=Untethered Sollerets
 
 item.cj_jewel_faux.name=Faux ChloroJewel
 item.cj_jewel_primal.name=Primal ChloroJewel
