@@ -848,9 +848,6 @@ public class CJMod extends Mod {
 			}
 		}
 
-		JsonObject cultivatorTemplate = CJMod.jsonAsset(
-				"/templates/cj_cultivator_seed_recipe.json");
-
 		for(Block block : BLOCKS_LIST) {
 			if(block instanceof BlockLeavesBase) {
 				tagLeaves.addIngredient(block);
@@ -873,6 +870,9 @@ public class CJMod extends Mod {
 				tagGlass.addIngredient(block);
 			}
 		}
+
+		JsonObject cultivatorTemplate = CJMod.jsonAsset(
+				"/templates/cj_cultivator_seed_recipe.json");
 
 		for(Item item : ITEMS_LIST) {
 			if(item instanceof ItemSeeds seeds) {
@@ -912,9 +912,7 @@ public class CJMod extends Mod {
 			else if(item instanceof ItemBlock itemBlock) {
 				Block block = BLOCKS_LIST[itemBlock.blockID];
 
-				if(block instanceof BlockMushroom ||
-						block instanceof BlockFlower) {
-
+				if(block instanceof BlockBasicPlant) {
 					CJMachineRecipe recipe =
 							new CJMachineRecipe(cultivatorTemplate);
 
