@@ -806,13 +806,68 @@ public class CJMod extends Mod {
 		JsonObject pulverizerTemplate =
 				jsonAsset("/templates/cj_pulverizer_dye_recipe.json");
 
+		JsonObject pressTemplate =
+				jsonAsset("/templates/cj_press_compact_recipe.json");
+
 		for(IRecipe recipe : recipes) {
 			if(recipe == null) continue;
 
 			ItemStack output = recipe.getRecipeOutput();
 			if(output == null) continue;
 
-			if(recipe instanceof ShapelessRecipes shapeless &&
+			recipeOutputMap.put(output.getItemID(), recipe);
+
+			if(recipe instanceof ShapedRecipes shaped) {
+				Ingredient[] ingredients = shaped.getIngredients();
+
+				if(!(ingredients[0] instanceof ItemStack ingredient)) continue;
+				if(output.stackSize != 1) continue;
+
+				if(output.getItemID() == COBWEB.getItemID()) {
+					continue;
+				}
+
+				ItemStack first = ingredient;
+				boolean matched = true;
+
+				int count = 1;
+				for(; count < ingredients.length; ++count) {
+					if(!(ingredients[count] instanceof ItemStack)) {
+						matched = false;
+						break;
+					}
+
+					ingredient = (ItemStack) ingredients[count];
+					if(ingredient == null || ingredient.getItemID() == 0) {
+						break;
+					}
+
+					if(ingredient.getItemID() != first.getItemID()) {
+						matched = false;
+						break;
+					}
+				}
+
+				if(matched && (count == 4 || count == 9)) {
+					CJMachineRecipe pressRecipe =
+							new CJMachineRecipe(pressTemplate);
+
+					CJMachineRecipeComponent inputComponent =
+							pressRecipe.getInputByTarget("input");
+
+					ItemStack inputCopy = first.copy();
+					inputCopy.stackSize = count;
+					inputComponent.item = inputCopy;
+
+					CJMachineRecipeComponent outputComponent =
+							pressRecipe.getOutputByTarget("output");
+
+					outputComponent.item = output.copy();
+
+					press.machineBuilder.recipes.add(pressRecipe);
+				}
+			}
+			else if(recipe instanceof ShapelessRecipes shapeless &&
 					shapeless.getIngredients().size() == 1 &&
 					shapeless.getIngredients().getFirst()
 							instanceof ItemStack inputStack &&
@@ -835,8 +890,6 @@ public class CJMod extends Mod {
 
 				pulverizer.machineBuilder.recipes.add(dyeRecipe);
 			}
-
-			recipeOutputMap.put(output.getItemID(), recipe);
 		}
 
 		for(Item item : earlyItemMap.values()) {
@@ -1304,7 +1357,7 @@ public class CJMod extends Mod {
 				toolStation,
 				"&&&",
 				"a|c",
-				"%b%",
+				"&b&",
 				'&', tagRawStone,
 				'a', IRON_AXE,
 				'b', IRON_PICKAXE,

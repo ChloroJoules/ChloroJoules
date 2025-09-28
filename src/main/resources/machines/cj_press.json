@@ -41,24 +41,6 @@
 			]
 		},
 		{
-			"ticks": 100,
-			"fuel": 125,
-			"inputs": [
-				{
-					"target": "input",
-					"item": "iron_ingot",
-					"amount": 4
-				}
-			],
-			"outputs": [
-				{
-					"target": "output",
-					"item": "gear",
-					"amount": 24
-				}
-			]
-		},
-		{
 			"ticks": 105,
 			"fuel": 95,
 			"inputs": [

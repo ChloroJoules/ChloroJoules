@@ -1,16 +1,17 @@
 {
-	"ticks": 80,
-	"fuel": 10,
+	"ticks": 95,
+	"fuel": 30,
 	"inputs": [
 		{
 			"target": "input",
-			"item": "bone"
+			"item": "coal",
+			"amount": 9
 		}
 	],
 	"outputs": [
 		{
 			"target": "output",
-			"item": "dye"
+			"item": "coal_block"
 		}
 	]
 }
