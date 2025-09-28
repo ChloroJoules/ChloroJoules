@@ -158,9 +158,8 @@
 			]
 		},
 		{
-			"ticks": 200,
+			"ticks": 90,
 			"fuel": 15,
-			"passive": true,
 			"inputs": [
 				{
 					"target": "input",

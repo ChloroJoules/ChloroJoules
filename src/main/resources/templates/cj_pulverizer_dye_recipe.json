@@ -1,0 +1,18 @@
+{
+	"ticks": 80,
+	"fuel": 10,
+	"inputs": [
+		{
+			"target": "input",
+			"item": "bone"
+		}
+	],
+	"outputs": [
+		{
+			"target": "output",
+			"item": "dye",
+			"damage": 15,
+			"amount": 5
+		}
+	]
+}

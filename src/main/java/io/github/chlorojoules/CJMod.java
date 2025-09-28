@@ -34,10 +34,7 @@ import net.minecraft.common.block.tileentity.TileEntity;
 import net.minecraft.common.entity.other.EntityItem;
 import net.minecraft.common.item.*;
 import net.minecraft.common.item.block.ItemBlock;
-import net.minecraft.common.item.children.ItemBucket;
-import net.minecraft.common.item.children.ItemGoldenBucket;
-import net.minecraft.common.item.children.ItemRecord;
-import net.minecraft.common.item.children.ItemSeeds;
+import net.minecraft.common.item.children.*;
 import net.minecraft.common.item.data.ArmorMaterial;
 import net.minecraft.common.item.data.EnumTools;
 import net.minecraft.common.recipe.*;
@@ -804,19 +801,50 @@ public class CJMod extends Mod {
 		ArrayList<IRecipe> recipes = (ArrayList<IRecipe>) getField(
 				CraftingManager.getInstance(), "recipes");
 
+		HashMap<Integer, IRecipe> recipeOutputMap = new HashMap<>();
+
+		JsonObject pulverizerTemplate =
+				jsonAsset("/templates/cj_pulverizer_dye_recipe.json");
+
+		for(IRecipe recipe : recipes) {
+			if(recipe == null) continue;
+
+			ItemStack output = recipe.getRecipeOutput();
+			if(output == null) continue;
+
+			if(recipe instanceof ShapelessRecipes shapeless &&
+					shapeless.getIngredients().size() == 1 &&
+					shapeless.getIngredients().getFirst()
+							instanceof ItemStack inputStack &&
+					output.getItem() instanceof ItemDye) {
+
+				CJMachineRecipe dyeRecipe =
+						new CJMachineRecipe(pulverizerTemplate);
+
+				CJMachineRecipeComponent inputComponent =
+						dyeRecipe.getInputByTarget("input");
+
+				inputComponent.item = inputStack.copy();
+
+				CJMachineRecipeComponent outputComponent =
+						dyeRecipe.getOutputByTarget("output");
+
+				ItemStack outputCopy = output.copy();
+				outputCopy.stackSize += 2;
+				outputComponent.item = outputCopy;
+
+				pulverizer.machineBuilder.recipes.add(dyeRecipe);
+			}
+
+			recipeOutputMap.put(output.getItemID(), recipe);
+		}
+
 		for(Item item : earlyItemMap.values()) {
 			if(item == null) continue;
 			if(item.getItemStackLimit() != 64) continue;
 
-			for(IRecipe recipe : recipes) {
-				if(recipe == null) continue;
-
-				ItemStack output = recipe.getRecipeOutput();
-				if(output == null) continue;
-
-				if(output.getItemID() == item.itemID) {
-					otherworldEligibleItems.add(item);
-				}
+			if(recipeOutputMap.getOrDefault(item.itemID, null) != null) {
+				otherworldEligibleItems.add(item);
 			}
 		}
 
@@ -880,6 +908,26 @@ public class CJMod extends Mod {
 				}
 
 				cultivator.machineBuilder.recipes.add(recipe);
+			}
+			else if(item instanceof ItemBlock itemBlock) {
+				Block block = BLOCKS_LIST[itemBlock.blockID];
+
+				if(block instanceof BlockMushroom ||
+						block instanceof BlockFlower) {
+
+					CJMachineRecipe recipe =
+							new CJMachineRecipe(cultivatorTemplate);
+
+					recipe.getInputByTarget("seed").item =
+							new ItemStack(item, 0);
+
+					CJMachineRecipeComponent output =
+							recipe.getOutputByTarget("output");
+
+					output.item = new ItemStack(item);
+
+					cultivator.machineBuilder.recipes.add(recipe);
+				}
 			}
 		}
 
