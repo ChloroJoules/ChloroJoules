@@ -230,7 +230,7 @@ public class CJBlockMachineBase
 		return new CJItemBlockMachineBase(this, !machineBuilder.iconDefault);
 	}
 
-	public void displayGUIMP(
+	public static void displayGUIMP(
 			EntityPlayerMP player, CJTileEntityMachineBase machineEntity) {
 
 		player.getNextWindowId();
@@ -251,13 +251,26 @@ public class CJBlockMachineBase
 				machineEntity.getBuilder().name, player);
 	}
 
-	public void displayGUISP(
+	public static void displayGUISP(
 			EntityPlayerSP player, CJTileEntityMachineBase machineEntity) {
 
 		CJGuiMachineBase gui = new CJGuiMachineBase(
 				player.inventory, machineEntity);
 
 		Minecraft.getInstance().displayGuiScreen(gui);
+	}
+
+	public static void displayGUI(
+			EntityPlayer player, CJTileEntityMachineBase machineEntity) {
+
+		if(!machineEntity.worldObj.isRemote) {
+			if(player instanceof EntityPlayerMP mp) {
+				displayGUIMP(mp, machineEntity);
+			}
+			else if(player instanceof EntityPlayerSP sp) {
+				displayGUISP(sp, machineEntity);
+			}
+		}
 	}
 
 	public boolean blockActivated(
@@ -269,14 +282,7 @@ public class CJBlockMachineBase
 			return true;
 		}
 
-		if(!world.isRemote) {
-			if(player instanceof EntityPlayerMP mp) {
-				displayGUIMP(mp, machineEntity);
-			}
-			else if(player instanceof EntityPlayerSP sp) {
-				displayGUISP(sp, machineEntity);
-			}
-		}
+		displayGUI(player, machineEntity);
 
 		return true;
 	}

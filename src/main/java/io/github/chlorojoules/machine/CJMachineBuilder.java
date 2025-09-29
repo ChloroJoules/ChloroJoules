@@ -7,10 +7,11 @@ import com.google.gson.JsonObject;
 import com.indigo3d.util.RenderSystem;
 import io.github.chlorojoules.*;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
-import io.github.chlorojoules.container.CJContainerMachineBase;
 import io.github.chlorojoules.gui.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiContainer;
 import net.minecraft.client.renderer.world.RenderEngine;
 import net.minecraft.client.renderer.world.RenderHelper;
 import net.minecraft.client.renderer.world.Tessellator;
@@ -23,6 +24,7 @@ import net.minecraft.common.util.JsonUtils;
 import net.minecraft.common.util.i18n.StringTranslate;
 import org.lwjgl.opengl.GL11;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -616,7 +618,7 @@ public class CJMachineBuilder {
 		machineEntity.operationTicks = 0;
 	}
 
-	public void renderIconClipped(
+	public static void renderIconClipped(
 			int x, int y, Icon icon, int width, int height, float z) {
 
 		Tessellator t = Tessellator.instance;
@@ -635,7 +637,100 @@ public class CJMachineBuilder {
 		t.draw();
 	}
 
-	public void drawTankWithVolume(
+	public static boolean guiPointInRect(
+			GuiContainer<?> gui, int xSize, int ySize, int mouseX, int mouseY,
+			int x, int y, int width, int height) {
+
+		int guiWidth = (gui.width - xSize) / 2;
+		int guiHeight = (gui.height - ySize) / 2;
+
+		mouseX -= guiWidth;
+		mouseY -= guiHeight;
+
+		return mouseX >= x
+				&& mouseX < x + width
+				&& mouseY >= y
+				&& mouseY < y + height;
+	}
+
+	public static boolean getIsMouseOverTank(
+			GuiContainer<?> container, int xSize, int ySize, CJTank tank,
+			int x, int y) {
+
+		return guiPointInRect(
+				container, xSize, ySize,
+				x + FLUID_OFFSET_X, y + FLUID_OFFSET_Y,
+				tank.getXPlacement(), tank.getYPlacement(),
+				FLUID_WIDTH - FLUID_OFFSET_X, FLUID_HEIGHT - FLUID_OFFSET_Y);
+	}
+
+	public static void drawTooltipRect(
+			float minX, float minY, float maxX, float maxY) {
+
+		RenderSystem.disableTexture2D();
+		RenderSystem.enableBlend();
+		RenderSystem.disableAlphaTest();
+		RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		RenderSystem.useSmoothShadeModel();
+
+		Tessellator t = Tessellator.instance;
+		Tessellator.instance.startDrawingQuads();
+
+		t.setColorRGBA_F(0.0f, 0.0f, 0.0f, 0xC0 / (float) 0xFF);
+		t.addVertex(maxX, minY, 0.0f);
+		t.addVertex(minX, minY, 0.0f);
+		t.addVertex(minX, maxY, 0.0f);
+		t.addVertex(maxX, maxY, 0.0f);
+		t.draw();
+
+		RenderSystem.useFlatShadeModel();
+		RenderSystem.disableBlend();
+		RenderSystem.enableAlphaTest();
+		RenderSystem.enableTexture2D();
+	}
+
+	public static void drawTooltip(
+			String name, String description, int x, int y, int titleColor) {
+
+		Minecraft mc = Minecraft.getInstance();
+		FontRenderer fontRenderer = mc.fontRenderer;
+
+		int nameWidth = fontRenderer.getStringWidth(name);
+		int boxHeight = TOOLTIP_HEIGHT;
+
+		int descriptionWidth = 0;
+		if(description != null) {
+			descriptionWidth = fontRenderer.getStringWidth(description);
+			boxHeight += TOOLTIP_DESCRIPTION_HEIGHT;
+		}
+
+		int textWidth = Math.max(nameWidth, descriptionWidth);
+
+		int xSlot = x + TOOLTIP_OFFSET_X;
+		int ySlot = y - TOOLTIP_OFFSET_Y;
+
+		RenderSystem.disableRescaleNormal();
+		RenderHelper.disableStandardItemLighting();
+		RenderSystem.disableLighting();
+		RenderSystem.disableDepthTest();
+
+		drawTooltipRect(
+				xSlot - TOOLTIP_BORDER, ySlot - TOOLTIP_BORDER,
+				xSlot + textWidth + TOOLTIP_BORDER, ySlot + boxHeight);
+
+		if(description != null) {
+			fontRenderer.drawStringWithShadow(
+					description, xSlot, ySlot + TOOLTIP_DESCRIPTION_OFFSET,
+					Color.GRAY.getRGB());
+		}
+
+		fontRenderer.drawStringWithShadow(name, xSlot, ySlot, titleColor);
+
+		RenderSystem.enableLighting();
+		RenderSystem.enableDepthTest();
+	}
+
+	public static void drawTankWithVolume(
 			Gui gui, int baseX, int baseY, CJTank tank, CJTankVolume volume,
 			float z) {
 
@@ -694,7 +789,7 @@ public class CJMachineBuilder {
 				(ticks * PROGRESS_WIDTH) / length, PROGRESS_HEIGHT);
 	}
 
-	public void drawSlot(
+	public static void drawSlot(
 			Gui gui, int baseX, int baseY, CJMachineSlotInfo slot) {
 
 		int slotX = baseX + slot.getXPlacement();

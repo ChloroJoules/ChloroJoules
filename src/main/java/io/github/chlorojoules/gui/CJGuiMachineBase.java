@@ -1,7 +1,6 @@
 package io.github.chlorojoules.gui;
 
 import com.indigo3d.util.RenderSystem;
-import io.github.chlorojoules.CJMod;
 import io.github.chlorojoules.CJTank;
 import io.github.chlorojoules.CJTankVolume;
 import io.github.chlorojoules.container.CJContainerMachineBase;
@@ -10,11 +9,8 @@ import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.machine.CJMachineSlotInfo;
 import net.minecraft.client.gui.GuiContainer;
 import net.minecraft.client.renderer.world.RenderHelper;
-import net.minecraft.client.renderer.world.Tessellator;
 import net.minecraft.common.block.Block;
 import net.minecraft.common.block.Blocks;
-import net.minecraft.common.block.icon.Icon;
-import net.minecraft.common.block.texture.Face;
 import net.minecraft.common.entity.player.InventoryPlayer;
 
 import net.minecraft.common.util.i18n.StringTranslate;
@@ -32,7 +28,6 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 	public static final int MACHINE_WARNING = Color.ORANGE.getRGB();
 	public static final int MACHINE_ERROR = Color.RED.getRGB();
 	public static final int MACHINE_INFO = Color.BLUE.getRGB();
-	public static final int TOOLTIP_BACKGROUND = -1073741824;
 
 	private final CJTileEntityMachineBase machineEntity;
 
@@ -44,67 +39,6 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 		super(new CJContainerMachineBase(inventoryPlayer, entity));
 
 		machineEntity = entity;
-	}
-
-	private boolean getIsMouseOverRect(
-			int mouseX, int mouseY, int x, int y, int width, int height) {
-
-		int widthScaled = (this.width - xSize) / 2;
-		int heightScaled = (this.height - ySize) / 2;
-
-		mouseX -= widthScaled;
-		mouseY -= heightScaled;
-
-		return mouseX >= x
-				&& mouseX < x + width
-				&& mouseY >= y
-				&& mouseY < y + height;
-	}
-
-	private boolean getIsMouseOverTank(CJTank tank, int x, int y) {
-		return getIsMouseOverRect(
-				x + FLUID_OFFSET_X, y + FLUID_OFFSET_Y,
-				tank.getXPlacement(), tank.getYPlacement(),
-				FLUID_WIDTH - FLUID_OFFSET_X, FLUID_HEIGHT - FLUID_OFFSET_Y);
-	}
-
-	private void drawTooltip(
-			String name, String description, int x, int y, int titleColor) {
-
-		int nameWidth = fontRenderer.getStringWidth(name);
-		int boxHeight = TOOLTIP_HEIGHT;
-
-		int descriptionWidth = 0;
-		if(description != null) {
-			descriptionWidth = fontRenderer.getStringWidth(description);
-			boxHeight += TOOLTIP_DESCRIPTION_HEIGHT;
-		}
-
-		int textWidth = Math.max(nameWidth, descriptionWidth);
-
-		int xSlot = x + TOOLTIP_OFFSET_X;
-		int ySlot = y - TOOLTIP_OFFSET_Y;
-
-		RenderSystem.disableRescaleNormal();
-		RenderHelper.disableStandardItemLighting();
-		RenderSystem.disableLighting();
-		RenderSystem.disableDepthTest();
-
-		this.drawGradientRect(
-				xSlot - TOOLTIP_BORDER, ySlot - TOOLTIP_BORDER,
-				xSlot + textWidth + TOOLTIP_BORDER, ySlot + boxHeight,
-				TOOLTIP_BACKGROUND, TOOLTIP_BACKGROUND);
-
-		if(description != null) {
-			fontRenderer.drawStringWithShadow(
-					description, xSlot, ySlot + TOOLTIP_DESCRIPTION_OFFSET,
-					Color.GRAY.getRGB());
-		}
-
-		fontRenderer.drawStringWithShadow(name, xSlot, ySlot, titleColor);
-
-		RenderSystem.enableLighting();
-		RenderSystem.enableDepthTest();
 	}
 
 	@Override
@@ -122,7 +56,9 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 			CJTank tank = machine.tanks.get(i);
 			CJTankVolume tankVolume = machineEntity.tanks.get(i);
 
-			if(getIsMouseOverTank(tank, mouseX, mouseY)) {
+			if(CJMachineBuilder.getIsMouseOverTank(
+					this, xSize, ySize, tank, mouseX, mouseY)) {
+
 				String name = translate.translateKey("message.cj_empty_fluid");
 
 				if(tankVolume.fluidID != 0) {
@@ -130,9 +66,8 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 					name = fluid.translateBlockName();
 				}
 
-				drawTooltip(
-						name,
-						tankVolume.current + "/" + tankVolume.max + "mB",
+				CJMachineBuilder.drawTooltip(
+						name, tankVolume.current + "/" + tankVolume.max + "mB",
 						mouseX, mouseY, -1);
 
 				break;
@@ -144,8 +79,8 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 			CJGuiButton button = machineBuilder.buttons.get(i);
 			if(button.checkDamageExclusive(machineEntity)) continue;
 
-			if(getIsMouseOverRect(
-					mouseX, mouseY,
+			if(CJMachineBuilder.guiPointInRect(
+					this, xSize, ySize, mouseX, mouseY,
 					button.getXPlacement(), button.getYPlacement(),
 					BUTTON_WIDTH, BUTTON_HEIGHT)) {
 
@@ -158,11 +93,9 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 									"message.cj_whitelist";
 				}
 
-				drawTooltip(
-						translate.translateKey(tooltip),
-						null,
-						mouseX, mouseY,
-						Color.WHITE.getRGB());
+				CJMachineBuilder.drawTooltip(
+						translate.translateKey(tooltip), null,
+						mouseX, mouseY, Color.WHITE.getRGB());
 
 				if(Mouse.isButtonDown(0)) {
 					if(!wasMousePressed) {
@@ -179,9 +112,8 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 			}
 		}
 
-		if(getIsMouseOverRect(
-				mouseX, mouseY,
-				STATUS_X, STATUS_Y,
+		if(CJMachineBuilder.guiPointInRect(
+				this, xSize, ySize, mouseX, mouseY, STATUS_X, STATUS_Y,
 				STATUS_WIDTH, STATUS_HEIGHT)) {
 
 			String title = "message.cj_stopped";
@@ -205,16 +137,17 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 				color = MACHINE_WARNING;
 			}
 
-			drawTooltip(
+			CJMachineBuilder.drawTooltip(
 					translate.translateKey(title),
 					translate.translateKey(name), mouseX, mouseY,
 					color);
 		}
 
-		if(getIsMouseOverRect(
-				mouseX, mouseY, INFO_X, INFO_Y, STATUS_WIDTH, STATUS_HEIGHT)) {
+		if(CJMachineBuilder.guiPointInRect(
+				this, xSize, ySize, mouseX, mouseY, INFO_X, INFO_Y,
+				STATUS_WIDTH, STATUS_HEIGHT)) {
 
-			drawTooltip(
+			CJMachineBuilder.drawTooltip(
 					translate.translateKey(
 							"message." + machineBuilder.name + ".help"),
 					translate.translateKey(
@@ -255,7 +188,7 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 		for(CJMachineSlotInfo slot : machineBuilder.slots) {
 			if(slot.checkDamageExclusive(machineEntity)) continue;
 
-			machineBuilder.drawSlot(this, baseX, baseY, slot);
+			CJMachineBuilder.drawSlot(this, baseX, baseY, slot);
 		}
 
 		for(int i = 0; i < machineEntity.tanks.size(); i++) {
@@ -263,7 +196,7 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 			if(tank.checkDamageExclusive(machineEntity)) continue;
 
 			CJTankVolume volume = machineEntity.tanks.get(i);
-			machineBuilder.drawTankWithVolume(
+			CJMachineBuilder.drawTankWithVolume(
 					this, baseX, baseY, tank, volume, zLevel);
 		}
 

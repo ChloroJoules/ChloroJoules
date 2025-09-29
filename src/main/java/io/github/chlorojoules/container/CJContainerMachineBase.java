@@ -162,6 +162,5 @@ public class CJContainerMachineBase extends Container {
 				}
 			}
 		}
-
 	}
 }

@@ -17,6 +17,8 @@ import io.github.chlorojoules.block.tileentity.CJTileEntityRendererMachineBase;
 import io.github.chlorojoules.item.*;
 import io.github.chlorojoules.machine.*;
 
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiContainer;
 import net.minecraft.client.gui.creative.CreativeTab;
 import net.minecraft.client.gui.creative.CreativeTabs;
 
@@ -35,7 +37,6 @@ import net.minecraft.common.entity.other.EntityItem;
 import net.minecraft.common.item.*;
 import net.minecraft.common.item.block.ItemBlock;
 import net.minecraft.common.item.children.*;
-import net.minecraft.common.item.data.ArmorMaterial;
 import net.minecraft.common.item.data.EnumTools;
 import net.minecraft.common.recipe.*;
 import net.minecraft.common.stats.Achievement;
@@ -193,6 +194,7 @@ public class CJMod extends Mod {
 	public static Item fluidContainer;
 	public static Item jetpack;
 	public static Item riftIdentifier;
+	public static Item guideBook;
 
 	public static Item riftHelmet;
 	public static Item riftChestplate;
@@ -225,6 +227,32 @@ public class CJMod extends Mod {
 		}
 
 		return types;
+	}
+
+	public static Object getField(Object object, String name) {
+		try {
+			Field f = object.getClass().getDeclaredField(name);
+			f.setAccessible(true);
+			return f.get(object);
+		}
+		catch(Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static Object callMethod(
+			Object object, String name, Object... args) {
+
+		try {
+			Method f = object.getClass().getDeclaredMethod(
+					name, objectArrayToTypes(args));
+
+			f.setAccessible(true);
+			return f.invoke(object, args);
+		}
+		catch(Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public static Block fluidFromName(String name) {
@@ -329,32 +357,6 @@ public class CJMod extends Mod {
 		}
 
 		world.entityJoinedWorld(item);
-	}
-
-	public static Object getField(Object object, String name) {
-		try {
-			Field f = object.getClass().getDeclaredField(name);
-			f.setAccessible(true);
-			return f.get(object);
-		}
-		catch(Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	private static Object callMethod(
-			Object object, String name, Object... args) {
-
-		try {
-			Method f = object.getClass().getDeclaredMethod(
-					name, objectArrayToTypes(args));
-
-			f.setAccessible(true);
-			return f.invoke(object, args);
-		}
-		catch(Exception e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	public CJBlockMachineBase registerMachine(String source) {
@@ -656,6 +658,9 @@ public class CJMod extends Mod {
 		riftIdentifier = registerItem(
 				AWAKENED_COLOR, 1, CJItemRiftIdentifier.class,
 				"cj_rift_identifier");
+
+//		guideBook = registerItem(
+//				MANUFACTURED_COLOR, 1, CJItemGuideBook.class, "cj_guide");
 
 		riftHelmet = registerItem(
 				OTHERWORLD_COLOR, 1, CJItemArmor.class,
