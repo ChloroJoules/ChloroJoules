@@ -12,6 +12,6 @@ public class CJContainerGuide extends Container {
 
 	@Override
 	public boolean isUsableByPlayer(EntityPlayer entityPlayer) {
-		return false;
+		return true;
 	}
 }

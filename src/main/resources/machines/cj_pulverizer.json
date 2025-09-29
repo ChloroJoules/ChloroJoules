@@ -142,23 +142,6 @@
 		},
 		{
 			"ticks": 90,
-			"fuel": 30,
-			"inputs": [
-				{
-					"target": "input",
-					"item": "sugar_cane"
-				}
-			],
-			"outputs": [
-				{
-					"target": "output",
-					"item": "sugar",
-					"amount": 4
-				}
-			]
-		},
-		{
-			"ticks": 90,
 			"fuel": 15,
 			"inputs": [
 				{

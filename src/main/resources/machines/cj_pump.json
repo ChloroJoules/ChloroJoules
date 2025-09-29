@@ -12,7 +12,8 @@
 			"name": "output",
 			"anchor": "center",
 			"x": 35,
-			"output": true
+			"output": true,
+			"volume": 4000
 		}
 	],
 	"progress": {

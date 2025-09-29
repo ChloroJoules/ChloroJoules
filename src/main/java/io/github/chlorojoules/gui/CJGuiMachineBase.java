@@ -183,7 +183,7 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 		int baseX = (width - xSize) / 2;
 		int baseY = (height - ySize) / 2;
 
-		machineBuilder.drawGui(this, baseX, baseY, xSize, ySize);
+		CJMachineBuilder.drawGui(this, baseX, baseY, xSize, ySize);
 
 		for(CJMachineSlotInfo slot : machineBuilder.slots) {
 			if(slot.checkDamageExclusive(machineEntity)) continue;

@@ -6,20 +6,18 @@
 		{
 			"name": "reactant",
 			"anchor": "left",
-			"x": 58,
-			"volume": 4000
+			"x": 58
 		},
 		{
 			"name": "reagent",
 			"anchor": "left",
-			"x": 80,
-			"volume": 4000
+			"x": 80
 		},
 		{
 			"name": "output",
 			"anchor": "center",
 			"x": 45,
-			"volume": 8000,
+			"volume": 2000,
 			"output": true
 		}
 	],

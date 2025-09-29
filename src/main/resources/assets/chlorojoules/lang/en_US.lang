@@ -33,6 +33,7 @@ message.cj_link_coordinate=§7Linked to §LX: %d Y: %d Z: %d
 message.cj_coordinate_unset=§CCoordinates unset
 message.cj_blacklist=Blacklist
 message.cj_whitelist=Whitelist
+message.cj_ticks=Operation Ticks
 
 message.cj_rift1=§DThe walls of reality have been stretched thin
 message.cj_rift2=§DYou feel a §K###§R §D§Lpresence §R§D§K###§R §Dgrow close
@@ -183,6 +184,8 @@ tile.cj_rift.name=Rift
 tile.cj_fox_power_cable.name=Fox Cable
 tile.cj_compacted_fabric.name=Compacted Fabric
 
+tile.cj_guide.name=Guide
+
 # Machines.
 tile.cj_liquefier.name=Liquefier
 tile.cj_cultivator.name=Cultivator
@@ -248,6 +251,7 @@ item.cj_paste.name=Plant Paste
 item.cj_soul_gem.name=Soul Gem
 item.cj_paste_bowl.name=Leafy Salad
 item.cj_dirt_bowl.name=Gritty Salad
+item.cj_wood_bowl.name=Mulchy Salad
 item.cj_iron_rod.name=Iron Rod
 item.cj_moss.name=Moss
 item.cj_blender.name=Rock Grinder

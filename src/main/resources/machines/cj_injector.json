@@ -7,8 +7,7 @@
 		{
 			"name": "inject",
 			"anchor": "left",
-			"x": 58,
-			"volume": 8000
+			"x": 58
 		}
 	],
 	"slots": [

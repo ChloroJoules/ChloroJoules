@@ -33,7 +33,7 @@ import static io.github.chlorojoules.gui.CJGuiGravity.*;
 import static io.github.chlorojoules.gui.CJGuiMachineBaseLayout.*;
 
 public class CJMachineBuilder {
-	public static final int FUEL_TANK_SIZE = 4 * CJTank.BUCKET;
+	public static final int FUEL_TANK_SIZE = 2 * CJTank.BUCKET;
 
 	public String name;
 	public CJRarity rarity;
@@ -229,7 +229,16 @@ public class CJMachineBuilder {
 		throw new RuntimeException("Unknown slot id '" + id + "'");
 	}
 
-	private boolean hasNamedSlot(String id) {
+	public CJMachineSlotInfo getNamedSlot(String id) {
+		for(CJMachineSlotInfo slot : slots) {
+			if(slot.id == null) continue;
+			if(slot.id.equals(id)) return slot;
+		}
+
+		throw new RuntimeException("Unknown slot id '" + id + "'");
+	}
+
+	public boolean hasNamedSlot(String id) {
 		try {
 			getNamedSlotIndex(id);
 			return true;
@@ -269,6 +278,15 @@ public class CJMachineBuilder {
 			CJTank tank = tanks.get(i);
 			if(tank.id == null) continue;
 			if(tank.id.equals(id)) return i;
+		}
+
+		throw new RuntimeException("Unknown tank id '" + id + "'");
+	}
+
+	public CJTank getNamedTank(String id) {
+		for(CJTank tank : tanks) {
+			if(tank.id == null) continue;
+			if(tank.id.equals(id)) return tank;
 		}
 
 		throw new RuntimeException("Unknown tank id '" + id + "'");
@@ -653,6 +671,29 @@ public class CJMachineBuilder {
 				&& mouseY < y + height;
 	}
 
+	public boolean getIsMouseOverProgressBar(
+			GuiContainer<?> container, int xSize, int ySize, int x, int y) {
+
+		if(progressBar == null) return false;
+
+		return guiPointInRect(
+				container, xSize, ySize, x, y,
+				progressBar.getXPlacement(), progressBar.getYPlacement(),
+				PROGRESS_WIDTH, PROGRESS_HEIGHT);
+	}
+
+	public static boolean getIsMouseOverSlot(
+			GuiContainer<?> container, int xSize, int ySize,
+			CJMachineSlotInfo slot, int x, int y) {
+
+		return guiPointInRect(
+				container, xSize, ySize,
+				x + SLOT_IN_OFFSET_X, y + SLOT_IN_OFFSET_Y,
+				slot.getXPlacement(), slot.getYPlacement(),
+				SLOT_IN_WIDTH - SLOT_IN_OFFSET_X,
+				SLOT_IN_HEIGHT - SLOT_IN_OFFSET_Y);
+	}
+
 	public static boolean getIsMouseOverTank(
 			GuiContainer<?> container, int xSize, int ySize, CJTank tank,
 			int x, int y) {
@@ -843,7 +884,9 @@ public class CJMachineBuilder {
 		}
 	}
 
-	public void drawGui(Gui gui, int baseX, int baseY, int xSize, int ySize) {
+	public static void drawGui(
+			Gui gui, int baseX, int baseY, int xSize, int ySize) {
+
 		Minecraft mc = Minecraft.getInstance();
 		RenderEngine renderEngine = mc.renderEngine;
 

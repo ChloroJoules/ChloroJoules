@@ -9,14 +9,17 @@ import com.google.gson.JsonObject;
 
 import com.google.gson.JsonParser;
 import io.github.chlorojoules.block.CJBlockAchievable;
+import io.github.chlorojoules.block.CJBlockGuide;
 import io.github.chlorojoules.block.CJBlockMachineBase;
 import io.github.chlorojoules.block.CJBlockRift;
 import io.github.chlorojoules.block.tileentity.CJTileEntityFoxPowerCable;
+import io.github.chlorojoules.block.tileentity.CJTileEntityGuide;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.block.tileentity.CJTileEntityRendererMachineBase;
 import io.github.chlorojoules.item.*;
 import io.github.chlorojoules.machine.*;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiContainer;
 import net.minecraft.client.gui.creative.CreativeTab;
@@ -134,6 +137,8 @@ public class CJMod extends Mod {
 
 	public static FoxPowerCableBlock foxPowerCable;
 
+	public static Block guide;
+
 	public static CJBlockMachineBase cultivator;
 	public static CJBlockMachineBase liquefier;
 	public static CJBlockMachineBase solidifier;
@@ -160,6 +165,7 @@ public class CJMod extends Mod {
 	public static Item soulGem;
 	public static Item pasteBowl;
 	public static Item dirtBowl;
+	public static Item woodBowl;
 	public static Item otherworld;
 	public static Item otherworldEssence;
 
@@ -194,7 +200,6 @@ public class CJMod extends Mod {
 	public static Item fluidContainer;
 	public static Item jetpack;
 	public static Item riftIdentifier;
-	public static Item guideBook;
 
 	public static Item riftHelmet;
 	public static Item riftChestplate;
@@ -499,6 +504,9 @@ public class CJMod extends Mod {
 		TileEntity.addMapping(
 				CJTileEntityMachineBase.class, "cj_machine_base");
 
+		TileEntity.addMapping(
+				CJTileEntityGuide.class, "cj_guide");
+
 		TileEntityRenderManager.instance.addTileEntityRenderer(
 				CJTileEntityMachineBase.class,
 				new CJTileEntityRendererMachineBase());
@@ -592,6 +600,10 @@ public class CJMod extends Mod {
 				PRIMAL_COLOR, 1, CJItemConvertBowl.class, "cj_dirt_bowl",
 				new ItemStack(stoneDust));
 
+		woodBowl = registerItem(
+				PRIMAL_COLOR, 1, CJItemConvertBowl.class, "cj_wood_bowl",
+				new ItemStack(PAPER));
+
 		otherworld = registerItem("cj_otherworld", OTHERWORLD_COLOR, 1)
 				.setDoNotConsumeOnCrafting(true);
 
@@ -659,9 +671,6 @@ public class CJMod extends Mod {
 				AWAKENED_COLOR, 1, CJItemRiftIdentifier.class,
 				"cj_rift_identifier");
 
-//		guideBook = registerItem(
-//				MANUFACTURED_COLOR, 1, CJItemGuideBook.class, "cj_guide");
-
 		riftHelmet = registerItem(
 				OTHERWORLD_COLOR, 1, CJItemArmor.class,
 				"cj_rift_helmet", 0);
@@ -703,6 +712,10 @@ public class CJMod extends Mod {
 		//foxPowerCable = (FoxPowerCableBlock) registerBlock(
 		//		0.8F, 3.0F, StepSounds.SOUND_STONE, EnumTools.PICKAXE,
 		//		CJBlockFoxPowerCable.class, "cj_fox_power_cable");
+
+		guide = registerBlock(
+				1.5F, 10.0F, StepSounds.SOUND_STONE, EnumTools.PICKAXE,
+				CJBlockGuide.class, "cj_guide");
 
 		cultivator = registerMachine("/machines/cj_cultivator.json");
 		liquefier = registerMachine("/machines/cj_liquefier.json");
@@ -827,6 +840,21 @@ public class CJMod extends Mod {
 
 				if(!(ingredients[0] instanceof ItemStack ingredient)) continue;
 				if(output.stackSize != 1) continue;
+
+				if(ingredient.getItem() instanceof ItemBlock itemBlock) {
+					try {
+						Block block = BLOCKS_LIST[itemBlock.blockID];
+						block.getIcon(0, ingredient.itemDamage);
+					}
+					catch(IndexOutOfBoundsException e) {
+						Logger.getLogger("Chlorojoules").warning(
+								"Skipping malformed compact recipe " +
+								ingredient.getDisplayName() + " -> " +
+								output.getDisplayName());
+
+						continue;
+					}
+				}
 
 				if(output.getItemID() == COBWEB.getItemID()) {
 					continue;
@@ -1143,6 +1171,7 @@ public class CJMod extends Mod {
 		registerShapelessRecipe(MOSSY_COBBLESTONE, COBBLESTONE, moss);
 		registerShapelessRecipe(soulDust2Stack, jewelDust, soulEssence);
 		registerShapelessRecipe(dirtBowl, DIRT, BOWL);
+		registerShapelessRecipe(woodBowl, tagLogs, BOWL);
 		registerShapelessRecipe(COBBLESTONE, DIRT, stoneDust);
 		registerShapelessRecipe(sundial, CLOCK, GLOWSTONE_DUST);
 
@@ -1226,6 +1255,15 @@ public class CJMod extends Mod {
 				'#', ASH,
 				'~', paste,
 				'@', IRON_INGOT);
+
+		registerRecipe(
+				guide,
+				"&~&",
+				"&@&",
+				"&&&",
+				'&', tagRawStone,
+				'@', BOOK,
+				'~', paste);
 
 		registerRecipe(
 				cultivator,
@@ -1469,14 +1507,30 @@ public class CJMod extends Mod {
 		CJBlockMachineBase furnaceMachine = machines.get("cj_furnace");
 		CJMachineBuilder furnaceMachineBuilder = furnaceMachine.machineBuilder;
 
-		JsonObject template = jsonAsset("/templates/cj_furnace_recipe.json");
+		JsonObject furnaceTemplate =
+				jsonAsset("/templates/cj_furnace_recipe.json");
+
 		for(Map.Entry<Integer, ItemStack> entry : furnaceEntries) {
-			CJMachineRecipe recipe = new CJMachineRecipe(template);
+			CJMachineRecipe recipe = new CJMachineRecipe(furnaceTemplate);
 
-			recipe.getInputByTarget("input").item =
-					new ItemStack(entry.getKey(), 1);
+			int ingredientId = entry.getKey();
+			ItemStack inStack = new ItemStack(ingredientId, 1);
+			ItemStack outStack = entry.getValue().copy();
 
-			recipe.getOutputByTarget("output").item = entry.getValue().copy();
+			try {
+				inStack.getDisplayName();
+				outStack.getDisplayName();
+			}
+			catch(IndexOutOfBoundsException e) {
+				Logger.getLogger("Chlorojoules").warning(
+						"Skipping malformed furnace recipe " + ingredientId +
+						" -> " + outStack.getItemID());
+
+				continue;
+			}
+
+			recipe.getInputByTarget("input").item = inStack;
+			recipe.getOutputByTarget("output").item = outStack;
 
 			furnaceMachineBuilder.recipes.add(recipe);
 		}

@@ -7,7 +7,7 @@ import net.minecraft.common.util.JsonUtils;
 
 // This is to a fluid as an `ItemStack` is to an item.
 public class CJTankVolume {
-	public static final int DEFAULT_MAX = CJTank.BUCKET * 8;
+	public static final int DEFAULT_MAX = CJTank.BUCKET;
 
 	// Maximum fluid volume.
 	public int max = DEFAULT_MAX;
