@@ -4,6 +4,7 @@
 	"package": "io.github.chlorojoules.mixins",
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
-		"MixinStatsIO"
+		"MixinStatsIO",
+		"MixinRenderBiped"
 	]
 }

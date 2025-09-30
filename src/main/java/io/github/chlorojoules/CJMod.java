@@ -40,6 +40,7 @@ import net.minecraft.common.entity.other.EntityItem;
 import net.minecraft.common.item.*;
 import net.minecraft.common.item.block.ItemBlock;
 import net.minecraft.common.item.children.*;
+import net.minecraft.common.item.data.ArmorMaterial;
 import net.minecraft.common.item.data.EnumTools;
 import net.minecraft.common.recipe.*;
 import net.minecraft.common.stats.Achievement;
@@ -215,6 +216,9 @@ public class CJMod extends Mod {
 	public static int lavaFluid;
 
 	public static CreativeTab creativeTab = CreativeTabs.MECHANICAL_BLOCKS;
+
+	public static ArmorMaterial armorMaterial = new ArmorMaterial(
+			6, new int[] { 99999, 99999, 99999, 99999 });
 
 	public static Class<?>[] objectArrayToTypes(Object[] objects) {
 		Class<?>[] types = new Class<?>[objects.length];
