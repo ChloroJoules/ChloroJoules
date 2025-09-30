@@ -744,9 +744,7 @@ public class CJMod extends Mod {
 		centrifuge = registerMachine("/machines/cj_centrifuge.json");
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public void onPostInit() {
+	public static void installAchievements() {
 		JsonElement achievementRoot = JsonParser.parseString(textAsset(
 				"/achievements/cj_achievements.json"));
 
@@ -815,7 +813,11 @@ public class CJMod extends Mod {
 				}
 			}
 		}
+	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public void onPostInit() {
 		ArrayList<IRecipe> recipes = (ArrayList<IRecipe>) getField(
 				CraftingManager.getInstance(), "recipes");
 
