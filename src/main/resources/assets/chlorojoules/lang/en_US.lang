@@ -6,7 +6,7 @@ tile.flowing_acid.name=Acid
 
 # Machine messages.
 message.cj_no_power=Not enough CJ
-message.cj_no_jewel=No jewel inserted
+message.cj_no_jewel=§CNo jewel inserted
 message.cj_no_fragment=No §9t§Dr§Fa§Dn§9s§Rdimensional material detected
 message.cj_bad_jewel=Bad jewel inserted
 message.cj_full_tool=Tool already has jewel

@@ -1304,11 +1304,12 @@ public class CJMod extends Mod {
 
 		registerRecipe(
 				injector,
-				"&@&",
+				"~@~",
 				"&|&",
 				"&%&",
-				'&', COBBLESTONE,
-				'@', tagEmptyBucket,
+				'&', tagRawStone,
+				'@', BOTTLE,
+				'~', IRON_INGOT,
 				'%', tagChest,
 				'|', machineFrame);
 

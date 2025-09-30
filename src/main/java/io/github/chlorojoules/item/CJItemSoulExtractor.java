@@ -32,7 +32,7 @@ public class CJItemSoulExtractor extends CJItemAchievable implements CJIItemSock
 					"message.cj_no_jewel" :
 					"message.cj_poor_jewel";
 
-			player.addChatMessage(ChatColors.RED + string);
+			player.addChatMessage(string);
 
 			return false;
 		}
