@@ -59,6 +59,60 @@
 					"amount": 1
 				}
 			]
+		},
+		{
+			"ticks": 50,
+			"fuel": 15,
+			"inputs": [
+				{
+					"target": "input",
+					"fluid": "lava",
+					"amount": 100
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "magma",
+					"amount": 1
+				}
+			]
+		},
+		{
+			"ticks": 50,
+			"fuel": 15,
+			"inputs": [
+				{
+					"target": "input",
+					"fluid": "sanguis",
+					"amount": 100
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "blood_magma",
+					"amount": 1
+				}
+			]
+		},
+		{
+			"ticks": 50,
+			"fuel": 15,
+			"inputs": [
+				{
+					"target": "input",
+					"fluid": "acid",
+					"amount": 100
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "sulphurous_magma",
+					"amount": 1
+				}
+			]
 		}
 	]
 }

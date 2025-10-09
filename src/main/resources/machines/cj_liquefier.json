@@ -39,6 +39,74 @@
 					"amount": 50
 				}
 			]
+		},
+		{
+			"ticks": 50,
+			"fuel": 35,
+			"inputs": [
+				{
+					"target": "input",
+					"item": "magma"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"fluid": "lava",
+					"amount": 100
+				}
+			]
+		},
+		{
+			"ticks": 100,
+			"fuel": 75,
+			"inputs": [
+				{
+					"target": "input",
+					"item": "#cj_raw_stone"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"fluid": "lava",
+					"amount": 50
+				}
+			]
+		},
+		{
+			"ticks": 50,
+			"fuel": 35,
+			"inputs": [
+				{
+					"target": "input",
+					"item": "blood_magma"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"fluid": "sanguis",
+					"amount": 100
+				}
+			]
+		},
+		{
+			"ticks": 50,
+			"fuel": 35,
+			"inputs": [
+				{
+					"target": "input",
+					"item": "sulphurous_magma"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"fluid": "acid",
+					"amount": 100
+				}
+			]
 		}
 	]
 }
