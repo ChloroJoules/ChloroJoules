@@ -6,7 +6,6 @@ import net.minecraft.common.block.Blocks;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.item.Items;
 import net.minecraft.common.item.block.ItemBlock;
-import net.minecraft.common.item.children.ItemCharge;
 import net.minecraft.common.world.World;
 
 @SuppressWarnings("unused")

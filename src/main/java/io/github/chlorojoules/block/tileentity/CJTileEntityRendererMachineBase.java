@@ -2,7 +2,9 @@ package io.github.chlorojoules.block.tileentity;
 
 import net.minecraft.client.renderer.block.tileentity.TileEntityRenderer;
 
-public class CJTileEntityRendererMachineBase extends TileEntityRenderer<CJTileEntityMachineBase> {
+public class CJTileEntityRendererMachineBase extends
+		TileEntityRenderer<CJTileEntityMachineBase> {
+
 	@Override
 	public void renderTileEntityAt(
 			CJTileEntityMachineBase machineEntity,

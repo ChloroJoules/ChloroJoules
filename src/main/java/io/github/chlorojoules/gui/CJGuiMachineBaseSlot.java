@@ -30,10 +30,6 @@ public class CJGuiMachineBaseSlot extends Slot {
 	public void onPickupFromSlot(EntityPlayer player, ItemStack item) {
 		item.onCrafting(player.worldObj, player);
 
-//		if(item.getItemID() == Items.IRON_INGOT.itemID) {
-//			player.addStat(Achievements.ACQUIRE_HARDWARE, 1);
-//		}
-
 		super.onPickupFromSlot(player, item);
 	}
 }

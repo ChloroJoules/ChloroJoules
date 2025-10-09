@@ -8,7 +8,6 @@ public enum CJGuiButtonLabelKind {
 
 	public static CJGuiButtonLabelKind fromString(String id) {
 		return switch(id.toLowerCase()) {
-			//case "default" -> DEFAULT;
 			//case "item" -> ITEM;
 			case "filter" -> FILTER;
 
@@ -28,6 +27,7 @@ public enum CJGuiButtonLabelKind {
 	public int getX(boolean state) {
 		return switch(this) {
 			case FILTER -> state ? BUTTON_BLACKLIST_X : BUTTON_WHITELIST_X;
+
 			default -> state ? BUTTON_INACTIVE_X : BUTTON_ACTIVE_X;
 		};
 	}
@@ -35,6 +35,7 @@ public enum CJGuiButtonLabelKind {
 	public int getY(boolean state) {
 		return switch(this) {
 			case FILTER -> state ? BUTTON_BLACKLIST_Y : BUTTON_WHITELIST_Y;
+
 			default -> state ? BUTTON_INACTIVE_Y : BUTTON_ACTIVE_Y;
 		};
 	}

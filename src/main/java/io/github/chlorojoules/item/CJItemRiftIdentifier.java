@@ -8,7 +8,9 @@ import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.util.i18n.StringTranslate;
 import net.minecraft.common.world.World;
 
-public class CJItemRiftIdentifier extends CJItemAchievable implements CJIItemSocket {
+public class CJItemRiftIdentifier extends CJItemAchievable implements
+		CJIItemSocket {
+
 	private static final int RIFT_MIN = 128;
 	private static final int RIFT_JITTER = 25;
 	private static final int RIFT_RANGE = 8;

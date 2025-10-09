@@ -5,13 +5,14 @@ import io.github.chlorojoules.CJRarity;
 import io.github.chlorojoules.CJRarityInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.common.block.Blocks;
-import net.minecraft.common.util.ChatColors;
 import net.minecraft.common.entity.player.EntityPlayer;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.world.World;
 
 // TODO: Add damage so texture can appear greyed when no jewel is inserted.
-public class CJItemSoulExtractor extends CJItemAchievable implements CJIItemSocket {
+public class CJItemSoulExtractor extends CJItemAchievable implements
+		CJIItemSocket {
+
 	public CJItemSoulExtractor(String id) {
 		super(id);
 

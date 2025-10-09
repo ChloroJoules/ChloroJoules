@@ -5,7 +5,6 @@ import io.github.chlorojoules.CJRarity;
 import io.github.chlorojoules.CJRarityInfo;
 import net.minecraft.common.entity.EntityLiving;
 import net.minecraft.common.entity.data.DamageTypes;
-import net.minecraft.common.entity.other.EntityItem;
 import net.minecraft.common.entity.player.EntityPlayer;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.item.children.ItemTool;

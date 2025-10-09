@@ -6,7 +6,7 @@ import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import org.jetbrains.annotations.NotNull;
 
 public class CJMachineFoxPowerInterface extends FoxPowerInterfaceSimple {
-	private CJTileEntityMachineBase machineEntity;
+	private final CJTileEntityMachineBase machineEntity;
 
 	public CJMachineFoxPowerInterface(CJTileEntityMachineBase machineEntity) {
 		this.machineEntity = machineEntity;

@@ -54,7 +54,9 @@ public class CJMachineTransferor implements CJIMachine {
 		ItemStack stack = machineEntity.getStackInSlot(0);
 		int currentItemID = -1;
 
-		if(++machineEntity.next >= machineEntity.linked.size()) machineEntity.next = 0;
+		if(++machineEntity.next >= machineEntity.linked.size()) {
+			machineEntity.next = 0;
+		}
 
 		if(stack != null) {
 			if(stack.stackSize >= stack.getMaxStackSize()) return;

@@ -8,7 +8,6 @@ import io.github.chlorojoules.CJTankVolume;
 import io.github.chlorojoules.block.CJBlockMachineBase;
 import io.github.chlorojoules.container.CJContainerGuide;
 import io.github.chlorojoules.machine.*;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiContainer;
 import net.minecraft.client.renderer.world.RenderHelper;
 import net.minecraft.common.block.Block;
@@ -341,8 +340,6 @@ public class CJGuiGuide extends GuiContainer<CJContainerGuide> {
 	private void drawMachineRecipeComponent(
 			CJMachineBuilder machineBuilder,
 			CJMachineRecipeComponent recipeComponent, int baseX, int baseY) {
-
-		Minecraft mc = Minecraft.getInstance();
 
 		switch(recipeComponent.target) {
 			case SLOT: {

@@ -1,6 +1,5 @@
 package io.github.chlorojoules;
 
-import com.fox2code.foxloader.energy.FoxPowerCableBlock;
 import com.fox2code.foxloader.loader.Mod;
 import com.fox2code.foxloader.registry.GameRegistry;
 
@@ -8,20 +7,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import com.google.gson.JsonParser;
-import io.github.chlorojoules.block.CJBlockAchievable;
-import io.github.chlorojoules.block.CJBlockGuide;
-import io.github.chlorojoules.block.CJBlockMachineBase;
-import io.github.chlorojoules.block.CJBlockRift;
-import io.github.chlorojoules.block.tileentity.CJTileEntityFoxPowerCable;
+import io.github.chlorojoules.block.*;
 import io.github.chlorojoules.block.tileentity.CJTileEntityGuide;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.block.tileentity.CJTileEntityRendererMachineBase;
 import io.github.chlorojoules.item.*;
 import io.github.chlorojoules.machine.*;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiContainer;
 import net.minecraft.client.gui.creative.CreativeTab;
 import net.minecraft.client.gui.creative.CreativeTabs;
 
@@ -135,8 +127,6 @@ public class CJMod extends Mod {
 	public static Block compactedJewelDust;
 	public static Block rift;
 	public static Block compactedFabric;
-
-	public static FoxPowerCableBlock foxPowerCable;
 
 	public static Block guide;
 
@@ -296,14 +286,14 @@ public class CJMod extends Mod {
 	public static ItemStack itemStackFromName(String name) {
 		Item item = GameRegistry.getRegisteredItem(name);
 		if(item == null) {
-			name = name.replace("tile.", "");
 			Block block = GameRegistry.getRegisteredBlock(name);
 			if(block == null) {
-				name = name.replace("item.", "");
-				return new ItemStack(earlyItemMap.get("item." + name));
+				item = earlyItemMap.get("item." + name);
 			}
 			else return new ItemStack(block);
 		}
+
+		if(item == null) return null;
 
 		return new ItemStack(item);
 	}
@@ -513,9 +503,6 @@ public class CJMod extends Mod {
 		}
 
 		TileEntity.addMapping(
-				CJTileEntityFoxPowerCable.class, "cj_fox_power_cable");
-
-		TileEntity.addMapping(
 				CJTileEntityMachineBase.class, "cj_machine_base");
 
 		TileEntity.addMapping(
@@ -723,10 +710,6 @@ public class CJMod extends Mod {
 				"cj_compacted_fabric", Materials.CLOTH, 1.5F, 0.0F,
 				StepSounds.SOUND_CLOTH, EnumTools.HOE);
 
-		//foxPowerCable = (FoxPowerCableBlock) registerBlock(
-		//		0.8F, 3.0F, StepSounds.SOUND_STONE, EnumTools.PICKAXE,
-		//		CJBlockFoxPowerCable.class, "cj_fox_power_cable");
-
 		guide = registerBlock(
 				1.5F, 10.0F, StepSounds.SOUND_STONE, EnumTools.PICKAXE,
 				CJBlockGuide.class, "cj_guide");
@@ -798,35 +781,47 @@ public class CJMod extends Mod {
 			if(JsonUtils.hasField(object, "trigger")) {
 				String trigger = JsonUtils.getString(object, "trigger");
 
-				Item item = GameRegistry.getRegisteredItem(trigger);
-				if(item == null || item instanceof ItemBlock) {
-					Block block = GameRegistry.getRegisteredBlock(trigger);
-
-					if(block instanceof CJBlockAchievable blockAchievable) {
-						blockAchievable.setAchievement(achievement);
-					}
-					else if(block instanceof CJBlockMachineBase blockMachine) {
-						blockMachine.setAchievement(achievement);
-					}
-					else {
-						throw new RuntimeException(
-								"Unknown trigger block '" + trigger + "'");
-					}
-				}
-				else if(item instanceof CJItemAchievable itemAchievable) {
-					itemAchievable.setAchievement(achievement);
-				}
-				else if(item instanceof CJItemBucket itemBucket) {
-					itemBucket.setAchievement(achievement);
-				}
-				else if(item instanceof CJItemToolSoulSword swordAchievable) {
-					swordAchievable.setAchievement(achievement);
-				}
-				else {
-					throw new RuntimeException(
-							"Unknown trigger item '" + trigger + "'");
-				}
+				addAchievementTrigger(trigger, achievement);
 			}
+		}
+	}
+
+	private static void addAchievementBlockTrigger(
+			Block trigger, Achievement achievement) {
+
+		switch(trigger) {
+			case CJBlockAchievable block -> block.setAchievement(achievement);
+			case CJBlockMachineBase block -> block.setAchievement(achievement);
+
+			default -> throw new RuntimeException(
+					"Unknown trigger block '" + trigger + "'");
+		}
+	}
+
+	private static void addAchievementTrigger(
+			String trigger, Achievement achievement) {
+
+		Item triggerItem = GameRegistry.getRegisteredItem(trigger);
+
+		switch(triggerItem) {
+			case null -> {
+				Block block = GameRegistry.getRegisteredBlock(trigger);
+
+				addAchievementBlockTrigger(block, achievement);
+			}
+
+			case ItemBlock ignored -> {
+				Block block = GameRegistry.getRegisteredBlock(trigger);
+
+				addAchievementBlockTrigger(block, achievement);
+			}
+
+			case CJItemAchievable item -> item.setAchievement(achievement);
+			case CJItemBucket item -> item.setAchievement(achievement);
+			case CJItemToolSoulSword item -> item.setAchievement(achievement);
+
+			default -> throw new RuntimeException(
+					"Unknown trigger item '" + trigger + "'");
 		}
 	}
 
