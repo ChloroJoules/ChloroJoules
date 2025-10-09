@@ -1,0 +1,36 @@
+{
+	"cj_raw_stone": [
+		"stone",
+		"cobblestone",
+		"mossy_cobblestone",
+		"limestone",
+		"cloudstone",
+		"brimstone",
+		"ridrock",
+		"slate",
+		"slag"
+	],
+	"cj_empty_bucket": [
+		"bucket",
+		"golden_bucket"
+	],
+	"cj_chest": [
+		"chest",
+		"colored_chest"
+	],
+	"cj_iron_ore": [
+		"iron_ore",
+		"nether_iron_ore"
+	],
+	"cj_gold_ore": [
+		"gold_ore",
+		"nether_gold_ore"
+	],
+	"cj_jewel": [
+		"chlorojoules:cj_jewel_faux",
+		"chlorojoules:cj_jewel_primal",
+		"chlorojoules:cj_jewel_manufactured",
+		"chlorojoules:cj_jewel_refined",
+		"chlorojoules:cj_jewel_awakened"
+	]
+}

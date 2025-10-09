@@ -298,33 +298,39 @@ public class CJMod extends Mod {
 		return new ItemStack(item);
 	}
 
-	public static Ingredient ingredientFromJson(JsonObject jsonObject) {
-		ItemStack result;
-
-		if(JsonUtils.isNumber(jsonObject.get("item"))) {
-			result = new ItemStack(JsonUtils.getInt(jsonObject, "item"), 1);
+	public static Ingredient ingredientFromName(JsonElement jsonElement) {
+		if(JsonUtils.isNumber(jsonElement)) {
+			return new ItemStack(jsonElement.getAsInt(), 1);
 		}
 		else {
-			String key = JsonUtils.getString(jsonObject, "item");
+			String key = jsonElement.getAsString();
 
 			if(key.startsWith("#")) {
 				String tag = key.substring(1);
 				return TaggedIngredients.get(tag);
 			}
 
-			result = itemStackFromName(key);
+			ItemStack result = itemStackFromName(key);
 			if(result == null) {
 				throw new RuntimeException(
 						"Failed to find ingredient with name '" + key + "'");
 			}
-		}
 
-		if(jsonObject.has("amount")) {
-			result.stackSize = JsonUtils.getInt(jsonObject, "amount");
+			return result;
 		}
+	}
 
-		if(jsonObject.has("damage")) {
-			result.setItemDamage(JsonUtils.getInt(jsonObject, "damage"));
+	public static Ingredient ingredientFromJson(JsonObject jsonObject) {
+		Ingredient result = ingredientFromName(jsonObject.get("item"));
+
+		if(result instanceof ItemStack stack) {
+			if(jsonObject.has("amount")) {
+				stack.stackSize = JsonUtils.getInt(jsonObject, "amount");
+			}
+
+			if(jsonObject.has("damage")) {
+				stack.setItemDamage(JsonUtils.getInt(jsonObject, "damage"));
+			}
 		}
 
 		return result;
@@ -828,6 +834,17 @@ public class CJMod extends Mod {
 	@Override
 	@SuppressWarnings("unchecked")
 	public void onPostInit() {
+		JsonObject tags = jsonAsset("/tags/cj_tags.json");
+
+		for(Map.Entry<String, JsonElement> entry : tags.entrySet()) {
+			TaggedIngredient ingredient =
+					TaggedIngredients.get(entry.getKey());
+
+			for(JsonElement item : entry.getValue().getAsJsonArray()) {
+				ingredient.addIngredient(ingredientFromName(item));
+			}
+		}
+
 		ArrayList<IRecipe> recipes = (ArrayList<IRecipe>) getField(
 				CraftingManager.getInstance(), "recipes");
 
@@ -1026,34 +1043,6 @@ public class CJMod extends Mod {
 				}
 			}
 		}
-
-		tagIronOre.addIngredient(IRON_ORE);
-		tagIronOre.addIngredient(NETHER_IRON_ORE);
-
-		tagGoldOre.addIngredient(GOLD_ORE);
-		tagGoldOre.addIngredient(NETHER_GOLD_ORE);
-
-		tagJewel.addIngredient(fauxJewel);
-		tagJewel.addIngredient(primalJewel);
-		tagJewel.addIngredient(manufacturedJewel);
-		tagJewel.addIngredient(refinedJewel);
-		tagJewel.addIngredient(awakenedJewel);
-
-		tagEmptyBucket.addIngredient(EMPTY_BUCKET);
-		tagEmptyBucket.addIngredient(GOLDEN_EMPTY_BUCKET);
-
-		tagChest.addIngredient(CHEST);
-		tagChest.addIngredient(COLORED_CHEST);
-
-		tagRawStone.addIngredient(STONE);
-		tagRawStone.addIngredient(COBBLESTONE);
-		tagRawStone.addIngredient(MOSSY_COBBLESTONE);
-		tagRawStone.addIngredient(LIMESTONE);
-		tagRawStone.addIngredient(CLOUDSTONE);
-		tagRawStone.addIngredient(BRIMSTONE);
-		tagRawStone.addIngredient(RIDROCK);
-		tagRawStone.addIngredient(SLATE);
-		tagRawStone.addIngredient(SLAG);
 
 		registerFurnaceRecipe(diamondDust, DIAMOND);
 		registerFurnaceRecipe(goldDust, GOLD_INGOT);
