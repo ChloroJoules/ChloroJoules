@@ -8,19 +8,22 @@ import io.github.chlorojoules.CJTankVolume;
 import io.github.chlorojoules.block.CJBlockMachineBase;
 import io.github.chlorojoules.container.CJContainerGuide;
 import io.github.chlorojoules.machine.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiContainer;
 import net.minecraft.client.renderer.world.RenderHelper;
 import net.minecraft.common.block.Block;
 import net.minecraft.common.block.Blocks;
 import net.minecraft.common.item.ItemStack;
+import net.minecraft.common.recipe.Ingredient;
+import net.minecraft.common.recipe.TaggedIngredient;
 import net.minecraft.common.util.i18n.StringTranslate;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
-import java.security.Key;
 import java.util.ArrayList;
+import java.util.List;
 
 import static io.github.chlorojoules.gui.CJGuiMachineBaseLayout.*;
 import static io.github.chlorojoules.gui.CJGuiMachineBaseLayout.BUTTON_LABEL_INSET;
@@ -87,18 +90,38 @@ public class CJGuiGuide extends GuiContainer<CJContainerGuide> {
 				CJGuiMachineBase.MACHINE_TEXT);
 	}
 
+	private ItemStack getTaggedDisplayStack(TaggedIngredient ingredient) {
+		List<Ingredient> ingredients = ingredient.getIngredients();
+		int select = (mc.ticksRan / 20) % ingredients.size();
+		Ingredient displayIngredient = ingredients.get(select);
+
+		return (ItemStack) displayIngredient;
+	}
+
 	private void drawMachineRecipeComponentTooltip(
 			CJMachineBuilder machineBuilder,
 			CJMachineRecipeComponent recipeComponent, int mouseX, int mouseY) {
 
 		switch(recipeComponent.target) {
 			case SLOT: {
-				if(!(recipeComponent.item instanceof ItemStack stack)) return;
-
 				if(CJMachineBuilder.getIsMouseOverSlot(
 						this, xSize, ySize,
 						machineBuilder.getNamedSlot(recipeComponent.targetID),
 						mouseX, mouseY)) {
+
+					ItemStack stack;
+
+					if(recipeComponent.item instanceof
+							TaggedIngredient ingredient) {
+
+						stack = getTaggedDisplayStack(ingredient);
+					}
+					else if(recipeComponent.item instanceof
+							ItemStack componentStack) {
+
+						stack = componentStack;
+					}
+					else return;
 
 					RenderSystem.disableLighting();
 					RenderSystem.disableDepthTest();
@@ -108,7 +131,6 @@ public class CJGuiGuide extends GuiContainer<CJContainerGuide> {
 					RenderSystem.enableLighting();
 					RenderSystem.enableDepthTest();
 				}
-
 				break;
 			}
 
@@ -300,6 +322,8 @@ public class CJGuiGuide extends GuiContainer<CJContainerGuide> {
 		RenderHelper.enableStandardItemLighting();
 		RenderSystem.disableLighting();
 
+		if(stack.itemDamage < 0) stack.itemDamage = 0;
+
 		itemRenderer.renderItemIntoGUI(
 				fontRenderer, mc.renderEngine, stack, slotX, slotY);
 
@@ -318,9 +342,23 @@ public class CJGuiGuide extends GuiContainer<CJContainerGuide> {
 			CJMachineBuilder machineBuilder,
 			CJMachineRecipeComponent recipeComponent, int baseX, int baseY) {
 
+		Minecraft mc = Minecraft.getInstance();
+
 		switch(recipeComponent.target) {
 			case SLOT: {
-				if(!(recipeComponent.item instanceof ItemStack stack)) return;
+				ItemStack stack;
+
+				if(recipeComponent.item instanceof
+						TaggedIngredient ingredient) {
+
+					stack = getTaggedDisplayStack(ingredient);
+				}
+				else if(recipeComponent.item instanceof
+						ItemStack componentStack) {
+
+					stack = componentStack;
+				}
+				else return;
 
 				drawItemInSlot(
 						machineBuilder, recipeComponent.targetID, stack,
