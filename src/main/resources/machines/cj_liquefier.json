@@ -97,6 +97,40 @@
 			"inputs": [
 				{
 					"target": "input",
+					"item": "coagulated_sanguis"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"fluid": "sanguis",
+					"amount": 100
+				}
+			]
+		},
+		{
+			"ticks": 50,
+			"fuel": 35,
+			"inputs": [
+				{
+					"target": "input",
+					"item": 1183
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"fluid": "acid",
+					"amount": 100
+				}
+			]
+		},
+		{
+			"ticks": 50,
+			"fuel": 35,
+			"inputs": [
+				{
+					"target": "input",
 					"item": "sulphurous_magma"
 				}
 			],

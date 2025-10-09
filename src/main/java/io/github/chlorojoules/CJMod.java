@@ -296,8 +296,10 @@ public class CJMod extends Mod {
 	public static ItemStack itemStackFromName(String name) {
 		Item item = GameRegistry.getRegisteredItem(name);
 		if(item == null) {
+			name = name.replace("tile.", "");
 			Block block = GameRegistry.getRegisteredBlock(name);
 			if(block == null) {
+				name = name.replace("item.", "");
 				return new ItemStack(earlyItemMap.get("item." + name));
 			}
 			else return new ItemStack(block);
@@ -307,17 +309,24 @@ public class CJMod extends Mod {
 	}
 
 	public static Ingredient ingredientFromJson(JsonObject jsonObject) {
-		String key = JsonUtils.getString(jsonObject, "item");
+		ItemStack result;
 
-		if(key.startsWith("#")) {
-			String tag = key.substring(1);
-			return TaggedIngredients.get(tag);
+		if(JsonUtils.isNumber(jsonObject.get("item"))) {
+			result = new ItemStack(JsonUtils.getInt(jsonObject, "item"), 1);
 		}
+		else {
+			String key = JsonUtils.getString(jsonObject, "item");
 
-		ItemStack result = itemStackFromName(key);
-		if(result == null) {
-			throw new RuntimeException(
-					"Failed to find ingredient with name '" + key + "'");
+			if(key.startsWith("#")) {
+				String tag = key.substring(1);
+				return TaggedIngredients.get(tag);
+			}
+
+			result = itemStackFromName(key);
+			if(result == null) {
+				throw new RuntimeException(
+						"Failed to find ingredient with name '" + key + "'");
+			}
 		}
 
 		if(jsonObject.has("amount")) {
@@ -1312,6 +1321,18 @@ public class CJMod extends Mod {
 				'&', tagRawStone,
 				'@', BOTTLE,
 				'~', IRON_INGOT,
+				'%', tagChest,
+				'|', machineFrame);
+
+		registerRecipe(
+				blockUser,
+				"&@&",
+				"~|#",
+				"&%&",
+				'&', tagRawStone,
+				'@', DIAMOND_PICKAXE,
+				'~', IRON_SHOVEL,
+				'#', IRON_AXE,
 				'%', tagChest,
 				'|', machineFrame);
 

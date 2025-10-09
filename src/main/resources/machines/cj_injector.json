@@ -243,6 +243,28 @@
 					"item": "soul_sand"
 				}
 			]
+		},
+		{
+			"ticks": 25,
+			"fuel": 10,
+			"inputs": [
+				{
+					"target": "inject",
+					"fluid": "lava",
+					"amount": 10
+				},
+				{
+					"target": "input",
+					"item": "coal"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "fire_charge",
+					"amount": 2
+				}
+			]
 		}
 	]
 }

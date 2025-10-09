@@ -191,6 +191,8 @@ public class CJMachineTransferor implements CJIMachine {
 					continue;
 				}
 
+				// TODO: Generalize this for locked volumes being prioritised
+				//		 For fluid inputs.
 				if(!adjacentTank.id.equals("fuel") &&
 						adjacentMachineBuilder.hasNamedTank("fuel") &&
 						volume.fluidID == CJMod.fuelFluid) {
@@ -199,6 +201,8 @@ public class CJMachineTransferor implements CJIMachine {
 				}
 
 				if(adjacentVolume.transferFrom(volume, FLOW_RATE)) return;
+				// Don't try to fill multiple tanks with the same fluid.
+				if(adjacentVolume.fluidID == volume.fluidID) return;
 			}
 		}
 	}
