@@ -87,10 +87,8 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 				String tooltip = button.tooltip;
 				boolean state = machineEntity.buttonStates.get(i);
 
-				if(button.filter) {
-					tooltip =
-							state ? "message.cj_blacklist" :
-									"message.cj_whitelist";
+				if(button.labelKind != CJGuiButtonLabelKind.ITEM) {
+					tooltip = button.labelKind.getTooltip(state);
 				}
 
 				CJMachineBuilder.drawTooltip(
@@ -233,19 +231,16 @@ public class CJGuiMachineBase extends GuiContainer<CJContainerMachineBase> {
 			boolean state = machineEntity.buttonStates.get(i);
 			int texture = GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);
 
-			if(button.filter) {
-				int srcX = state ? BUTTON_BLACKLIST_X : BUTTON_WHITELIST_X;
-				int srcY = state ? BUTTON_BLACKLIST_Y : BUTTON_WHITELIST_Y;
+			int srcX = button.labelKind.getX(state);
+			int srcY = button.labelKind.getY(state);
 
+			if(button.labelKind != CJGuiButtonLabelKind.ITEM) {
 				drawTexturedModalRect(
 						x, y,
 						srcX, srcY,
 						BUTTON_WIDTH, BUTTON_HEIGHT);
 			}
 			else {
-				int srcX = state ? BUTTON_ACTIVE_X : BUTTON_INACTIVE_X;
-				int srcY = state ? BUTTON_ACTIVE_Y : BUTTON_INACTIVE_Y;
-
 				drawTexturedModalRect(
 						x, y,
 						srcX, srcY,

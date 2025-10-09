@@ -1,0 +1,23 @@
+{
+	"name": "cj_block_user",
+	"rarity": "manufactured",
+	"implementation": "io.github.chlorojoules.machine.CJMachineBlockUser",
+	"slots": [
+		{
+			"name": "buffer",
+			"anchor": "center"
+		}
+	],
+	"buttons": [
+		{
+			"name": "place_break",
+			"tooltip": "message.cj_mode_break",
+			"label": {
+				"item": "diamond_pickaxe"
+			},
+			"anchor": "bottom right",
+			"x": 16,
+			"y": 26
+		}
+	]
+}

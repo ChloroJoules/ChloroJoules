@@ -11,7 +11,7 @@ import net.minecraft.common.util.JsonUtils;
 import static io.github.chlorojoules.gui.CJGuiMachineBaseLayout.*;
 
 public class CJGuiButton extends CJGuiElement {
-	public boolean filter = false;
+	public CJGuiButtonLabelKind labelKind = CJGuiButtonLabelKind.ITEM;
 	public String tooltip;
 	public ItemStack label;
 
@@ -27,11 +27,12 @@ public class CJGuiButton extends CJGuiElement {
 
 		setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
 
-		if(jsonObject.has("filter")) {
-			filter = JsonUtils.getBoolean(jsonObject, "filter");
+		if(jsonObject.has("kind")) {
+			labelKind = CJGuiButtonLabelKind.fromString(
+					JsonUtils.getString(jsonObject, "kind"));
 		}
 
-		if(!filter) {
+		if(labelKind == CJGuiButtonLabelKind.ITEM) {
 			tooltip = JsonUtils.getString(jsonObject, "tooltip");
 			label = (ItemStack) CJMod.ingredientFromJson(
 					JsonUtils.getJsonObject(jsonObject, "label"));

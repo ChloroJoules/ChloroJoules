@@ -161,6 +161,7 @@ public class CJMod extends Mod {
 	public static CJBlockMachineBase riftBeacon;
 	public static CJBlockMachineBase otherworldPinhole;
 	public static CJBlockMachineBase centrifuge;
+	public static CJBlockMachineBase blockUser;
 
 	public static Item paste;
 	public static Item soulGem;
@@ -746,6 +747,7 @@ public class CJMod extends Mod {
 				"/machines/cj_otherworld_pinhole.json");
 
 		centrifuge = registerMachine("/machines/cj_centrifuge.json");
+		blockUser = registerMachine("/machines/cj_block_user.json");
 	}
 
 	public static void installAchievements() {

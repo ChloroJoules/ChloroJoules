@@ -48,7 +48,7 @@
 	"buttons": [
 		{
 			"name": "filter_mode",
-			"filter": true,
+			"kind": "filter",
 			"anchor": "bottom right",
 			"x": 22,
 			"y": 26,

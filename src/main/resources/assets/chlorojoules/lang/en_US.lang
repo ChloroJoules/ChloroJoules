@@ -34,6 +34,7 @@ message.cj_coordinate_unset=§CCoordinates unset
 message.cj_blacklist=Blacklist
 message.cj_whitelist=Whitelist
 message.cj_ticks=Operation Ticks
+message.cj_mode_break=Break blocks
 
 message.cj_rift1=§DThe walls of reality have been stretched thin
 message.cj_rift2=§DYou feel a §K###§R §D§Lpresence §R§D§K###§R §Dgrow close
@@ -100,6 +101,8 @@ message.cj_otherworld_pinhole.help=Pulls volatile foreign matter from another di
 message.cj_otherworld_pinhole.flavor=Always thinking of others
 message.cj_vacuum.help=Collects items in a cube around the machine
 message.cj_vacuum.flavor=Not called Henry
+message.cj_block_user.help=Breaks or places blocks
+message.cj_block_user.flavor=Working toward becoming human
 
 message.cj_enable_refine_fuel=Allow processing of fuel tank
 message.cj_compost_bone_meal=Compost to bone meal
@@ -208,6 +211,7 @@ tile.cj_rift_beacon.name=Rift Beacon
 tile.cj_otherworld_pinhole.name=Otherworld Pinhole
 tile.cj_centrifuge.name=Centrifuge
 tile.cj_vacuum.name=Vacuum
+tile.cj_block_user.name=Block User
 
 # Fluids.
 tile.cj_fluid_paste.name=Paste

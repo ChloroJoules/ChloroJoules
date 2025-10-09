@@ -1,11 +1,8 @@
 package io.github.chlorojoules.block;
 
 import io.github.chlorojoules.block.tileentity.CJTileEntityGuide;
-import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.container.CJContainerGuide;
-import io.github.chlorojoules.container.CJContainerMachineBase;
 import io.github.chlorojoules.gui.CJGuiGuide;
-import io.github.chlorojoules.gui.CJGuiMachineBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.EntityPlayerSP;
 import net.minecraft.common.block.children.BlockContainer;
