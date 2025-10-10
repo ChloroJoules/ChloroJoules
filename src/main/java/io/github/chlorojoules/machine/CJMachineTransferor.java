@@ -1,5 +1,6 @@
 package io.github.chlorojoules.machine;
 
+import com.indigo3d.util.RenderSystem;
 import com.mojang.nbt.CompoundTag;
 import com.mojang.nbt.IntArrayTag;
 import com.mojang.nbt.ListTag;
@@ -9,10 +10,13 @@ import io.github.chlorojoules.CJTank;
 import io.github.chlorojoules.CJTankVolume;
 import io.github.chlorojoules.block.tileentity.CJTileEntityMachineBase;
 import io.github.chlorojoules.gui.CJGuiCoordinateDisplay;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.world.Tessellator;
 import net.minecraft.common.block.tileentity.TileEntity;
 import net.minecraft.common.entity.inventory.IInventory;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.world.World;
+import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +37,13 @@ public class CJMachineTransferor implements CJIMachine {
 
 	private static boolean isMulti(int meta) {
 		return meta > RECEIVE_FLUIDS;
+	}
+
+	private static boolean isTransmit(int meta) {
+		return meta == TRANSMIT_ITEMS ||
+				meta == TRANSMIT_FLUIDS ||
+				meta == MULTI_TRANSMIT_ITEMS ||
+				meta == MULTI_TRANSMIT_FLUIDS;
 	}
 
 	private boolean tryMultiReceive(
@@ -322,5 +333,50 @@ public class CJMachineTransferor implements CJIMachine {
 				damage == TRANSMIT_FLUIDS ||
 				damage == MULTI_TRANSMIT_ITEMS ||
 				damage == MULTI_TRANSMIT_FLUIDS;
+	}
+
+	public void renderTileEntityAt(
+			CJTileEntityMachineBase machineEntity,
+			double x, double y, double z, float deltaTicks, int progress) {
+
+		int meta = machineEntity.getWorldBlockMetadata();
+		if(!isTransmit(meta)) return;
+
+		ItemStack stack = Minecraft.getInstance().thePlayer.getHeldItem();
+		if(stack == null || stack.getItem() != CJMod.linker) return;
+
+		Tessellator tess = Tessellator.instance;
+
+		RenderSystem.disableTexture2D();
+		RenderSystem.disableLighting();
+		RenderSystem.enableDepthMask();
+		RenderSystem.enableBlend();
+		RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+
+		GL11.glLineWidth(8.0f);
+
+		tess.startDrawing(GL11.GL_LINES);
+
+		if(meta == MULTI_TRANSMIT_ITEMS || meta == TRANSMIT_ITEMS) {
+			tess.setColorRGBA_F(0.8f, 0.3f, 0.0f, 0.8f);
+		}
+		else tess.setColorRGBA_F(0.0f, 0.8f, 0.8f, 0.8f);
+
+		for(int[] linked : machineEntity.linked) {
+			tess.addVertex(x + 0.5, y + 0.5, z + 0.5);
+
+			int dx = linked[0] - machineEntity.xCoord;
+			int dy = linked[1] - machineEntity.yCoord;
+			int dz = linked[2] - machineEntity.zCoord;
+
+			tess.addVertex(x + dx + 0.5, y + dy + 0.5, z + dz + 0.5);
+		}
+
+		tess.draw();
+
+		RenderSystem.disableBlend();
+		RenderSystem.enableLighting();
+		RenderSystem.enableTexture2D();
+		RenderSystem.enableDepthMask();
 	}
 }
