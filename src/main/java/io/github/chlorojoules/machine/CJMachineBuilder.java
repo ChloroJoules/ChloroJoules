@@ -804,6 +804,7 @@ public class CJMachineBuilder {
 
 		// Overlay the full tank graphic with an amount of the empty one.
 		int tankFill = (volume.current * FLUID_HEIGHT) / volume.max;
+		if(volume.current > 0) tankFill = Math.max(2, tankFill);
 		int tankEmptyDrawHeight = FLUID_HEIGHT - tankFill;
 
 		gui.drawTexturedModalRect(

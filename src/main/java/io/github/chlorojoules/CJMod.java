@@ -849,215 +849,6 @@ public class CJMod extends Mod {
 			}
 		}
 
-		ArrayList<IRecipe> recipes = (ArrayList<IRecipe>) getField(
-				CraftingManager.getInstance(), "recipes");
-
-		HashMap<Integer, IRecipe> recipeOutputMap = new HashMap<>();
-
-		JsonObject pulverizerTemplate =
-				jsonAsset("/templates/cj_pulverizer_dye_recipe.json");
-
-		JsonObject pressTemplate =
-				jsonAsset("/templates/cj_press_compact_recipe.json");
-
-		for(IRecipe recipe : recipes) {
-			if(recipe == null) continue;
-
-			ItemStack output = recipe.getRecipeOutput();
-			if(output == null) continue;
-
-			recipeOutputMap.put(output.getItemID(), recipe);
-
-			if(recipe instanceof ShapedRecipes shaped) {
-				Ingredient[] ingredients = shaped.getIngredients();
-
-				if(!(ingredients[0] instanceof ItemStack ingredient)) continue;
-				if(output.stackSize != 1) continue;
-
-				if(ingredient.getItem() instanceof ItemBlock itemBlock) {
-					try {
-						Block block = BLOCKS_LIST[itemBlock.blockID];
-						block.getIcon(0, ingredient.itemDamage);
-					}
-					catch(IndexOutOfBoundsException e) {
-						Logger.getLogger("Chlorojoules").warning(
-								"Skipping malformed compact recipe " +
-								ingredient.getDisplayName() + " -> " +
-								output.getDisplayName());
-
-						continue;
-					}
-				}
-
-				if(output.getItemID() == COBWEB.getItemID()) {
-					continue;
-				}
-
-				ItemStack first = ingredient;
-				boolean matched = true;
-
-				int count = 1;
-				for(; count < ingredients.length; ++count) {
-					if(!(ingredients[count] instanceof ItemStack)) {
-						matched = false;
-						break;
-					}
-
-					ingredient = (ItemStack) ingredients[count];
-					if(ingredient == null || ingredient.getItemID() == 0) {
-						break;
-					}
-
-					if(ingredient.getItemID() != first.getItemID()) {
-						matched = false;
-						break;
-					}
-				}
-
-				if(matched && (count == 4 || count == 9)) {
-					CJMachineRecipe pressRecipe =
-							new CJMachineRecipe(pressTemplate);
-
-					CJMachineRecipeComponent inputComponent =
-							pressRecipe.getInputByTarget("input");
-
-					ItemStack inputCopy = first.copy();
-					inputCopy.stackSize = count;
-					inputComponent.item = inputCopy;
-
-					CJMachineRecipeComponent outputComponent =
-							pressRecipe.getOutputByTarget("output");
-
-					outputComponent.item = output.copy();
-
-					press.machineBuilder.recipes.add(pressRecipe);
-				}
-			}
-			else if(recipe instanceof ShapelessRecipes shapeless &&
-					shapeless.getIngredients().size() == 1 &&
-					shapeless.getIngredients().getFirst()
-							instanceof ItemStack inputStack &&
-					output.getItem() instanceof ItemDye) {
-
-				CJMachineRecipe dyeRecipe =
-						new CJMachineRecipe(pulverizerTemplate);
-
-				CJMachineRecipeComponent inputComponent =
-						dyeRecipe.getInputByTarget("input");
-
-				inputComponent.item = inputStack.copy();
-
-				CJMachineRecipeComponent outputComponent =
-						dyeRecipe.getOutputByTarget("output");
-
-				ItemStack outputCopy = output.copy();
-				outputCopy.stackSize += 2;
-				outputComponent.item = outputCopy;
-
-				pulverizer.machineBuilder.recipes.add(dyeRecipe);
-			}
-		}
-
-		for(Item item : earlyItemMap.values()) {
-			if(item == null) continue;
-			if(item.getItemStackLimit() != 64) continue;
-
-			if(recipeOutputMap.getOrDefault(item.itemID, null) != null) {
-				otherworldEligibleItems.add(item);
-			}
-		}
-
-		for(Block block : BLOCKS_LIST) {
-			if(block instanceof BlockLeavesBase) {
-				tagLeaves.addIngredient(block);
-				tagCompostable.addIngredient(block);
-			}
-
-			if(block instanceof BlockBasicPlant) {
-				tagCompostable.addIngredient(block);
-			}
-
-			if(block instanceof BlockLog) {
-				tagLogs.addIngredient(block);
-			}
-
-			if(block instanceof BlockFlower) {
-				tagFlower.addIngredient(block);
-			}
-
-			if(block instanceof BlockGlass) {
-				tagGlass.addIngredient(block);
-			}
-		}
-
-		JsonObject cultivatorTemplate = CJMod.jsonAsset(
-				"/templates/cj_cultivator_seed_recipe.json");
-
-		for(Item item : ITEMS_LIST) {
-			if(item instanceof ItemSeeds seeds) {
-				CJMachineRecipe recipe =
-						new CJMachineRecipe(cultivatorTemplate);
-
-				recipe.getInputByTarget("seed").item = new ItemStack(seeds, 0);
-
-				CJMachineRecipeComponent output =
-						recipe.getOutputByTarget("output");
-
-				Block block =
-						BLOCKS_LIST[(Integer) getField(seeds, "blockId")];
-
-				if(block instanceof BlockCrops crops) {
-					Integer droppedID = (Integer) callMethod(crops, "cropID");
-
-					output.item = new ItemStack(ITEMS_LIST[droppedID]);
-				}
-				else if(block instanceof BlockMelonStem stem) {
-					Integer fruitID = (Integer) getField(stem, "fruit");
-					int droppedID = BLOCKS_LIST[fruitID]
-							.idDropped(0, new Random());
-
-					output.item = new ItemStack(ITEMS_LIST[droppedID]);
-				}
-				else {
-					Logger.getLogger("Chlorojoules").warning(
-							"Could not determine seed crop for '" +
-							seeds.itemID + "'");
-
-					continue;
-				}
-
-				cultivator.machineBuilder.recipes.add(recipe);
-			}
-			else if(item instanceof ItemBlock itemBlock) {
-				Block block = BLOCKS_LIST[itemBlock.blockID];
-
-				if(block instanceof BlockBasicPlant) {
-					CJMachineRecipe recipe =
-							new CJMachineRecipe(cultivatorTemplate);
-
-					recipe.getInputByTarget("seed").item =
-							new ItemStack(item, 0);
-
-					CJMachineRecipeComponent output =
-							recipe.getOutputByTarget("output");
-
-					output.item = new ItemStack(item);
-
-					cultivator.machineBuilder.recipes.add(recipe);
-				}
-			}
-		}
-
-		registerFurnaceRecipe(diamondDust, DIAMOND);
-		registerFurnaceRecipe(goldDust, GOLD_INGOT);
-		registerFurnaceRecipe(ironDust, IRON_INGOT);
-
-		for(Ingredient ingredient : tagLeaves.getIngredients()) {
-			ItemStack stack = (ItemStack) ingredient;
-
-			registerFurnaceRecipe(stack.getItem(), paste);
-		}
-
 		ItemStack machineFrame4Stack = new ItemStack(machineFrame, 4);
 		ItemStack transferor8Stack = new ItemStack(transferor, 8);
 		ItemStack soulDust2Stack = new ItemStack(soulDust, 2);
@@ -1526,6 +1317,16 @@ public class CJMod extends Mod {
 				'~', otherworldEssence,
 				'@', compactedFabric);
 
+		registerFurnaceRecipe(diamondDust, DIAMOND);
+		registerFurnaceRecipe(goldDust, GOLD_INGOT);
+		registerFurnaceRecipe(ironDust, IRON_INGOT);
+
+		for(Ingredient ingredient : tagLeaves.getIngredients()) {
+			ItemStack stack = (ItemStack) ingredient;
+
+			registerFurnaceRecipe(stack.getItem(), paste);
+		}
+
 		// Consume furnace recipes.
 		FurnaceRecipes furnaceRecipes = FurnaceRecipes.instance;
 		Map<Integer, ItemStack> furnaceMap =
@@ -1554,7 +1355,7 @@ public class CJMod extends Mod {
 			catch(IndexOutOfBoundsException e) {
 				Logger.getLogger("Chlorojoules").warning(
 						"Skipping malformed furnace recipe " + ingredientId +
-						" -> " + outStack.getItemID());
+								" -> " + outStack.getItemID());
 
 				continue;
 			}
@@ -1563,6 +1364,205 @@ public class CJMod extends Mod {
 			recipe.getOutputByTarget("output").item = outStack;
 
 			furnaceMachineBuilder.recipes.add(recipe);
+		}
+
+		ArrayList<IRecipe> recipes = (ArrayList<IRecipe>) getField(
+				CraftingManager.getInstance(), "recipes");
+
+		HashMap<Integer, IRecipe> recipeOutputMap = new HashMap<>();
+
+		JsonObject pulverizerTemplate =
+				jsonAsset("/templates/cj_pulverizer_dye_recipe.json");
+
+		JsonObject pressTemplate =
+				jsonAsset("/templates/cj_press_compact_recipe.json");
+
+		for(IRecipe recipe : recipes) {
+			if(recipe == null) continue;
+
+			ItemStack output = recipe.getRecipeOutput();
+			if(output == null) continue;
+
+			recipeOutputMap.put(output.getItemID(), recipe);
+
+			if(recipe instanceof ShapedRecipes shaped) {
+				Ingredient[] ingredients = shaped.getIngredients();
+
+				if(!(ingredients[0] instanceof ItemStack ingredient)) continue;
+				if(output.stackSize != 1) continue;
+
+				if(ingredient.getItem() instanceof ItemBlock itemBlock) {
+					try {
+						Block block = BLOCKS_LIST[itemBlock.blockID];
+						block.getIcon(0, ingredient.itemDamage);
+					}
+					catch(IndexOutOfBoundsException e) {
+						Logger.getLogger("Chlorojoules").warning(
+								"Skipping malformed compact recipe " +
+										ingredient.getDisplayName() + " -> " +
+										output.getDisplayName());
+
+						continue;
+					}
+				}
+
+				if(output.getItemID() == COBWEB.getItemID()) {
+					continue;
+				}
+
+				ItemStack first = ingredient;
+				boolean matched = true;
+
+				int count = 1;
+				for(; count < ingredients.length; ++count) {
+					if(!(ingredients[count] instanceof ItemStack)) {
+						matched = false;
+						break;
+					}
+
+					ingredient = (ItemStack) ingredients[count];
+					if(ingredient == null || ingredient.getItemID() == 0) {
+						break;
+					}
+
+					if(ingredient.getItemID() != first.getItemID()) {
+						matched = false;
+						break;
+					}
+				}
+
+				if(matched && (count == 4 || count == 9)) {
+					CJMachineRecipe pressRecipe =
+							new CJMachineRecipe(pressTemplate);
+
+					CJMachineRecipeComponent inputComponent =
+							pressRecipe.getInputByTarget("input");
+
+					ItemStack inputCopy = first.copy();
+					inputCopy.stackSize = count;
+					inputComponent.item = inputCopy;
+
+					CJMachineRecipeComponent outputComponent =
+							pressRecipe.getOutputByTarget("output");
+
+					outputComponent.item = output.copy();
+
+					press.machineBuilder.recipes.add(pressRecipe);
+				}
+			}
+			else if(recipe instanceof ShapelessRecipes shapeless &&
+					shapeless.getIngredients().size() == 1 &&
+					shapeless.getIngredients().getFirst()
+							instanceof ItemStack inputStack &&
+					output.getItem() instanceof ItemDye) {
+
+				CJMachineRecipe dyeRecipe =
+						new CJMachineRecipe(pulverizerTemplate);
+
+				CJMachineRecipeComponent inputComponent =
+						dyeRecipe.getInputByTarget("input");
+
+				inputComponent.item = inputStack.copy();
+
+				CJMachineRecipeComponent outputComponent =
+						dyeRecipe.getOutputByTarget("output");
+
+				ItemStack outputCopy = output.copy();
+				outputCopy.stackSize += 2;
+				outputComponent.item = outputCopy;
+
+				pulverizer.machineBuilder.recipes.add(dyeRecipe);
+			}
+		}
+
+		for(Item item : earlyItemMap.values()) {
+			if(item == null) continue;
+			if(item.getItemStackLimit() != 64) continue;
+
+			if(recipeOutputMap.getOrDefault(item.itemID, null) != null) {
+				otherworldEligibleItems.add(item);
+			}
+		}
+
+		for(Block block : BLOCKS_LIST) {
+			if(block instanceof BlockLeavesBase) {
+				tagLeaves.addIngredient(block);
+				tagCompostable.addIngredient(block);
+			}
+
+			if(block instanceof BlockBasicPlant) {
+				tagCompostable.addIngredient(block);
+			}
+
+			if(block instanceof BlockLog) {
+				tagLogs.addIngredient(block);
+			}
+
+			if(block instanceof BlockFlower) {
+				tagFlower.addIngredient(block);
+			}
+
+			if(block instanceof BlockGlass) {
+				tagGlass.addIngredient(block);
+			}
+		}
+
+		JsonObject cultivatorTemplate = CJMod.jsonAsset(
+				"/templates/cj_cultivator_seed_recipe.json");
+
+		for(Item item : ITEMS_LIST) {
+			if(item instanceof ItemSeeds seeds) {
+				CJMachineRecipe recipe =
+						new CJMachineRecipe(cultivatorTemplate);
+
+				recipe.getInputByTarget("seed").item = new ItemStack(seeds, 0);
+
+				CJMachineRecipeComponent output =
+						recipe.getOutputByTarget("output");
+
+				Block block =
+						BLOCKS_LIST[(Integer) getField(seeds, "blockId")];
+
+				if(block instanceof BlockCrops crops) {
+					Integer droppedID = (Integer) callMethod(crops, "cropID");
+
+					output.item = new ItemStack(ITEMS_LIST[droppedID]);
+				}
+				else if(block instanceof BlockMelonStem stem) {
+					Integer fruitID = (Integer) getField(stem, "fruit");
+					int droppedID = BLOCKS_LIST[fruitID]
+							.idDropped(0, new Random());
+
+					output.item = new ItemStack(ITEMS_LIST[droppedID]);
+				}
+				else {
+					Logger.getLogger("Chlorojoules").warning(
+							"Could not determine seed crop for '" +
+									seeds.itemID + "'");
+
+					continue;
+				}
+
+				cultivator.machineBuilder.recipes.add(recipe);
+			}
+			else if(item instanceof ItemBlock itemBlock) {
+				Block block = BLOCKS_LIST[itemBlock.blockID];
+
+				if(block instanceof BlockBasicPlant) {
+					CJMachineRecipe recipe =
+							new CJMachineRecipe(cultivatorTemplate);
+
+					recipe.getInputByTarget("seed").item =
+							new ItemStack(item, 0);
+
+					CJMachineRecipeComponent output =
+							recipe.getOutputByTarget("output");
+
+					output.item = new ItemStack(item);
+
+					cultivator.machineBuilder.recipes.add(recipe);
+				}
+			}
 		}
 	}
 }
