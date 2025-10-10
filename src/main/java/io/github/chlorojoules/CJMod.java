@@ -154,6 +154,8 @@ public class CJMod extends Mod {
 	public static CJBlockMachineBase blockUser;
 
 	public static Item paste;
+	public static Item carbon;
+	public static Item sulphurDust;
 	public static Item soulGem;
 	public static Item pasteBowl;
 	public static Item dirtBowl;
@@ -575,6 +577,8 @@ public class CJMod extends Mod {
 		soulGem = registerItem(
 				REFINED_COLOR, 64, CJItemSoulGem.class, "cj_soul_gem");
 
+		carbon = registerItem("cj_carbon", MANUFACTURED_COLOR);
+		sulphurDust = registerItem("cj_sulphur_dust", MANUFACTURED_COLOR);
 		jewelDust = registerItem("cj_jewel_dust", MANUFACTURED_COLOR);
 		stoneDust = registerItem("cj_stone_dust", PRIMAL_COLOR);
 		ironDust = registerItem("cj_iron_dust", PRIMAL_COLOR);
@@ -1232,6 +1236,18 @@ public class CJMod extends Mod {
 				'%', tagRawStone,
 				'~', paste,
 				'|', tagEmptyBucket);
+
+		registerRecipe(
+				SULPHUR,
+				"%%",
+				"%%",
+				'%', sulphurDust);
+
+		registerRecipe(
+				COAL,
+				"%%",
+				"%%",
+				'%', carbon);
 
 		registerRecipe(
 				ironRod,

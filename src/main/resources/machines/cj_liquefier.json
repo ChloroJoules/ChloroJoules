@@ -126,6 +126,23 @@
 			]
 		},
 		{
+			"ticks": 12,
+			"fuel": 7,
+			"inputs": [
+				{
+					"target": "input",
+					"item": "chlorojoules:cj_sulphur_dust"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"fluid": "acid",
+					"amount": 25
+				}
+			]
+		},
+		{
 			"ticks": 50,
 			"fuel": 35,
 			"inputs": [

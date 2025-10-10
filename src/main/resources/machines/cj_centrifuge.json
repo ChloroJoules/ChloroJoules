@@ -134,6 +134,28 @@
 					"chance": 0.45
 				}
 			]
+		},
+		{
+			"ticks": 70,
+			"fuel": 15,
+			"inputs": [
+				{
+					"target": "input",
+					"item": "sulphur"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "chlorojoules:cj_sulphur_dust",
+					"chance": 0.95
+				},
+				{
+					"target": "additional",
+					"item": "chlorojoules:cj_carbon",
+					"chance": 0.65
+				}
+			]
 		}
 	]
 }

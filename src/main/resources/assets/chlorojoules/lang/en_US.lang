@@ -236,6 +236,8 @@ item.cj_fluid_etching_bucket_gold.name=Golden Etching Fluid Bucket
 item.cj_fluid_awareness_bucket.name=Awareness Bucket
 item.cj_fluid_awareness_bucket_gold.name=Golden Awareness Bucket
 
+item.cj_sulphur_dust.name=Sulphur Dust
+item.cj_carbon.name=Carbon
 item.cj_stone_dust.name=Stone Dust
 item.cj_iron_dust.name=Iron Dust
 item.cj_gold_dust.name=Gold Dust

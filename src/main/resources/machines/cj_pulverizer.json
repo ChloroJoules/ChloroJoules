@@ -155,6 +155,22 @@
 					"item": "sand"
 				}
 			]
+		},
+		{
+			"ticks": 110,
+			"fuel": 35,
+			"inputs": [
+				{
+					"target": "input",
+					"item": "coal"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "chlorojoules:cj_sulphur_dust"
+				}
+			]
 		}
 	]
 }
