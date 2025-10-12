@@ -156,6 +156,28 @@
 					"chance": 0.65
 				}
 			]
+		},
+		{
+			"ticks": 120,
+			"fuel": 35,
+			"inputs": [
+				{
+					"target": "input",
+					"item": "mineral_sand"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "chlorojoules:cj_iron_dust",
+					"chance": 0.65
+				},
+				{
+					"target": "additional",
+					"item": "chlorojoules:cj_gold_dust",
+					"chance": 0.35
+				}
+			]
 		}
 	]
 }

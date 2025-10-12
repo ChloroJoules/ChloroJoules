@@ -44,11 +44,12 @@
 			"ticks": 250,
 			"fuel": 150,
 			"button": "refine_fuel",
+			"rarity": "refined",
 			"inputs": [
 				{
 					"target": "fuel",
 					"fluid": "chlorojoules:cj_fluid_chlorojoules",
-					"amount": 250
+					"amount": 150
 				},
 				{
 					"target": "additive",
@@ -59,7 +60,7 @@
 				{
 					"target": "output",
 					"fluid": "chlorojoules:cj_fluid_souls",
-					"amount": 50
+					"amount": 150
 				}
 			]
 		},
@@ -83,6 +84,29 @@
 					"target": "output",
 					"fluid": "chlorojoules:cj_fluid_chlorojoules",
 					"amount": 150
+				}
+			]
+		},
+		{
+			"ticks": 185,
+			"fuel": 35,
+			"rarity": "manufactured",
+			"inputs": [
+				{
+					"target": "input",
+					"fluid": "water",
+					"amount": 350
+				},
+				{
+					"target": "additive",
+					"item": "chlorojoules:cj_moss"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"fluid": "chlorojoules:cj_fluid_chlorojoules",
+					"amount": 350
 				}
 			]
 		}

@@ -23,6 +23,10 @@ public class CJTankVolume {
 
 	public CJTankVolume() {}
 
+	public CJTankVolume(int max) {
+		this.max = max;
+	}
+
 	public CJTankVolume(Block fluid, int volume) {
 		this.fluidID = fluid.blockID;
 		this.current = volume;
@@ -48,8 +52,6 @@ public class CJTankVolume {
 	}
 
 	public void writeToNBT(CompoundTag tagCompound) {
-		// NOTE: `max` and `lockFluid` are expected to be set statically
-		//       Per-machine so we don't need to serialize them.
 		tagCompound.setInteger("current", current);
 		tagCompound.setInteger("fluid", fluidID);
 	}

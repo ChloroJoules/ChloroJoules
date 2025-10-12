@@ -107,6 +107,24 @@
 					"item": "chlorojoules:cj_compacted_fabric"
 				}
 			]
+		},
+		{
+			"ticks": 115,
+			"fuel": 55,
+			"rarity": "refined",
+			"inputs": [
+				{
+					"target": "input",
+					"item": "chlorojoules:cj_soul_fragment",
+					"amount": 9
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "chlorojoules:cj_soul_core"
+				}
+			]
 		}
 	]
 }

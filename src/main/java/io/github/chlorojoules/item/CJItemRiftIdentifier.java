@@ -72,6 +72,7 @@ public class CJItemRiftIdentifier extends CJItemAchievable implements
 		else riftZ = 1 << Math.round(Math.log10(absZ) / Math.log10(2));
 
 		riftY = (int) ((Math.cos(riftX + riftZ) * 0.5 + 0.6) * RIFT_JITTER);
+		riftY += 10; // Avoid spawning on top of Bedrock.
 
 		int riftXHold = riftX;
 		riftX += (int) (Math.cos(riftZ) * RIFT_JITTER);

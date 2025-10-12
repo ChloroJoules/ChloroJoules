@@ -15,7 +15,7 @@ public class CJItemDescriptionFluidContainer implements ItemDesc {
 	public void runDesc(World world, List<String> desc, ItemStack item) {
 		if(!(item.getItem() instanceof CJItemFluidContainer)) return;
 
-		CJTankVolume volume = new CJTankVolume();
+		CJTankVolume volume = new CJTankVolume(CJItemFluidContainer.MAX);
 		CompoundTag tagCompound = item.getTagCompound();
 		if(tagCompound != null) volume.readFromNBT(tagCompound);
 

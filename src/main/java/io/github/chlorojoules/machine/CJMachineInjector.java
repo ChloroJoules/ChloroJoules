@@ -64,7 +64,7 @@ public class CJMachineInjector extends CJMachineRecipeConsumer {
 		}
 
 		CompoundTag tagCompound = input.getTagCompound();
-		CJTankVolume volume = new CJTankVolume();
+		CJTankVolume volume = new CJTankVolume(CJItemFluidContainer.MAX);
 		if(tagCompound != null) volume.readFromNBT(tagCompound);
 
 		if(volume.fluidID != 0 && injectVolume.fluidID != volume.fluidID) {

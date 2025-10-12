@@ -265,6 +265,27 @@
 					"amount": 2
 				}
 			]
+		},
+		{
+			"ticks": 55,
+			"fuel": 20,
+			"inputs": [
+				{
+					"target": "inject",
+					"fluid": "chlorojoules:cj_fluid_dimension",
+					"amount": 10
+				},
+				{
+					"target": "input",
+					"item": "sand"
+				}
+			],
+			"outputs": [
+				{
+					"target": "output",
+					"item": "mineral_sand"
+				}
+			]
 		}
 	]
 }

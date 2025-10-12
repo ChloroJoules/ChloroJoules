@@ -28,7 +28,7 @@ public enum CJGuiButtonLabelKind {
 		return switch(this) {
 			case FILTER -> state ? BUTTON_BLACKLIST_X : BUTTON_WHITELIST_X;
 
-			default -> state ? BUTTON_INACTIVE_X : BUTTON_ACTIVE_X;
+			default -> state ? BUTTON_ACTIVE_X : BUTTON_INACTIVE_X;
 		};
 	}
 
@@ -36,7 +36,7 @@ public enum CJGuiButtonLabelKind {
 		return switch(this) {
 			case FILTER -> state ? BUTTON_BLACKLIST_Y : BUTTON_WHITELIST_Y;
 
-			default -> state ? BUTTON_INACTIVE_Y : BUTTON_ACTIVE_Y;
+			default -> state ? BUTTON_ACTIVE_Y : BUTTON_INACTIVE_Y;
 		};
 	}
 }

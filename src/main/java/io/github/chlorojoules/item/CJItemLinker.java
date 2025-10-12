@@ -83,6 +83,11 @@ public class CJItemLinker extends Item {
 		CompoundTag tag = stack.getTagCompoundNonNull();
 		int[] position = tag.getIntArray("linked_position");
 
+		if(position.length != 3) {
+			stack.itemDamage--;
+			return true;
+		}
+
 		CJTileEntityMachineBase inserterMachine =
 				(CJTileEntityMachineBase) world.getBlockTileEntity(
 						blockX, blockY, blockZ);
@@ -92,7 +97,7 @@ public class CJItemLinker extends Item {
 						position[0], position[1], position[2]);
 
 		if(extractorMachine == null) {
-			stack.setItemDamage(stack.getItemDamage() - 1);
+			stack.itemDamage--;
 			return true;
 		}
 

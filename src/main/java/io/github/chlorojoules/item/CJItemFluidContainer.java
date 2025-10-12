@@ -1,6 +1,7 @@
 package io.github.chlorojoules.item;
 
 import com.mojang.nbt.CompoundTag;
+import io.github.chlorojoules.CJTank;
 import io.github.chlorojoules.CJTankVolume;
 import net.minecraft.common.entity.Entity;
 import net.minecraft.common.item.Item;
@@ -10,10 +11,12 @@ import net.minecraft.common.world.World;
 import java.util.ArrayList;
 
 public class CJItemFluidContainer extends Item {
+	public static int MAX = CJTank.BUCKET * 16;
+
 	public CJItemFluidContainer(String name) {
 		super(name);
 
-		setMaxDamage(CJTankVolume.DEFAULT_MAX);
+		setMaxDamage(MAX);
 	}
 
 	public static ItemStack getContainerMatchingFluid(
@@ -26,7 +29,7 @@ public class CJItemFluidContainer extends Item {
 			CompoundTag tagCompound = stack.getTagCompound();
 			if(tagCompound == null) continue;
 
-			CJTankVolume volume = new CJTankVolume();
+			CJTankVolume volume = new CJTankVolume(MAX);
 			volume.readFromNBT(tagCompound);
 			if(volume.fluidID != fluidID) continue;
 
@@ -46,10 +49,10 @@ public class CJItemFluidContainer extends Item {
 		CompoundTag tagCompound = stack.getTagCompound();
 		if(tagCompound == null) return;
 
-		CJTankVolume volume = new CJTankVolume();
+		CJTankVolume volume = new CJTankVolume(MAX);
 		volume.readFromNBT(tagCompound);
 
-		stack.setItemDamage(CJTankVolume.DEFAULT_MAX - volume.current);
+		stack.setItemDamage(MAX - volume.current);
 	}
 
 	public static boolean consumeFromContainers(
@@ -65,7 +68,7 @@ public class CJItemFluidContainer extends Item {
 			if(container == null) return false;
 
 			CompoundTag tag = container.getTagCompound();
-			CJTankVolume volume = new CJTankVolume();
+			CJTankVolume volume = new CJTankVolume(MAX);
 			volume.readFromNBT(tag);
 
 			consumed += Math.min(required - consumed, volume.current);
@@ -75,7 +78,7 @@ public class CJItemFluidContainer extends Item {
 		consumed = 0;
 		for(ItemStack container : containers) {
 			CompoundTag tag = container.getTagCompound();
-			CJTankVolume volume = new CJTankVolume();
+			CJTankVolume volume = new CJTankVolume(MAX);
 			volume.readFromNBT(tag);
 
 			consumed += volume.removeFluid(

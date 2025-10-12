@@ -66,8 +66,9 @@ public class CJItemToolSoulSword extends ItemTool implements CJIItemSocket {
 		if(target.health <= 0) {
 			World world = target.worldObj;
 
+			int rarity = CJRarityInfo.MAX_DAMAGE - stack.itemDamage;
 			int count = (int) ((world.rand.nextFloat() * 0.7) *
-							(CJRarityInfo.MAX_DAMAGE - stack.itemDamage));
+					(float) (rarity * rarity));
 
 			if(count <= 0) return true;
 

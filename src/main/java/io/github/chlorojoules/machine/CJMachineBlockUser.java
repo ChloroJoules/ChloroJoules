@@ -28,7 +28,7 @@ public class CJMachineBlockUser implements CJIMachine {
 			case 3 -> x++;
 		}
 
-		if(machineBuilder.getNamedButtonState(machineEntity, "place_break")) {
+		if(!machineBuilder.getNamedButtonState(machineEntity, "place_break")) {
 			ItemStack stack = machineBuilder.getNamedStack(
 					machineEntity, "buffer");
 
@@ -39,12 +39,19 @@ public class CJMachineBlockUser implements CJIMachine {
 				worldObj.setBlockAndMetadataWithNotify(
 						x, y, z, block.blockID,
 						block.getPlacedBlockMetadata(stack.getItemDamage()));
+
+				stack.stackSize--;
 			}
 			else if(stack.getItem() == Items.FIRE_CHARGE) {
 				worldObj.setBlockWithNotify(x, y, z, Blocks.FIRE.blockID);
-			}
 
-			stack.stackSize--;
+				stack.stackSize--;
+			}
+			else if(stack.getItem() == Items.FLINT_AND_STEEL) {
+				worldObj.setBlockWithNotify(x, y, z, Blocks.FIRE.blockID);
+
+				stack.damageItem(1, null, true);
+			}
 
 			if(stack.stackSize <= 0) {
 				machineBuilder.setNamedStack(machineEntity, "buffer", null);

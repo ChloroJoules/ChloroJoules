@@ -303,7 +303,7 @@ public class CJGuiGuide extends GuiContainer<CJContainerGuide> {
 			currentRecipe--;
 
 			if(currentRecipe < 0) {
-				currentRecipe = machineBuilder.recipes.size();
+				currentRecipe = machineBuilder.recipes.size() - 1;
 			}
 		}
 	}

@@ -101,6 +101,9 @@ public class CJMod extends Mod {
 	public static TaggedIngredient tagJewel =
 			TaggedIngredients.get("cj_jewel");
 
+	public static TaggedIngredient tagSapling =
+			TaggedIngredients.get("cj_sapling");
+
 	public static Block fluidChlorojoules;
 	public static Item bucketFluidChlorojoules;
 	public static Block fluidPaste;
@@ -162,6 +165,7 @@ public class CJMod extends Mod {
 	public static Item woodBowl;
 	public static Item otherworld;
 	public static Item otherworldEssence;
+	public static Item soulFragment;
 
 	public static Item blender;
 
@@ -280,6 +284,10 @@ public class CJMod extends Mod {
 
 				return true;
 			}
+		}
+
+		if(match == CJMod.tagJewel && value.getItem() == CJMod.fauxJewel) {
+			return true;
 		}
 
 		return match.matchIngredient(value);
@@ -428,12 +436,12 @@ public class CJMod extends Mod {
 		registerShapelessRecipe(new ItemStack(output), params);
 	}
 
-	public void registerFurnaceRecipe(int output, int input) {
-		FurnaceRecipes.instance.addSmelting(output, new ItemStack(input, 1));
+	public void registerFurnaceRecipe(int input, int output) {
+		FurnaceRecipes.instance.addSmelting(input, new ItemStack(output, 1));
 	}
 
-	public void registerFurnaceRecipe(Item output, Item input) {
-		registerFurnaceRecipe(output.itemID, input.itemID);
+	public void registerFurnaceRecipe(Item input, Item output) {
+		registerFurnaceRecipe(input.itemID, output.itemID);
 	}
 
 	public Item registerItem(
@@ -620,6 +628,9 @@ public class CJMod extends Mod {
 
 		otherworldEssence = registerItem(
 				"cj_otherworld_essence", AWAKENED_COLOR);
+
+		soulFragment = registerItem(
+				"cj_soul_fragment", REFINED_COLOR);
 
 		blender = registerItem("cj_blender", PRIMAL_COLOR, 1)
 				.setDoNotConsumeOnCrafting(true);
@@ -1010,6 +1021,14 @@ public class CJMod extends Mod {
 				'%', tagRawStone,
 				'~', IRON_INGOT);
 
+		registerRecipe(
+				soulFragment,
+				"%%%",
+				"%~%",
+				"%%%",
+				'%', MINERAL_SAND_GLASS,
+				'~', primalJewel);
+
 		registerShapelessRecipe(GRAVEL, blender, tagRawStone);
 		registerShapelessRecipe(SAND, blender, GRAVEL);
 
@@ -1018,6 +1037,8 @@ public class CJMod extends Mod {
 
 		registerShapelessRecipe(
 				new ItemStack(tinyGoldDust, 6), blender, tagGoldOre);
+
+		registerShapelessRecipe(OAK_SAPLING, blender, tagSapling);
 
 		registerRecipe(
 				machineFrame4Stack,
@@ -1272,7 +1293,7 @@ public class CJMod extends Mod {
 				" @%",
 				"@  ",
 				'%', paste,
-				'#', SOUL_SAND,
+				'#', MINERAL_SAND,
 				'@', ironRod);
 
 		registerRecipe(
@@ -1321,55 +1342,12 @@ public class CJMod extends Mod {
 		registerFurnaceRecipe(goldDust, GOLD_INGOT);
 		registerFurnaceRecipe(ironDust, IRON_INGOT);
 
-		for(Ingredient ingredient : tagLeaves.getIngredients()) {
-			ItemStack stack = (ItemStack) ingredient;
-
-			registerFurnaceRecipe(stack.getItem(), paste);
-		}
-
-		// Consume furnace recipes.
-		FurnaceRecipes furnaceRecipes = FurnaceRecipes.instance;
-		Map<Integer, ItemStack> furnaceMap =
-				furnaceRecipes.getSmeltingList();
-
-		Set<Map.Entry<Integer, ItemStack>> furnaceEntries =
-				furnaceMap.entrySet();
-
-		CJBlockMachineBase furnaceMachine = machines.get("cj_furnace");
-		CJMachineBuilder furnaceMachineBuilder = furnaceMachine.machineBuilder;
-
-		JsonObject furnaceTemplate =
-				jsonAsset("/templates/cj_furnace_recipe.json");
-
-		for(Map.Entry<Integer, ItemStack> entry : furnaceEntries) {
-			CJMachineRecipe recipe = new CJMachineRecipe(furnaceTemplate);
-
-			int ingredientId = entry.getKey();
-			ItemStack inStack = new ItemStack(ingredientId, 1);
-			ItemStack outStack = entry.getValue().copy();
-
-			try {
-				inStack.getDisplayName();
-				outStack.getDisplayName();
-			}
-			catch(IndexOutOfBoundsException e) {
-				Logger.getLogger("Chlorojoules").warning(
-						"Skipping malformed furnace recipe " + ingredientId +
-								" -> " + outStack.getItemID());
-
-				continue;
-			}
-
-			recipe.getInputByTarget("input").item = inStack;
-			recipe.getOutputByTarget("output").item = outStack;
-
-			furnaceMachineBuilder.recipes.add(recipe);
-		}
-
 		ArrayList<IRecipe> recipes = (ArrayList<IRecipe>) getField(
 				CraftingManager.getInstance(), "recipes");
 
 		HashMap<Integer, IRecipe> recipeOutputMap = new HashMap<>();
+
+
 
 		JsonObject pulverizerTemplate =
 				jsonAsset("/templates/cj_pulverizer_dye_recipe.json");
@@ -1505,6 +1483,10 @@ public class CJMod extends Mod {
 			if(block instanceof BlockGlass) {
 				tagGlass.addIngredient(block);
 			}
+
+			if(block instanceof BlockBasicSapling) {
+				tagSapling.addIngredient(block);
+			}
 		}
 
 		JsonObject cultivatorTemplate = CJMod.jsonAsset(
@@ -1563,6 +1545,51 @@ public class CJMod extends Mod {
 					cultivator.machineBuilder.recipes.add(recipe);
 				}
 			}
+		}
+
+		for(Ingredient ingredient : tagLeaves.getIngredients()) {
+			ItemStack stack = (ItemStack) ingredient;
+
+			registerFurnaceRecipe(stack.getItem(), paste);
+		}
+
+		// Consume furnace recipes.
+		FurnaceRecipes furnaceRecipes = FurnaceRecipes.instance;
+		Map<Integer, ItemStack> furnaceMap =
+				furnaceRecipes.getSmeltingList();
+
+		Set<Map.Entry<Integer, ItemStack>> furnaceEntries =
+				furnaceMap.entrySet();
+
+		CJBlockMachineBase furnaceMachine = machines.get("cj_furnace");
+		CJMachineBuilder furnaceMachineBuilder = furnaceMachine.machineBuilder;
+
+		JsonObject furnaceTemplate =
+				jsonAsset("/templates/cj_furnace_recipe.json");
+
+		for(Map.Entry<Integer, ItemStack> entry : furnaceEntries) {
+			CJMachineRecipe recipe = new CJMachineRecipe(furnaceTemplate);
+
+			int ingredientId = entry.getKey();
+			ItemStack inStack = new ItemStack(ingredientId, 1);
+			ItemStack outStack = entry.getValue().copy();
+
+			try {
+				inStack.getDisplayName();
+				outStack.getDisplayName();
+			}
+			catch(IndexOutOfBoundsException e) {
+				Logger.getLogger("Chlorojoules").warning(
+						"Skipping malformed furnace recipe " + ingredientId +
+								" -> " + outStack.getItemID());
+
+				continue;
+			}
+
+			recipe.getInputByTarget("input").item = inStack;
+			recipe.getOutputByTarget("output").item = outStack;
+
+			furnaceMachineBuilder.recipes.add(recipe);
 		}
 	}
 }
