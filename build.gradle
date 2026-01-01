@@ -10,7 +10,7 @@ buildscript {
 
 apply plugin: 'foxloader.dev'
 
-version '0.1.0'
+version '1.0.1'
 
 foxloader {
 	modId = 'chlorojoules'

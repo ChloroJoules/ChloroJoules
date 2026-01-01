@@ -524,10 +524,6 @@ public class CJMod extends Mod {
 		TileEntity.addMapping(
 				CJTileEntityGuide.class, "cj_guide");
 
-		TileEntityRenderManager.instance.addTileEntityRenderer(
-				CJTileEntityMachineBase.class,
-				new CJTileEntityRendererMachineBase());
-
 		fluidChlorojoules = registerFluid("cj_fluid_chlorojoules");
 		bucketFluidChlorojoules = registerFluidBucket(
 				"cj_fluid_chlorojoules_bucket", MANUFACTURED_COLOR,
@@ -849,6 +845,10 @@ public class CJMod extends Mod {
 	@Override
 	@SuppressWarnings("unchecked")
 	public void onPostInit() {
+		TileEntityRenderManager.instance.addTileEntityRenderer(
+				CJTileEntityMachineBase.class,
+				new CJTileEntityRendererMachineBase());
+
 		JsonObject tags = jsonAsset("/tags/cj_tags.json");
 
 		for(Map.Entry<String, JsonElement> entry : tags.entrySet()) {
